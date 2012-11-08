@@ -13,9 +13,35 @@ namespace VODB.VirtualDataBase
     internal sealed class TableCreator<TEntity> : ITableCreator
     {
 
+        Type _EntityType;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TableCreator{TEntity}" /> class.
+        /// </summary>
+        public TableCreator()
+        {
+            _EntityType = typeof(TEntity);
+        }
+
+        /// <summary>
+        /// Creates a table.
+        /// </summary>
+        /// <returns></returns>
         public Table Create()
         {
+            var table = new Table()
+            {
+                TableName = GetTableName(_EntityType)
+            };
 
+
+            return table;
+        }
+
+        public static String GetTableName(Type type)
+        {
+            /* Todo: Check for annotations and get name from one if any. Else its the name of the type. */
+            return type.Name;
         }
 
     }
