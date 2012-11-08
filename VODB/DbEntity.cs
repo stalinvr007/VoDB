@@ -49,6 +49,16 @@ namespace VODB
             );
         }
 
+        protected TModel GetValue<TModel>()
+        {
+            return default(TModel);
+        }
+
+        protected void SetValue<TModel>(TModel value)
+        {
+
+        }
+
     }
 
 }

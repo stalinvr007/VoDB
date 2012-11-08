@@ -52,6 +52,13 @@
     <Compile Include="VirtualDataBase\ITableCreator.cs" />
     <Compile Include="VirtualDataBase\Table.cs" />
     <Compile Include="VirtualDataBase\TableCreator.cs" />
+    <Compile Include="VirtualDataBase\TSqlCommands\TDelete.cs" />
+    <Compile Include="VirtualDataBase\TSqlCommands\TInsert.cs" />
+    <Compile Include="VirtualDataBase\TSqlCommands\TSelect.cs" />
+    <Compile Include="VirtualDataBase\TSqlCommands\TSelectById.cs" />
+    <Compile Include="VirtualDataBase\TSqlCommands\TSqlCmdBase.cs" />
+    <Compile Include="VirtualDataBase\TSqlCommands\TUpdate.cs" />
+    <Compile Include="VirtualDataBase\TSqlCommands\TWhere.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
