@@ -69,7 +69,7 @@ namespace VODB.VirtualDataBase
             var dbField = info.GetAttribute<DbFieldAttribute>();
             if (dbField != null)
             {
-                return new Field
+                return new Field(info)
                 {
                     FieldName = GetFieldName(dbField, info),
                     FieldType = info.PropertyType,
@@ -79,7 +79,7 @@ namespace VODB.VirtualDataBase
             }
             else
             {
-                return new Field
+                return new Field(info)
                 {
                     FieldName = GetKeyFieldName(info),
                     FieldType = info.PropertyType,

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace VODB.VirtualDataBase
@@ -10,6 +11,16 @@ namespace VODB.VirtualDataBase
     /// </summary>
     internal sealed class Field
     {
+
+        private readonly PropertyInfo _Prop;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Field" /> class.
+        /// </summary>
+        /// <param name="prop">The prop.</param>
+        public Field(PropertyInfo prop)
+        {
+            _Prop = prop;
+        }
 
         /// <summary>
         /// Gets or sets the name of the field.
@@ -35,7 +46,6 @@ namespace VODB.VirtualDataBase
         /// </value>
         public Boolean IsKey { get; set; }
 
-
         /// <summary>
         /// Gets or sets the is identity.
         /// </summary>
@@ -43,6 +53,27 @@ namespace VODB.VirtualDataBase
         /// The is identity.
         /// </value>
         public Boolean IsIdentity { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        /// <value>
+        /// The value.
+        /// </value>
+        public Object GetValue(Object entity)
+        {
+            return _Prop.GetValue(entity, null);
+        }
+
+        /// <summary>
+        /// Sets the value.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <param name="value">The value.</param>
+        public void SetValue(Object entity, Object value)
+        {
+            _Prop.SetValue(entity, value, null);
+        }
 
     }
 }
