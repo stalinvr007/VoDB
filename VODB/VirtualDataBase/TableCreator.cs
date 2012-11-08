@@ -11,18 +11,18 @@ namespace VODB.VirtualDataBase
     /// Creates Tables with fields.
     /// Convention based and property Annotations to find out the table fields of an Entity.
     /// </summary>
-    /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    internal sealed class TableCreator<TEntity> : ITableCreator
+    internal sealed class TableCreator : ITableCreator
     {
 
         Type _EntityType;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TableCreator{TEntity}" /> class.
+        /// Initializes a new instance of the <see cref="TableCreator" /> class.
         /// </summary>
-        public TableCreator()
+        /// <param name="entityType">Type of the entity.</param>
+        public TableCreator(Type entityType)
         {
-            _EntityType = typeof(TEntity);
+            _EntityType = entityType;
         }
 
         public Table Create()

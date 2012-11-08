@@ -7,6 +7,14 @@ using VODB.Caching;
 
 namespace VODB.Tests
 {
+
+    class AutoCachedEntity : DbEntity
+    {
+        public String Name { get; set; }
+
+        public int Age { get; set; }
+    }
+
     class Entity
     {
         public String Name { get; set; }
@@ -20,7 +28,7 @@ namespace VODB.Tests
         [TestMethod]
         public void CreateTable_Test()
         {
-            var tableCreator = new TableCreator<Entity>();
+            var tableCreator = new TableCreator(typeof(Entity));
 
             var table = tableCreator.Create();
 
@@ -33,10 +41,28 @@ namespace VODB.Tests
         [TestMethod]
         public void CreateTable_FromTablesCache_Test()
         {
-            TablesCache.AsyncAdd<Entity>(new TableCreator<Entity>());
+            TablesCache.AsyncAdd<Entity>(new TableCreator(typeof(Entity)));
             
             Table table;
             while ((table = TablesCache.GetTable<Entity>()) == null)
+            {
+                Thread.Yield();
+            }
+
+            Assert.IsNotNull(table.KeyFields);
+            Assert.IsNotNull(table.Fields);
+
+            Assert.AreEqual(2, table.Fields.Count());
+        }
+
+        [TestMethod]
+        public void CreateTable_FromDbEntity_Test()
+        {
+
+            var entity = new AutoCachedEntity();
+            
+            Table table;
+            while ((table = TablesCache.GetTable<AutoCachedEntity>()) == null)
             {
                 Thread.Yield();
             }
