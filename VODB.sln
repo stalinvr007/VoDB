@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VODB", "VODB\VODB.csproj", "{128B3899-745D-4329-9C13-4E6CBF4889DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VODB.Tests", "VODB.Tests\VODB.Tests.csproj", "{272824AE-554E-4F1B-972B-1DB34EECBDFD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{128B3899-745D-4329-9C13-4E6CBF4889DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{128B3899-745D-4329-9C13-4E6CBF4889DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{128B3899-745D-4329-9C13-4E6CBF4889DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{128B3899-745D-4329-9C13-4E6CBF4889DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{272824AE-554E-4F1B-972B-1DB34EECBDFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{272824AE-554E-4F1B-972B-1DB34EECBDFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{272824AE-554E-4F1B-972B-1DB34EECBDFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{272824AE-554E-4F1B-972B-1DB34EECBDFD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
