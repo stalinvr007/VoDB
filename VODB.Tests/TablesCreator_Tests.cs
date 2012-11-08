@@ -58,7 +58,7 @@ namespace VODB.Tests
         [TestMethod]
         public void CreateTable_FromDbEntity_Test()
         {
-
+            
             var entity = new AutoCachedEntity();
             
             Table table;
@@ -72,6 +72,28 @@ namespace VODB.Tests
 
             Assert.AreEqual(2, table.Fields.Count());
         }
+
+
+        [TestMethod]
+        public void CreateTable_FromDbEntity_MultipleInstances_Test()
+        {
+
+            for (int i = 0; i < 1000; i++)
+            {
+                /* Makes a call to AsyncAdd for each instance. */
+                new AutoCachedEntity();
+            }
+
+            Table table;
+            while ((table = TablesCache.GetTable<AutoCachedEntity>()) == null)
+            {
+                Thread.Yield();
+            }
+
+            Assert.AreEqual(2, TablesCache.GetTables().Count());
+
+        }
+
     }
 
 }

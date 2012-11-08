@@ -20,9 +20,10 @@ namespace VODB
         /// </summary>
         public DbEntity()
         {
+            Type type = this.GetType();
             TablesCache.AsyncAdd(
-                this.GetType(), 
-                new TableCreator(this.GetType())
+                type,
+                new TableCreator(type)
             );
         }
 

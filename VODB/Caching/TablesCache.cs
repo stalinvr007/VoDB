@@ -80,6 +80,15 @@ namespace VODB.Caching
             return value;
         }
 
+        /// <summary>
+        /// Gets the tables.
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<Table> GetTables()
+        {
+            return _tables.Values;
+        }
+
     }
 
 }
