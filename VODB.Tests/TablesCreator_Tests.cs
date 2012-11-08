@@ -84,12 +84,6 @@ namespace VODB.Tests
                 new AutoCachedEntity();
             }
 
-            Table table;
-            while ((table = TablesCache.GetTable<AutoCachedEntity>()) == null)
-            {
-                Thread.Yield();
-            }
-
             Assert.AreEqual(2, TablesCache.GetTables().Count());
 
         }

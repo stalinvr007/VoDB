@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Annotations\Attributes.cs" />
     <Compile Include="Caching\TablesCache.cs" />
     <Compile Include="DbEntity.cs" />
     <Compile Include="Modules\ConfigModule.cs" />
@@ -51,9 +52,7 @@
     <Compile Include="VirtualDataBase\Table.cs" />
     <Compile Include="VirtualDataBase\TableCreator.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Annotations\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
