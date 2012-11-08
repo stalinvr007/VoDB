@@ -61,16 +61,49 @@ namespace VODB.VirtualDataBase
 
         private static IEnumerable<Field> GetTableFields(Type type)
         {
+            return type.GetProperties().Select(i => GetField(i)).ToList();
+        }
 
-            return type.GetProperties()
-                .Select(i => new Field
+        private static Field GetField(PropertyInfo info)
+        {
+            var dbField = info.GetAttribute<DbFieldAttribute>();
+            if (dbField != null)
+            {
+                return new Field
                 {
-                    FieldName = GetFieldName(i),
-                    FieldType = i.PropertyType,
-                    IsKey = IsKeyField(i)
-                })
-                .ToList();
+                    FieldName = GetFieldName(dbField, info),
+                    FieldType = info.PropertyType,
+                    IsKey = false,
+                    IsIdentity = false
+                };
+            }
+            else
+            {
+                return new Field
+                {
+                    FieldName = GetKeyFieldName(info),
+                    FieldType = info.PropertyType,
+                    IsKey = IsKeyField(info),
+                    IsIdentity = IsIdentityField(info)
+                };
+            }
 
+        }
+
+        private static String GetFieldName(DbFieldAttribute dbField, PropertyInfo info)
+        {
+            if (dbField != null && !String.IsNullOrEmpty(dbField.FieldName))
+            {
+                return dbField.FieldName;
+            }
+
+            return info.Name;
+        }
+
+
+        private static Boolean IsIdentityField(PropertyInfo info)
+        {
+            return info.GetAttribute<DbIdentityAttribute>() != null;
         }
 
         private static Boolean IsKeyField(PropertyInfo info)
@@ -79,15 +112,8 @@ namespace VODB.VirtualDataBase
                 info.GetAttribute<DbIdentityAttribute>() != null;
         }
 
-        private static String GetFieldName(PropertyInfo info)
+        private static String GetKeyFieldName(PropertyInfo info)
         {
-
-            var dbField = info.GetAttribute<DbFieldAttribute>();
-
-            if (dbField != null && !String.IsNullOrEmpty(dbField.FieldName))
-            {
-                return dbField.FieldName;
-            }
 
             var dbKey = info.GetAttribute<DbKeyAttribute>();
 

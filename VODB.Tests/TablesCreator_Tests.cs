@@ -99,7 +99,9 @@ namespace VODB.Tests
                 new AutoCachedEntity();
             }
 
-            Assert.AreEqual(2, TablesCache.GetTables().Count());
+            Assert.IsTrue(
+                TablesCache.GetTables().Count(t => t.TableName.Equals("AutoCachedEntity")) == 1
+            );
 
         }
 
@@ -113,6 +115,8 @@ namespace VODB.Tests
             Assert.IsNotNull(entity.Table.Fields);
 
             var fields = entity.Table.Fields.ToList();
+
+            Assert.AreEqual("MyTable", entity.Table.TableName);
 
             Assert.AreEqual("Id", fields[0].FieldName);
             Assert.AreEqual("Name", fields[1].FieldName);

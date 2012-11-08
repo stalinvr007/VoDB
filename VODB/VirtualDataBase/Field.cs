@@ -35,5 +35,14 @@ namespace VODB.VirtualDataBase
         /// </value>
         public Boolean IsKey { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the is identity.
+        /// </summary>
+        /// <value>
+        /// The is identity.
+        /// </value>
+        public Boolean IsIdentity { get; set; }
+
     }
 }
