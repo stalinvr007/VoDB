@@ -9,7 +9,7 @@ namespace VODB.VirtualDataBase
     /// <summary>
     /// Creates Tables with fields.
     /// </summary>
-    internal interface ITableCreator<TEntity>
+    internal interface ITableCreator
     {
 
         /// <summary>

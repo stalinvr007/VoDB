@@ -26,18 +26,32 @@ namespace VODB.Caching
             _tables[type] = table;
         }
 
-        public static void AsyncAdd<TEntity>(ITableCreator<TEntity> creator)
+        /// <summary>
+        /// Adds a Table to the cache asynchronously.
+        /// </summary>
+        /// <param name="creator">The creator.</param>
+        public static void AsyncAdd<TEntity>(ITableCreator creator)
+        {
+            AsyncAdd(typeof(TEntity), creator);
+        }
+
+        /// <summary>
+        /// Adds a Table to the cache asynchronously.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="creator">The creator.</param>
+        public static void AsyncAdd(Type type, ITableCreator creator)
         {
 
-            if (_tables.ContainsKey(typeof(TEntity)))
+            if (_tables.ContainsKey(type))
             {
                 return;
             }
-            
+
             new Thread(() =>
             {
                 var table = creator.Create();
-                _tables.Add(typeof(TEntity), table);
+                _tables.Add(type, table);
             }).Start();
 
         }

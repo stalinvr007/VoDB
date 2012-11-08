@@ -12,7 +12,7 @@ namespace VODB.VirtualDataBase
     /// Convention based and property Annotations to find out the table fields of an Entity.
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    internal sealed class TableCreator<TEntity> : ITableCreator<TEntity>
+    internal sealed class TableCreator<TEntity> : ITableCreator
     {
 
         Type _EntityType;
