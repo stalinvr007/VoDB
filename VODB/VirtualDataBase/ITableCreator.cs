@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace VODB.VirtualDataBase
 {
     /// <summary>
     /// Creates Tables with fields.
     /// </summary>
-    internal interface ITableCreator
+    internal interface ITableCreator<TEntity>
     {
 
         /// <summary>

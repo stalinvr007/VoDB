@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using VODB.VirtualDataBase;
 
 namespace VODB.Caching
@@ -25,6 +26,21 @@ namespace VODB.Caching
             _tables[type] = table;
         }
 
+        public static void AsyncAdd<TEntity>(ITableCreator<TEntity> creator)
+        {
+
+            if (_tables.ContainsKey(typeof(TEntity)))
+            {
+                return;
+            }
+            
+            new Thread(() =>
+            {
+                var table = creator.Create();
+                _tables.Add(typeof(TEntity), table);
+            }).Start();
+
+        }
 
         /// <summary>
         /// Gets the table.
