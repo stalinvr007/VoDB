@@ -42,7 +42,9 @@
     <Compile Include="DbEntity.cs" />
     <Compile Include="VirtualDataBase\Field.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VirtualDataBase\ITableCreator.cs" />
     <Compile Include="VirtualDataBase\Table.cs" />
+    <Compile Include="VirtualDataBase\TableCreator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Annotations\" />
