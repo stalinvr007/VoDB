@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using VODB.Annotations;
 
 namespace VODB.VirtualDataBase
 {
@@ -52,8 +54,9 @@ namespace VODB.VirtualDataBase
 
         private static String GetTableName(Type type)
         {
-            /* Todo: Check for annotations and get name from one if any. Else its the name of the type. */
-            return type.Name;
+            var tableAttr = type.GetCustomAttributes(typeof(DbTableAttribute), true).FirstOrDefault() as DbTableAttribute;
+
+            return tableAttr == null ? type.Name : tableAttr.TableName;
         }
 
         private static IEnumerable<Field> GetTableFields(Type type)
@@ -62,11 +65,45 @@ namespace VODB.VirtualDataBase
             return type.GetProperties()
                 .Select(i => new Field
                 {
-                    FieldName = i.Name,
-                    FieldType = i.PropertyType
+                    FieldName = GetFieldName(i),
+                    FieldType = i.PropertyType,
+                    IsKey = IsKeyField(i)
                 })
                 .ToList();
 
+        }
+
+        private static Boolean IsKeyField(PropertyInfo info)
+        {
+            return info.GetAttribute<DbKeyAttribute>() != null ||
+                info.GetAttribute<DbIdentityAttribute>() != null;
+        }
+
+        private static String GetFieldName(PropertyInfo info)
+        {
+
+            var dbField = info.GetAttribute<DbFieldAttribute>();
+
+            if (dbField != null && !String.IsNullOrEmpty(dbField.FieldName))
+            {
+                return dbField.FieldName;
+            }
+
+            var dbKey = info.GetAttribute<DbKeyAttribute>();
+
+            if (dbKey != null && !String.IsNullOrEmpty(dbKey.FieldName))
+            {
+                return dbKey.FieldName;
+            }
+
+            var dbIdentity = info.GetAttribute<DbIdentityAttribute>();
+
+            if (dbIdentity != null && !String.IsNullOrEmpty(dbIdentity.FieldName))
+            {
+                return dbIdentity.FieldName;
+            }
+
+            return info.Name;
         }
 
         private static IEnumerable<Field> GetTableKeyFields(Type type)

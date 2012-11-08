@@ -45,6 +45,7 @@
     <Compile Include="Annotations\Attributes.cs" />
     <Compile Include="Caching\TablesCache.cs" />
     <Compile Include="DbEntity.cs" />
+    <Compile Include="Extensions\ReflectionExtensions.cs" />
     <Compile Include="Modules\ConfigModule.cs" />
     <Compile Include="VirtualDataBase\Field.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
