@@ -76,7 +76,7 @@ namespace VODB.Annotations
         /// Initializes a new instance of the <see cref="DbFieldAttribute" /> class.
         /// </summary>
         /// <param name="fieldName">Name of the field.</param>
-        public DbKeyAttribute(String fieldName)
+        public DbKeyAttribute(String fieldName = null)
         {
             FieldName = fieldName;
         }
@@ -101,7 +101,7 @@ namespace VODB.Annotations
         /// Initializes a new instance of the <see cref="DbFieldAttribute" /> class.
         /// </summary>
         /// <param name="fieldName">Name of the field.</param>
-        public DbIdentityAttribute(String fieldName)
+        public DbIdentityAttribute(String fieldName = null)
         {
             FieldName = fieldName;
         }

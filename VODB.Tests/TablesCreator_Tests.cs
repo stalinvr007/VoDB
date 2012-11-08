@@ -4,9 +4,24 @@ using VODB.VirtualDataBase;
 using System.Threading;
 using System.Linq;
 using VODB.Caching;
+using VODB.Annotations;
 
 namespace VODB.Tests
 {
+
+    [DbTable("MyTable")]
+    class AnnotationsEntity : DbEntity
+    {
+        [DbIdentity]
+        public String Id { get; set; }
+
+        [DbKey]
+        public String Name { get; set; }
+
+        [DbField("Age1")]
+        public int Age { get; set; }
+
+    }
 
     class AutoCachedEntity : DbEntity
     {
@@ -86,6 +101,31 @@ namespace VODB.Tests
 
             Assert.AreEqual(2, TablesCache.GetTables().Count());
 
+        }
+
+
+        [TestMethod]
+        public void CreateTable_UsingAnnotations_Test()
+        {
+            var entity = new AnnotationsEntity();
+
+            Assert.IsNotNull(entity.Table.KeyFields);
+            Assert.IsNotNull(entity.Table.Fields);
+
+            var fields = entity.Table.Fields.ToList();
+
+            Assert.AreEqual("Id", fields[0].FieldName);
+            Assert.AreEqual("Name", fields[1].FieldName);
+            Assert.AreEqual("Age1", fields[2].FieldName);
+
+            Assert.AreEqual(typeof(String), fields[0].FieldType);
+            Assert.AreEqual(typeof(String), fields[1].FieldType);
+            Assert.AreEqual(typeof(int), fields[2].FieldType);
+
+
+            Assert.IsTrue(fields[0].IsKey);
+            Assert.IsTrue(fields[1].IsKey);
+            Assert.IsFalse(fields[2].IsKey);
         }
 
     }
