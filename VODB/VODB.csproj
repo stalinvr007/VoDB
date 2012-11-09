@@ -35,6 +35,7 @@
       <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -45,6 +46,10 @@
     <Compile Include="Annotations\Attributes.cs" />
     <Compile Include="Caching\TablesCache.cs" />
     <Compile Include="DbEntity.cs" />
+    <Compile Include="Exceptions\UnableToCreateDbConnectionException.cs" />
+    <Compile Include="Exceptions\ConnectionStringNotFoundException.cs" />
+    <Compile Include="DbLayer\DbConnectionCreator.cs" />
+    <Compile Include="DbLayer\IDbConnectionCreator.cs" />
     <Compile Include="Extensions\ReflectionExtensions.cs" />
     <Compile Include="Modules\ConfigModule.cs" />
     <Compile Include="ThreadCollection.cs" />
@@ -64,6 +69,7 @@
     <Compile Include="VirtualDataBase\TSqlCommands\TWhere.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.Config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
