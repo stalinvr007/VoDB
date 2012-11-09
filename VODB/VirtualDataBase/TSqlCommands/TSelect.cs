@@ -27,13 +27,12 @@ namespace VODB.VirtualDataBase.TSqlCommands
             if (Table.TableName.ToLower().StartsWith("sys."))
                 sb.Append("Select * ")
                     .Append(" From ")
-                    .Append(Table.TableName)
-                    .Append(" with (nolock) ");
+                    .Append(Table.TableName);
             else
                 sb.Append("Select * ")
                     .Append(" From [")
                     .Append(Table.TableName)
-                    .Append("] with (nolock) ");
+                    .Append("]");
         }
     }
 }

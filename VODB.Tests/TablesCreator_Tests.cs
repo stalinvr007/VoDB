@@ -130,6 +130,8 @@ namespace VODB.Tests
             Assert.IsTrue(fields[0].IsKey);
             Assert.IsTrue(fields[1].IsKey);
             Assert.IsFalse(fields[2].IsKey);
+
+            Assert.IsNotNull(entity.Table.CommandsHolder.Select);
         }
 
     }
