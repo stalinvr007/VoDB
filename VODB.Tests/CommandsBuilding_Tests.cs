@@ -6,7 +6,7 @@ using VODB.VirtualDataBase.TSqlCommands;
 namespace VODB.Tests {
 
     [TestClass]
-    public class CommandsBuildingTester {
+    public class CommandsBuilding_Tests {
 
         [TestMethod]
         public void BuildInsert() {
