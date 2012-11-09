@@ -72,6 +72,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TablesCreator_Tests.cs" />
     <Compile Include="DbConnectionCreator_Tests.cs" />
+    <Compile Include="DbQueryCommand_Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VODB\VODB.csproj">

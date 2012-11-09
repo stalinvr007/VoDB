@@ -46,6 +46,7 @@
     <Compile Include="Annotations\Attributes.cs" />
     <Compile Include="Caching\TablesCache.cs" />
     <Compile Include="DbEntity.cs" />
+    <Compile Include="DbLayer\DbQueryCommand.cs" />
     <Compile Include="Exceptions\UnableToCreateDbConnectionException.cs" />
     <Compile Include="Exceptions\ConnectionStringNotFoundException.cs" />
     <Compile Include="DbLayer\DbConnectionCreator.cs" />
