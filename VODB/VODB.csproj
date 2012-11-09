@@ -51,6 +51,7 @@
     <Compile Include="VirtualDataBase\Field.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VirtualDataBase\ITableCreator.cs" />
+    <Compile Include="VirtualDataBase\ITSqlCommandHolder.cs" />
     <Compile Include="VirtualDataBase\Table.cs" />
     <Compile Include="VirtualDataBase\TableCreator.cs" />
     <Compile Include="VirtualDataBase\TSqlCommandHolder.cs" />

@@ -30,7 +30,8 @@ namespace VODB.VirtualDataBase
             var threads = new ThreadCollection(
                 () => table.TableName = GetTableName(_EntityType),
                 () => table.Fields = GetTableFields(_EntityType),
-                () => table.KeyFields = GetTableKeyFields(_EntityType));
+                () => table.KeyFields = GetTableKeyFields(_EntityType),
+                () => table.CommandsHolder = new TSqlCommandHolder(table));
 
             threads.StartAll();
             threads.JoinAll();
