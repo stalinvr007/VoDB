@@ -13,12 +13,12 @@ namespace VODB
 
         public ThreadCollection(params Thread[] threads)
         {
-            _threads = threads;
+            _threads = threads.ToList();
         }
 
         public ThreadCollection(params Action[] actions)
         {
-            _threads = actions.Select(a => new Thread(() => a()));
+            _threads = actions.Select(a => new Thread(() => a())).ToList();
         }
 
         public void StartAll()
@@ -31,13 +31,9 @@ namespace VODB
 
         public void JoinAll()
         {
-
             foreach (var thread in _threads)
             {
-                if (thread.IsAlive)
-                {
-                    thread.Join();
-                }
+                thread.Join();
             }
         }
 
