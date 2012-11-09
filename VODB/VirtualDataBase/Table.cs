@@ -34,5 +34,13 @@ namespace VODB.VirtualDataBase
         /// </value>
         public IEnumerable<Field> KeyFields { get; set; }
 
+        /// <summary>
+        /// Gets or sets the commands holder.
+        /// </summary>
+        /// <value>
+        /// The commands holder.
+        /// </value>
+        public ITSqlCommandHolder CommandsHolder { get; set; }
+
     }
 }

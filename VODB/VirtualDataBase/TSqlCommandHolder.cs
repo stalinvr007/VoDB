@@ -4,7 +4,7 @@ using VODB.VirtualDataBase.TSqlCommands;
 
 namespace VODB.VirtualDataBase
 {
-    internal sealed class TSqlCommandHolder
+    internal sealed class TSqlCommandHolder : VODB.VirtualDataBase.ITSqlCommandHolder
     {
         private readonly Table _table;
         private string _select;
