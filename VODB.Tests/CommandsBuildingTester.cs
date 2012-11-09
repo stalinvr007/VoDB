@@ -1,8 +1,9 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using VODB.Tests.Models;
+using VODB.VirtualDataBase;
 using VODB.VirtualDataBase.TSqlCommands;
 
-namespace VODB.Tests.Models.TSqlCommands {
+namespace VODB.Tests {
 
     [TestClass]
     public class CommandsBuildingTester {
@@ -39,6 +40,15 @@ namespace VODB.Tests.Models.TSqlCommands {
             Assert.AreEqual("Select *  From [Employees] with (nolock)  Where  [EmployeeId] = @EmployeeId", result);
         }
 
-
+        [TestMethod]
+        public void CommandsHolder_Test()
+        {
+            var holder = new TSqlCommandHolder(new Employees().Table);
+            Assert.AreEqual("Select *  From [Employees] with (nolock) ", holder.Select);
+            Assert.AreEqual("Select *  From [Employees] with (nolock)  Where  [EmployeeId] = @EmployeeId", holder.SelectById);
+            Assert.AreEqual("Update [Employees] Set [LastName] = @LastName,  [FirstName] = @FirstName,  [Title] = @Title,  [TitleOfCourtesy] = @TitleOfCourtesy,  [BirthDate] = @BirthDate,  [HireDate] = @HireDate,  [Address] = @Address,  [City] = @City,  [Region] = @Region,  [PostalCode] = @PostalCode,  [Country] = @Country,  [HomePhone] = @HomePhone,  [Extension] = @Extension,  [Notes] = @Notes,  [ReportsTo] = @ReportsTo,  [PhotoPath] = @PhotoPath Where  [EmployeeId] = @OldEmployeeId", holder.Update);
+            Assert.AreEqual("Select *  From [Employees] with (nolock) ", holder.Select);
+            Assert.AreEqual("Insert into [Employees]( [LastName], [FirstName], [Title], [TitleOfCourtesy], [BirthDate], [HireDate], [Address], [City], [Region], [PostalCode], [Country], [HomePhone], [Extension], [Notes], [ReportsTo], [PhotoPath]) values (@LastName,@FirstName,@Title,@TitleOfCourtesy,@BirthDate,@HireDate,@Address,@City,@Region,@PostalCode,@Country,@HomePhone,@Extension,@Notes,@ReportsTo,@PhotoPath)", holder.Insert);
+        }
     }
 }
