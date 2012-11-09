@@ -118,7 +118,7 @@ namespace VODB.Annotations
     }
 
     /// <summary>
-    /// Indicates that this is a Required Field (Not null).
+    /// Indicates the Foreign key to bind.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public sealed class DbBindAttribute : Attribute
