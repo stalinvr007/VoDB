@@ -34,7 +34,7 @@ namespace VODB.VirtualDataBase
             _th_update = new Thread(() => _update = new TUpdate(_table).BuildCmdStr());
             _th_insert = new Thread(() => _insert = new TInsert(_table).BuildCmdStr());
             _th_delete = new Thread(() => _delete = new TDelete(_table).BuildCmdStr());
-            _count = string.Format("Select count(*) From {0}", _table.TableName);
+            _count = string.Format("Select count(*) From [{0}]", _table.TableName);
 
             new ThreadCollection(_th_select, _th_selectById, _th_update, _th_insert, _th_delete)
                 .StartAll();
