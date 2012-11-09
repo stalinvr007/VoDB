@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using VODB.VirtualDataBase;
 
 
 namespace VODB.VirtualDataBase.TSqlCommands
@@ -23,7 +20,7 @@ namespace VODB.VirtualDataBase.TSqlCommands
         /// <summary>
         /// Initializes a new instance of the <see cref="TSqlCmdBase" /> class.
         /// </summary>
-        /// <param name="Table">The table.</param>
+        /// <param name="table">The table.</param>
         public TSqlCmdBase(Table table) {
             Table = table;
         }
