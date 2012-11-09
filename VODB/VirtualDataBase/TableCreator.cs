@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using VODB.Annotations;
 
 namespace VODB.VirtualDataBase
@@ -15,8 +12,7 @@ namespace VODB.VirtualDataBase
     /// </summary>
     internal sealed class TableCreator : ITableCreator
     {
-
-        Type _EntityType;
+        readonly Type _EntityType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TableCreator" /> class.
@@ -31,23 +27,13 @@ namespace VODB.VirtualDataBase
         {
             var table = new Table();
 
-            var thread = new Thread(() =>
-            {
-                var t1 = new Thread(() => table.TableName = GetTableName(_EntityType));
-                var t2 = new Thread(() => table.Fields = GetTableFields(_EntityType));
-                var t3 = new Thread(() => table.KeyFields = GetTableKeyFields(_EntityType));
+            var threads = new ThreadCollection(
+                () => table.TableName = GetTableName(_EntityType),
+                () => table.Fields = GetTableFields(_EntityType),
+                () => table.KeyFields = GetTableKeyFields(_EntityType));
 
-                t3.Start();
-                t2.Start();
-                t1.Start();                
-
-                t1.Join();
-                t2.Join();
-                t3.Join();
-            });
-
-            thread.Start();
-            thread.Join();
+            threads.StartAll();
+            threads.JoinAll();
 
             return table;
         }
@@ -61,7 +47,7 @@ namespace VODB.VirtualDataBase
 
         private static IEnumerable<Field> GetTableFields(Type type)
         {
-            return type.GetProperties().Select(i => GetField(i)).ToList();
+            return type.GetProperties().Select(GetField).ToList();
         }
 
         private static Field GetField(PropertyInfo info)
@@ -77,17 +63,14 @@ namespace VODB.VirtualDataBase
                     IsIdentity = false
                 };
             }
-            else
-            {
-                return new Field(info)
-                {
-                    FieldName = GetKeyFieldName(info),
-                    FieldType = info.PropertyType,
-                    IsKey = IsKeyField(info),
-                    IsIdentity = IsIdentityField(info)
-                };
-            }
 
+            return new Field(info)
+            {
+                FieldName = GetKeyFieldName(info),
+                FieldType = info.PropertyType,
+                IsKey = IsKeyField(info),
+                IsIdentity = IsIdentityField(info)
+            };
         }
 
         private static String GetFieldName(DbFieldAttribute dbField, PropertyInfo info)
