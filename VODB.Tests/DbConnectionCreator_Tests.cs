@@ -1,10 +1,6 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.DbLayer;
-using VODB.DbLayer.Exceptions;
+using VODB.Exceptions;
 
 namespace VODB.Tests
 {
@@ -28,8 +24,7 @@ namespace VODB.Tests
         public void Create_A_new_Connection_Provider_failed()
         {
             var creator = new DbConnectionCreator("System.Data.Oracle", "NorthwindSQL");
-            var connection = creator.Create();
-
+            creator.Create();
         }
 
         [TestMethod]
