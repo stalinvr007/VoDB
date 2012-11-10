@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.DbLayer;
-using VODB.Tests.Models;
 using System.Linq;
+using VODB.Tests.Models.Northwind;
 
 namespace VODB.Tests
 {

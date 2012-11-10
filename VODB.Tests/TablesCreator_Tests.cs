@@ -74,7 +74,7 @@ namespace VODB.Tests
         public void CreateTable_FromDbEntity_Test()
         {
             
-            var entity = new AutoCachedEntity();
+            new AutoCachedEntity();
             
             Table table;
             while ((table = TablesCache.GetTable<AutoCachedEntity>()) == null)

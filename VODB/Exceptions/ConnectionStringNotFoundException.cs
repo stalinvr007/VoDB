@@ -1,11 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
 
-namespace VODB.DbLayer.Exceptions
+namespace VODB.Exceptions
 {
     /// <summary>
     /// 
@@ -13,7 +8,7 @@ namespace VODB.DbLayer.Exceptions
     public class ConnectionStringNotFoundException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConnectionStringNotFound" /> class.
+        /// Initializes a new instance of the <see cref="ConnectionStringNotFoundException" /> class.
         /// </summary>
         /// <param name="providerName">Name of the provider.</param>
         public ConnectionStringNotFoundException(string providerName)

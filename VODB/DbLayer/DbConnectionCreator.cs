@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Common;
 using System.Linq;
-using System.Text;
-using VODB.DbLayer.Exceptions;
+using VODB.Exceptions;
 
 namespace VODB.DbLayer
 {
@@ -12,10 +10,12 @@ namespace VODB.DbLayer
     {
         private readonly String _ProviderName;
         private readonly String _ConnectionStringName;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DbConnectionCreator" /> class.
         /// </summary>
         /// <param name="providerName">Name of the provider.</param>
+        /// <param name="connectionStringName"> </param>
         public DbConnectionCreator(String providerName, String connectionStringName = null)
         {
             _ConnectionStringName = connectionStringName;
@@ -32,8 +32,11 @@ namespace VODB.DbLayer
                 {
                     DbProviderFactory factory = DbProviderFactories.GetFactory(_ProviderName);
                     var connection = factory.CreateConnection();
-                    connection.ConnectionString = connectionString;
-                    return connection;
+                    if (connection != null)
+                    {
+                        connection.ConnectionString = connectionString;
+                        return connection;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -50,16 +53,11 @@ namespace VODB.DbLayer
 
             if (settings != null)
             {
-                foreach (ConnectionStringSettings cs in settings)
-                {
-                    if (cs.ProviderName == providerName )
-                    {
-                        if (connectionStringName == null || connectionStringName != null && cs.Name == connectionStringName)
-                        {
-                            return cs.ConnectionString;
-                        }
-                    }
-                }
+                return settings.Cast<ConnectionStringSettings>()
+                    .Where(cs => cs.ProviderName == providerName)
+                    .Where(cs => connectionStringName == null || cs.Name == connectionStringName)
+                    .Select(cs => cs.ConnectionString)
+                    .FirstOrDefault();
             }
             return null;
         }
