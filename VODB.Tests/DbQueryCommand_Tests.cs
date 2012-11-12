@@ -50,5 +50,23 @@ namespace VODB.Tests
             }
 
         }
+
+        [TestMethod]
+        public void GetEmployeesEntities_Lazy()
+        {
+            using (var con = new DbConnectionCreator("System.Data.SqlClient").Create())
+            {
+                con.Open();
+
+                var query = new EntityQueryLazy<Employee>(con, new FullEntityLoader<Employee>());
+
+                var result = query.Execute();
+                
+                Assert.AreEqual(9, result.Where(emp => !String.IsNullOrEmpty(emp.FirstName)).Count());
+
+                con.Close();
+            }
+
+        }
     }
 }
