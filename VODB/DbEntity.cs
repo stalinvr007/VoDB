@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using VODB.Caching;
-using VODB.Modules;
 using VODB.VirtualDataBase;
 
 namespace VODB
@@ -16,7 +12,7 @@ namespace VODB
     public abstract class DbEntity
     {
 
-        private Type _Type;
+        private readonly Type _Type;
 
         /// <summary>
         /// Gets the table.
@@ -28,7 +24,7 @@ namespace VODB
         {
             get
             {
-                Table t = null;
+                Table t;
                 while((t= TablesCache.GetTable(_Type)) == null)
                 {
                     Thread.Yield();
@@ -40,9 +36,9 @@ namespace VODB
         /// <summary>
         /// Initializes a new instance of the <see cref="DbEntity" /> class.
         /// </summary>
-        public DbEntity()
+        protected DbEntity()
         {
-            _Type = this.GetType();
+            _Type = GetType();
             TablesCache.AsyncAdd(
                 _Type,
                 new TableCreator(_Type)

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using VODB.VirtualDataBase;
 
@@ -73,7 +71,7 @@ namespace VODB.Caching
         /// <returns></returns>
         public static Table GetTable(Type type)
         {
-            Table value = null;
+            Table value;
 
             _tables.TryGetValue(type, out value);
 

@@ -52,8 +52,8 @@
     <Compile Include="Exceptions\ConnectionStringNotFoundException.cs" />
     <Compile Include="DbLayer\DbConnectionCreator.cs" />
     <Compile Include="DbLayer\IDbConnectionCreator.cs" />
-    <Compile Include="Extensions\ReflectionExtensions.cs" />
     <Compile Include="Modules\ConfigModule.cs" />
+    <Compile Include="ReflectionExtensions.cs" />
     <Compile Include="ThreadCollection.cs" />
     <Compile Include="VirtualDataBase\Field.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -73,6 +73,9 @@
   <ItemGroup>
     <None Include="App.Config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extensions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

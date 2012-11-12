@@ -1,10 +1,5 @@
 ﻿using Ninject;
 using Ninject.Modules;
-using Ninject.Parameters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using VODB.VirtualDataBase;
 
 namespace VODB.Modules
@@ -13,7 +8,7 @@ namespace VODB.Modules
     static class Configuration
     {
 
-        static IKernel kernel = new StandardKernel(new ConfigModule());
+        static readonly IKernel kernel = new StandardKernel(new ConfigModule());
 
         public static TType GetInstance<TType>()
         {

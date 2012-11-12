@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using VODB.Annotations;
+﻿using VODB.Annotations;
 
-
-namespace VODB.Tests.Models {
+namespace VODB.Tests.Models.Northwind {
     public class CustomerCustomerDemo : DbEntity {
 
         [DbKey("CustomerId")]
