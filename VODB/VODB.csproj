@@ -45,10 +45,13 @@
   <ItemGroup>
     <Compile Include="Annotations\Attributes.cs" />
     <Compile Include="Caching\TablesCache.cs" />
+    <Compile Include="Configuration.cs" />
     <Compile Include="DbEntity.cs" />
     <Compile Include="DbLayer\DbQueryCommand.cs" />
     <Compile Include="DbLayer\Loaders\EntityKeyLoader.cs" />
     <Compile Include="DbLayer\Loaders\EntityLoader.cs" />
+    <Compile Include="DbLayer\Loaders\FieldSetters\BasicFieldSetter.cs" />
+    <Compile Include="DbLayer\Loaders\FieldSetters\IFieldSetter.cs" />
     <Compile Include="Exceptions\FieldNotFoundException.cs" />
     <Compile Include="DbLayer\Loaders\FullEntityLoader.cs" />
     <Compile Include="Exceptions\UnableToCreateDbConnectionException.cs" />

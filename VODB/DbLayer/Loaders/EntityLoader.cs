@@ -54,10 +54,14 @@ namespace VODB.DbLayer.Loaders
         /// <returns></returns>
         protected Field SetValue(TModel entity, Field field, object value)
         {
-            if (field.FieldType != typeof(DbEntity))
+            foreach (var setter in Configuration.FieldSetters)
             {
-                field.SetValue(entity, value);
+                if (setter.CanHandle(field.FieldType))
+                {
+                    setter.SetValue(entity, field, value);
+                }
             }
+
             return field;
         } 
 
