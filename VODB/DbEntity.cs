@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using VODB.Caching;
 using VODB.VirtualDataBase;
@@ -45,16 +47,24 @@ namespace VODB
             );
         }
 
+        #region FOREIGN KEYS GETTER SETTER
+
+        readonly IDictionary<Type, Object> _ForeignEntities = new Dictionary<Type, Object>();
+
         protected TModel GetValue<TModel>()
+            where TModel : class
         {
-            return default(TModel);
+            object value;
+            _ForeignEntities.TryGetValue(typeof(TModel), out value);
+            return value as TModel;
         }
 
         protected void SetValue<TModel>(TModel value)
         {
-
+            _ForeignEntities[typeof(TModel)] = value;
         }
 
+        #endregion
     }
 
 }

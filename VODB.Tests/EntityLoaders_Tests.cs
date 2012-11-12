@@ -83,7 +83,7 @@ namespace VODB.Tests
                 Assert.AreEqual(21626, employee.Photo.Count());
                 Assert.AreEqual("Education includes a BA in psychology from Colorado State University in 1970.  She also completed \"The Art of the Cold Call.\"  Nancy is a member of Toastmasters International.", employee.Notes);
                 Assert.AreEqual("http://accweb/emmployees/davolio.bmp", employee.PhotoPath);
-                Assert.IsNotNull( employee.ReportsTo);
+                Assert.IsNotNull(employee.ReportsTo);
                 Assert.AreEqual(2, employee.ReportsTo.EmployeeId);
                 
             }
