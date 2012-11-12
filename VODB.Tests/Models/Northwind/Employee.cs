@@ -6,7 +6,8 @@ namespace VODB.Tests.Models.Northwind {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class Employees : DbEntity {
+    [DbTable("Employees")]
+    public sealed class Employee : DbEntity {
 
         [DbIdentity]
         public int EmployeeId { get; set; }
@@ -41,9 +42,11 @@ namespace VODB.Tests.Models.Northwind {
 
         public String Notes { get; set; }
 
+        public Byte[] Photo { get; set; }
+
         [DbBind("EmployeeId")]
-        public Employees ReportsTo {
-            get { return GetValue<Employees>(); }
+        public Employee ReportsTo {
+            get { return GetValue<Employee>(); }
             set { SetValue(value); }
         }
 

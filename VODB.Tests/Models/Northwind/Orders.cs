@@ -17,8 +17,8 @@ namespace VODB.Tests.Models.Northwind {
         }
 
         [DbField("EmployeeId")]
-        public Employees Employee {
-            get { return GetValue<Employees>(); }
+        public Employee Employee {
+            get { return GetValue<Employee>(); }
             set { SetValue(value); }
         }
 
