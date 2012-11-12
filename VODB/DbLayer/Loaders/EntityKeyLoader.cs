@@ -16,8 +16,6 @@ namespace VODB.DbLayer.Loaders
     {
 
 
-        
-
         /// <summary>
         /// Loads the specified entity.
         /// </summary>

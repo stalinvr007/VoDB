@@ -55,6 +55,7 @@
     <Compile Include="Exceptions\ConnectionStringNotFoundException.cs" />
     <Compile Include="DbLayer\DbConnectionCreator.cs" />
     <Compile Include="DbLayer\IDbConnectionCreator.cs" />
+    <Compile Include="Extensions\Helpers.cs" />
     <Compile Include="Modules\ConfigModule.cs" />
     <Compile Include="ReflectionExtensions.cs" />
     <Compile Include="ThreadCollection.cs" />
@@ -79,7 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DbLayer\DbQuery\" />
-    <Folder Include="Extensions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

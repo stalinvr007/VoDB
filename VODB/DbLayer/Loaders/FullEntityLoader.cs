@@ -22,7 +22,9 @@ namespace VODB.DbLayer.Loaders
         /// <returns></returns>
         public override void Load(TModel entity, DbDataReader reader)
         {
-            throw new NotImplementedException();
+            entity.Table.Fields
+                .Select(field => SetValue(entity, field, GetValue(reader, field.FieldName)))
+                .Count();
         }
     }
 }
