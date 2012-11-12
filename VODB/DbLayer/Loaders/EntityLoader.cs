@@ -52,13 +52,13 @@ namespace VODB.DbLayer.Loaders
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        protected Field SetValue(TModel entity, Field field, object value)
+        protected Field SetValue(TModel entity, Field field, object value, DbDataReader reader)
         {
             foreach (var setter in Configuration.FieldSetters)
             {
                 if (setter.CanHandle(field.FieldType))
                 {
-                    setter.SetValue(entity, field, value);
+                    setter.SetValue(entity, field, value, (f) => GetValue(reader, f.FieldName));
                     break;
                 }
             }
