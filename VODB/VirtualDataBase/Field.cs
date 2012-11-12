@@ -6,7 +6,7 @@ namespace VODB.VirtualDataBase
     /// <summary>
     /// Represents a DataBase Table Field.
     /// </summary>
-    internal sealed class Field
+    public sealed class Field
     {
 
         private readonly PropertyInfo _Prop;
