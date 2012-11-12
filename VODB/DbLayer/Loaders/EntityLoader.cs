@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using VODB.DbLayer.Exceptions;
 using VODB.VirtualDataBase;
+using VODB.Extensions;
 
 namespace VODB.DbLayer.Loaders
 {
@@ -44,8 +45,19 @@ namespace VODB.DbLayer.Loaders
 
         }
 
+        /// <summary>
+        /// Sets the field value.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <param name="field">The field.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
         protected Field SetValue(TModel entity, Field field, object value)
         {
+            if (field.FieldType != typeof(DbEntity))
+            {
+                field.SetValue(entity, value);
+            }
             return field;
         } 
 
