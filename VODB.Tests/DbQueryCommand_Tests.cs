@@ -15,7 +15,7 @@ namespace VODB.Tests
             {
                 con.Open();
 
-                var table = new Employees().Table;
+                var table = new Employee().Table;
                 var cmd = con.CreateCommand();
                 cmd.CommandText = table.CommandsHolder.Select;
 
