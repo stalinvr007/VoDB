@@ -48,6 +48,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="DbEntity.cs" />
     <Compile Include="DbLayer\DbQueryCommand.cs" />
+    <Compile Include="DbLayer\EntityQueryBaseLazy.cs" />
     <Compile Include="DbLayer\EntityQueryEager.cs" />
     <Compile Include="DbLayer\EntityQueryBase.cs" />
     <Compile Include="DbLayer\IQuery.cs" />

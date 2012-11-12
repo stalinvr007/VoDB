@@ -25,6 +25,7 @@ namespace VODB.Tests
 
                 Assert.AreEqual(9, query.Execute().Count());
 
+                con.Close();
             }
 
         }
@@ -45,6 +46,7 @@ namespace VODB.Tests
 
                 Assert.AreEqual(9, result.Where(emp => !String.IsNullOrEmpty(emp.FirstName)).Count());
 
+                con.Close();
             }
 
         }
