@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
+using VODB.DbLayer.Exceptions;
+using VODB.VirtualDataBase;
 
 namespace VODB.DbLayer.Loaders
 {
@@ -11,8 +13,43 @@ namespace VODB.DbLayer.Loaders
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     internal abstract class EntityLoader<TModel>
-        where TModel : class, new()
+        where TModel : DbEntity, new()
     {
+
+        #region FIELD GETTER SETTER
+
+        /// <summary>
+        /// Gets the field value from the datareader.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <param name="fieldName">Name of the field.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        protected object GetValue(DbDataReader reader, String fieldName)
+        {
+
+            try
+            {
+                return reader[fieldName];
+            }
+            catch (Exception ex)
+            {
+                var table = reader.GetSchemaTable();
+                if (!table.Columns.Contains(fieldName))
+                {
+                    throw new FieldNotFoundException(fieldName, table.TableName, ex);
+                }
+                throw ex;
+            }
+
+        }
+
+        protected Field SetValue(TModel entity, Field field, object value)
+        {
+            return field;
+        } 
+
+        #endregion
 
         /// <summary>
         /// Loads the specified entity.

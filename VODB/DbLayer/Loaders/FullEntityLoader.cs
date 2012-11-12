@@ -6,8 +6,12 @@ using System.Text;
 
 namespace VODB.DbLayer.Loaders
 {
+    /// <summary>
+    /// Loads all the data to the entity from the DataReader.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
     internal class FullEntityLoader<TModel> : EntityLoader<TModel>
-            where TModel : class, new()
+            where TModel : DbEntity, new()
     {
 
         /// <summary>

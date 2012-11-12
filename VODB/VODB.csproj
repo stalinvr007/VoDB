@@ -49,6 +49,7 @@
     <Compile Include="DbLayer\DbQueryCommand.cs" />
     <Compile Include="DbLayer\Loaders\EntityKeyLoader.cs" />
     <Compile Include="DbLayer\Loaders\EntityLoader.cs" />
+    <Compile Include="Exceptions\FieldNotFoundException.cs" />
     <Compile Include="DbLayer\Loaders\FullEntityLoader.cs" />
     <Compile Include="Exceptions\UnableToCreateDbConnectionException.cs" />
     <Compile Include="Exceptions\ConnectionStringNotFoundException.cs" />
