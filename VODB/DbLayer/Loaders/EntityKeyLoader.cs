@@ -1,17 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
 
-namespace VODB.DbLayer.DbQuery
+namespace VODB.DbLayer.Loaders
 {
-
     /// <summary>
-    /// Loads data into an entity from a DataReader.
+    /// Loads the key fields from the datareader.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
-    internal abstract class EntityLoader<TModel>
+    internal class EntityKeyLoader<TModel> : EntityLoader<TModel>
         where TModel : class, new()
     {
 
@@ -21,9 +20,9 @@ namespace VODB.DbLayer.DbQuery
         /// <param name="entity">The entity.</param>
         /// <param name="reader">The reader.</param>
         /// <returns></returns>
-        public abstract void Load(TModel entity, DbDataReader reader);
-
+        public override void Load(TModel entity, DbDataReader reader)
+        {
+            throw new NotImplementedException();
+        }
     }
-
-
 }

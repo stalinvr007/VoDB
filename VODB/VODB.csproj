@@ -47,7 +47,9 @@
     <Compile Include="Caching\TablesCache.cs" />
     <Compile Include="DbEntity.cs" />
     <Compile Include="DbLayer\DbQueryCommand.cs" />
-    <Compile Include="DbLayer\DbQuery\EntityConverter.cs" />
+    <Compile Include="DbLayer\Loaders\EntityKeyLoader.cs" />
+    <Compile Include="DbLayer\Loaders\EntityLoader.cs" />
+    <Compile Include="DbLayer\Loaders\FullEntityLoader.cs" />
     <Compile Include="Exceptions\UnableToCreateDbConnectionException.cs" />
     <Compile Include="Exceptions\ConnectionStringNotFoundException.cs" />
     <Compile Include="DbLayer\DbConnectionCreator.cs" />
@@ -75,6 +77,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="DbLayer\DbQuery\" />
     <Folder Include="Extensions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

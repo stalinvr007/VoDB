@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Linq;
+using System.Text;
+
+namespace VODB.DbLayer.Loaders
+{
+    /// <summary>
+    /// Loads data into an entity from a DataReader.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    internal abstract class EntityLoader<TModel>
+        where TModel : class, new()
+    {
+
+        /// <summary>
+        /// Loads the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <param name="reader">The reader.</param>
+        /// <returns></returns>
+        public abstract void Load(TModel entity, DbDataReader reader);
+
+    }
+
+
+}
