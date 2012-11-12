@@ -17,6 +17,11 @@ namespace VODB
         private readonly Type _Type;
 
         /// <summary>
+        /// Indicates that this entity has been loaded with database data.
+        /// </summary>
+        internal Boolean IsLoaded { get; set; }
+
+        /// <summary>
         /// Gets the table.
         /// </summary>
         /// <value>

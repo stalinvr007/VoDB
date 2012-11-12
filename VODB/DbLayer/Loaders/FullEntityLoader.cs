@@ -25,6 +25,8 @@ namespace VODB.DbLayer.Loaders
             entity.Table.Fields
                 .Select(field => SetValue(entity, field, GetValue(reader, field.FieldName), reader))
                 .Count();
+
+            entity.IsLoaded = true;
         }
     }
 }

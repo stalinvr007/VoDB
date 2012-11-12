@@ -19,7 +19,7 @@ namespace VODB.DbLayer
 
     }
 
-    internal sealed class DbQueryCommand
+    internal sealed class DbQueryCommand : IQuery<DbQueryResult>
     {
 
         private readonly DbCommand _Query;
@@ -37,7 +37,7 @@ namespace VODB.DbLayer
         }
 
 
-        public IEnumerable<DbQueryResult> Query()
+        public IEnumerable<DbQueryResult> Execute()
         {
             var reader = _Query.ExecuteReader();
 
