@@ -25,6 +25,7 @@ namespace VODB
         {
             FieldSetters = new List<IFieldSetter>()
             {
+                new DbEntityFieldSetter(),
                 new BasicFieldSetter()
             };
         }

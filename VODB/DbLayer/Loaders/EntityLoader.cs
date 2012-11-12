@@ -59,6 +59,7 @@ namespace VODB.DbLayer.Loaders
                 if (setter.CanHandle(field.FieldType))
                 {
                     setter.SetValue(entity, field, value);
+                    break;
                 }
             }
 

@@ -28,6 +28,14 @@ namespace VODB.VirtualDataBase
         public String FieldName { get; set; }
 
         /// <summary>
+        /// Gets or sets the binded to.
+        /// </summary>
+        /// <value>
+        /// The binded to.
+        /// </value>
+        public String BindedTo { get; set; }
+
+        /// <summary>
         /// Gets or sets the type of the field.
         /// </summary>
         /// <value>
