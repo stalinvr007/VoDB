@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
+using VODB.VirtualDataBase;
 
 namespace VODB.DbLayer.Loaders
 {
@@ -11,8 +12,11 @@ namespace VODB.DbLayer.Loaders
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     internal class EntityKeyLoader<TModel> : EntityLoader<TModel>
-        where TModel : class, new()
+        where TModel : DbEntity, new()
     {
+
+
+        
 
         /// <summary>
         /// Loads the specified entity.
@@ -22,7 +26,9 @@ namespace VODB.DbLayer.Loaders
         /// <returns></returns>
         public override void Load(TModel entity, DbDataReader reader)
         {
-            throw new NotImplementedException();
+            entity.Table.KeyFields
+                .Select(field => SetValue(entity, field, GetValue(reader, field.FieldName)))
+                .Count();
         }
     }
 }
