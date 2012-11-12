@@ -25,8 +25,8 @@ namespace VODB.VirtualDataBase.TSqlCommands
             sb.Append("Insert into [")
                 .Append(Table.TableName).Append("]");
 
-            StringBuilder sbFields = new StringBuilder("( ");
-            foreach (var field in Table.Fields.Where(field => { return !field.IsIdentity; }))
+            var sbFields = new StringBuilder("( ");
+            foreach (var field in Table.Fields.Where(field => !field.IsIdentity))
                 sbFields.Append("[").Append(field.FieldName).Append("], ");
 
             sbFields.Remove(sbFields.Length - 2, 2);

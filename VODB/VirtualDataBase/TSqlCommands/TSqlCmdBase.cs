@@ -21,7 +21,7 @@ namespace VODB.VirtualDataBase.TSqlCommands
         /// Initializes a new instance of the <see cref="TSqlCmdBase" /> class.
         /// </summary>
         /// <param name="table">The table.</param>
-        public TSqlCmdBase(Table table) {
+        protected TSqlCmdBase(Table table) {
             Table = table;
         }
 
@@ -30,7 +30,7 @@ namespace VODB.VirtualDataBase.TSqlCommands
         /// </summary>
         /// <returns></returns>
         public String BuildCmdStr() {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             BuildCmdStr(sb);
             return sb.ToString();
         }

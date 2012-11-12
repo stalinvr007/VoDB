@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using System.Text;
 using VODB.VirtualDataBase;
 
 namespace VODB.DbLayer
@@ -25,11 +24,12 @@ namespace VODB.DbLayer
 
         private readonly DbCommand _Query;
         private readonly Table _Table;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DbQueryCommand" /> class.
         /// </summary>
         /// <param name="query">The query.</param>
+        /// <param name="table"> </param>
         public DbQueryCommand(DbCommand query, Table table)
         {
             _Table = table;
