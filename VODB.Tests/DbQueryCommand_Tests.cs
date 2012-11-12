@@ -19,7 +19,7 @@ namespace VODB.Tests
                 var cmd = con.CreateCommand();
                 cmd.CommandText = table.CommandsHolder.Select;
 
-                var query = new DbQueryCommand(cmd, table);
+                var query = new DbQueryCommandEager(cmd, table);
 
                 Assert.AreEqual(9, query.Execute().Count());
 

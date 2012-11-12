@@ -19,7 +19,7 @@ namespace VODB.DbLayer
 
     }
 
-    internal sealed class DbQueryCommand : IQuery<DbQueryResult>
+    internal sealed class DbQueryCommandEager : IQuery<DbQueryResult>
     {
 
         private readonly DbCommand _Query;
@@ -30,7 +30,7 @@ namespace VODB.DbLayer
         /// </summary>
         /// <param name="query">The query.</param>
         /// <param name="table"> </param>
-        public DbQueryCommand(DbCommand query, Table table)
+        public DbQueryCommandEager(DbCommand query, Table table)
         {
             _Table = table;
             _Query = query;
