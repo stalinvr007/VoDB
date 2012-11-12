@@ -25,7 +25,8 @@ namespace VODB.DbLayer.Loaders.TypeConverter
         /// <param name="entity">The entity.</param>
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
-        void SetValue(Object entity, Field field, Object value);
+        /// <param name="getValueFromReader">The get value from reader.</param>
+        void SetValue(Object entity, Field field, Object value, Func<Field, Object> getValueFromReader);
 
     }
 }

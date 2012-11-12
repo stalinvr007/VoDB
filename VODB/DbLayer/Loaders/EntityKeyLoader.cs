@@ -25,7 +25,7 @@ namespace VODB.DbLayer.Loaders
         public override void Load(TModel entity, DbDataReader reader)
         {
             entity.Table.KeyFields
-                .Select(field => SetValue(entity, field, GetValue(reader, field.FieldName)))
+                .Select(field => SetValue(entity, field, GetValue(reader, field.FieldName), reader))
                 .Count();
         }
     }
