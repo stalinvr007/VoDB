@@ -21,7 +21,7 @@ namespace VODB.Tests
 
                 var query = new DbQueryCommand(cmd, table);
 
-                Assert.AreEqual(9, query.Query().Count());
+                Assert.AreEqual(9, query.Execute().Count());
 
 
             }
