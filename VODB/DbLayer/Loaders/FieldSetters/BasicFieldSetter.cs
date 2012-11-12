@@ -30,7 +30,10 @@ namespace VODB.DbLayer.Loaders.TypeConverter
         /// <param name="getValueFromReader">The get value from reader.</param>
         public void SetValue(Object entity, Field field, Object value, Func<Field, Object> getValueFromReader)
         {
-            field.SetValue(entity, value);
+            if (value != DBNull.Value)
+            {
+                field.SetValue(entity, value);
+            }
         }
     }
 }

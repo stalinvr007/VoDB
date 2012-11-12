@@ -2,6 +2,8 @@
 using VODB.DbLayer;
 using System.Linq;
 using VODB.Tests.Models.Northwind;
+using VODB.DbLayer.Loaders;
+using System;
 
 namespace VODB.Tests
 {
@@ -23,6 +25,25 @@ namespace VODB.Tests
 
                 Assert.AreEqual(9, query.Execute().Count());
 
+            }
+
+        }
+
+
+        [TestMethod]
+        public void GetEmployeesEntities()
+        {
+            using (var con = new DbConnectionCreator("System.Data.SqlClient").Create())
+            {
+                con.Open();
+
+                var query = new EntityQueryEager<Employee>(con, new FullEntityLoader<Employee>());
+
+                var result = query.Execute();
+
+                Assert.AreEqual(9, result.Count());
+
+                Assert.AreEqual(9, result.Where(emp => !String.IsNullOrEmpty(emp.FirstName)).Count());
 
             }
 
