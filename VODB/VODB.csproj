@@ -48,9 +48,9 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="DbEntity.cs" />
     <Compile Include="DbLayer\DbCommands\DbCommandFactory.cs" />
-    <Compile Include="DbLayer\DbCommands\DbEntityCommand.cs" />
-    <Compile Include="DbLayer\DbCommands\DbEntitySelectByIdCommand.cs" />
-    <Compile Include="DbLayer\DbCommands\DbEntitySelectCommand.cs" />
+    <Compile Include="DbLayer\DbCommands\DbEntityCommandFactory.cs" />
+    <Compile Include="DbLayer\DbCommands\DbEntitySelectByIdCommandFactory.cs" />
+    <Compile Include="DbLayer\DbCommands\DbEntitySelectCommandFactory.cs" />
     <Compile Include="DbLayer\DbCommands\IDbCommandFactory.cs" />
     <Compile Include="DbLayer\DbExecuters\DbCommandExecuterBase.cs" />
     <Compile Include="DbLayer\DbExecuters\DbQueryResult.cs" />
