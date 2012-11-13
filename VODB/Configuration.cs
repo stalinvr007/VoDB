@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using VODB.DbLayer.DbCommands.DbParameterSetters;
 using VODB.DbLayer.Loaders.TypeConverter;
 
 namespace VODB
@@ -20,6 +21,14 @@ namespace VODB
         /// </value>
         public static ICollection<IFieldSetter> FieldSetters { get; private set; }
 
+        /// <summary>
+        /// Gets the parameter setters. Used to set data into DbParameters.
+        /// </summary>
+        /// <value>
+        /// The parameter setters.
+        /// </value>
+        public static ICollection<IParameterSetter> ParameterSetters { get; private set; }
+
 
         static Configuration()
         {
@@ -27,6 +36,14 @@ namespace VODB
             {
                 new DbEntityFieldSetter(),
                 new BasicFieldSetter()
+            };
+
+            ParameterSetters = new List<IParameterSetter>()
+            {
+                new BasicParameterSetter(),
+                new DbEntityParameterSetter(),
+                new DateTimeParameterSetter(),
+                new ByteArrayParameterSetter()                
             };
         }
 
