@@ -5,6 +5,17 @@ using VODB.Exceptions;
 
 namespace VODB.DbLayer.DbExecuters
 {
+    internal sealed class DbCommandNonQueryExecuter : DbCommandExecuterBase<int>
+    {
+        public DbCommandNonQueryExecuter(IDbCommandFactory commandFactory)
+            : base(commandFactory)
+        { }
+
+        protected override int Execute(int cmdResult)
+        {
+            return cmdResult;
+        }
+    }
     internal abstract class DbCommandExecuterBase<TResult> : ICommandExecuter<TResult>
     {
         readonly IDbCommandFactory _commandFactory;

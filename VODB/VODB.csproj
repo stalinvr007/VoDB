@@ -49,6 +49,7 @@
     <Compile Include="DbEntity.cs" />
     <Compile Include="DbLayer\DbCommands\DbCommandFactory.cs" />
     <Compile Include="DbLayer\DbCommands\DbEntityCommandFactory.cs" />
+    <Compile Include="DbLayer\DbCommands\DbEntityInsertCommandFactory.cs" />
     <Compile Include="DbLayer\DbCommands\DbEntitySelectByIdCommandFactory.cs" />
     <Compile Include="DbLayer\DbCommands\DbEntitySelectCommandFactory.cs" />
     <Compile Include="DbLayer\DbCommands\IDbCommandFactory.cs" />
@@ -65,6 +66,9 @@
     <Compile Include="DbLayer\Loaders\FieldSetters\BasicFieldSetter.cs" />
     <Compile Include="DbLayer\Loaders\FieldSetters\DbEntityFieldSetter.cs" />
     <Compile Include="DbLayer\Loaders\FieldSetters\IFieldSetter.cs" />
+    <Compile Include="ISession.cs" />
+    <Compile Include="Session.cs" />
+    <Compile Include="DbLayer\SqlConnectionCreator.cs" />
     <Compile Include="Exceptions\UnableToExecuteNonQueryException.cs" />
     <Compile Include="Exceptions\UnableToExecuteQueryException.cs" />
     <Compile Include="Exceptions\UnableToInstantiateTypeException.cs" />
@@ -86,6 +90,7 @@
     <Compile Include="VirtualDataBase\Table.cs" />
     <Compile Include="VirtualDataBase\TableCreator.cs" />
     <Compile Include="VirtualDataBase\TSqlCommandHolder.cs" />
+    <Compile Include="Exceptions\EntityKeysNotFoundException.cs" />
     <Compile Include="VirtualDataBase\TSqlCommands\TDelete.cs" />
     <Compile Include="VirtualDataBase\TSqlCommands\TInsert.cs" />
     <Compile Include="VirtualDataBase\TSqlCommands\TSelect.cs" />

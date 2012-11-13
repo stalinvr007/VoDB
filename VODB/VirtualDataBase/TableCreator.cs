@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using VODB.Annotations;
 
 namespace VODB.VirtualDataBase
@@ -27,14 +28,21 @@ namespace VODB.VirtualDataBase
         {
             var table = new Table();
 
-            var threads = new ThreadCollection(
-                () => table.TableName = GetTableName(_EntityType),
-                () => table.Fields = GetTableFields(_EntityType),
-                () => table.KeyFields = GetTableKeyFields(_EntityType),
-                () => table.CommandsHolder = new TSqlCommandHolder(table));
+            var t1 = new Task<String>(() => GetTableName(_EntityType));
+            var t2 = new Task<IEnumerable<Field>>(() => GetTableFields(_EntityType));
+            var t3 = new Task<IEnumerable<Field>>(() => GetTableKeyFields(_EntityType));
+            var t4 = new Task<ITSqlCommandHolder>(() => new TSqlCommandHolder(table));
+            
+            t1.Start();
+            t2.Start();
+            t3.Start();
+            
+            table.TableName = t1.Result;
+            table.Fields = t2.Result;
+            table.KeyFields = t3.Result;
 
-            threads.StartAll();
-            threads.JoinAll();
+            t4.Start();
+            table.CommandsHolder = t4.Result;
 
             return table;
         }

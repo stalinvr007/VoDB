@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using VODB.Exceptions;
 
 
 namespace VODB.VirtualDataBase.TSqlCommands
@@ -31,8 +32,14 @@ namespace VODB.VirtualDataBase.TSqlCommands
                 " [{0}] = @Old{0} and" : // Just for update when using a table with key fields only.
                 " [{0}] = @{0} and";
 
+            
             foreach (var field in Table.KeyFields)
                 sb.AppendFormat(mask, field.FieldName);
+
+            if (sb.Length == 0)
+            {
+                throw new EntityKeysNotFoundException(Table.TableName);
+            }
 
             int sepLength = " and".Length;
             sb.Remove(sb.Length - sepLength, sepLength);

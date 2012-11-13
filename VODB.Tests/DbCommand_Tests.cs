@@ -10,7 +10,7 @@ using VODB.DbLayer.DbCommands;
 namespace VODB.Tests
 {
     [TestClass]
-    public class DbQueryCommand_Tests
+    public class DbCommand_Tests
     {
         [TestMethod]
         public void GetEmployeesData()
@@ -92,6 +92,59 @@ namespace VODB.Tests
                 Assert.AreEqual(1, result.Count());
 
                 EntitiesAsserts.Assert_Employee_1(result.First());
+
+                con.Close();
+            }
+
+        }
+
+        [TestMethod]
+        public void GetEmployeesById_Eager_NoIdSupplied()
+        {
+            using (var con = new DbConnectionCreator("System.Data.SqlClient").Create())
+            {
+                con.Open();
+
+                var factory = new DbEntitySelectByIdCommandFactory<Employee>(con,
+                    new Employee());
+
+                var query = new DbEntityQueryExecuterEager<Employee>(factory, new FullEntityLoader<Employee>());
+
+                var result = query.Execute();
+
+                Assert.AreEqual(0, result.Count());
+
+                con.Close();
+            }
+
+        }
+
+        [TestMethod]
+        public void InsertEmployee()
+        {
+            using (var con = new DbConnectionCreator("System.Data.SqlClient").Create())
+            {
+                con.Open();
+
+                var trans = con.BeginTransaction();
+
+                try
+                {
+                    var factory = new DbEntityInsertCommandFactory<Employee>(con,
+                        new Employee
+                        {
+
+                        }
+                    );
+
+                    var query = new DbCommandNonQueryExecuter(factory);
+
+                    Assert.AreEqual(1, query.Execute());
+                }
+                finally
+                {
+                    trans.Rollback();
+                }
 
                 con.Close();
             }

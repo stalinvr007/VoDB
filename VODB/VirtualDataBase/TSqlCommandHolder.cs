@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using VODB.VirtualDataBase.TSqlCommands;
 
 namespace VODB.VirtualDataBase
@@ -7,19 +8,15 @@ namespace VODB.VirtualDataBase
     internal sealed class TSqlCommandHolder : ITSqlCommandHolder
     {
         private readonly Table _table;
-        private string _select;
-        private string _update;
-        private string _selectById;
-        private string _insert;
-        private string _delete;
         private string _count;
-        
-        private Thread _th_select;
-        private Thread _th_selectById;
-        private Thread _th_update;
-        private Thread _th_insert;
-        private Thread _th_delete;
 
+        private Task<String> _th_select;
+        private Task<String> _th_selectById;
+        private Task<String> _th_update;
+        private Task<String> _th_insert;
+        private Task<String> _th_delete;
+
+        private Exception exceptionCatcher;
 
         public TSqlCommandHolder(Table table)
         {
@@ -28,33 +25,41 @@ namespace VODB.VirtualDataBase
         }
 
         private void RunBuildCommandThreads()
-        {    
-            _th_select = new Thread(() => _select = new TSelect(_table).BuildCmdStr());
-            _th_selectById = new Thread(() => _selectById = new TSelectById(_table).BuildCmdStr());
-            _th_update = new Thread(() => _update = new TUpdate(_table).BuildCmdStr());
-            _th_insert = new Thread(() => _insert = new TInsert(_table).BuildCmdStr());
-            _th_delete = new Thread(() => _delete = new TDelete(_table).BuildCmdStr());
+        {
+            _th_select = new Task<String>(() => new TSelect(_table).BuildCmdStr());
+            _th_selectById = new Task<String>(() => new TSelectById(_table).BuildCmdStr());
+            _th_update = new Task<String>(() => new TUpdate(_table).BuildCmdStr());
+            _th_insert = new Task<String>(() => new TInsert(_table).BuildCmdStr());
+            _th_delete = new Task<String>(() => new TDelete(_table).BuildCmdStr());
             _count = string.Format("Select count(*) From [{0}]", _table.TableName);
 
             new ThreadCollection(_th_select, _th_selectById, _th_update, _th_insert, _th_delete)
                 .StartAll();
         }
-
-        private  static void Wait(ref Thread thread)
+        
+        private void Wait(ref Thread thread)
         {
-            if (thread != null)
+            if (exceptionCatcher != null)
             {
-                thread.Join();
+                var ex = exceptionCatcher;
+                exceptionCatcher = null;
+                throw ex;
             }
-            thread = null;
+            else
+            {
+                if (thread != null)
+                {
+                    thread.Join();
+                }
+                thread = null;
+            }
         }
-
+        
         public String Select
         {
             get
             {
-                Wait(ref _th_select);
-                return _select;
+                return _th_select.Result;
             }
         }
 
@@ -62,8 +67,7 @@ namespace VODB.VirtualDataBase
         {
             get
             {
-                Wait(ref _th_selectById); 
-                return _selectById;
+                return _th_selectById.Result;
             }
         }
 
@@ -71,8 +75,7 @@ namespace VODB.VirtualDataBase
         {
             get
             {
-                Wait(ref _th_update); 
-                return _update;
+                return _th_update.Result;
             }
         }
 
@@ -80,8 +83,7 @@ namespace VODB.VirtualDataBase
         {
             get
             {
-                Wait(ref _th_insert); 
-                return _insert;
+                return _th_insert.Result;
             }
         }
 
@@ -89,8 +91,7 @@ namespace VODB.VirtualDataBase
         {
             get
             {
-                Wait(ref _th_delete); 
-                return _delete;
+                return _th_delete.Result;
             }
         }
 
