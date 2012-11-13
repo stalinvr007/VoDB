@@ -72,6 +72,9 @@
     <Compile Include="DbLayer\Loaders\FieldSetters\DbEntityFieldSetter.cs" />
     <Compile Include="DbLayer\Loaders\FieldSetters\IFieldSetter.cs" />
     <Compile Include="EagerSession.cs" />
+    <Compile Include="EntityValidators\IEntityValidator.cs" />
+    <Compile Include="EntityValidators\RequiredFieldsValidator.cs" />
+    <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Exceptions\FieldSetterNotFoundException.cs" />
     <Compile Include="Exceptions\ParameterSetterNotFoundException.cs" />
     <Compile Include="ISession.cs" />

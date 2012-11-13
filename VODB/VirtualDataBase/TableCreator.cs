@@ -61,6 +61,7 @@ namespace VODB.VirtualDataBase
 
         private static Field GetField(PropertyInfo info)
         {
+            
             if (info.GetCustomAttributes(true).Count() == 0)
             {
                 return new Field(info)
@@ -69,7 +70,8 @@ namespace VODB.VirtualDataBase
                     FieldType = info.PropertyType,
                     IsKey = false,
                     IsIdentity = false,
-                    BindedTo = GetBindedTo(info)
+                    BindedTo = GetBindedTo(info),
+                    IsRequired = info.GetAttribute<DbRequiredAttribute>() != null
                 };
             }
 
@@ -82,7 +84,8 @@ namespace VODB.VirtualDataBase
                     FieldType = info.PropertyType,
                     IsKey = false,
                     IsIdentity = false,
-                    BindedTo = GetBindedTo(info)
+                    BindedTo = GetBindedTo(info),
+                    IsRequired = info.GetAttribute<DbRequiredAttribute>() != null
                 };
             }
 
@@ -92,7 +95,8 @@ namespace VODB.VirtualDataBase
                 FieldType = info.PropertyType,
                 IsKey = IsKeyField(info),
                 IsIdentity = IsIdentityField(info),
-                BindedTo = GetBindedTo(info)
+                BindedTo = GetBindedTo(info),
+                IsRequired = info.GetAttribute<DbRequiredAttribute>() != null
             };
         }
 

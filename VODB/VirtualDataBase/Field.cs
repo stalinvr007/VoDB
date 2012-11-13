@@ -44,7 +44,7 @@ namespace VODB.VirtualDataBase
         public Type FieldType { get; set; }
 
         /// <summary>
-        /// Gets or sets the is key.
+        /// Gets or sets isKey flag.
         /// </summary>
         /// <value>
         /// The is key.
@@ -52,12 +52,20 @@ namespace VODB.VirtualDataBase
         public Boolean IsKey { get; set; }
 
         /// <summary>
-        /// Gets or sets the is identity.
+        /// Gets or sets isIdentity flag.
         /// </summary>
         /// <value>
         /// The is identity.
         /// </value>
         public Boolean IsIdentity { get; set; }
+
+        /// <summary>
+        /// Gets or sets isRequired flag.
+        /// </summary>
+        /// <value>
+        /// The is required.
+        /// </value>
+        public Boolean IsRequired { get; set; }
 
         /// <summary>
         /// Gets or sets the value.
