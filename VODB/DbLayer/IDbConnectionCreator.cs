@@ -2,7 +2,7 @@
 
 namespace VODB.DbLayer
 {
-    internal interface IDbConnectionCreator
+    public interface IDbConnectionCreator
     {
 
         DbConnection Create();

@@ -2,23 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace VODB
 {
     internal sealed class ThreadCollection
     {
-        readonly IEnumerable<Thread> _threads = new List<Thread>();
+        readonly IEnumerable<Task> _threads = new List<Task>();
 
-        public ThreadCollection(params Thread[] threads)
+        public ThreadCollection(params Task[] tasks)
         {
-            _threads = threads.ToList();
+            _threads = tasks;
         }
-
-        public ThreadCollection(params Action[] actions)
-        {
-            _threads = actions.Select(a => new Thread(() => a())).ToList();
-        }
-
+        
         public void StartAll()
         {
             foreach (var thread in _threads)
@@ -31,7 +27,7 @@ namespace VODB
         {
             foreach (var thread in _threads)
             {
-                thread.Join();
+                thread.Wait();
             }
         }
 

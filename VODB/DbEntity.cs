@@ -21,6 +21,8 @@ namespace VODB
         /// </summary>
         internal Boolean IsLoaded { get; set; }
 
+        private Table _table;
+
         /// <summary>
         /// Gets the table.
         /// </summary>
@@ -31,12 +33,16 @@ namespace VODB
         {
             get
             {
-                Table t;
-                while((t= TablesCache.GetTable(_Type)) == null)
+                if (_table != null)
+                {
+                    return _table;
+                }
+
+                while ((_table = TablesCache.GetTable(_Type)) == null)
                 {
                     Thread.Yield();
                 }
-                return t;
+                return _table;
             }
         }
 

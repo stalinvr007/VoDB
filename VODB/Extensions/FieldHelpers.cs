@@ -98,6 +98,12 @@ namespace VODB.Extensions
             var param = dbCommand.CreateParameter();
             param.ParameterName = field.FieldName;
             param.Value = field.GetValue(entity);
+            
+            if (param.Value == null)
+            {
+                param.Value = DBNull.Value;
+            }
+
             dbCommand.Parameters.Add(param);
         }
 

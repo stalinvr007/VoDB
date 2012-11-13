@@ -5,6 +5,7 @@ using System.Threading;
 using System.Linq;
 using VODB.Caching;
 using VODB.Annotations;
+using VODB.Exceptions;
 
 namespace VODB.Tests
 {
@@ -25,6 +26,7 @@ namespace VODB.Tests
 
     class AutoCachedEntity : DbEntity
     {
+        [DbKey]
         public String Name { get; set; }
 
         public int Age { get; set; }
@@ -32,6 +34,7 @@ namespace VODB.Tests
 
     class Entity
     {
+
         public String Name { get; set; }
 
         public int Age { get; set; }
@@ -40,7 +43,7 @@ namespace VODB.Tests
     [TestClass]
     public class TablesCreator_Tests
     {
-        [TestMethod]
+        [TestMethod, ExpectedException(typeof(AggregateException))]
         public void CreateTable_Test()
         {
             var tableCreator = new TableCreator(typeof(Entity));
@@ -49,6 +52,8 @@ namespace VODB.Tests
 
             Assert.IsNotNull(table.KeyFields);
             Assert.IsNotNull(table.Fields);
+
+            Assert.IsNotNull(table.CommandsHolder.Update);
 
             Assert.AreEqual(2, table.Fields.Count());
         }
