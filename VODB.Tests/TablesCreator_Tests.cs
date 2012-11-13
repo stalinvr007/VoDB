@@ -19,7 +19,7 @@ namespace VODB.Tests
         [DbKey]
         public String Name { get; set; }
 
-        [DbField("Age1")]
+        [DbField("Age1"), DbRequired]
         public int Age { get; set; }
 
     }
@@ -126,6 +126,10 @@ namespace VODB.Tests
             Assert.AreEqual("Id", fields[0].FieldName);
             Assert.AreEqual("Name", fields[1].FieldName);
             Assert.AreEqual("Age1", fields[2].FieldName);
+
+            Assert.IsFalse(fields[0].IsRequired);
+            Assert.IsFalse(fields[1].IsRequired);
+            Assert.IsTrue(fields[2].IsRequired);
 
             Assert.AreEqual(typeof(String), fields[0].FieldType);
             Assert.AreEqual(typeof(String), fields[1].FieldType);

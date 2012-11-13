@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using VODB.DbLayer.DbCommands.DbParameterSetters;
 using VODB.DbLayer.Loaders.TypeConverter;
+using VODB.EntityValidators;
 
 namespace VODB
 {
@@ -12,6 +13,14 @@ namespace VODB
     /// </summary>
     public static class Configuration
     {
+
+        /// <summary>
+        /// Gets the entity validators.
+        /// </summary>
+        /// <value>
+        /// The entity validators.
+        /// </value>
+        public static ICollection<IEntityValidator> EntityValidators { get; private set; }
 
         /// <summary>
         /// Gets the field setters.
@@ -32,10 +41,15 @@ namespace VODB
 
         static Configuration()
         {
+            EntityValidators = new List<IEntityValidator>()
+            {
+
+            };
+
             FieldSetters = new List<IFieldSetter>()
             {
-                new DbEntityFieldSetter(),
-                new BasicFieldSetter()
+                new BasicFieldSetter(),
+                new DbEntityFieldSetter()                
             };
 
             ParameterSetters = new List<IParameterSetter>()

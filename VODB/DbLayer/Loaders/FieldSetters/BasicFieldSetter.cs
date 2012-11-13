@@ -18,7 +18,10 @@ namespace VODB.DbLayer.Loaders.TypeConverter
         /// <returns></returns>
         public Boolean CanHandle(Type type)
         {
-            return true;
+            return type.IsPrimitive || 
+                typeof(String).IsAssignableFrom(type) ||
+                typeof(DateTime).IsAssignableFrom(type) ||
+                typeof(Byte[]).IsAssignableFrom(type);
         }
 
         /// <summary>
