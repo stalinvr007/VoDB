@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 namespace VODB
 {
 
-    interface ISession
+    public interface ISession
     {
         Transaction BeginTransaction();
+
+        IEnumerable<TEntity> GetAll<TEntity>() 
+            where TEntity : DbEntity, new();
     }
 
     interface ISessionInternal
