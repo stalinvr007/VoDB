@@ -1,36 +1,22 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using VODB.VirtualDataBase;
 
-namespace VODB.DbLayer
+namespace VODB.DbLayer.DbExecuters
 {
-
-    internal sealed class DbQueryResult
-    {
-
-        public DbQueryResult(IEnumerable<Object> values)
-        {
-            Values = values;
-        }
-
-        public IEnumerable<Object> Values { get; private set; }
-
-    }
-
-    internal sealed class DbQueryCommandEager : IQuery<DbQueryResult>
+    internal sealed class DbQueryExecuterCommandEager : IQueryExecuter<DbQueryResult>
     {
 
         private readonly DbCommand _Query;
         private readonly Table _Table;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DbQueryCommand" /> class.
+        /// Initializes a new instance of the <see cref="DbQueryExecuterCommandEager" /> class.
         /// </summary>
         /// <param name="query">The query.</param>
         /// <param name="table"> </param>
-        public DbQueryCommandEager(DbCommand query, Table table)
+        public DbQueryExecuterCommandEager(DbCommand query, Table table)
         {
             _Table = table;
             _Query = query;
@@ -50,7 +36,7 @@ namespace VODB.DbLayer
 
         private IEnumerable<object> GetValues(IEnumerable<Field> fields, DbDataReader reader)
         {
-            return fields.Select(f => reader[f.FieldName]).ToList();
+            return fields.Select(f => reader[(string) f.FieldName]).ToList();
         }
 
     }

@@ -1,23 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using VODB.DbLayer.Loaders;
 using VODB.Exceptions;
 
-namespace VODB.DbLayer
+namespace VODB.DbLayer.DbExecuters
 {
     /// <summary>
     /// Implements a base for a Query that returns Entities.
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    internal abstract class EntityQueryBase<TEntity> : IQuery<TEntity>
+    internal abstract class DbEntityQueryExecuterBase<TEntity> : IQueryExecuter<TEntity>
         where TEntity : DbEntity, new()
     {
         private readonly DbConnection _Connection;
 
-        public EntityQueryBase(DbConnection connection)
+        protected DbEntityQueryExecuterBase(DbConnection connection)
         {
             _Connection = connection;
         }

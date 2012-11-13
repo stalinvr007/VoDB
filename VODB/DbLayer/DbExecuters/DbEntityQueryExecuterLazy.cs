@@ -1,24 +1,21 @@
-using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
 using VODB.DbLayer.Loaders;
-using VODB.Exceptions;
 
-namespace VODB.DbLayer
+namespace VODB.DbLayer.DbExecuters
 {
-    internal class EntityQueryLazy<TEntity> : EntityQueryBase<TEntity>
+    internal class DbEntityQueryExecuterLazy<TEntity> : DbEntityQueryExecuterBase<TEntity>
             where TEntity : DbEntity, new()
     {
 
         private readonly EntityLoader<TEntity> _Loader;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EntityQueryLazy{TEntity}" /> class.
+        /// Initializes a new instance of the <see cref="DbDbEntityQueryExecuterLazy{TEntity}" /> class.
         /// </summary>
         /// <param name="connection">The connection.</param>
-        public EntityQueryLazy(DbConnection connection, EntityLoader<TEntity> loader)
+        /// <param name="loader">The loader.</param>
+        public DbEntityQueryExecuterLazy(DbConnection connection, EntityLoader<TEntity> loader)
             : base(connection)
         {
             _Loader = loader;
@@ -34,7 +31,7 @@ namespace VODB.DbLayer
             {
                 while (reader.Read())
                 {
-                    TEntity newTEntity = new TEntity();
+                    var newTEntity = new TEntity();
 
                     _Loader.Load(newTEntity, reader);
 

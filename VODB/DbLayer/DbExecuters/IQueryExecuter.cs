@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace VODB.DbLayer
+namespace VODB.DbLayer.DbExecuters
 {
     /// <summary>
     /// Represents a query to be executed against the database.
     /// </summary>
     /// <typeparam name="TResult">The type of the result.</typeparam>
-    interface IQuery<TResult>
+    interface IQueryExecuter<out TResult>
     {
 
         /// <summary>

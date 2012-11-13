@@ -47,16 +47,25 @@
     <Compile Include="Caching\TablesCache.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="DbEntity.cs" />
-    <Compile Include="DbLayer\DbQueryCommand.cs" />
-    <Compile Include="DbLayer\EntityQueryLazy.cs" />
-    <Compile Include="DbLayer\EntityQueryEager.cs" />
-    <Compile Include="DbLayer\EntityQueryBase.cs" />
-    <Compile Include="DbLayer\IQuery.cs" />
+    <Compile Include="DbLayer\DbCommands\DbCommandFactory.cs" />
+    <Compile Include="DbLayer\DbCommands\DbEntityCommand.cs" />
+    <Compile Include="DbLayer\DbCommands\DbEntitySelectByIdCommand.cs" />
+    <Compile Include="DbLayer\DbCommands\DbEntitySelectCommand.cs" />
+    <Compile Include="DbLayer\DbCommands\IDbCommandFactory.cs" />
+    <Compile Include="DbLayer\DbExecuters\DbCommandExecuterBase.cs" />
+    <Compile Include="DbLayer\DbExecuters\DbQueryResult.cs" />
+    <Compile Include="DbLayer\DbExecuters\DbEntityQueryExecuterLazy.cs" />
+    <Compile Include="DbLayer\DbExecuters\DbEntityQueryExecuterEager.cs" />
+    <Compile Include="DbLayer\DbExecuters\DbEntityQueryExecuterBase.cs" />
+    <Compile Include="DbLayer\DbExecuters\ICommandExecuter.cs" />
+    <Compile Include="DbLayer\DbExecuters\IQueryExecuter.cs" />
+    <Compile Include="DbLayer\DbExecuters\DbQueryExecuterCommandEager.cs" />
     <Compile Include="DbLayer\Loaders\EntityKeyLoader.cs" />
     <Compile Include="DbLayer\Loaders\EntityLoader.cs" />
     <Compile Include="DbLayer\Loaders\FieldSetters\BasicFieldSetter.cs" />
     <Compile Include="DbLayer\Loaders\FieldSetters\DbEntityFieldSetter.cs" />
     <Compile Include="DbLayer\Loaders\FieldSetters\IFieldSetter.cs" />
+    <Compile Include="Exceptions\UnableToExecuteNonQueryException.cs" />
     <Compile Include="Exceptions\UnableToExecuteQueryException.cs" />
     <Compile Include="Exceptions\UnableToInstantiateTypeException.cs" />
     <Compile Include="Exceptions\FieldNotFoundException.cs" />
@@ -88,9 +97,7 @@
     <None Include="App.Config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DbLayer\DbQuery\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

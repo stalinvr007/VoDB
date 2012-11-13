@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.DbLayer;
 using System.Linq;
+using VODB.DbLayer.DbExecuters;
 using VODB.Tests.Models.Northwind;
 using VODB.DbLayer.Loaders;
 using System;
@@ -21,7 +22,7 @@ namespace VODB.Tests
                 var cmd = con.CreateCommand();
                 cmd.CommandText = table.CommandsHolder.Select;
 
-                var query = new DbQueryCommandEager(cmd, table);
+                var query = new DbQueryExecuterCommandEager(cmd, table);
 
                 Assert.AreEqual(9, query.Execute().Count());
 
@@ -38,7 +39,7 @@ namespace VODB.Tests
             {
                 con.Open();
 
-                var query = new EntityQueryEager<Employee>(con, new FullEntityLoader<Employee>());
+                var query = new DbEntityQueryExecuterEager<Employee>(con, new FullEntityLoader<Employee>());
 
                 var result = query.Execute();
 
@@ -58,7 +59,7 @@ namespace VODB.Tests
             {
                 con.Open();
 
-                var query = new EntityQueryLazy<Employee>(con, new FullEntityLoader<Employee>());
+                var query = new DbEntityQueryExecuterLazy<Employee>(con, new FullEntityLoader<Employee>());
 
                 var result = query.Execute();
                 

@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
 using VODB.DbLayer.Loaders;
-using VODB.Exceptions;
 
-namespace VODB.DbLayer
+namespace VODB.DbLayer.DbExecuters
 {
 
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    internal class EntityQueryEager<TEntity> : EntityQueryBase<TEntity>
+    internal class DbEntityQueryExecuterEager<TEntity> : DbEntityQueryExecuterBase<TEntity>
         where TEntity : DbEntity, new()
     {
         private readonly EntityLoader<TEntity> _Loader;
@@ -22,7 +18,7 @@ namespace VODB.DbLayer
         /// Initializes a new instance of the <see cref="EntityQuery{TEntity}" /> class.
         /// </summary>
         /// <param name="connection">The connection.</param>
-        public EntityQueryEager(DbConnection connection, EntityLoader<TEntity> loader)
+        public DbEntityQueryExecuterEager(DbConnection connection, EntityLoader<TEntity> loader)
             : base(connection)
         {
             _Loader = loader;
