@@ -28,21 +28,7 @@ namespace VODB.DbLayer.Loaders
         /// <exception cref="System.NotImplementedException"></exception>
         protected object GetValue(DbDataReader reader, String fieldName)
         {
-
-            try
-            {
-                return reader[fieldName];
-            }
-            catch (Exception ex)
-            {
-                var table = reader.GetSchemaTable();
-                if (!table.Columns.Contains(fieldName))
-                {
-                    throw new FieldNotFoundException(fieldName, table.TableName, ex);
-                }
-                throw ex;
-            }
-
+            return reader.GetValue(fieldName);
         }
 
         /// <summary>
@@ -54,16 +40,7 @@ namespace VODB.DbLayer.Loaders
         /// <returns></returns>
         protected Field SetValue(TModel entity, Field field, object value, DbDataReader reader)
         {
-            foreach (var setter in Configuration.FieldSetters)
-            {
-                if (setter.CanHandle(field.FieldType))
-                {
-                    setter.SetValue(entity, field, value, (f) => GetValue(reader, f.FieldName));
-                    break;
-                }
-            }
-
-            return field;
+            return entity.SetValue(field, value, reader);
         } 
 
         #endregion
