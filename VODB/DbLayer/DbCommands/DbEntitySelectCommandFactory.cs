@@ -2,10 +2,11 @@ using System.Data.Common;
 
 namespace VODB.DbLayer.DbCommands
 {
-    internal sealed class DbEntitySelectCommand<TEntity> : DbEntityCommand<TEntity> where TEntity : DbEntity, new()
+    internal sealed class DbEntitySelectCommandFactory<TEntity> : DbEntityCommandFactory<TEntity> 
+        where TEntity : DbEntity, new()
     {
-        public DbEntitySelectCommand(DbConnection connection, TEntity entity)
-            : base(connection, entity)
+        public DbEntitySelectCommandFactory(DbConnection connection)
+            : base(connection, new TEntity())
         {
         }
 

@@ -1,16 +1,17 @@
 using System;
 using System.Data.Common;
+using VODB.DbLayer.DbCommands;
 using VODB.Exceptions;
 
 namespace VODB.DbLayer.DbExecuters
 {
     internal abstract class DbCommandExecuterBase<TResult> : ICommandExecuter<TResult>
     {
-        private readonly DbCommand _command;
+        readonly IDbCommandFactory _commandFactory;
 
-        protected DbCommandExecuterBase(DbCommand command)
+        protected DbCommandExecuterBase(IDbCommandFactory commandFactory)
         {
-            _command = command;
+            _commandFactory = commandFactory;
         }
 
         public TResult Execute()
@@ -18,7 +19,7 @@ namespace VODB.DbLayer.DbExecuters
 
             try
             {
-                return Execute(_command.ExecuteNonQuery());
+                return Execute(_commandFactory.Make().ExecuteNonQuery());
             }
             catch (Exception ex)
             {

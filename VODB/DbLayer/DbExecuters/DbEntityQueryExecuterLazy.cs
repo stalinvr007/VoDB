@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Data.Common;
+using VODB.DbLayer.DbCommands;
 using VODB.DbLayer.Loaders;
 
 namespace VODB.DbLayer.DbExecuters
@@ -15,8 +16,8 @@ namespace VODB.DbLayer.DbExecuters
         /// </summary>
         /// <param name="connection">The connection.</param>
         /// <param name="loader">The loader.</param>
-        public DbEntityQueryExecuterLazy(DbConnection connection, EntityLoader<TEntity> loader)
-            : base(connection)
+        public DbEntityQueryExecuterLazy(IDbCommandFactory commandFactory, EntityLoader<TEntity> loader)
+            : base(commandFactory)
         {
             _Loader = loader;
         }

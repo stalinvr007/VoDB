@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using VODB.VirtualDataBase;
+using VODB.Extensions;
 
 namespace VODB.DbLayer.DbCommands
 {
-    internal sealed class DbEntitySelectByIdCommand<TEntity> : DbEntityCommand<TEntity> where TEntity : DbEntity, new()
+    internal sealed class DbEntitySelectByIdCommandFactory<TEntity> : DbEntityCommandFactory<TEntity> 
+        where TEntity : DbEntity, new()
     {
-        public DbEntitySelectByIdCommand(DbConnection connection, TEntity entity)
+        public DbEntitySelectByIdCommandFactory(DbConnection connection, TEntity entity)
             : base(connection, entity)
         {
         }
@@ -14,11 +16,11 @@ namespace VODB.DbLayer.DbCommands
         protected override DbCommand Make(DbCommand dbCommand, TEntity entity)
         {
             dbCommand.CommandText = entity.Table.CommandsHolder.SelectById;
-            SetParameters(dbCommand, entity.Table.KeyFields);
+            dbCommand.SetParameters(entity.Table.KeyFields, entity);
 
             return dbCommand;
         }
 
-        
+
     }
 }

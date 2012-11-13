@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using VODB.DbLayer.DbCommands;
 using VODB.Exceptions;
 
 namespace VODB.DbLayer.DbExecuters
@@ -12,17 +13,17 @@ namespace VODB.DbLayer.DbExecuters
     internal abstract class DbEntityQueryExecuterBase<TEntity> : IQueryExecuter<TEntity>
         where TEntity : DbEntity, new()
     {
-        private readonly DbConnection _Connection;
 
-        protected DbEntityQueryExecuterBase(DbConnection connection)
+        private readonly IDbCommandFactory _CommandFactory;
+
+        protected DbEntityQueryExecuterBase(IDbCommandFactory commandFactory)
         {
-            _Connection = connection;
+            _CommandFactory = commandFactory;
         }
 
         public IEnumerable<TEntity> Execute()
         {
-            var cmd = _Connection.CreateCommand();
-            cmd.CommandText = new TEntity().Table.CommandsHolder.Select;
+            var cmd = _CommandFactory.Make();
             try
             {
                 return GetEntities(cmd.ExecuteReader());

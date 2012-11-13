@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Common;
 using VODB.DbLayer.Loaders;
+using VODB.DbLayer.DbCommands;
 
 namespace VODB.DbLayer.DbExecuters
 {
@@ -9,17 +10,19 @@ namespace VODB.DbLayer.DbExecuters
     /// 
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    internal class DbEntityQueryExecuterEager<TEntity> : DbEntityQueryExecuterBase<TEntity>
+    internal sealed class DbEntityQueryExecuterEager<TEntity> : DbEntityQueryExecuterBase<TEntity>
         where TEntity : DbEntity, new()
     {
         private readonly EntityLoader<TEntity> _Loader;
 
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="EntityQuery{TEntity}" /> class.
+        /// Initializes a new instance of the <see cref="DbEntityQueryExecuterEager{TEntity}" /> class.
         /// </summary>
-        /// <param name="connection">The connection.</param>
-        public DbEntityQueryExecuterEager(DbConnection connection, EntityLoader<TEntity> loader)
-            : base(connection)
+        /// <param name="commandFactory">The command factory.</param>
+        /// <param name="loader">The loader.</param>
+        public DbEntityQueryExecuterEager(IDbCommandFactory commandFactory, EntityLoader<TEntity> loader)
+            : base(commandFactory)
         {
             _Loader = loader;
         }

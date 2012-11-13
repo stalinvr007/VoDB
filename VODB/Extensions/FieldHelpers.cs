@@ -85,5 +85,36 @@ namespace VODB.Extensions
 
         }
 
+        /// <summary>
+        /// Sets the parameter.
+        /// </summary>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <param name="dbCommand">The db command.</param>
+        /// <param name="field">The field.</param>
+        /// <param name="entity">The entity.</param>
+        public static void SetParameter<TModel>(this DbCommand dbCommand, Field field, TModel entity)
+            where TModel : DbEntity
+        {
+            var param = dbCommand.CreateParameter();
+            param.ParameterName = field.FieldName;
+            param.Value = field.GetValue(entity);
+            dbCommand.Parameters.Add(param);
+        }
+
+        /// <summary>
+        /// Sets the parameters.
+        /// </summary>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <param name="dbCommand">The db command.</param>
+        /// <param name="fields">The fields.</param>
+        /// <param name="entity">The entity.</param>
+        public static void SetParameters<TModel>(this DbCommand dbCommand, IEnumerable<Field> fields, TModel entity)
+             where TModel : DbEntity
+        {
+            foreach (var field in fields)
+            {
+                dbCommand.SetParameter(field, entity);
+            }
+        }
     }
 }
