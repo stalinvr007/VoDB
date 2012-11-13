@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using VODB.VirtualDataBase;
 
 namespace VODB.Caching
@@ -13,6 +14,7 @@ namespace VODB.Caching
     {
 
         static readonly IDictionary<Type, Table> _tables = new Dictionary<Type, Table>();
+        static readonly IDictionary<Type, Task> _pendingTasks = new Dictionary<Type, Task>();
 
         /// <summary>
         /// Adds the specified type.
@@ -21,7 +23,10 @@ namespace VODB.Caching
         /// <param name="table">The table.</param>
         public static void Add(Type type, Table table)
         {
-            _tables[type] = table;
+            lock (_tables)
+            {
+                _tables[type] = table;    
+            }            
         }
 
         /// <summary>
@@ -40,17 +45,30 @@ namespace VODB.Caching
         /// <param name="creator">The creator.</param>
         public static void AsyncAdd(Type type, ITableCreator creator)
         {
-
+            
             if (_tables.ContainsKey(type))
             {
                 return;
             }
 
-            new Thread(() =>
+            var task = new Task<Table>(() =>
             {
                 var table = creator.Create();
-                _tables.Add(type, table);
-            }).Start();
+
+                lock (_tables)
+                {
+                    _tables.Add(type, table);    
+                }
+                
+                return table;
+            });
+
+            lock (_pendingTasks)
+            {
+                _pendingTasks.Add(type, task);
+            }            
+
+            task.Start();
 
         }
 
@@ -71,9 +89,28 @@ namespace VODB.Caching
         /// <returns></returns>
         public static Table GetTable(Type type)
         {
-            Table value;
 
-            _tables.TryGetValue(type, out value);
+            Table value = null;
+
+            lock (_pendingTasks)
+            {
+                Task task;
+                if (_pendingTasks.TryGetValue(type, out task))
+                {
+                    value = ((Task<Table>)task).Result;
+                    _pendingTasks.Remove(type);
+                }
+            }
+
+            if (value != null)
+            {
+                return value;
+            }            
+
+            lock (_tables)
+            {
+                _tables.TryGetValue(type, out value);    
+            }
 
             return value;
         }
