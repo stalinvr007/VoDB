@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using VODB.VirtualDataBase;
 using VODB.DbLayer.Exceptions;
+using VODB.Extensions;
 
 namespace VODB.DbLayer.Loaders.TypeConverter
 {
@@ -39,27 +40,15 @@ namespace VODB.DbLayer.Loaders.TypeConverter
             {
                 if (key.FieldName.Equals(field.BindedTo) || key.FieldName.Equals(field.FieldName))
                 {
-                    InternalSetValue(foreignEntity, key, value, getValueFromReader);
+                    foreignEntity.SetValue(key, value, getValueFromReader);
                 }
                 else
                 {
-                    InternalSetValue(foreignEntity, key, getValueFromReader(key), getValueFromReader);
+                    foreignEntity.SetValue(key, getValueFromReader(key), getValueFromReader);
                 }
             }
             
             field.SetValue(entity, foreignEntity);
-        }
-
-        private static void InternalSetValue(Object entity, Field field, Object value, Func<Field, Object> getValueFromReader)
-        {
-            foreach (var setter in Configuration.FieldSetters)
-            {
-                if (setter.CanHandle(field.FieldType))
-                {
-                    setter.SetValue(entity, field, value, getValueFromReader);
-                    break;
-                }
-            }
         }
 
         private static DbEntity CreateInstance(Type type)
