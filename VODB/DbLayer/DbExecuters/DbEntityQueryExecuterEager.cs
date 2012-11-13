@@ -10,7 +10,7 @@ namespace VODB.DbLayer.DbExecuters
     /// 
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    internal sealed class DbEntityQueryExecuterEager<TEntity> : DbEntityQueryExecuterBase<TEntity>
+    internal class DbEntityQueryExecuterEager<TEntity> : DbEntityQueryExecuterBase<TEntity>
         where TEntity : DbEntity, new()
     {
         private readonly EntityLoader<TEntity> _Loader;

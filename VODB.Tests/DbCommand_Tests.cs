@@ -36,11 +36,9 @@ namespace VODB.Tests
         [TestMethod]
         public void GetEmployeesEntities()
         {
-            using (var con = new DbConnectionCreator("System.Data.SqlClient").Create())
+            Utils.Execute(session =>
             {
-                con.Open();
-
-                var factory = new DbEntitySelectCommandFactory<Employee>(con);
+                var factory = new DbEntitySelectCommandFactory<Employee>(session);
 
                 var query = new DbEntityQueryExecuterEager<Employee>(factory, new FullEntityLoader<Employee>());
 
@@ -49,40 +47,34 @@ namespace VODB.Tests
                 Assert.AreEqual(9, result.Count());
 
                 Assert.AreEqual(9, result.Where(emp => !String.IsNullOrEmpty(emp.FirstName)).Count());
-
-                con.Close();
-            }
-
+            });
         }
 
         [TestMethod]
         public void GetEmployeesEntities_Lazy()
         {
-            using (var con = new DbConnectionCreator("System.Data.SqlClient").Create())
+            Utils.Execute(session =>
             {
-                con.Open();
 
-                var factory = new DbEntitySelectCommandFactory<Employee>(con);
+                var factory = new DbEntitySelectCommandFactory<Employee>(session);
 
                 var query = new DbEntityQueryExecuterLazy<Employee>(factory, new FullEntityLoader<Employee>());
 
                 var result = query.Execute();
-                
+
                 Assert.AreEqual(9, result.Where(emp => !String.IsNullOrEmpty(emp.FirstName)).Count());
 
-                con.Close();
-            }
+            });
 
         }
 
         [TestMethod]
         public void GetEmployeesById_Eager()
         {
-            using (var con = new DbConnectionCreator("System.Data.SqlClient").Create())
+            Utils.Execute(session =>
             {
-                con.Open();
 
-                var factory = new DbEntitySelectByIdCommandFactory<Employee>(con,
+                var factory = new DbEntitySelectByIdCommandFactory<Employee>(session,
                     new Employee { EmployeeId = 1 });
 
                 var query = new DbEntityQueryExecuterEager<Employee>(factory, new FullEntityLoader<Employee>());
@@ -93,19 +85,17 @@ namespace VODB.Tests
 
                 EntitiesAsserts.Assert_Employee_1(result.First());
 
-                con.Close();
-            }
+            });
 
         }
 
         [TestMethod]
         public void GetEmployeesById_Eager_NoIdSupplied()
         {
-            using (var con = new DbConnectionCreator("System.Data.SqlClient").Create())
+            Utils.Execute(session =>
             {
-                con.Open();
 
-                var factory = new DbEntitySelectByIdCommandFactory<Employee>(con,
+                var factory = new DbEntitySelectByIdCommandFactory<Employee>(session,
                     new Employee());
 
                 var query = new DbEntityQueryExecuterEager<Employee>(factory, new FullEntityLoader<Employee>());
@@ -114,23 +104,21 @@ namespace VODB.Tests
 
                 Assert.AreEqual(0, result.Count());
 
-                con.Close();
-            }
+            });
 
         }
 
         [TestMethod]
         public void InsertEmployee()
         {
-            using (var con = new DbConnectionCreator("System.Data.SqlClient").Create())
+            Utils.Execute(session =>
             {
-                con.Open();
 
-                var trans = con.BeginTransaction();
+                var trans = session.BeginTransaction();
 
                 try
                 {
-                    var factory = new DbEntityInsertCommandFactory<Employee>(con,
+                    var factory = new DbEntityInsertCommandFactory<Employee>(session,
                         new Employee
                         {
 
@@ -143,11 +131,10 @@ namespace VODB.Tests
                 }
                 finally
                 {
-                    trans.Rollback();
+                    trans.RollBack();
                 }
 
-                con.Close();
-            }
+            });
 
         }
     }

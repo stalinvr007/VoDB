@@ -76,6 +76,7 @@
     <Compile Include="DbConnectionCreator_Tests.cs" />
     <Compile Include="DbCommand_Tests.cs" />
     <Compile Include="EntityLoaders_Tests.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VODB\VODB.csproj">

@@ -11,5 +11,10 @@ namespace VODB
     interface ISessionInternal
     {
         DbCommand CreateCommand();
+
+        void Open();
+
+        void Close();
+
     }
 }
