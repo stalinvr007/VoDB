@@ -10,7 +10,7 @@ namespace VODB.Tests
 
         public static void Execute(Action<Session> action)
         {
-            var session = new Session();
+            var session = new EagerSession();
 
             session.Open();
 

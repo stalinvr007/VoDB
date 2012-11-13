@@ -4,6 +4,9 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using VODB.DbLayer;
+using VODB.DbLayer.DbCommands;
+using VODB.DbLayer.DbExecuters;
+using VODB.DbLayer.Loaders;
 
 namespace VODB
 {
@@ -11,7 +14,7 @@ namespace VODB
     /// <summary>
     /// Represents a connection Session.
     /// </summary>
-    public sealed class Session : ISessionInternal, ISession
+    public abstract class Session : ISessionInternal, ISession
     {
 
         private DbConnection _connection;
@@ -95,75 +98,9 @@ namespace VODB
             }
             _connection.Close();
         }
-    }
+        
+        public abstract IEnumerable<TEntity> GetAll<TEntity>() where TEntity : DbEntity, new();
 
-    public sealed class Transaction : IDisposable
-    {
-
-        private int count = 1;
-        private DbTransaction _Transaction;
-
-        public Transaction(DbTransaction transaction)
-        {
-            _Transaction = transaction;
-        }
-
-        internal DbCommand CreateCommand()
-        {
-            var cmd = _Transaction.Connection.CreateCommand();
-            cmd.Transaction = _Transaction;
-            return cmd;
-        }
-
-        private void CheckTransactionAlive()
-        {
-            if (_Transaction == null)
-            {
-                throw new MissingFieldException("Transaction", "transaction");
-            }
-        }
-
-        internal void BeginNestedTransaction()
-        {
-            CheckTransactionAlive();
-
-            ++count;
-        }
-
-        public void RollBack()
-        {
-            CheckTransactionAlive();
-
-            count = int.MaxValue;
-            _Transaction.Rollback();
-        }
-
-        public void Commit()
-        {
-            CheckTransactionAlive();
-
-            --count;
-            if (count == 0)
-            {
-                _Transaction.Commit();
-            }
-        }
-
-        public void Dispose()
-        {
-            if (_Transaction == null)
-            {
-                return;
-            }
-
-            Commit();
-            if (count == 0)
-            {
-                _Transaction.Dispose();
-                _Transaction = null;
-            }
-
-        }
     }
 
 }
