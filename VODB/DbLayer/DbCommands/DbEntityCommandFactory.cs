@@ -10,8 +10,8 @@ namespace VODB.DbLayer.DbCommands
     {
         private readonly TEntity _entity;
 
-        protected DbEntityCommandFactory(DbConnection connection, TEntity entity)
-            : base(connection)
+        protected DbEntityCommandFactory(ISessionInternal session, TEntity entity)
+            : base(session)
         {
             _entity = entity;
         }

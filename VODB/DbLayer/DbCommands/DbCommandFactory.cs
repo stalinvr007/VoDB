@@ -5,16 +5,16 @@ namespace VODB.DbLayer.DbCommands
     internal abstract class DbCommandFactory : IDbCommandFactory
     {
 
-        private readonly DbConnection _connection;
+        private readonly ISessionInternal _session;
 
-        protected DbCommandFactory(DbConnection connection)
+        protected DbCommandFactory(ISessionInternal session)
         {
-            _connection = connection;
+            _session = session;
         }
 
         public DbCommand Make()
         {
-            return Make(_connection.CreateCommand());
+            return Make(_session.CreateCommand());
         }
 
         protected abstract DbCommand Make(DbCommand dbCommand);

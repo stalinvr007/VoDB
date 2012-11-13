@@ -38,10 +38,7 @@ namespace VODB
                     return _table;
                 }
 
-                while ((_table = TablesCache.GetTable(_Type)) == null)
-                {
-                    Thread.Yield();
-                }
+                _table = TablesCache.GetTable(_Type);                
                 return _table;
             }
         }
