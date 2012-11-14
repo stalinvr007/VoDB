@@ -58,6 +58,11 @@ namespace VODB.Sessions
 
         public abstract TEntity GetById<TEntity>(TEntity entity) where TEntity : DbEntity, new();
 
+        public Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : DbEntity, new()
+        {
+            return new Task<TEntity>(() => GetById(entity)).RunAsync();
+        }
+
         #endregion
 
         #region IInternalSession Members
