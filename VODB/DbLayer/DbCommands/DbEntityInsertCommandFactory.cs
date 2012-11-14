@@ -8,8 +8,8 @@ namespace VODB.DbLayer.DbCommands
     internal sealed class DbEntityInsertCommandFactory<TEntity> : DbEntityCommandFactory<TEntity>
         where TEntity : DbEntity, new()
     {
-        public DbEntityInsertCommandFactory(ISessionInternal session, TEntity entity)
-            : base(session, entity)
+        public DbEntityInsertCommandFactory(IInternalSession internalSession, TEntity entity)
+            : base(internalSession, entity)
         {
         }
 

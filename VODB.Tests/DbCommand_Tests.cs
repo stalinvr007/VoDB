@@ -42,7 +42,7 @@ namespace VODB.Tests
         {
             Utils.EagerExecute(session =>
                               {
-                                  var factory = new DbEntitySelectCommandFactory<Employee>(session);
+                                  var factory = new DbEntitySelectCommandFactory<Employee>(session as IInternalSession);
 
                                   var query = new DbEntityQueryExecuterEager<Employee>(factory,
                                                                                        new FullEntityLoader<Employee>());
@@ -60,7 +60,7 @@ namespace VODB.Tests
         {
             Utils.EagerExecute(session =>
                               {
-                                  var factory = new DbEntitySelectCommandFactory<Employee>(session);
+                                  var factory = new DbEntitySelectCommandFactory<Employee>(session as IInternalSession);
 
                                   var query = new DbEntityQueryExecuterLazy<Employee>(factory,
                                                                                       new FullEntityLoader<Employee>());
@@ -76,7 +76,7 @@ namespace VODB.Tests
         {
             Utils.EagerExecute(session =>
                               {
-                                  var factory = new DbEntitySelectByIdCommandFactory<Employee>(session,
+                                  var factory = new DbEntitySelectByIdCommandFactory<Employee>(session as IInternalSession,
                                                                                                new Employee { EmployeeId = 1 });
 
                                   var query = new DbEntityQueryExecuterEager<Employee>(factory,
@@ -95,7 +95,7 @@ namespace VODB.Tests
         {
             Utils.EagerExecute(session =>
                               {
-                                  var factory = new DbEntitySelectByIdCommandFactory<Employee>(session,
+                                  var factory = new DbEntitySelectByIdCommandFactory<Employee>(session as IInternalSession,
                                                                                                new Employee());
 
                                   var query = new DbEntityQueryExecuterEager<Employee>(factory,
@@ -112,7 +112,7 @@ namespace VODB.Tests
         {
             Utils.EagerExecuteWithinTransaction(session =>
             {
-                var cmdFactory = new DbEntityInsertCommandFactory<Employee>(session, new Employee());
+                var cmdFactory = new DbEntityInsertCommandFactory<Employee>(session as IInternalSession, new Employee());
                 var query = new DbCommandNonQueryExecuter(cmdFactory);
 
                 query.Execute();
@@ -132,7 +132,7 @@ namespace VODB.Tests
                         LastName = "Ferreira"
                     };
 
-                    var cmdFactory = new DbEntityInsertCommandFactory<Employee>(session, employee);
+                    var cmdFactory = new DbEntityInsertCommandFactory<Employee>(session as IInternalSession, employee);
                     var insert = new DbCommandNonQueryExecuter(cmdFactory);
 
                     var count = session.GetAll<Employee>().Count();

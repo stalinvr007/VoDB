@@ -1,12 +1,13 @@
 ﻿using System;
+using VODB.Sessions;
 
 namespace VODB.Tests
 {
     public static class Utils
     {
-        public static void EagerExecute(Action<Session> action)
+        public static void EagerExecute(Action<ISession> action)
         {
-            var session = new EagerSession();
+            var session = new EagerInternalSession();
 
             session.Open();
 
@@ -20,7 +21,7 @@ namespace VODB.Tests
             }
         }
 
-        public static void EagerExecuteWithinTransaction(Action<Session> action)
+        public static void EagerExecuteWithinTransaction(Action<ISession> action)
         {
             EagerExecute((session) =>
             {
@@ -37,9 +38,9 @@ namespace VODB.Tests
         }
 
 
-        public static void StayAliveEagerExecute(Action<Session> action)
+        public static void StayAliveEagerExecute(Action<ISession> action)
         {
-            var session = new StayAliveEagerSession();
+            var session = new StayAliveEagerInternalSession();
 
             session.Open();
 
@@ -53,7 +54,7 @@ namespace VODB.Tests
             }
         }
 
-        public static void StayAliveEagerExecuteWithinTransaction(Action<Session> action)
+        public static void StayAliveEagerExecuteWithinTransaction(Action<ISession> action)
         {
             StayAliveEagerExecute((session) =>
             {

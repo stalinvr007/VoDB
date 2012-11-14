@@ -5,16 +5,16 @@ using VODB.DbLayer.DbCommands;
 using VODB.DbLayer.DbExecuters;
 using VODB.DbLayer.Loaders;
 
-namespace VODB
+namespace VODB.Sessions
 {
 
-    public class EagerSession : Session
+    internal class EagerInternalSession : InternalSession
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EagerSession"/> class.
+        /// Initializes a new instance of the <see cref="EagerInternalSession"/> class.
         /// </summary>
         /// <param name="creator">The creator.</param>
-        internal EagerSession(IDbConnectionCreator creator = null)
+        internal EagerInternalSession(IDbConnectionCreator creator = null)
             : base(creator)
         {
         }

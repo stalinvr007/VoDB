@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace VODB
+namespace VODB.Extensions
 {
     static class ReflectionExtensions
     {

@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Data.Common;
+using VODB.Sessions;
 
 namespace VODB
 {
     public interface ISession
     {
-        Transaction BeginTransaction();
+        ITransaction BeginTransaction();
 
         IEnumerable<TEntity> GetAll<TEntity>()
             where TEntity : DbEntity, new();
     }
 
-    internal interface ISessionInternal
+    internal interface IInternalSession
     {
         DbCommand CreateCommand();
 

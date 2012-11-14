@@ -6,8 +6,8 @@ namespace VODB.DbLayer.DbCommands
     internal sealed class DbEntitySelectByIdCommandFactory<TEntity> : DbEntityCommandFactory<TEntity>
         where TEntity : DbEntity, new()
     {
-        public DbEntitySelectByIdCommandFactory(ISessionInternal session, TEntity entity)
-            : base(session, entity)
+        public DbEntitySelectByIdCommandFactory(IInternalSession internalSession, TEntity entity)
+            : base(internalSession, entity)
         {
         }
 
