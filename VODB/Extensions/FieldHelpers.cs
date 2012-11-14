@@ -151,6 +151,23 @@ namespace VODB.Extensions
             dbCommand.Parameters.Add(param);
         }
 
+        /// <summary>
+        /// Sets the parameter.
+        /// </summary>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <param name="dbCommand">The db command.</param>
+        /// <param name="field">The field.</param>
+        /// <param name="entity">The entity.</param>
+        private static void SetOldParameter<TModel>(this DbCommand dbCommand, Field field, TModel entity)
+            where TModel : DbEntity
+        {
+            var param = dbCommand.CreateParameter();
+            param.ParameterName = string.Format("Old{0}", field.FieldName);
+            param.SetValue(field, entity);
+
+            dbCommand.Parameters.Add(param);
+        }
+
 
         /// <summary>
         /// Sets the parameters.
@@ -165,6 +182,15 @@ namespace VODB.Extensions
             foreach (Field field in fields)
             {
                 dbCommand.SetParameter(field, entity);
+            }
+        }
+
+        public static void SetOldParameters<TModel>(this DbCommand dbCommand, TModel entity)
+            where TModel : DbEntity
+        {
+            foreach (var field in entity.Table.KeyFields)
+            {
+                dbCommand.SetOldParameter(field, entity);
             }
         }
     }

@@ -110,5 +110,28 @@ namespace VODB.Tests
             });
 
         }
+
+        [TestMethod]
+        public void EagerSession_Delete_Employee()
+        {
+
+
+            Utils.EagerExecuteWithinTransaction(
+                session =>
+                {
+                    var count = session.GetAll<Employee>().Count();
+                    var sergio = session.Insert(new Employee
+                    {
+                        FirstName = "Sérgio",
+                        LastName = "Ferreira"
+                    });
+
+                    session.Delete(sergio);
+
+                    Assert.AreEqual(count, session.GetAll<Employee>().Count());
+                }
+            );
+
+        }
     }
 }

@@ -33,9 +33,13 @@ namespace VODB.DbLayer.Loaders
         /// <param name="value">The value.</param>
         /// <param name="reader"> </param>
         /// <returns></returns>
-        protected Field SetValue(TModel entity, Field field, object value, DbDataReader reader)
+        protected void SetValue(TModel entity, Field field, object value, DbDataReader reader)
         {
-            return entity.SetValue(field, value, reader);
+            if (field.IsKey)
+            {
+                entity.AddKeyOriginalValue(field, value);
+            }
+            entity.SetValue(field, value, reader);
         }
 
         #endregion
