@@ -17,6 +17,15 @@ namespace VODB.Tests
         }
 
         [TestMethod]
+        public void EagerSession_GetById()
+        {
+            var employee = SessionsFactory.CreateEager().GetById<Employee>(
+                new Employee { EmployeeId = 1 });
+
+            EntitiesAsserts.Assert_Employee_1(employee);
+        }
+
+        [TestMethod]
         public void EagerSession_AsyncGetAll()
         {
             var task = SessionsFactory.CreateEager().AsyncGetAll<Employee>();

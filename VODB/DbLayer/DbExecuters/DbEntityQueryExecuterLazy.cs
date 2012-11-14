@@ -9,7 +9,7 @@ namespace VODB.DbLayer.DbExecuters
             where TEntity : DbEntity, new()
     {
 
-        private readonly EntityLoader<TEntity> _Loader;
+        private readonly IEntityLoader<TEntity> _Loader;
 
         /// <summary>
         /// Initializes a new instance of the <see>
@@ -18,7 +18,7 @@ namespace VODB.DbLayer.DbExecuters
         /// </summary>
         /// <param name="commandFactory"> </param>
         /// <param name="loader">The loader.</param>
-        public DbEntityQueryExecuterLazy(IDbCommandFactory commandFactory, EntityLoader<TEntity> loader)
+        public DbEntityQueryExecuterLazy(IDbCommandFactory commandFactory, IEntityLoader<TEntity> loader)
             : base(commandFactory)
         {
             _Loader = loader;

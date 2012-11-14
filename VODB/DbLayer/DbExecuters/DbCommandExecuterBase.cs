@@ -22,7 +22,7 @@ namespace VODB.DbLayer.DbExecuters
             {
                 return Execute(_commandFactory.Make().ExecuteNonQuery());
             }
-            catch(SqlException ex)
+            catch (SqlException)
             {
                 throw;
             }
