@@ -30,7 +30,7 @@ namespace VODB.EntityValidators
             if (sb.Length <= 0) return;
             
             sb.Remove(sb.Length - 2, 2);    
-            throw new ValidationException(string.Format("Required fields not set: {{ {0} }}", sb.ToString()));
+            throw new ValidationException(string.Format("Required fields not set: {{ {0} }}", sb));
         }
 
         #endregion
@@ -39,7 +39,7 @@ namespace VODB.EntityValidators
         {
             var value = field.GetValue(entity);
 
-            if (value == null)
+            if (value == null || (typeof(String).IsAssignableFrom(field.FieldType) && String.IsNullOrEmpty((String)value)))
             {
                 return true;
             }

@@ -7,6 +7,7 @@ using VODB.DbLayer.Loaders;
 
 namespace VODB
 {
+
     public class EagerSession : Session
     {
         /// <summary>
