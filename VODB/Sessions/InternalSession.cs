@@ -1,16 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Threading.Tasks;
 using VODB.DbLayer;
+using VODB.Extensions;
 
 namespace VODB.Sessions
 {
     /// <summary>
-    /// Represents a connection internalSession.
+    /// Represents a connection Session.
     /// </summary>
-    internal abstract class InternalSession : IInternalSession, ISession
+    internal abstract class InternalSession : IInternalSession, ISession, IDisposable
     {
-        private readonly IDbConnectionCreator _creator;
+        private IDbConnectionCreator _creator;
         private DbConnection _connection;
         private Transaction transaction;
 
@@ -47,6 +50,11 @@ namespace VODB.Sessions
         }
 
         public abstract IEnumerable<TEntity> GetAll<TEntity>() where TEntity : DbEntity, new();
+
+        public Task<IEnumerable<TEntity>> AsyncGetAll<TEntity>() where TEntity : DbEntity, new()
+        {
+            return new Task<IEnumerable<TEntity>>(GetAll<TEntity>).RunAsync();
+        }
 
         #endregion
 
@@ -90,6 +98,23 @@ namespace VODB.Sessions
             {
                 _connection = _creator.Create();
             }
+        }
+
+        public void Dispose()
+        {
+            if (transaction != null)
+            {
+                transaction.Dispose();
+                transaction = null;
+            }
+
+            if (_connection != null)
+            {
+                _connection.Dispose();
+                _connection = null;
+            }
+
+            _creator = null;
         }
     }
 }

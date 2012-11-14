@@ -72,6 +72,7 @@
     <Compile Include="DbLayer\Loaders\FieldSetters\BasicFieldSetter.cs" />
     <Compile Include="DbLayer\Loaders\FieldSetters\DbEntityFieldSetter.cs" />
     <Compile Include="DbLayer\Loaders\FieldSetters\IFieldSetter.cs" />
+    <Compile Include="Extensions\TasksExtensions.cs" />
     <Compile Include="Sessions\EagerSession.cs" />
     <Compile Include="EntityValidators\IEntityValidator.cs" />
     <Compile Include="EntityValidators\RequiredFieldsValidator.cs" />
@@ -80,8 +81,7 @@
     <Compile Include="Exceptions\ParameterSetterNotFoundException.cs" />
     <Compile Include="ISession.cs" />
     <Compile Include="ITransaction.cs" />
-    <Compile Include="Sessions\StayAliveEagerSession.cs" />
-    <Compile Include="Sessions\Session.cs" />
+    <Compile Include="Sessions\InternalSession.cs" />
     <Compile Include="DbLayer\SqlConnectionCreator.cs" />
     <Compile Include="Exceptions\UnableToExecuteNonQueryException.cs" />
     <Compile Include="Exceptions\UnableToExecuteQueryException.cs" />

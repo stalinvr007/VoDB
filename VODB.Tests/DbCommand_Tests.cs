@@ -122,7 +122,7 @@ namespace VODB.Tests
         [TestMethod]
         public void InsertEmployee()
         {
-            Utils.StayAliveEagerExecuteWithinTransaction(
+            Utils.EagerExecuteWithinTransaction(
                 session =>
                 {
                     var employee = new Employee

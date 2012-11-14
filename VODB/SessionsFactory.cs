@@ -10,9 +10,5 @@ namespace VODB
             return new EagerInternalSession(creator);
         }
 
-        public static ISession CreateStayAliveEager(IDbConnectionCreator creator = null)
-        {
-            return new StayAliveEagerInternalSession(creator);
-        }
     }
 }
