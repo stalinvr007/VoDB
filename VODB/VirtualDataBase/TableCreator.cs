@@ -97,7 +97,7 @@ namespace VODB.VirtualDataBase
         private static Field SetCommunSettings(Field field, PropertyInfo info)
         {
             field.BindedTo = GetBindedTo(info);
-            field.IsIdentity = field.IsKey || info.GetAttribute<DbRequiredAttribute>() != null;
+            field.IsRequired = (field.IsKey && !field.IsIdentity) || info.GetAttribute<DbRequiredAttribute>() != null;
             return field;
         }
 

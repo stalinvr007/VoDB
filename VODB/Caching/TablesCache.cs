@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using VODB.VirtualDataBase;
 
@@ -32,7 +33,7 @@ namespace VODB.Caching
         /// <param name="creator">The creator.</param>
         public static void AsyncAdd<TEntity>(ITableCreator creator)
         {
-            AsyncAdd(typeof (TEntity), creator);
+            AsyncAdd(typeof(TEntity), creator);
         }
 
         /// <summary>
@@ -42,29 +43,34 @@ namespace VODB.Caching
         /// <param name="creator">The creator.</param>
         public static void AsyncAdd(Type type, ITableCreator creator)
         {
-            if (_tables.ContainsKey(type))
-            {
-                return;
-            }
-
             var task = new Task<Table>(() =>
-                                           {
-                                               Table table = creator.Create();
+            {
+                lock (_tables)
+                {
+                    if (_tables.ContainsKey(type))
+                    {
+                        return null;
+                    }
+                }
 
-                                               lock (_tables)
-                                               {
-                                                   _tables.Add(type, table);
-                                               }
+                var table = creator.Create();
 
-                                               return table;
-                                           });
+                lock (_tables)
+                {
+                    _tables[type] = table;
+                }
+
+                return table;
+            });
 
             lock (_pendingTasks)
             {
-                _pendingTasks.Add(type, task);
+                if (!_pendingTasks.ContainsKey(type))
+                {
+                    _pendingTasks.Add(type, task);
+                    task.Start();
+                }
             }
-
-            task.Start();
         }
 
         /// <summary>
@@ -74,7 +80,7 @@ namespace VODB.Caching
         /// <returns></returns>
         public static Table GetTable<TType>()
         {
-            return GetTable(typeof (TType));
+            return GetTable(typeof(TType));
         }
 
         /// <summary>
@@ -91,7 +97,7 @@ namespace VODB.Caching
                 Task task;
                 if (_pendingTasks.TryGetValue(type, out task))
                 {
-                    value = ((Task<Table>) task).Result;
+                    value = ((Task<Table>)task).Result;
                     _pendingTasks.Remove(type);
                 }
             }
@@ -115,6 +121,13 @@ namespace VODB.Caching
         /// <returns></returns>
         public static IEnumerable<Table> GetTables()
         {
+            lock (_pendingTasks)
+            {
+                foreach (var task in _pendingTasks)
+                {
+                    task.Value.Wait();
+                } 
+            }
             return _tables.Values;
         }
     }

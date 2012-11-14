@@ -99,9 +99,7 @@ namespace VODB.Tests
                 new AutoCachedEntity();
             }
 
-            Assert.IsTrue(
-                TablesCache.GetTables().Count(t => t.TableName.Equals("AutoCachedEntity")) == 1
-                );
+            Assert.AreEqual(1, TablesCache.GetTables().Count(t => t.TableName.Equals("AutoCachedEntity")));
         }
 
 
@@ -122,7 +120,7 @@ namespace VODB.Tests
             Assert.AreEqual("Age1", fields[2].FieldName);
 
             Assert.IsFalse(fields[0].IsRequired);
-            Assert.IsFalse(fields[1].IsRequired);
+            Assert.IsTrue(fields[1].IsRequired);
             Assert.IsTrue(fields[2].IsRequired);
 
             Assert.AreEqual(typeof (String), fields[0].FieldType);
