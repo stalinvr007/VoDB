@@ -12,9 +12,11 @@ namespace VODB.DbLayer.DbExecuters
         private readonly EntityLoader<TEntity> _Loader;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DbDbEntityQueryExecuterLazy{TEntity}" /> class.
+        /// Initializes a new instance of the <see>
+        ///                                     <cref>DbDbEntityQueryExecuterLazy{TEntity}</cref>
+        ///                                   </see>  class.
         /// </summary>
-        /// <param name="connection">The connection.</param>
+        /// <param name="commandFactory"> </param>
         /// <param name="loader">The loader.</param>
         public DbEntityQueryExecuterLazy(IDbCommandFactory commandFactory, EntityLoader<TEntity> loader)
             : base(commandFactory)

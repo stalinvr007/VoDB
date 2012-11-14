@@ -1,26 +1,40 @@
 using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using VODB.DbLayer;
 
 namespace VODB
 {
     public sealed class Transaction : IDisposable
     {
-
-        private int count = 1;
         private DbTransaction _Transaction;
+        private int count = 1;
 
         public Transaction(DbTransaction transaction)
         {
             _Transaction = transaction;
         }
 
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            if (_Transaction == null)
+            {
+                return;
+            }
+
+            Commit();
+            if (count == 0)
+            {
+                _Transaction.Dispose();
+                _Transaction = null;
+            }
+        }
+
+        #endregion
+
         internal DbCommand CreateCommand()
         {
-            var cmd = _Transaction.Connection.CreateCommand();
+            DbCommand cmd = _Transaction.Connection.CreateCommand();
             cmd.Transaction = _Transaction;
             return cmd;
         }
@@ -57,22 +71,6 @@ namespace VODB
             {
                 _Transaction.Commit();
             }
-        }
-
-        public void Dispose()
-        {
-            if (_Transaction == null)
-            {
-                return;
-            }
-
-            Commit();
-            if (count == 0)
-            {
-                _Transaction.Dispose();
-                _Transaction = null;
-            }
-
         }
     }
 }

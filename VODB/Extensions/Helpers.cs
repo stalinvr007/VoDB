@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace VODB.Extensions
 {
     public static class Helpers
     {
-
         /// <summary>
         /// Throws ArgumentNullException if argument is null.
         /// </summary>
@@ -22,6 +18,5 @@ namespace VODB.Extensions
                 throw new ArgumentNullException(argumentName, msg);
             }
         }
-
     }
 }

@@ -1,12 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using VODB.Exceptions;
 using VODB.VirtualDataBase;
-using VODB.DbLayer.Exceptions;
 using VODB.Extensions;
 
-namespace VODB.DbLayer.Loaders.TypeConverter
+namespace VODB.DbLayer.Loaders.FieldSetters
 {
     /// <summary>
     /// Sets the value for a DbEntity type field.

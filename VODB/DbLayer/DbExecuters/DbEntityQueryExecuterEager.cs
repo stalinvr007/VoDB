@@ -42,7 +42,7 @@ namespace VODB.DbLayer.DbExecuters
             {
                 while (reader.Read())
                 {
-                    TEntity newTEntity = new TEntity();
+                    var newTEntity = new TEntity();
                     
                     _Loader.Load(newTEntity, reader);
 

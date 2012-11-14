@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using VODB.DbLayer.DbCommands.DbParameterSetters;
-using VODB.DbLayer.Loaders.TypeConverter;
+using VODB.DbLayer.Loaders.FieldSetters;
 using VODB.EntityValidators;
 
 namespace VODB
@@ -13,6 +10,24 @@ namespace VODB
     /// </summary>
     public static class Configuration
     {
+        static Configuration()
+        {
+            EntityValidators = new List<IEntityValidator>();
+
+            FieldSetters = new List<IFieldSetter>
+                               {
+                                   new BasicFieldSetter(),
+                                   new DbEntityFieldSetter()
+                               };
+
+            ParameterSetters = new List<IParameterSetter>
+                                   {
+                                       new BasicParameterSetter(),
+                                       new DbEntityParameterSetter(),
+                                       new DateTimeParameterSetter(),
+                                       new ByteArrayParameterSetter()
+                                   };
+        }
 
         /// <summary>
         /// Gets the entity validators.
@@ -37,30 +52,5 @@ namespace VODB
         /// The parameter setters.
         /// </value>
         public static ICollection<IParameterSetter> ParameterSetters { get; private set; }
-
-
-        static Configuration()
-        {
-            EntityValidators = new List<IEntityValidator>()
-            {
-
-            };
-
-            FieldSetters = new List<IFieldSetter>()
-            {
-                new BasicFieldSetter(),
-                new DbEntityFieldSetter()                
-            };
-
-            ParameterSetters = new List<IParameterSetter>()
-            {
-                new BasicParameterSetter(),
-                new DbEntityParameterSetter(),
-                new DateTimeParameterSetter(),
-                new ByteArrayParameterSetter()                
-            };
-        }
-
-
     }
 }

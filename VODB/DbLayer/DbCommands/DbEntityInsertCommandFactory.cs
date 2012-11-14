@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Data.Common;
 using System.Linq;
-using System.Text;
-using System.Data.Common;
 using VODB.Extensions;
 
 namespace VODB.DbLayer.DbCommands
@@ -13,14 +10,13 @@ namespace VODB.DbLayer.DbCommands
         public DbEntityInsertCommandFactory(ISessionInternal session, TEntity entity)
             : base(session, entity)
         {
-
         }
 
         protected override DbCommand Make(DbCommand dbCommand, TEntity entity)
         {
             dbCommand.CommandText = entity.Table.CommandsHolder.Insert;
             dbCommand.SetParameters(
-                entity.Table.Fields.Where(field => !field.IsIdentity), 
+                entity.Table.Fields.Where(field => !field.IsIdentity),
                 entity);
 
             return dbCommand;

@@ -1,34 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
 using VODB.DbLayer;
-using VODB.DbLayer.DbCommands;
-using VODB.DbLayer.DbExecuters;
-using VODB.DbLayer.Loaders;
 
 namespace VODB
 {
-
     /// <summary>
     /// Represents a connection Session.
     /// </summary>
     public abstract class Session : ISessionInternal, ISession
     {
-
-        private DbConnection _connection;
         private readonly IDbConnectionCreator _creator;
+        private DbConnection _connection;
         private Transaction transaction;
 
-
-        internal bool InTransaction
-        {
-            get
-            {
-                return transaction != null;
-            }
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Session" /> class.
@@ -36,21 +21,15 @@ namespace VODB
         /// <param name="creator">The creator.</param>
         internal Session(IDbConnectionCreator creator = null)
         {
-            _creator = creator;
-
-            if (_creator == null)
-            {
-                _creator = new SqlConnectionCreator();
-            }
+            _creator = creator ?? new SqlConnectionCreator();
         }
 
-        private void CreateConnection()
+        internal bool InTransaction
         {
-            if (_connection == null)
-            {
-                _connection = _creator.Create();
-            }
+            get { return transaction != null; }
         }
+
+        #region ISession Members
 
         public Transaction BeginTransaction()
         {
@@ -68,22 +47,27 @@ namespace VODB
             return transaction;
         }
 
+        public abstract IEnumerable<TEntity> GetAll<TEntity>() where TEntity : DbEntity, new();
+
+        #endregion
+
+        #region ISessionInternal Members
+
         public DbCommand CreateCommand()
         {
             CreateConnection();
 
-            return InTransaction ? 
-                transaction.CreateCommand() : 
-                _connection.CreateCommand();
+            return InTransaction
+                       ? transaction.CreateCommand()
+                       : _connection.CreateCommand();
         }
-
 
 
         public void Open()
         {
             CreateCommand();
 
-            if (_connection.State == System.Data.ConnectionState.Open)
+            if (_connection.State == ConnectionState.Open)
             {
                 return;
             }
@@ -92,15 +76,21 @@ namespace VODB
 
         public void Close()
         {
-            if (_connection == null || _connection.State == System.Data.ConnectionState.Closed)
+            if (_connection == null || _connection.State == ConnectionState.Closed)
             {
                 return;
             }
             _connection.Close();
         }
-        
-        public abstract IEnumerable<TEntity> GetAll<TEntity>() where TEntity : DbEntity, new();
 
+        #endregion
+
+        private void CreateConnection()
+        {
+            if (_connection == null)
+            {
+                _connection = _creator.Create();
+            }
+        }
     }
-
 }

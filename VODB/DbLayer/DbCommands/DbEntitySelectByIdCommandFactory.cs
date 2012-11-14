@@ -1,11 +1,9 @@
-using System.Collections.Generic;
 using System.Data.Common;
-using VODB.VirtualDataBase;
 using VODB.Extensions;
 
 namespace VODB.DbLayer.DbCommands
 {
-    internal sealed class DbEntitySelectByIdCommandFactory<TEntity> : DbEntityCommandFactory<TEntity> 
+    internal sealed class DbEntitySelectByIdCommandFactory<TEntity> : DbEntityCommandFactory<TEntity>
         where TEntity : DbEntity, new()
     {
         public DbEntitySelectByIdCommandFactory(ISessionInternal session, TEntity entity)
@@ -20,7 +18,5 @@ namespace VODB.DbLayer.DbCommands
 
             return dbCommand;
         }
-
-
     }
 }

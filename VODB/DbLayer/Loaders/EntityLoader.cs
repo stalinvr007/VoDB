@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using VODB.DbLayer.Exceptions;
-using VODB.VirtualDataBase;
 using VODB.Extensions;
+using VODB.VirtualDataBase;
 
 namespace VODB.DbLayer.Loaders
 {
@@ -16,7 +12,6 @@ namespace VODB.DbLayer.Loaders
     internal abstract class EntityLoader<TModel>
         where TModel : DbEntity, new()
     {
-
         #region FIELD GETTER SETTER
 
         /// <summary>
@@ -37,11 +32,12 @@ namespace VODB.DbLayer.Loaders
         /// <param name="entity">The entity.</param>
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
+        /// <param name="reader"> </param>
         /// <returns></returns>
         protected Field SetValue(TModel entity, Field field, object value, DbDataReader reader)
         {
             return entity.SetValue(field, value, reader);
-        } 
+        }
 
         #endregion
 
@@ -52,8 +48,5 @@ namespace VODB.DbLayer.Loaders
         /// <param name="reader">The reader.</param>
         /// <returns></returns>
         public abstract void Load(TModel entity, DbDataReader reader);
-
     }
-
-
 }

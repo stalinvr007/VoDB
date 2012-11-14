@@ -1,17 +1,16 @@
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using VODB.VirtualDataBase;
-using System.Threading;
+using System.Collections.Generic;
 using System.Linq;
-using VODB.Caching;
+using System.Threading;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.Annotations;
-using VODB.Exceptions;
+using VODB.Caching;
+using VODB.VirtualDataBase;
 
 namespace VODB.Tests
 {
-
     [DbTable("MyTable")]
-    class AnnotationsEntity : DbEntity
+    internal class AnnotationsEntity : DbEntity
     {
         [DbIdentity]
         public String Id { get; set; }
@@ -21,10 +20,9 @@ namespace VODB.Tests
 
         [DbField("Age1"), DbRequired]
         public int Age { get; set; }
-
     }
 
-    class AutoCachedEntity : DbEntity
+    internal class AutoCachedEntity : DbEntity
     {
         [DbKey]
         public String Name { get; set; }
@@ -32,9 +30,8 @@ namespace VODB.Tests
         public int Age { get; set; }
     }
 
-    class Entity
+    internal class Entity
     {
-
         public String Name { get; set; }
 
         public int Age { get; set; }
@@ -43,12 +40,12 @@ namespace VODB.Tests
     [TestClass]
     public class TablesCreator_Tests
     {
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod, ExpectedException(typeof (AggregateException))]
         public void CreateTable_Test()
         {
-            var tableCreator = new TableCreator(typeof(Entity));
+            var tableCreator = new TableCreator(typeof (Entity));
 
-            var table = tableCreator.Create();
+            Table table = tableCreator.Create();
 
             Assert.IsNotNull(table.KeyFields);
             Assert.IsNotNull(table.Fields);
@@ -61,8 +58,8 @@ namespace VODB.Tests
         [TestMethod]
         public void CreateTable_FromTablesCache_Test()
         {
-            TablesCache.AsyncAdd<Entity>(new TableCreator(typeof(Entity)));
-            
+            TablesCache.AsyncAdd<Entity>(new TableCreator(typeof (Entity)));
+
             Table table;
             while ((table = TablesCache.GetTable<Entity>()) == null)
             {
@@ -78,9 +75,8 @@ namespace VODB.Tests
         [TestMethod]
         public void CreateTable_FromDbEntity_Test()
         {
-            
             new AutoCachedEntity();
-            
+
             Table table;
             while ((table = TablesCache.GetTable<AutoCachedEntity>()) == null)
             {
@@ -97,7 +93,6 @@ namespace VODB.Tests
         [TestMethod]
         public void CreateTable_FromDbEntity_MultipleInstances_Test()
         {
-
             for (int i = 0; i < 1000; i++)
             {
                 /* Makes a call to AsyncAdd for each instance. */
@@ -106,8 +101,7 @@ namespace VODB.Tests
 
             Assert.IsTrue(
                 TablesCache.GetTables().Count(t => t.TableName.Equals("AutoCachedEntity")) == 1
-            );
-
+                );
         }
 
 
@@ -119,7 +113,7 @@ namespace VODB.Tests
             Assert.IsNotNull(entity.Table.KeyFields);
             Assert.IsNotNull(entity.Table.Fields);
 
-            var fields = entity.Table.Fields.ToList();
+            List<Field> fields = entity.Table.Fields.ToList();
 
             Assert.AreEqual("MyTable", entity.Table.TableName);
 
@@ -131,9 +125,9 @@ namespace VODB.Tests
             Assert.IsFalse(fields[1].IsRequired);
             Assert.IsTrue(fields[2].IsRequired);
 
-            Assert.AreEqual(typeof(String), fields[0].FieldType);
-            Assert.AreEqual(typeof(String), fields[1].FieldType);
-            Assert.AreEqual(typeof(int), fields[2].FieldType);
+            Assert.AreEqual(typeof (String), fields[0].FieldType);
+            Assert.AreEqual(typeof (String), fields[1].FieldType);
+            Assert.AreEqual(typeof (int), fields[2].FieldType);
 
 
             Assert.IsTrue(fields[0].IsKey);
@@ -142,7 +136,5 @@ namespace VODB.Tests
 
             Assert.IsNotNull(entity.Table.CommandsHolder.Select);
         }
-
     }
-
 }

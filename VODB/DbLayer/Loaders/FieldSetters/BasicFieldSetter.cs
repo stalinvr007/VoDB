@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using VODB.VirtualDataBase;
 
-namespace VODB.DbLayer.Loaders.TypeConverter
+namespace VODB.DbLayer.Loaders.FieldSetters
 {
     /// <summary>
     /// Sets the field value. 
