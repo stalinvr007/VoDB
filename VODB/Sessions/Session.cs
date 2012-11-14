@@ -3,12 +3,12 @@ using System.Data;
 using System.Data.Common;
 using VODB.DbLayer;
 
-namespace VODB
+namespace VODB.Sessions
 {
     /// <summary>
-    /// Represents a connection Session.
+    /// Represents a connection internalSession.
     /// </summary>
-    public abstract class Session : ISessionInternal, ISession
+    internal abstract class InternalSession : IInternalSession, ISession
     {
         private readonly IDbConnectionCreator _creator;
         private DbConnection _connection;
@@ -16,10 +16,10 @@ namespace VODB
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Session" /> class.
+        /// Initializes a new instance of the <see cref="InternalSession" /> class.
         /// </summary>
         /// <param name="creator">The creator.</param>
-        internal Session(IDbConnectionCreator creator = null)
+        internal InternalSession(IDbConnectionCreator creator = null)
         {
             _creator = creator ?? new SqlConnectionCreator();
         }
@@ -31,7 +31,7 @@ namespace VODB
 
         #region ISession Members
 
-        public Transaction BeginTransaction()
+        public ITransaction BeginTransaction()
         {
             CreateConnection();
 
@@ -51,7 +51,7 @@ namespace VODB
 
         #endregion
 
-        #region ISessionInternal Members
+        #region IInternalSession Members
 
         public DbCommand CreateCommand()
         {

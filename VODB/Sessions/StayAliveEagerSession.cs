@@ -4,12 +4,12 @@ using VODB.DbLayer.DbCommands;
 using VODB.DbLayer.DbExecuters;
 using VODB.DbLayer.Loaders;
 
-namespace VODB
+namespace VODB.Sessions
 {
-    public sealed class StayAliveEagerSession : Session
+    internal sealed class StayAliveEagerInternalSession : InternalSession
     {
 
-        internal StayAliveEagerSession(IDbConnectionCreator creator = null)
+        internal StayAliveEagerInternalSession(IDbConnectionCreator creator = null)
             :base(creator)
         {
             

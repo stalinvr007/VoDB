@@ -1,9 +1,9 @@
 using System;
 using System.Data.Common;
 
-namespace VODB
+namespace VODB.Sessions
 {
-    public sealed class Transaction : IDisposable
+    internal sealed class Transaction : IDisposable, ITransaction
     {
         private DbTransaction _Transaction;
         private int count = 1;

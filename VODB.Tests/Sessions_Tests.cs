@@ -11,7 +11,7 @@ namespace VODB.Tests
         [TestMethod]
         public void EagerSession_GetAll()
         {
-            IEnumerable<Employee> employees = Sessions.GetEager().GetAll<Employee>();
+            IEnumerable<Employee> employees = SessionsFactory.CreateEager().GetAll<Employee>();
 
             Assert.AreEqual(9, employees.Count());
         }

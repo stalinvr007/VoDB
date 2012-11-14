@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using VODB.Annotations;
+using VODB.Extensions;
 
 namespace VODB.VirtualDataBase
 {
