@@ -15,7 +15,8 @@ namespace VODB.Sessions
     {
         private IDbConnectionCreator _creator;
         private DbConnection _connection;
-        private Transaction transaction;
+        private Transaction _transaction;
+        private TasksCollection _tasks;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InternalSession" /> class.
@@ -24,43 +25,51 @@ namespace VODB.Sessions
         internal InternalSession(IDbConnectionCreator creator = null)
         {
             _creator = creator ?? new SqlConnectionCreator();
+            _tasks = new TasksCollection();
         }
 
         private bool InTransaction
         {
-            get { return transaction != null; }
+            get { return _transaction != null; }
         }
 
         #region ISession Members
 
         public ITransaction BeginTransaction()
         {
-            CreateConnection();
-
-            if (transaction != null)
+            lock (this)
             {
-                transaction.BeginNestedTransaction();
-            }
-            else
-            {
-                transaction = new Transaction(_connection.BeginTransaction());
-            }
+                CreateConnection();
 
-            return transaction;
+                if (_transaction != null)
+                {
+                    _transaction.BeginNestedTransaction();
+                }
+                else
+                {
+                    _transaction = new Transaction(_connection.BeginTransaction());
+                }
+
+                return _transaction;
+            }
         }
 
         public abstract IEnumerable<TEntity> GetAll<TEntity>() where TEntity : DbEntity, new();
 
         public Task<IEnumerable<TEntity>> AsyncGetAll<TEntity>() where TEntity : DbEntity, new()
         {
-            return new Task<IEnumerable<TEntity>>(GetAll<TEntity>).RunAsync();
+            return _tasks.Add<IEnumerable<TEntity>>(
+                new Task<IEnumerable<TEntity>>(new EagerSession(_creator).GetAll<TEntity>).RunAsync()
+            );
         }
 
         public abstract TEntity GetById<TEntity>(TEntity entity) where TEntity : DbEntity, new();
 
         public Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : DbEntity, new()
         {
-            return new Task<TEntity>(() => GetById(entity)).RunAsync();
+            return _tasks.Add<TEntity>(
+                new Task<TEntity>(() => new EagerSession(_creator).GetById(entity)).RunAsync()
+            );
         }
 
         #endregion
@@ -69,32 +78,43 @@ namespace VODB.Sessions
 
         public DbCommand CreateCommand()
         {
-            CreateConnection();
+            lock (this)
+            {
+                CreateConnection();
 
-            return InTransaction
-                       ? transaction.CreateCommand()
-                       : _connection.CreateCommand();
+                return InTransaction
+                           ? _transaction.CreateCommand()
+                           : _connection.CreateCommand();
+            }
         }
 
 
         public void Open()
         {
-            CreateCommand();
-
-            if (_connection.State == ConnectionState.Open)
+            lock (this)
             {
-                return;
+                CreateConnection();
+
+                if (_connection.State == ConnectionState.Open)
+                {
+                    return;
+                }
+                _connection.Open();    
             }
-            _connection.Open();
+            
         }
 
         public void Close()
         {
-            if (_connection == null || _connection.State == ConnectionState.Closed || (InTransaction && !transaction.Ended))
+            lock (this)
             {
-                return;
+                if (_connection == null || _connection.State == ConnectionState.Closed ||
+                    (InTransaction && !_transaction.Ended) || _tasks.Count > 0)
+                {
+                    return;
+                }
+                _connection.Close();
             }
-            _connection.Close();
         }
 
         #endregion
@@ -109,10 +129,11 @@ namespace VODB.Sessions
 
         public void Dispose()
         {
-            if (transaction != null)
+            
+            if (_transaction != null)
             {
-                transaction.Dispose();
-                transaction = null;
+                _transaction.Dispose();
+                _transaction = null;
             }
 
             if (_connection != null)
@@ -122,6 +143,7 @@ namespace VODB.Sessions
             }
 
             _creator = null;
+            _tasks = null;
         }
     }
 }

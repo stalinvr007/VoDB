@@ -7,7 +7,7 @@ namespace VODB.Tests
     {
         public static void EagerExecute(Action<ISession> action)
         {
-            var session = new EagerInternalSession();
+            var session = new EagerSession();
 
             session.Open();
 
