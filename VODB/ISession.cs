@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace VODB
 {
@@ -10,16 +11,29 @@ namespace VODB
     {
         ITransaction BeginTransaction();
 
-
         /// <summary>
-        /// Gets all entities from this session.
+        /// Gets all entities of the given type from this session.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns></returns>
         IEnumerable<TEntity> GetAll<TEntity>() where TEntity : DbEntity, new();
 
+        /// <summary>
+        /// Gets all entities of the given type from this session. Asynchronously.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <returns></returns>
+        Task<IEnumerable<TEntity>> AsyncGetAll<TEntity>() where TEntity : DbEntity, new();
 
-
+        /*
+        /// <summary>
+        /// Gets the entity by Id.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="entity">The entity that contains the key fields filled.</param>
+        /// <returns></returns>
+        //TEntity GetById<TEntity>(TEntity entity) where TEntity : DbEntity, new();
+        */
     }
 
     internal interface IInternalSession
