@@ -8,6 +8,8 @@ namespace VODB.Sessions
         private DbTransaction _Transaction;
         private int count = 1;
 
+        public Boolean Ended { get; private set; }
+
         public Transaction(DbTransaction transaction)
         {
             _Transaction = transaction;
@@ -23,18 +25,18 @@ namespace VODB.Sessions
             }
 
             Commit();
-            if (count == 0)
-            {
-                _Transaction.Dispose();
-                _Transaction = null;
-            }
+            
+            if (count != 0) return;
+
+            _Transaction.Dispose();
+            _Transaction = null;
         }
 
         #endregion
 
         internal DbCommand CreateCommand()
         {
-            DbCommand cmd = _Transaction.Connection.CreateCommand();
+            var cmd = _Transaction.Connection.CreateCommand();
             cmd.Transaction = _Transaction;
             return cmd;
         }
@@ -59,6 +61,7 @@ namespace VODB.Sessions
             CheckTransactionAlive();
 
             count = int.MaxValue;
+            Ended = true;
             _Transaction.Rollback();
         }
 
@@ -69,6 +72,7 @@ namespace VODB.Sessions
             --count;
             if (count == 0)
             {
+                Ended = true;
                 _Transaction.Commit();
             }
         }
