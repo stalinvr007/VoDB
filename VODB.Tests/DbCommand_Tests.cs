@@ -9,6 +9,7 @@ using VODB.DbLayer.DbExecuters;
 using VODB.DbLayer.Loaders;
 using VODB.Tests.Models.Northwind;
 using VODB.VirtualDataBase;
+using VODB.Exceptions;
 
 namespace VODB.Tests
 {
@@ -106,8 +107,8 @@ namespace VODB.Tests
                               });
         }
 
-        [TestMethod]
-        public void InsertEmployee()
+        [TestMethod, ExpectedException(typeof(ValidationException))]
+        public void InsertEmployee_NoFieldsSet()
         {
             Utils.Execute(session =>
                               {

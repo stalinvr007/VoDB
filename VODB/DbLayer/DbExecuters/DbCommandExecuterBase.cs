@@ -34,6 +34,10 @@ namespace VODB.DbLayer.DbExecuters
             {
                 return Execute(_commandFactory.Make().ExecuteNonQuery());
             }
+            catch (ValidationException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 throw new UnableToExecuteNonQueryException(ex);

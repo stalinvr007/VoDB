@@ -12,7 +12,10 @@ namespace VODB
     {
         static Configuration()
         {
-            EntityValidators = new List<IEntityValidator>();
+            EntityValidators = new List<IEntityValidator>
+                                   {
+                                       new RequiredFieldsValidator()
+                                   };
 
             FieldSetters = new List<IFieldSetter>
                                {
