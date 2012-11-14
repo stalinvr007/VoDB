@@ -59,6 +59,7 @@
     <Compile Include="DbLayer\DbCommands\DbParameterSetters\IParameterSetter.cs" />
     <Compile Include="DbLayer\DbCommands\IDbCommandFactory.cs" />
     <Compile Include="DbLayer\DbExecuters\DbCommandExecuterBase.cs" />
+    <Compile Include="DbLayer\DbExecuters\DbCommandNonQueryExecuter.cs" />
     <Compile Include="DbLayer\DbExecuters\DbQueryResult.cs" />
     <Compile Include="DbLayer\DbExecuters\DbEntityQueryExecuterLazy.cs" />
     <Compile Include="DbLayer\DbExecuters\DbEntityQueryExecuterEager.cs" />

@@ -76,7 +76,8 @@
     <Compile Include="DbConnectionCreator_Tests.cs" />
     <Compile Include="DbCommand_Tests.cs" />
     <Compile Include="EntityLoaders_Tests.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="Sessions_Tests.cs" />
+    <Compile Include="Validatores_Tests.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>

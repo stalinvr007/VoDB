@@ -10,6 +10,7 @@ using VODB.DbLayer.Loaders;
 using VODB.Tests.Models.Northwind;
 using VODB.VirtualDataBase;
 using VODB.Exceptions;
+using System.Data.SqlClient;
 
 namespace VODB.Tests
 {
@@ -126,6 +127,7 @@ namespace VODB.Tests
                 {
                     var employee = new Employee
                     {
+                        EmployeeId = 10,
                         FirstName = "Sérgio",
                         LastName = "Ferreira"
                     };
