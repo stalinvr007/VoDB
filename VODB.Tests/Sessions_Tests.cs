@@ -93,5 +93,22 @@ namespace VODB.Tests
             Assert.AreEqual(9, employees2.Count());
             Assert.AreEqual(9, employees3.Count());
         }
+
+        [TestMethod]
+        public void EagerSession_Insert_Employee()
+        {
+            Utils.EagerExecuteWithinTransaction(session =>
+            {
+                var employee = session
+                    .Insert(new Employee
+                    {
+                        FirstName = "Sérgio",
+                        LastName = "Ferreira"
+                    });
+
+                Assert.IsNotNull(employee);
+            });
+
+        }
     }
 }

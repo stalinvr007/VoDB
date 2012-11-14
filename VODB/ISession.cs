@@ -40,6 +40,14 @@ namespace VODB
         /// <param name="entity">The entity that contains the key fields filled.</param>
         /// <returns></returns>
         Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : DbEntity, new();
+
+        /// <summary>
+        /// Inserts the specified entity.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="entity">The entity.</param>
+        /// <returns></returns>
+        TEntity Insert<TEntity>(TEntity entity) where TEntity : DbEntity, new();
     }
 
     internal interface IInternalSession

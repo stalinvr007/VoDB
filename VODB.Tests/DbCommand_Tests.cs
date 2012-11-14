@@ -10,7 +10,6 @@ using VODB.DbLayer.Loaders;
 using VODB.Tests.Models.Northwind;
 using VODB.VirtualDataBase;
 using VODB.Exceptions;
-using System.Data.SqlClient;
 
 namespace VODB.Tests
 {

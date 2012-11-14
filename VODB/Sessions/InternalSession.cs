@@ -4,6 +4,8 @@ using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 using VODB.DbLayer;
+using VODB.DbLayer.DbCommands;
+using VODB.DbLayer.DbExecuters;
 using VODB.Extensions;
 
 namespace VODB.Sessions
@@ -72,6 +74,17 @@ namespace VODB.Sessions
             );
         }
 
+        public TEntity Insert<TEntity>(TEntity entity) where TEntity : DbEntity, new()
+        {
+            RunAndClose(() =>
+                new DbCommandNonQueryExecuter(
+                    new DbEntityInsertCommandFactory<TEntity>(this, entity)
+                ).Execute()
+            );
+
+            return entity;
+        }
+
         #endregion
 
         #region IInternalSession Members
@@ -118,6 +131,19 @@ namespace VODB.Sessions
         }
 
         #endregion
+
+        protected TResult RunAndClose<TResult>(Func<TResult> action)
+        {
+            Open();
+            try
+            {
+                return action();
+            }
+            finally
+            {
+                Close();
+            }
+        }
 
         private void CreateConnection()
         {
