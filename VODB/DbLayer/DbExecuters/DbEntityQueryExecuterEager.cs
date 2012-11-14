@@ -13,7 +13,7 @@ namespace VODB.DbLayer.DbExecuters
     internal class DbEntityQueryExecuterEager<TEntity> : DbEntityQueryExecuterBase<TEntity>
         where TEntity : DbEntity, new()
     {
-        private readonly EntityLoader<TEntity> _Loader;
+        private readonly IEntityLoader<TEntity> _Loader;
 
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace VODB.DbLayer.DbExecuters
         /// </summary>
         /// <param name="commandFactory">The command factory.</param>
         /// <param name="loader">The loader.</param>
-        public DbEntityQueryExecuterEager(IDbCommandFactory commandFactory, EntityLoader<TEntity> loader)
+        public DbEntityQueryExecuterEager(IDbCommandFactory commandFactory, IEntityLoader<TEntity> loader)
             : base(commandFactory)
         {
             _Loader = loader;

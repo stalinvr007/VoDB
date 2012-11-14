@@ -56,6 +56,8 @@ namespace VODB.Sessions
             return new Task<IEnumerable<TEntity>>(GetAll<TEntity>).RunAsync();
         }
 
+        public abstract TEntity GetById<TEntity>(TEntity entity) where TEntity : DbEntity, new();
+
         #endregion
 
         #region IInternalSession Members

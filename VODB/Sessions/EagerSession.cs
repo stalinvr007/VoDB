@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using VODB.DbLayer;
 using VODB.DbLayer.DbCommands;
 using VODB.DbLayer.DbExecuters;
@@ -40,6 +41,12 @@ namespace VODB.Sessions
                                          ).Execute());
         }
 
-        
+        public override TEntity GetById<TEntity>(TEntity entity)
+        {
+            return RunAndClose(() => new DbEntityQueryExecuterEager<TEntity>(
+                                         new DbEntitySelectByIdCommandFactory<TEntity>(this, entity),
+                                         new FullEntityLoader<TEntity>()
+                                         ).Execute().FirstOrDefault());
+        }
     }
 }

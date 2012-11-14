@@ -9,8 +9,7 @@ namespace VODB.DbLayer.Loaders
     /// Loads data into an entity from a DataReader.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
-    internal abstract class EntityLoader<TModel>
-        where TModel : DbEntity, new()
+    internal abstract class EntityLoader<TModel> : IEntityLoader<TModel> where TModel : DbEntity, new()
     {
         #region FIELD GETTER SETTER
 
