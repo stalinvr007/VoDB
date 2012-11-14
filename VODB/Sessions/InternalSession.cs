@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Threading.Tasks;
 using VODB.DbLayer;
 using VODB.DbLayer.DbCommands;
@@ -76,12 +77,40 @@ namespace VODB.Sessions
 
         public TEntity Insert<TEntity>(TEntity entity) where TEntity : DbEntity, new()
         {
-            RunAndClose(() =>
+            var id = RunAndClose(() =>
+            {
                 new DbCommandNonQueryExecuter(
                     new DbEntityInsertCommandFactory<TEntity>(this, entity)
+                    ).Execute();
+
+                return new DbQueryExecuterCommandEager(
+                    new DbCommandBypass(this, "Select @@IDENTITY").Make(), entity.Table).Execute().FirstOrDefault();
+            });
+
+            var idField = entity.Table.KeyFields.FirstOrDefault(f => f.IsIdentity);
+            if (idField != null)
+            {
+                entity.SetValue(idField, id, field => id);
+            }
+            return entity;
+        }
+
+        public void Delete<TEntity>(TEntity entity) where TEntity : DbEntity, new()
+        {
+            RunAndClose(() =>
+                new DbCommandNonQueryExecuter(
+                    new DbEntityDeleteCommandFactory<TEntity>(this, entity)
                 ).Execute()
             );
+        }
 
+        public TEntity Update<TEntity>(TEntity entity) where TEntity : DbEntity, new()
+        {
+            RunAndClose(() =>
+                new DbCommandNonQueryExecuter(
+                    new DbEntityUpdateCommandFactory<TEntity>(this, entity)
+                ).Execute()
+            );
             return entity;
         }
 
@@ -112,9 +141,9 @@ namespace VODB.Sessions
                 {
                     return;
                 }
-                _connection.Open();    
+                _connection.Open();
             }
-            
+
         }
 
         public void Close()
@@ -155,7 +184,7 @@ namespace VODB.Sessions
 
         public void Dispose()
         {
-            
+
             if (_transaction != null)
             {
                 _transaction.Dispose();

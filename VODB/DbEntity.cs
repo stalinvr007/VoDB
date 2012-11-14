@@ -14,6 +14,8 @@ namespace VODB
 
         private Table _table;
 
+        private readonly IDictionary<Field, Object> OriginalKeyValues = new Dictionary<Field, object>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DbEntity" /> class.
         /// </summary>
@@ -24,6 +26,16 @@ namespace VODB
                 _Type,
                 new TableCreator(_Type)
                 );
+        }
+
+        internal Object GetKeyOriginalValue(Field field)
+        {
+            return OriginalKeyValues[field];
+        }
+
+        internal void AddKeyOriginalValue(Field field, Object value)
+        {
+            OriginalKeyValues[field] = value;
         }
 
         #region FOREIGN KEYS GETTER SETTER

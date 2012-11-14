@@ -48,14 +48,26 @@ namespace VODB
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
         TEntity Insert<TEntity>(TEntity entity) where TEntity : DbEntity, new();
+
+        /// <summary>
+        /// Deletes the specified entity.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="entity">The entity.</param>
+        void Delete<TEntity>(TEntity entity) where TEntity : DbEntity, new();
+
+        /// <summary>
+        /// Updates the specified entity.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="entity">The entity.</param>
+        /// <returns></returns>
+        TEntity Update<TEntity>(TEntity entity) where TEntity : DbEntity, new();
+
     }
 
     internal interface IInternalSession
     {
         DbCommand CreateCommand();
-
-        void Open();
-
-        void Close();
     }
 }

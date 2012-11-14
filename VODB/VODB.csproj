@@ -47,11 +47,15 @@
     <Compile Include="Caching\TablesCache.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="DbEntity.cs" />
+    <Compile Include="DbLayer\DbCommands\DbCommandBypass.cs" />
     <Compile Include="DbLayer\DbCommands\DbCommandFactory.cs" />
     <Compile Include="DbLayer\DbCommands\DbEntityCommandFactory.cs" />
+    <Compile Include="DbLayer\DbCommands\DbEntityCountCommandFactory.cs" />
+    <Compile Include="DbLayer\DbCommands\DbEntityDeleteCommandFactory.cs" />
     <Compile Include="DbLayer\DbCommands\DbEntityInsertCommandFactory.cs" />
     <Compile Include="DbLayer\DbCommands\DbEntitySelectByIdCommandFactory.cs" />
     <Compile Include="DbLayer\DbCommands\DbEntitySelectCommandFactory.cs" />
+    <Compile Include="DbLayer\DbCommands\DbEntityUpdateCommandFactory.cs" />
     <Compile Include="DbLayer\DbCommands\DbParameterSetters\BasicParameterSetter.cs" />
     <Compile Include="DbLayer\DbCommands\DbParameterSetters\ByteArrayParameterSetter.cs" />
     <Compile Include="DbLayer\DbCommands\DbParameterSetters\DateTimeParameterSetter.cs" />

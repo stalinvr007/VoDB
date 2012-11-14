@@ -1,5 +1,4 @@
 using System.Data.Common;
-using VODB.VirtualDataBase;
 
 namespace VODB.DbLayer.Loaders
 {
@@ -19,7 +18,7 @@ namespace VODB.DbLayer.Loaders
         public override void Load(TModel entity, DbDataReader reader)
         {
             if (entity == null) return;
-            foreach (Field field in entity.Table.KeyFields)
+            foreach (var field in entity.Table.KeyFields)
             {
                 SetValue(entity, field, GetValue(reader, field.FieldName), reader);
             }
