@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using VODB.DbLayer;
 using VODB.DbLayer.DbCommands;
@@ -17,20 +18,25 @@ namespace VODB
         {
         }
 
-        public override IEnumerable<TEntity> GetAll<TEntity>()
+        private TResult RunAndClose<TResult>(Func<TResult> action)
         {
             Open();
             try
             {
-                return new DbEntityQueryExecuterEager<TEntity>(
-                    new DbEntitySelectCommandFactory<TEntity>(this),
-                    new FullEntityLoader<TEntity>()
-                    ).Execute();
+                return action();
             }
             finally
             {
                 Close();
             }
+        }
+
+        public override IEnumerable<TEntity> GetAll<TEntity>()
+        {
+            return RunAndClose(() => new DbEntityQueryExecuterEager<TEntity>(
+                                         new DbEntitySelectCommandFactory<TEntity>(this),
+                                         new FullEntityLoader<TEntity>()
+                                         ).Execute());
         }
     }
 }

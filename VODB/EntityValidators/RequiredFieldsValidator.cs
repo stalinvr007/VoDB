@@ -1,5 +1,6 @@
-using System.Collections.Generic;
+using System;
 using System.Linq;
+using System.Text;
 using VODB.Exceptions;
 using VODB.VirtualDataBase;
 
@@ -15,29 +16,50 @@ namespace VODB.EntityValidators
         /// <param name="entity">The entity.</param>
         public void Validate(DbEntity entity)
         {
-            List<Field> nonFilled = entity.Table.Fields
+            var nonFilled = entity.Table.Fields
                 .Where(field => field.IsRequired)
                 .Where(field => NotFilled(field, entity))
-                .ToList();
+                .Select(field => field.FieldName);
 
-            if (nonFilled.Count > 0)
+            var sb = new StringBuilder();
+            foreach (var field in nonFilled)
             {
-                throw new ValidationException();
+                sb.AppendFormat("[{0}], ", field);
             }
+
+            if (sb.Length <= 0) return;
+            
+            sb.Remove(sb.Length - 2, 2);    
+            throw new ValidationException(string.Format("Required fields not set: {{ {0} }}", sb.ToString()));
         }
 
         #endregion
 
-        private bool NotFilled(Field field, DbEntity entity)
+        private static bool NotFilled(Field field, DbEntity entity)
         {
-            object value = field.GetValue(entity);
+            var value = field.GetValue(entity);
 
             if (value == null)
             {
                 return true;
             }
 
-            return false;
+            if (typeof(DateTime).IsAssignableFrom(field.FieldType) && ((DateTime)value).Year == 1)
+            {
+                return true;
+            }
+
+            return (typeof(int).IsAssignableFrom(field.FieldType) ||
+                    typeof(Double).IsAssignableFrom(field.FieldType) ||
+                    typeof(float).IsAssignableFrom(field.FieldType) ||
+                    typeof(Decimal).IsAssignableFrom(field.FieldType) ||
+                    typeof(long).IsAssignableFrom(field.FieldType)) && value.Equals(0);
+        }
+
+        public bool ShouldRunOn(On onCommand)
+        {
+            return onCommand == On.Insert ||
+                    onCommand == On.Update;
         }
     }
 }

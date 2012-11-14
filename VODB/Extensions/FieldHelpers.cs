@@ -3,13 +3,27 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using VODB.DbLayer.DbCommands.DbParameterSetters;
+using VODB.EntityValidators;
 using VODB.Exceptions;
 using VODB.VirtualDataBase;
 
 namespace VODB.Extensions
 {
-    internal static class FieldHelpers
+
+    internal static class ConfigurationHelpers
     {
+
+        public static void ValidateEntity(this DbEntity entity, On onCommand)
+        {
+
+            foreach (var validator in Configuration.EntityValidators
+                .Where(val => val.ShouldRunOn(onCommand)))
+            {
+                validator.Validate(entity);
+            }
+
+        }
+
         /// <summary>
         /// Sets the parameter.
         /// </summary>
@@ -18,13 +32,11 @@ namespace VODB.Extensions
         /// <param name="entity">The entity.</param>
         public static void SetValue(this DbParameter param, Field field, Object entity)
         {
-            foreach (IParameterSetter setter in Configuration.ParameterSetters)
+            foreach (IParameterSetter setter in Configuration.ParameterSetters
+                .Where(setter => setter.CanHandle(field.FieldType)))
             {
-                if (setter.CanHandle(field.FieldType))
-                {
-                    setter.SetValue(param, field, entity);
-                    return;
-                }
+                setter.SetValue(param, field, entity);
+                return;
             }
 
             throw new ParameterSetterNotFoundException(field.FieldType);
@@ -85,6 +97,29 @@ namespace VODB.Extensions
             }
             return field;
         }
+    }
+
+    internal static class Helpers
+    {
+        /// <summary>
+        /// Throws ArgumentNullException if argument is null.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
+        /// <param name="argumentName">Name of the argument.</param>
+        /// <param name="msg">The MSG.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public static void ThrowExceptionIfNull(this Object argument, String argumentName, String msg)
+        {
+            if (argument == null)
+            {
+                throw new ArgumentNullException(argumentName, msg);
+            }
+        }
+    }
+
+    internal static class FieldHelpers
+    {
+        
 
         /// <summary>
         /// Gets the value.

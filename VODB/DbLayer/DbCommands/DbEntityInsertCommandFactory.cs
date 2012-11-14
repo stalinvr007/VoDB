@@ -1,5 +1,6 @@
 ﻿using System.Data.Common;
 using System.Linq;
+using VODB.EntityValidators;
 using VODB.Extensions;
 
 namespace VODB.DbLayer.DbCommands
@@ -14,6 +15,8 @@ namespace VODB.DbLayer.DbCommands
 
         protected override DbCommand Make(DbCommand dbCommand, TEntity entity)
         {
+            entity.ValidateEntity(On.Insert);
+
             dbCommand.CommandText = entity.Table.CommandsHolder.Insert;
             dbCommand.SetParameters(
                 entity.Table.Fields.Where(field => !field.IsIdentity),

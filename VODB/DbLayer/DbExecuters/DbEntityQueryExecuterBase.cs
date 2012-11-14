@@ -28,6 +28,10 @@ namespace VODB.DbLayer.DbExecuters
             {
                 return GetEntities(cmd.ExecuteReader());
             }
+            catch (ValidationException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 throw new UnableToExecuteQueryException(cmd.CommandText, ex);
