@@ -20,18 +20,7 @@ namespace VODB.Sessions
         {
         }
 
-        private TResult RunAndClose<TResult>(Func<TResult> action)
-        {
-            Open();
-            try
-            {
-                return action();
-            }
-            finally
-            {
-                Close();
-            }
-        }
+        
 
         public override IEnumerable<TEntity> GetAll<TEntity>()
         {
