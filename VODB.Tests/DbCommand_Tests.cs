@@ -39,7 +39,7 @@ namespace VODB.Tests
         [TestMethod]
         public void GetEmployeesEntities()
         {
-            Utils.Execute(session =>
+            Utils.EagerExecute(session =>
                               {
                                   var factory = new DbEntitySelectCommandFactory<Employee>(session);
 
@@ -57,7 +57,7 @@ namespace VODB.Tests
         [TestMethod]
         public void GetEmployeesEntities_Lazy()
         {
-            Utils.Execute(session =>
+            Utils.EagerExecute(session =>
                               {
                                   var factory = new DbEntitySelectCommandFactory<Employee>(session);
 
@@ -73,11 +73,10 @@ namespace VODB.Tests
         [TestMethod]
         public void GetEmployeesById_Eager()
         {
-            Utils.Execute(session =>
+            Utils.EagerExecute(session =>
                               {
                                   var factory = new DbEntitySelectByIdCommandFactory<Employee>(session,
-                                                                                               new Employee
-                                                                                                   {EmployeeId = 1});
+                                                                                               new Employee { EmployeeId = 1 });
 
                                   var query = new DbEntityQueryExecuterEager<Employee>(factory,
                                                                                        new FullEntityLoader<Employee>());
@@ -93,7 +92,7 @@ namespace VODB.Tests
         [TestMethod]
         public void GetEmployeesById_Eager_NoIdSupplied()
         {
-            Utils.Execute(session =>
+            Utils.EagerExecute(session =>
                               {
                                   var factory = new DbEntitySelectByIdCommandFactory<Employee>(session,
                                                                                                new Employee());
@@ -110,24 +109,35 @@ namespace VODB.Tests
         [TestMethod, ExpectedException(typeof(ValidationException))]
         public void InsertEmployee_NoFieldsSet()
         {
-            Utils.Execute(session =>
-                              {
-                                  var trans = session.BeginTransaction();
+            Utils.EagerExecuteWithinTransaction(session =>
+            {
+                var cmdFactory = new DbEntityInsertCommandFactory<Employee>(session, new Employee());
+                var query = new DbCommandNonQueryExecuter(cmdFactory);
 
-                                  try
-                                  {
-                                      var factory = new DbEntityInsertCommandFactory<Employee>(session,
-                                                                                               new Employee());
+                query.Execute();
+            });
+        }
 
-                                      var query = new DbCommandNonQueryExecuter(factory);
+        [TestMethod]
+        public void InsertEmployee()
+        {
+            Utils.StayAliveEagerExecuteWithinTransaction(
+                session =>
+                {
+                    var employee = new Employee
+                    {
+                        FirstName = "Sérgio",
+                        LastName = "Ferreira"
+                    };
 
-                                      Assert.AreEqual(1, query.Execute());
-                                  }
-                                  finally
-                                  {
-                                      trans.RollBack();
-                                  }
-                              });
+                    var cmdFactory = new DbEntityInsertCommandFactory<Employee>(session, employee);
+                    var insert = new DbCommandNonQueryExecuter(cmdFactory);
+
+                    var count = session.GetAll<Employee>().Count();
+                    insert.Execute();
+
+                    Assert.AreEqual(count + 1, session.GetAll<Employee>().Count());
+                });
         }
     }
 }

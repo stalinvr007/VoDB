@@ -8,5 +8,10 @@ namespace VODB
         {
             return new EagerSession(creator);
         }
+
+        public static ISession GetStayAliveEager(IDbConnectionCreator creator = null)
+        {
+            return new StayAliveEagerSession(creator);
+        }
     }
 }

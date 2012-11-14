@@ -56,7 +56,7 @@ namespace VODB.VirtualDataBase
 
         private static IEnumerable<Field> GetTableFields(Type type)
         {
-            return type.GetProperties().Select(GetField).ToList();
+            return type.GetProperties().Select(info => SetCommunSettings(GetField(info), info)).ToList();
         }
 
         private static Field GetField(PropertyInfo info)
@@ -69,9 +69,7 @@ namespace VODB.VirtualDataBase
                     FieldName = info.Name,
                     FieldType = info.PropertyType,
                     IsKey = false,
-                    IsIdentity = false,
-                    BindedTo = GetBindedTo(info),
-                    IsRequired = info.GetAttribute<DbRequiredAttribute>() != null
+                    IsIdentity = false
                 };
             }
 
@@ -83,9 +81,7 @@ namespace VODB.VirtualDataBase
                     FieldName = GetFieldName(dbField, info),
                     FieldType = info.PropertyType,
                     IsKey = false,
-                    IsIdentity = false,
-                    BindedTo = GetBindedTo(info),
-                    IsRequired = info.GetAttribute<DbRequiredAttribute>() != null
+                    IsIdentity = false
                 };
             }
 
@@ -94,10 +90,15 @@ namespace VODB.VirtualDataBase
                 FieldName = GetKeyFieldName(info),
                 FieldType = info.PropertyType,
                 IsKey = IsKeyField(info),
-                IsIdentity = IsIdentityField(info),
-                BindedTo = GetBindedTo(info),
-                IsRequired = info.GetAttribute<DbRequiredAttribute>() != null
+                IsIdentity = IsIdentityField(info)
             };
+        }
+
+        private static Field SetCommunSettings(Field field, PropertyInfo info)
+        {
+            field.BindedTo = GetBindedTo(info);
+            field.IsIdentity = field.IsKey || info.GetAttribute<DbRequiredAttribute>() != null;
+            return field;
         }
 
         private static String GetFieldName(DbFieldAttribute dbField, PropertyInfo info)

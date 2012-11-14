@@ -78,6 +78,7 @@
     <Compile Include="Exceptions\FieldSetterNotFoundException.cs" />
     <Compile Include="Exceptions\ParameterSetterNotFoundException.cs" />
     <Compile Include="ISession.cs" />
+    <Compile Include="StayAliveEagerSession.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="DbLayer\SqlConnectionCreator.cs" />
     <Compile Include="Exceptions\UnableToExecuteNonQueryException.cs" />
