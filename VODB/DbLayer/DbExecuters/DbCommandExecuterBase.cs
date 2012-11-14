@@ -1,22 +1,10 @@
 using System;
+using System.Data.SqlClient;
 using VODB.DbLayer.DbCommands;
 using VODB.Exceptions;
 
 namespace VODB.DbLayer.DbExecuters
 {
-    internal sealed class DbCommandNonQueryExecuter : DbCommandExecuterBase<int>
-    {
-        public DbCommandNonQueryExecuter(IDbCommandFactory commandFactory)
-            : base(commandFactory)
-        {
-        }
-
-        protected override int Execute(int cmdResult)
-        {
-            return cmdResult;
-        }
-    }
-
     internal abstract class DbCommandExecuterBase<TResult> : ICommandExecuter<TResult>
     {
         private readonly IDbCommandFactory _commandFactory;
@@ -33,6 +21,10 @@ namespace VODB.DbLayer.DbExecuters
             try
             {
                 return Execute(_commandFactory.Make().ExecuteNonQuery());
+            }
+            catch(SqlException ex)
+            {
+                throw;
             }
             catch (ValidationException)
             {

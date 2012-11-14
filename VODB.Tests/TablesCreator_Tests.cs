@@ -5,6 +5,7 @@ using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.Annotations;
 using VODB.Caching;
+using VODB.Tests.Models.Northwind;
 using VODB.VirtualDataBase;
 
 namespace VODB.Tests
@@ -131,6 +132,52 @@ namespace VODB.Tests
             Assert.IsTrue(fields[0].IsKey);
             Assert.IsTrue(fields[1].IsKey);
             Assert.IsFalse(fields[2].IsKey);
+
+            Assert.IsNotNull(entity.Table.CommandsHolder.Select);
+        }
+
+        [TestMethod]
+        public void CreateTable_Employee_Test()
+        {
+            var entity = new Employee();
+
+            Assert.IsNotNull(entity.Table.KeyFields);
+            Assert.IsNotNull(entity.Table.Fields);
+
+            List<Field> fields = entity.Table.Fields.ToList();
+
+            Assert.AreEqual("Employees", entity.Table.TableName);
+
+            Assert.AreEqual("EmployeeId", fields[0].FieldName);
+            Assert.AreEqual("LastName", fields[1].FieldName);
+            Assert.AreEqual("FirstName", fields[2].FieldName);
+            Assert.AreEqual("Title", fields[3].FieldName);
+            Assert.AreEqual("TitleOfCourtesy", fields[4].FieldName);
+            Assert.AreEqual("BirthDate", fields[5].FieldName);
+            Assert.AreEqual("HireDate", fields[6].FieldName);
+            Assert.AreEqual("Address", fields[7].FieldName);
+            Assert.AreEqual("City", fields[8].FieldName);
+            Assert.AreEqual("Region", fields[9].FieldName);
+            Assert.AreEqual("PostalCode", fields[10].FieldName);
+            Assert.AreEqual("Country", fields[11].FieldName);
+            Assert.AreEqual("HomePhone", fields[12].FieldName);
+            Assert.AreEqual("Extension", fields[13].FieldName);
+            Assert.AreEqual("Notes", fields[14].FieldName);
+            Assert.AreEqual("Photo", fields[15].FieldName);
+            Assert.AreEqual("ReportsTo", fields[16].FieldName);
+            Assert.AreEqual("PhotoPath", fields[17].FieldName);
+
+            Assert.IsFalse(fields[0].IsRequired);
+            Assert.IsTrue(fields[1].IsRequired);
+            Assert.IsTrue(fields[2].IsRequired);
+
+
+            Assert.IsTrue(fields[0].IsKey);
+
+            foreach (var field in fields.Skip(1))
+            {
+                Assert.IsFalse(field.IsKey);   
+            }
 
             Assert.IsNotNull(entity.Table.CommandsHolder.Select);
         }
