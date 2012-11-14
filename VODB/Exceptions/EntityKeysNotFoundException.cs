@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 
 namespace VODB.Exceptions
 {
@@ -8,7 +7,6 @@ namespace VODB.Exceptions
         public EntityKeysNotFoundException(string tableName)
             : base(String.Format("No keys found for the model that represents [{0}] table.", tableName))
         {
-
         }
     }
 }

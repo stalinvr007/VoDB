@@ -1,8 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
 using VODB.DbLayer;
 using VODB.DbLayer.DbCommands;
 using VODB.DbLayer.DbExecuters;
@@ -12,7 +8,6 @@ namespace VODB
 {
     public class EagerSession : Session
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="EagerSession"/> class.
         /// </summary>
@@ -20,7 +15,6 @@ namespace VODB
         internal EagerSession(IDbConnectionCreator creator = null)
             : base(creator)
         {
-
         }
 
         public override IEnumerable<TEntity> GetAll<TEntity>()
@@ -31,12 +25,12 @@ namespace VODB
                 return new DbEntityQueryExecuterEager<TEntity>(
                     new DbEntitySelectCommandFactory<TEntity>(this),
                     new FullEntityLoader<TEntity>()
-                ).Execute();
+                    ).Execute();
             }
             finally
             {
                 Close();
-            }            
+            }
         }
     }
 }

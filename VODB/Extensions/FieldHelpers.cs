@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using System.Text;
-using VODB.DbLayer.Exceptions;
+using VODB.DbLayer.DbCommands.DbParameterSetters;
 using VODB.Exceptions;
 using VODB.VirtualDataBase;
 
@@ -11,17 +10,15 @@ namespace VODB.Extensions
 {
     internal static class FieldHelpers
     {
-
         /// <summary>
         /// Sets the parameter.
         /// </summary>
-        /// <param name="dbCommand">The db command.</param>
         /// <param name="param">The param.</param>
         /// <param name="field">The field.</param>
         /// <param name="entity">The entity.</param>
         public static void SetValue(this DbParameter param, Field field, Object entity)
         {
-            foreach (var setter in Configuration.ParameterSetters)
+            foreach (IParameterSetter setter in Configuration.ParameterSetters)
             {
                 if (setter.CanHandle(field.FieldType))
                 {
@@ -45,15 +42,13 @@ namespace VODB.Extensions
         public static Field SetValue<TModel>(this TModel entity, Field field, object value, DbDataReader reader)
             where TModel : DbEntity
         {
-            Boolean handled = false;
-            foreach (var setter in Configuration.FieldSetters)
+            var handled = false;
+            foreach (var setter in Configuration.FieldSetters
+                .Where(setter => setter.CanHandle(field.FieldType)))
             {
-                if (setter.CanHandle(field.FieldType))
-                {
-                    setter.SetValue(entity, field, value, (f) => reader.GetValue(f.FieldName));
-                    handled = true;
-                    break;
-                }
+                setter.SetValue(entity, field, value, f => reader.GetValue(f.FieldName));
+                handled = true;
+                break;
             }
             if (!handled)
             {
@@ -72,18 +67,17 @@ namespace VODB.Extensions
         /// <param name="value">The value.</param>
         /// <param name="getValueFromReader">The get value from reader.</param>
         /// <returns></returns>
-        public static Field SetValue<TModel>(this TModel entity, Field field, object value, Func<Field, Object> getValueFromReader)
+        public static Field SetValue<TModel>(this TModel entity, Field field, object value,
+                                             Func<Field, Object> getValueFromReader)
             where TModel : DbEntity
         {
-            Boolean handled = false;
-            foreach (var setter in Configuration.FieldSetters)
+            var handled = false;
+            foreach (var setter in Configuration.FieldSetters
+                .Where(setter => setter.CanHandle(field.FieldType)))
             {
-                if (setter.CanHandle(field.FieldType))
-                {
-                    setter.SetValue(entity, field, value, getValueFromReader);
-                    handled = true;
-                    break;
-                }
+                setter.SetValue(entity, field, value, getValueFromReader);
+                handled = true;
+                break;
             }
             if (!handled)
             {
@@ -101,7 +95,6 @@ namespace VODB.Extensions
         /// <exception cref="FieldNotFoundException"></exception>
         public static object GetValue(this DbDataReader reader, String fieldName)
         {
-
             try
             {
                 return reader[fieldName];
@@ -109,13 +102,12 @@ namespace VODB.Extensions
             catch (Exception ex)
             {
                 var table = reader.GetSchemaTable();
-                if (!table.Columns.Contains(fieldName))
+                if (table != null && !table.Columns.Contains(fieldName))
                 {
                     throw new FieldNotFoundException(fieldName, table.TableName, ex);
                 }
-                throw ex;
+                throw;
             }
-
         }
 
         /// <summary>
@@ -128,7 +120,7 @@ namespace VODB.Extensions
         public static void SetParameter<TModel>(this DbCommand dbCommand, Field field, TModel entity)
             where TModel : DbEntity
         {
-            var param = dbCommand.CreateParameter();
+            DbParameter param = dbCommand.CreateParameter();
             param.ParameterName = field.FieldName;
             param.SetValue(field, entity);
 
@@ -144,9 +136,9 @@ namespace VODB.Extensions
         /// <param name="fields">The fields.</param>
         /// <param name="entity">The entity.</param>
         public static void SetParameters<TModel>(this DbCommand dbCommand, IEnumerable<Field> fields, TModel entity)
-             where TModel : DbEntity
+            where TModel : DbEntity
         {
-            foreach (var field in fields)
+            foreach (Field field in fields)
             {
                 dbCommand.SetParameter(field, entity);
             }

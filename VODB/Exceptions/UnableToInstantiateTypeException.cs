@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace VODB.DbLayer.Exceptions
+namespace VODB.Exceptions
 {
     public class UnableToInstantiateTypeException : Exception
     {

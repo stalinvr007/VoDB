@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data.Common;
-using VODB.VirtualDataBase;
-using VODB.Extensions;
+﻿using System.Data.Common;
 
 namespace VODB.DbLayer.DbCommands
 {
@@ -15,7 +12,7 @@ namespace VODB.DbLayer.DbCommands
         {
             _entity = entity;
         }
-        
+
         protected override DbCommand Make(DbCommand dbCommand)
         {
             return Make(dbCommand, _entity);

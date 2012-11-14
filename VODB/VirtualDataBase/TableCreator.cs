@@ -62,7 +62,7 @@ namespace VODB.VirtualDataBase
         private static Field GetField(PropertyInfo info)
         {
             
-            if (info.GetCustomAttributes(true).Count() == 0)
+            if (!info.GetCustomAttributes(true).Any())
             {
                 return new Field(info)
                 {

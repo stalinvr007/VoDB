@@ -1,7 +1,7 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.Tests.Models.Northwind;
-using System.Linq;
 
 namespace VODB.Tests
 {
@@ -11,11 +11,9 @@ namespace VODB.Tests
         [TestMethod]
         public void EagerSession_GetAll()
         {
-
-            var employees = Sessions.GetEager().GetAll<Employee>();
+            IEnumerable<Employee> employees = Sessions.GetEager().GetAll<Employee>();
 
             Assert.AreEqual(9, employees.Count());
-
         }
     }
 }

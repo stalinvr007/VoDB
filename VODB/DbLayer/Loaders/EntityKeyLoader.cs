@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
 using VODB.VirtualDataBase;
 
 namespace VODB.DbLayer.Loaders
@@ -14,8 +10,6 @@ namespace VODB.DbLayer.Loaders
     internal class EntityKeyLoader<TModel> : EntityLoader<TModel>
         where TModel : DbEntity, new()
     {
-
-
         /// <summary>
         /// Loads the specified entity.
         /// </summary>
@@ -24,9 +18,11 @@ namespace VODB.DbLayer.Loaders
         /// <returns></returns>
         public override void Load(TModel entity, DbDataReader reader)
         {
-            entity.Table.KeyFields
-                .Select(field => SetValue(entity, field, GetValue(reader, field.FieldName), reader))
-                .Count();
+            if (entity == null) return;
+            foreach (Field field in entity.Table.KeyFields)
+            {
+                SetValue(entity, field, GetValue(reader, field.FieldName), reader);
+            }
         }
     }
 }

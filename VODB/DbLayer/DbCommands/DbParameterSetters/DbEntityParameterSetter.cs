@@ -1,24 +1,22 @@
 using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using System.Text;
-using VODB.VirtualDataBase;
 using VODB.Extensions;
+using VODB.VirtualDataBase;
 
 namespace VODB.DbLayer.DbCommands.DbParameterSetters
 {
     public class DbEntityParameterSetter : IParameterSetter
     {
+        #region IParameterSetter Members
 
         public Boolean CanHandle(Type type)
         {
-            return typeof(DbEntity).IsAssignableFrom(type);
+            return typeof (DbEntity).IsAssignableFrom(type);
         }
 
         public void SetValue(DbParameter param, Field field, Object entity)
         {
-
             var foreignEntity = field.GetValue(entity) as DbEntity;
 
             if (foreignEntity == null)
@@ -27,13 +25,13 @@ namespace VODB.DbLayer.DbCommands.DbParameterSetters
             }
             else
             {
-                var foreignKey = foreignEntity.Table.KeyFields
-                       .FirstOrDefault(key => key.Equals(field.BindedTo) || key.Equals(field.FieldName));
+                Field foreignKey = foreignEntity.Table.KeyFields
+                    .FirstOrDefault(key => key.FieldName.Equals(field.BindedTo) || key.FieldName.Equals(field.FieldName));
 
                 param.SetValue(foreignKey, foreignEntity);
             }
-
         }
 
+        #endregion
     }
 }

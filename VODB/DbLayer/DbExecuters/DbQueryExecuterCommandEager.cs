@@ -7,7 +7,6 @@ namespace VODB.DbLayer.DbExecuters
 {
     internal sealed class DbQueryExecuterCommandEager : IQueryExecuter<DbQueryResult>
     {
-
         private readonly DbCommand _Query;
         private readonly Table _Table;
 
@@ -22,10 +21,11 @@ namespace VODB.DbLayer.DbExecuters
             _Query = query;
         }
 
+        #region IQueryExecuter<DbQueryResult> Members
 
         public IEnumerable<DbQueryResult> Execute()
         {
-            var reader = _Query.ExecuteReader();
+            DbDataReader reader = _Query.ExecuteReader();
 
             while (reader.Read())
             {
@@ -34,10 +34,11 @@ namespace VODB.DbLayer.DbExecuters
             reader.Close();
         }
 
+        #endregion
+
         private IEnumerable<object> GetValues(IEnumerable<Field> fields, DbDataReader reader)
         {
-            return fields.Select(f => reader[(string) f.FieldName]).ToList();
+            return fields.Select(f => reader[f.FieldName]).ToList();
         }
-
     }
 }

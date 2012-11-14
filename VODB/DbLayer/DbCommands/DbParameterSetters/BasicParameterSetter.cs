@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
 using VODB.VirtualDataBase;
 
 namespace VODB.DbLayer.DbCommands.DbParameterSetters
@@ -12,12 +9,7 @@ namespace VODB.DbLayer.DbCommands.DbParameterSetters
 
         public void SetValue(DbParameter param, Field field, Object entity)
         {
-            param.Value = field.GetValue(entity);
-
-            if (param.Value == null)
-            {
-                param.Value = DBNull.Value;
-            }
+            param.Value = field.GetValue(entity) ?? DBNull.Value;
         }
 
         public bool CanHandle(Type type)
