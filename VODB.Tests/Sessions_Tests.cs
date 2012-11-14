@@ -57,8 +57,8 @@ namespace VODB.Tests
             var employee3 = task3.Result;
 
             EntitiesAsserts.Assert_Employee_1(employee1);
-            EntitiesAsserts.Assert_Employee_1(employee2);
-            EntitiesAsserts.Assert_Employee_1(employee3);
+            EntitiesAsserts.Assert_Employee_2(employee2);
+            EntitiesAsserts.Assert_Employee_3(employee3);
         }
 
         [TestMethod]

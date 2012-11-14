@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using VODB.DbLayer.DbCommands.DbParameterSetters;
 using VODB.EntityValidators;
 using VODB.Exceptions;
 using VODB.VirtualDataBase;
@@ -32,7 +31,7 @@ namespace VODB.Extensions
         /// <param name="entity">The entity.</param>
         public static void SetValue(this DbParameter param, Field field, Object entity)
         {
-            foreach (IParameterSetter setter in Configuration.ParameterSetters
+            foreach (var setter in Configuration.ParameterSetters
                 .Where(setter => setter.CanHandle(field.FieldType)))
             {
                 setter.SetValue(param, field, entity);
@@ -54,6 +53,11 @@ namespace VODB.Extensions
         public static Field SetValue<TModel>(this TModel entity, Field field, object value, DbDataReader reader)
             where TModel : DbEntity
         {
+            if (value == null || value == DBNull.Value)
+            {
+                return field;
+            }
+
             var handled = false;
             foreach (var setter in Configuration.FieldSetters
                 .Where(setter => setter.CanHandle(field.FieldType)))
@@ -79,10 +83,14 @@ namespace VODB.Extensions
         /// <param name="value">The value.</param>
         /// <param name="getValueFromReader">The get value from reader.</param>
         /// <returns></returns>
-        public static Field SetValue<TModel>(this TModel entity, Field field, object value,
-                                             Func<Field, Object> getValueFromReader)
+        public static void SetValue<TModel>(this TModel entity, Field field, object value, Func<Field, object> getValueFromReader)
             where TModel : DbEntity
         {
+            if (value == null || value == DBNull.Value)
+            {
+                return;
+            }
+
             var handled = false;
             foreach (var setter in Configuration.FieldSetters
                 .Where(setter => setter.CanHandle(field.FieldType)))
@@ -94,25 +102,6 @@ namespace VODB.Extensions
             if (!handled)
             {
                 throw new FieldSetterNotFoundException(field.FieldType);
-            }
-            return field;
-        }
-    }
-
-    internal static class Helpers
-    {
-        /// <summary>
-        /// Throws ArgumentNullException if argument is null.
-        /// </summary>
-        /// <param name="argument">The argument.</param>
-        /// <param name="argumentName">Name of the argument.</param>
-        /// <param name="msg">The MSG.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public static void ThrowExceptionIfNull(this Object argument, String argumentName, String msg)
-        {
-            if (argument == null)
-            {
-                throw new ArgumentNullException(argumentName, msg);
             }
         }
     }
@@ -152,10 +141,10 @@ namespace VODB.Extensions
         /// <param name="dbCommand">The db command.</param>
         /// <param name="field">The field.</param>
         /// <param name="entity">The entity.</param>
-        public static void SetParameter<TModel>(this DbCommand dbCommand, Field field, TModel entity)
+        private static void SetParameter<TModel>(this DbCommand dbCommand, Field field, TModel entity)
             where TModel : DbEntity
         {
-            DbParameter param = dbCommand.CreateParameter();
+            var param = dbCommand.CreateParameter();
             param.ParameterName = field.FieldName;
             param.SetValue(field, entity);
 

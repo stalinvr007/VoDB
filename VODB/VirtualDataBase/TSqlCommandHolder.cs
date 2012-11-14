@@ -60,7 +60,7 @@ namespace VODB.VirtualDataBase
             _th_delete = new Task<String>(() => new TDelete(_table).BuildCmdStr());
             Count = string.Format("Select count(*) From [{0}]", _table.TableName);
 
-            new ThreadCollection(_th_select, _th_selectById, _th_update, _th_insert, _th_delete)
+            new TasksCollection(_th_select, _th_selectById, _th_update, _th_insert, _th_delete)
                 .StartAll();
         }
     }
