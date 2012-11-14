@@ -32,7 +32,14 @@ namespace VODB
         /// <param name="entity">The entity that contains the key fields filled.</param>
         /// <returns></returns>
         TEntity GetById<TEntity>(TEntity entity) where TEntity : DbEntity, new();
-        
+
+        /// <summary>
+        /// Gets the entity by Id. Asynchronously.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="entity">The entity that contains the key fields filled.</param>
+        /// <returns></returns>
+        Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : DbEntity, new();
     }
 
     internal interface IInternalSession

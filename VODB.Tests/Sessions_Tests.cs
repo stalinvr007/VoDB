@@ -19,10 +19,46 @@ namespace VODB.Tests
         [TestMethod]
         public void EagerSession_GetById()
         {
-            var employee = SessionsFactory.CreateEager().GetById<Employee>(
+            var employee = SessionsFactory.CreateEager().GetById(
                 new Employee { EmployeeId = 1 });
 
             EntitiesAsserts.Assert_Employee_1(employee);
+        }
+
+        [TestMethod]
+        public void EagerSession_AsyncGetById()
+        {
+            var task = SessionsFactory.CreateEager().AsyncGetById(
+                new Employee { EmployeeId = 1 });
+
+            /* Simulate some work... */
+            Thread.Sleep(50);
+
+            var employee = task.Result;
+
+            EntitiesAsserts.Assert_Employee_1(employee);
+        }
+
+        [TestMethod]
+        public void EagerSession_AsyncGetById_multipleCalls()
+        {
+            var session = SessionsFactory.CreateEager();
+
+            var task1 = session.AsyncGetById(new Employee { EmployeeId = 1 });
+            var task2 = session.AsyncGetById(new Employee { EmployeeId = 2 });
+            var task3 = session.AsyncGetById(new Employee { EmployeeId = 3 });
+
+
+            /* Simulate some work... */
+            Thread.Sleep(50);
+
+            var employee1 = task1.Result;
+            var employee2 = task2.Result;
+            var employee3 = task3.Result;
+
+            EntitiesAsserts.Assert_Employee_1(employee1);
+            EntitiesAsserts.Assert_Employee_1(employee2);
+            EntitiesAsserts.Assert_Employee_1(employee3);
         }
 
         [TestMethod]
@@ -41,9 +77,10 @@ namespace VODB.Tests
         [TestMethod]
         public void EagerSession_AsyncGetAll_multipleCalls()
         {
-            var task1 = SessionsFactory.CreateEager().AsyncGetAll<Employee>();
-            var task2 = SessionsFactory.CreateEager().AsyncGetAll<Employee>();
-            var task3 = SessionsFactory.CreateEager().AsyncGetAll<Employee>();
+            var session = SessionsFactory.CreateEager();
+            var task1 = session.AsyncGetAll<Employee>();
+            var task2 = session.AsyncGetAll<Employee>();
+            var task3 = session.AsyncGetAll<Employee>();
 
             /* Simulate some work... */
             Thread.Sleep(50);
