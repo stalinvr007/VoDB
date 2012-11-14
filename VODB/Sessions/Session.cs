@@ -14,7 +14,6 @@ namespace VODB.Sessions
         private DbConnection _connection;
         private Transaction transaction;
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="InternalSession" /> class.
         /// </summary>
@@ -24,7 +23,7 @@ namespace VODB.Sessions
             _creator = creator ?? new SqlConnectionCreator();
         }
 
-        internal bool InTransaction
+        private bool InTransaction
         {
             get { return transaction != null; }
         }
@@ -76,7 +75,7 @@ namespace VODB.Sessions
 
         public void Close()
         {
-            if (_connection == null || _connection.State == ConnectionState.Closed)
+            if (_connection == null || _connection.State == ConnectionState.Closed || (InTransaction && !transaction.Ended))
             {
                 return;
             }
