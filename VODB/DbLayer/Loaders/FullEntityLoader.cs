@@ -9,6 +9,13 @@ namespace VODB.DbLayer.Loaders
     internal class FullEntityLoader<TModel> : EntityLoader<TModel>
         where TModel : DbEntity, new()
     {
+
+        private readonly ISession _Session;
+        public FullEntityLoader(ISession session = null)
+        {
+            _Session = session;
+        }
+
         /// <summary>
         /// Loads the specified entity.
         /// </summary>
@@ -23,6 +30,7 @@ namespace VODB.DbLayer.Loaders
                 SetValue(entity, field, GetValue(reader, field.FieldName), reader);
             }
 
+            entity.Session = _Session;
             entity.IsLoaded = true;
         }
     }

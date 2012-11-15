@@ -123,6 +123,15 @@ namespace VODB.Sessions
             return entity;
         }
 
+        public int Count<TEntity>() where TEntity : DbEntity, new()
+        {
+            return Run(() =>
+                new DbQueryScalarExecuter<int>(
+                    new DbEntityCountCommandFactory<TEntity>(this).Make()
+                ).Execute()
+            );
+        }
+
         #endregion
 
         #region IInternalSession Members
@@ -214,5 +223,8 @@ namespace VODB.Sessions
             _creator = null;
             _tasks = null;
         }
+
+
+        
     }
 }

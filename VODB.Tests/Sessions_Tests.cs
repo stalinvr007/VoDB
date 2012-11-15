@@ -17,6 +17,12 @@ namespace VODB.Tests
         }
 
         [TestMethod]
+        public void EagerSession_Count()
+        {
+            Assert.AreEqual(9, SessionsFactory.CreateEager().Count<Employee>());
+        }
+
+        [TestMethod]
         public void EagerSession_GetAll_withWhereCond()
         {
             var employees = SessionsFactory.CreateEager()
@@ -43,6 +49,18 @@ namespace VODB.Tests
             var employee = SessionsFactory.CreateEager().GetById(
                 new Employee { EmployeeId = 1 });
 
+            EntitiesAsserts.Assert_Employee_1(employee);
+        }
+
+        [TestMethod]
+        public void EagerSession_GetById_ReportsTo()
+        {
+            var employee = SessionsFactory.CreateEager().GetById(
+                new Employee { EmployeeId = 1 });
+            
+            EntitiesAsserts.Assert_Employee_2(employee.ReportsTo);
+            EntitiesAsserts.Assert_Employee_1(employee.ReportsTo.ReportsTo);
+            EntitiesAsserts.Assert_Employee_2(employee.ReportsTo.ReportsTo.ReportsTo);
             EntitiesAsserts.Assert_Employee_1(employee);
         }
 

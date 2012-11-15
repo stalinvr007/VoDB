@@ -57,6 +57,11 @@ namespace VODB.Sessions
             return _InnerSession.Update(entity);
         }
 
+        public int Count<TEntity>() where TEntity : DbEntity, new()
+        {
+            return _InnerSession.Count<TEntity>();
+        }
+
         public void Dispose()
         {
             if (_InnerSession != null)
@@ -65,5 +70,6 @@ namespace VODB.Sessions
                 _InnerSession = null;
             }
         }
+
     }
 }
