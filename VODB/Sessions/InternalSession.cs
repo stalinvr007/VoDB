@@ -62,7 +62,7 @@ namespace VODB.Sessions
         public Task<IDbQueryResult<TEntity>> AsyncGetAll<TEntity>() where TEntity : DbEntity, new()
         {
             return _tasks.Add<IDbQueryResult<TEntity>>(
-                new Task<IDbQueryResult<TEntity>>(new EagerSession(_creator).GetAll<TEntity>).RunAsync()
+                new Task<IDbQueryResult<TEntity>>(new InternalEagerSession(_creator).GetAll<TEntity>).RunAsync()
             );
         }
 
@@ -71,7 +71,7 @@ namespace VODB.Sessions
         public Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : DbEntity, new()
         {
             return _tasks.Add<TEntity>(
-                new Task<TEntity>(() => new EagerSession(_creator).GetById(entity)).RunAsync()
+                new Task<TEntity>(() => new InternalEagerSession(_creator).GetById(entity)).RunAsync()
             );
         }
 
