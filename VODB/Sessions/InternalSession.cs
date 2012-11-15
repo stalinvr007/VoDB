@@ -83,14 +83,16 @@ namespace VODB.Sessions
                     new DbEntityInsertCommandFactory<TEntity>(this, entity)
                     ).Execute();
 
-                return new DbQueryExecuterCommandEager(
-                    new DbCommandBypass(this, "Select @@IDENTITY").Make(), entity.Table).Execute().FirstOrDefault();
+                return new DbQueryScalarExecuter<Object>(
+                    new DbCommandBypass(this, "Select @@IDENTITY").Make()).Execute();
             });
 
             var idField = entity.Table.KeyFields.FirstOrDefault(f => f.IsIdentity);
             if (idField != null)
             {
-                entity.SetValue(idField, id, field => id);
+                entity.SetValue(idField,
+                    Convert.ChangeType(id, idField.FieldType), 
+                    field => Convert.ChangeType(id, idField.FieldType));
             }
             return entity;
         }
