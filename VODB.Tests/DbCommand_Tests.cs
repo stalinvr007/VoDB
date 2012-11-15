@@ -70,21 +70,19 @@ namespace VODB.Tests
                               });
         }
 
-        [TestMethod]
+        [TestMethod, ExpectedException(typeof(ValidationException))]
         public void GetEmployeesById_Eager_NoIdSupplied()
         {
             Utils.EagerExecute(session =>
-                              {
-                                  var factory = new DbEntitySelectByIdCommandFactory<Employee>(session as IInternalSession,
-                                                                                               new Employee());
+            {
+                var factory = new DbEntitySelectByIdCommandFactory<Employee>(session as IInternalSession,
+                                                                             new Employee());
 
-                                  var query = new DbEntityQueryExecuterEager<Employee>(factory,
-                                                                                       new FullEntityLoader<Employee>());
+                var query = new DbEntityQueryExecuterEager<Employee>(factory,
+                                                                     new FullEntityLoader<Employee>());
 
-                                  IEnumerable<Employee> result = query.Execute();
-
-                                  Assert.AreEqual(0, result.Count());
-                              });
+                query.Execute();
+            });
         }
 
         [TestMethod, ExpectedException(typeof(ValidationException))]

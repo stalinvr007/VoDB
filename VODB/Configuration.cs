@@ -14,7 +14,8 @@ namespace VODB
         {
             EntityValidators = new List<IEntityValidator>
                                    {
-                                       new RequiredFieldsValidator()
+                                       new RequiredFieldsValidator(),
+                                       new KeyFilledValidator()
                                    };
 
             FieldSetters = new List<IFieldSetter>
