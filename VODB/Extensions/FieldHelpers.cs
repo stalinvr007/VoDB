@@ -108,7 +108,31 @@ namespace VODB.Extensions
 
     internal static class FieldHelpers
     {
-        
+
+        public static Boolean IsFilled(this DbEntity entity, Field field)
+        {
+            var value = field.GetValue(entity);
+
+            if (field.FieldType.IsPrimitive)
+            {
+                return (typeof(int).IsAssignableFrom(field.FieldType) ||
+                                    typeof(Double).IsAssignableFrom(field.FieldType) ||
+                                    typeof(float).IsAssignableFrom(field.FieldType) ||
+                                    typeof(Decimal).IsAssignableFrom(field.FieldType) ||
+                                    typeof(long).IsAssignableFrom(field.FieldType)) && !value.Equals(0);;
+            }
+            else if (typeof(DateTime).IsAssignableFrom(field.FieldType))
+            {
+                return ((DateTime)value).Year != 1;
+            }
+            else
+            {
+                return value != null && 
+                    (typeof(String).IsAssignableFrom(field.FieldType) && 
+                    !String.IsNullOrEmpty((String)value));
+            }
+
+        }
 
         /// <summary>
         /// Gets the value.

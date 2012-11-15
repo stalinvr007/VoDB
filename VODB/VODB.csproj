@@ -77,6 +77,7 @@
     <Compile Include="DbLayer\Loaders\FieldSetters\DbEntityFieldSetter.cs" />
     <Compile Include="DbLayer\Loaders\FieldSetters\IFieldSetter.cs" />
     <Compile Include="DbLayer\Loaders\IEntityLoader.cs" />
+    <Compile Include="EntityValidators\KeyFilledValidator.cs" />
     <Compile Include="Extensions\TasksExtensions.cs" />
     <Compile Include="Sessions\EagerSession.cs" />
     <Compile Include="EntityValidators\IEntityValidator.cs" />

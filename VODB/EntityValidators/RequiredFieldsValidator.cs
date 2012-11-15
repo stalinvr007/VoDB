@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using VODB.Exceptions;
 using VODB.VirtualDataBase;
+using VODB.Extensions;
 
 namespace VODB.EntityValidators
 {
@@ -18,7 +19,7 @@ namespace VODB.EntityValidators
         {
             var nonFilled = entity.Table.Fields
                 .Where(field => field.IsRequired)
-                .Where(field => NotFilled(field, entity))
+                .Where(field => !entity.IsFilled(field))
                 .Select(field => field.FieldName);
 
             var sb = new StringBuilder();
@@ -34,28 +35,7 @@ namespace VODB.EntityValidators
         }
 
         #endregion
-
-        private static bool NotFilled(Field field, DbEntity entity)
-        {
-            var value = field.GetValue(entity);
-
-            if (value == null || (typeof(String).IsAssignableFrom(field.FieldType) && String.IsNullOrEmpty((String)value)))
-            {
-                return true;
-            }
-
-            if (typeof(DateTime).IsAssignableFrom(field.FieldType) && ((DateTime)value).Year == 1)
-            {
-                return true;
-            }
-
-            return (typeof(int).IsAssignableFrom(field.FieldType) ||
-                    typeof(Double).IsAssignableFrom(field.FieldType) ||
-                    typeof(float).IsAssignableFrom(field.FieldType) ||
-                    typeof(Decimal).IsAssignableFrom(field.FieldType) ||
-                    typeof(long).IsAssignableFrom(field.FieldType)) && value.Equals(0);
-        }
-
+        
         public bool ShouldRunOn(On onCommand)
         {
             return onCommand == On.Insert ||

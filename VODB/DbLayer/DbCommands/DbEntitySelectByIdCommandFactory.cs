@@ -1,4 +1,5 @@
 using System.Data.Common;
+using VODB.EntityValidators;
 using VODB.Extensions;
 
 namespace VODB.DbLayer.DbCommands
@@ -13,6 +14,8 @@ namespace VODB.DbLayer.DbCommands
 
         protected override DbCommand Make(DbCommand dbCommand, TEntity entity)
         {
+            entity.ValidateEntity(On.SelectById);
+
             dbCommand.CommandText = entity.Table.CommandsHolder.SelectById;
             dbCommand.SetParameters(entity.Table.KeyFields, entity);
 
