@@ -59,6 +59,7 @@ namespace VODB.VirtualDataBase
         private static IEnumerable<Field> GetTableFields(Type type)
         {
             return type.GetProperties()
+                .Where(info => info.GetAttribute<DbIgnoreAttribute>() == null)
                 .Select(info => SetCommunSettings(GetField(info), info))
                 .Where(field => !typeof(IEnumerable<DbEntity>).IsAssignableFrom(field.FieldType))
                 .ToList();

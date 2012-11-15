@@ -68,5 +68,8 @@ namespace VODB.Tests.Models.Northwind {
         {
             get { return GetValues<EmployeeTerritories>().Where("EmployeeId = '{0}')", EmployeeId); }
         }
+
+        [DbIgnore]
+        public bool NonExistingField { get; set; }
     }
 }

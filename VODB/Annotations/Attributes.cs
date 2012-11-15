@@ -115,6 +115,14 @@ namespace VODB.Annotations
     }
 
     /// <summary>
+    /// Indicates that this should be ignored.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public sealed class DbIgnoreAttribute : Attribute
+    {
+    }
+
+    /// <summary>
     /// Indicates the Foreign key to bind.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
