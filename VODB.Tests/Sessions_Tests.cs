@@ -53,6 +53,17 @@ namespace VODB.Tests
         }
 
         [TestMethod]
+        public void EagerSession_GetById_ReportsFrom()
+        {
+            var employee = SessionsFactory.CreateEager().GetById(
+                new Employee { EmployeeId = 1 });
+
+            Assert.AreEqual(1, employee.ReportedFrom.Count());
+
+            EntitiesAsserts.Assert_Employee_1(employee);
+        }
+
+        [TestMethod]
         public void EagerSession_GetById_ReportsTo()
         {
             var employee = SessionsFactory.CreateEager().GetById(
