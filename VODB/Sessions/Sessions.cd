@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="VODB.Sessions.PublicSessionBase" Collapsed="true">
+    <Position X="6.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQIAEQBACAAAAAAEAAAAAQAAAEAAAAAAgAAAAAAAIA=</HashCode>
+      <FileName>Sessions\PublicSessionBase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_InnerSession" />
+    </ShowAsAssociation>
+    <Lollipop Position="1.138" />
+  </Class>
+  <Class Name="VODB.Sessions.InternalSession" Collapsed="true">
+    <Position X="3.5" Y="2.75" Width="1.5" />
+    <AssociationLine Name="_connection" Type="System.Data.Common.DbConnection" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.688" Y="2.75" />
+        <Point X="3.688" Y="2.179" />
+        <Point X="2" Y="2.179" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAwAAEQBACCAIAUAEAAEAAQAAAECAAAAAgAAAACABII=</HashCode>
+      <FileName>Sessions\InternalSession.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_connection" />
+      <Field Name="_transaction" />
+      <Field Name="_creator" />
+    </ShowAsAssociation>
+    <Lollipop Position="1.206" />
+  </Class>
+  <Class Name="VODB.Sessions.EagerSession" Collapsed="true">
+    <Position X="6.5" Y="4" Width="1.5" />
+    <InheritanceLine Type="VODB.Sessions.PublicSessionBase" FixedToPoint="true">
+      <Path>
+        <Point X="7.25" Y="3.312" />
+        <Point X="7.25" Y="4" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sessions\EagerSession.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VODB.Sessions.InternalEagerSession" Collapsed="true">
+    <Position X="4.5" Y="4" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAIA=</HashCode>
+      <FileName>Sessions\EagerSession.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Data.Common.DbConnection" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="VODB.Sessions.Transaction" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAEAAACCAAAEABAAEAAAAAAAAAAQAAAAAAACAAAA=</HashCode>
+      <FileName>Sessions\Transaction.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="VODB.ISession" Collapsed="true">
+    <Position X="6.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAEQBAAAAAAAAEAAAAAQAAAEAAAAAAgAAAAAAAIA=</HashCode>
+      <FileName>ISession.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="VODB.IInternalSession" Collapsed="true">
+    <Position X="4.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ISession.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="VODB.DbLayer.IDbConnectionCreator" Collapsed="true">
+    <Position X="0.5" Y="2.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>DbLayer\IDbConnectionCreator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
