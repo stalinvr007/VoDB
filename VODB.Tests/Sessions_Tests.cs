@@ -17,6 +17,27 @@ namespace VODB.Tests
         }
 
         [TestMethod]
+        public void EagerSession_GetAll_withWhereCond()
+        {
+            var employees = SessionsFactory.CreateEager()
+                .GetAll<Employee>()
+                .Where("EmployeeId = {0}", 1);
+
+            Assert.AreEqual(1, employees.Count());
+        }
+
+        [TestMethod]
+        public void EagerSession_GetAll_withWhereCond_AndMoreConditions()
+        {
+            var employees = SessionsFactory.CreateEager()
+                .GetAll<Employee>()
+                .Where("FirstName = '{0}'", "Nancy")
+                .And("LastName = '{0}'", "Davolio");
+
+            Assert.AreEqual(1, employees.Count());
+        }
+
+        [TestMethod]
         public void EagerSession_GetById()
         {
             var employee = SessionsFactory.CreateEager().GetById(
