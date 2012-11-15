@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -57,7 +58,10 @@ namespace VODB.VirtualDataBase
 
         private static IEnumerable<Field> GetTableFields(Type type)
         {
-            return type.GetProperties().Select(info => SetCommunSettings(GetField(info), info)).ToList();
+            return type.GetProperties()
+                .Select(info => SetCommunSettings(GetField(info), info))
+                .Where(field => !typeof(IEnumerable<DbEntity>).IsAssignableFrom(field.FieldType))
+                .ToList();
         }
 
         private static Field GetField(PropertyInfo info)

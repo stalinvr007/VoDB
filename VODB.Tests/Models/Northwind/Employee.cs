@@ -1,5 +1,6 @@
 ﻿using VODB.Annotations;
 using System;
+using System.Collections.Generic;
 
 namespace VODB.Tests.Models.Northwind {
 
@@ -51,7 +52,21 @@ namespace VODB.Tests.Models.Northwind {
         }
 
         public String PhotoPath { get; set; }
-        
 
+        /// <summary>
+        /// Gets a collection of employees that reports to this one.
+        /// </summary>
+        public IEnumerable<Employee> ReportedFrom
+        {
+            get { return GetValues<Employee>().Where("ReportsTo = '{0}'", EmployeeId); }
+        }
+
+        /// <summary>
+        /// Gets the territories.
+        /// </summary>
+        public IEnumerable<EmployeeTerritories> Territories
+        {
+            get { return GetValues<EmployeeTerritories>().Where("EmployeeId = '{0}')", EmployeeId); }
+        }
     }
 }

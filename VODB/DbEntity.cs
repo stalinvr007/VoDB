@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using VODB.Caching;
+using VODB.DbLayer.DbExecuters;
 using VODB.VirtualDataBase;
 
 namespace VODB
@@ -59,6 +60,12 @@ namespace VODB
             }
 
             return model;
+        }
+
+        protected IDbQueryResult<TEntity> GetValues<TEntity>()
+            where TEntity : DbEntity, new()
+        {
+            return Session.GetAll<TEntity>();
         }
 
         protected void SetValue<TModel>(TModel value)
