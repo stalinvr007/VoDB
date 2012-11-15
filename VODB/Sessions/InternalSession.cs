@@ -14,7 +14,7 @@ namespace VODB.Sessions
     /// <summary>
     /// Represents a connection Session.
     /// </summary>
-    internal abstract class InternalSession : IInternalSession, ISession, IDisposable
+    internal abstract class InternalSession : IInternalSession, ISession
     {
         private IDbConnectionCreator _creator;
         private DbConnection _connection;
@@ -57,12 +57,12 @@ namespace VODB.Sessions
             }
         }
 
-        public abstract IEnumerable<TEntity> GetAll<TEntity>() where TEntity : DbEntity, new();
+        public abstract IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : DbEntity, new();
 
-        public Task<IEnumerable<TEntity>> AsyncGetAll<TEntity>() where TEntity : DbEntity, new()
+        public Task<IDbQueryResult<TEntity>> AsyncGetAll<TEntity>() where TEntity : DbEntity, new()
         {
-            return _tasks.Add<IEnumerable<TEntity>>(
-                new Task<IEnumerable<TEntity>>(new EagerSession(_creator).GetAll<TEntity>).RunAsync()
+            return _tasks.Add<IDbQueryResult<TEntity>>(
+                new Task<IDbQueryResult<TEntity>>(new EagerSession(_creator).GetAll<TEntity>).RunAsync()
             );
         }
 
@@ -79,7 +79,7 @@ namespace VODB.Sessions
         {
             var idField = entity.Table.KeyFields.FirstOrDefault(f => f.IsIdentity);
 
-            var id = RunAndClose(() =>
+            var id = Run(() =>
             {
                 new DbCommandNonQueryExecuter(
                     new DbEntityInsertCommandFactory<TEntity>(this, entity)
@@ -106,7 +106,7 @@ namespace VODB.Sessions
 
         public void Delete<TEntity>(TEntity entity) where TEntity : DbEntity, new()
         {
-            RunAndClose(() =>
+            Run(() =>
                 new DbCommandNonQueryExecuter(
                     new DbEntityDeleteCommandFactory<TEntity>(this, entity)
                 ).Execute()
@@ -115,7 +115,7 @@ namespace VODB.Sessions
 
         public TEntity Update<TEntity>(TEntity entity) where TEntity : DbEntity, new()
         {
-            RunAndClose(() =>
+            Run(() =>
                 new DbCommandNonQueryExecuter(
                     new DbEntityUpdateCommandFactory<TEntity>(this, entity)
                 ).Execute()
@@ -170,16 +170,21 @@ namespace VODB.Sessions
 
         #endregion
 
-        protected TResult RunAndClose<TResult>(Func<TResult> action)
+        protected TResult Run<TResult>(Func<TResult> action)
         {
             Open();
             try
             {
                 return action();
             }
-            finally
+            catch (Exception)
             {
-                Close();
+                if (InTransaction)
+                {
+                    _transaction.RollBack();
+                }
+
+                throw;
             }
         }
 
@@ -193,7 +198,7 @@ namespace VODB.Sessions
 
         public void Dispose()
         {
-
+            Close();
             if (_transaction != null)
             {
                 _transaction.Dispose();

@@ -70,6 +70,7 @@
     <Compile Include="DbLayer\DbExecuters\DbEntityQueryExecuterEager.cs" />
     <Compile Include="DbLayer\DbExecuters\DbEntityQueryExecuterBase.cs" />
     <Compile Include="DbLayer\DbExecuters\ICommandExecuter.cs" />
+    <Compile Include="DbLayer\DbExecuters\IDbQueryResult.cs" />
     <Compile Include="DbLayer\DbExecuters\IQueryExecuter.cs" />
     <Compile Include="DbLayer\Loaders\EntityKeyLoader.cs" />
     <Compile Include="DbLayer\Loaders\EntityLoader.cs" />

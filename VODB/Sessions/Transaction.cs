@@ -67,6 +67,11 @@ namespace VODB.Sessions
 
         public void Commit()
         {
+            if (Ended)
+            {
+                return;
+            }
+
             CheckTransactionAlive();
 
             --count;

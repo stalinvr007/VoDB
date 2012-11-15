@@ -20,11 +20,9 @@ namespace VODB.Sessions
         {
         }
 
-        
-
-        public override IEnumerable<TEntity> GetAll<TEntity>()
+        public override IDbQueryResult<TEntity> GetAll<TEntity>()
         {
-            return RunAndClose(() => new DbEntityQueryExecuterEager<TEntity>(
+            return Run(() => new DbEntityQueryExecuterEager<TEntity>(
                                          new DbEntitySelectCommandFactory<TEntity>(this),
                                          new FullEntityLoader<TEntity>()
                                          ).Execute());
@@ -32,7 +30,7 @@ namespace VODB.Sessions
 
         public override TEntity GetById<TEntity>(TEntity entity)
         {
-            return RunAndClose(() => new DbEntityQueryExecuterEager<TEntity>(
+            return Run(() => new DbEntityQueryExecuterEager<TEntity>(
                                          new DbEntitySelectByIdCommandFactory<TEntity>(this, entity),
                                          new FullEntityLoader<TEntity>()
                                          ).Execute().FirstOrDefault());
