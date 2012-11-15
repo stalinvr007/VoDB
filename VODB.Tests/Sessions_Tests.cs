@@ -133,5 +133,30 @@ namespace VODB.Tests
             );
 
         }
+
+        [TestMethod]
+        public void EagerSession_Update_Employee()
+        {
+
+            Utils.EagerExecuteWithinTransaction(
+                session =>
+                {
+                    var sergio = session.Insert(new Employee
+                    {
+                        FirstName = "Sérgio",
+                        LastName = "Ferreira"
+                    });
+
+                    sergio.FirstName = "Alien";
+
+                    session.Update(sergio);
+
+                    var alien = session.GetById(sergio);
+
+                    Assert.AreEqual("Alien", alien.FirstName);
+                }
+            );
+
+        }
     }
 }
