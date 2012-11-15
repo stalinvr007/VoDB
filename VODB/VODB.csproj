@@ -103,6 +103,7 @@
     <Compile Include="Modules\ConfigModule.cs" />
     <Compile Include="Extensions\ReflectionExtensions.cs" />
     <Compile Include="SessionsFactory.cs" />
+    <Compile Include="Sessions\PublicSessionBase.cs" />
     <Compile Include="TasksCollection.cs" />
     <Compile Include="Sessions\Transaction.cs" />
     <Compile Include="VirtualDataBase\Field.cs" />

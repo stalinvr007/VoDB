@@ -9,13 +9,20 @@ using VODB.DbLayer.Loaders;
 namespace VODB.Sessions
 {
 
-    internal class EagerSession : InternalSession
+    public class EagerSession : PublicSessionBase
+    {
+        public EagerSession(IDbConnectionCreator creator = null)
+            : base(new InternalEagerSession(creator))
+        { }   
+    }
+
+    internal class InternalEagerSession : InternalSession
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EagerSession"/> class.
         /// </summary>
         /// <param name="creator">The creator.</param>
-        internal EagerSession(IDbConnectionCreator creator = null)
+        internal InternalEagerSession(IDbConnectionCreator creator = null)
             : base(creator)
         {
         }
