@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
+using VODB.DbLayer.DbExecuters;
 
 namespace VODB
 {
     /// <summary>
     /// Allows users to interact with a database using strongly typed Objects.
     /// </summary>
-    public interface ISession
+    public interface ISession : IDisposable
     {
         ITransaction BeginTransaction();
 
@@ -16,14 +18,14 @@ namespace VODB
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns></returns>
-        IEnumerable<TEntity> GetAll<TEntity>() where TEntity : DbEntity, new();
+        IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : DbEntity, new();
 
         /// <summary>
         /// Gets all entities of the given type from this session. Asynchronously.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns></returns>
-        Task<IEnumerable<TEntity>> AsyncGetAll<TEntity>() where TEntity : DbEntity, new();
+        Task<IDbQueryResult<TEntity>> AsyncGetAll<TEntity>() where TEntity : DbEntity, new();
 
         /// <summary>
         /// Gets the entity by Id.

@@ -14,14 +14,37 @@ namespace VODB.DbLayer.DbExecuters
         where TEntity : DbEntity, new()
     {
 
-        private readonly IDbCommandFactory _CommandFactory;
+        private IDbCommandFactory _CommandFactory;
 
         protected DbEntityQueryExecuterBase(IDbCommandFactory commandFactory)
         {
             _CommandFactory = commandFactory;
         }
 
-        public IEnumerable<TEntity> Execute()
+        public IDbQueryResult<TEntity> Execute()
+        {
+            var cmdFact = _CommandFactory;
+            _CommandFactory = new DbQueryResult<TEntity>(cmdFact, this);
+            return _CommandFactory as IDbQueryResult<TEntity>;
+        }
+
+        /// <summary>
+        /// Gets the entities.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        protected abstract IEnumerable<TEntity> GetEntities(DbDataReader reader);
+
+        public IEnumerator<TEntity> GetEnumerator()
+        {
+            return InternalExecute().GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+        
+        public IEnumerable<TEntity> InternalExecute()
         {
             var cmd = _CommandFactory.Make();
             try
@@ -37,12 +60,5 @@ namespace VODB.DbLayer.DbExecuters
                 throw new UnableToExecuteQueryException(cmd.CommandText, ex);
             }
         }
-
-        /// <summary>
-        /// Gets the entities.
-        /// </summary>
-        /// <param name="reader">The reader.</param>
-        protected abstract IEnumerable<TEntity> GetEntities(DbDataReader reader);
-
     }
 }

@@ -7,17 +7,10 @@ namespace VODB.Tests
     {
         public static void EagerExecute(Action<ISession> action)
         {
-            var session = new EagerSession();
-
-            session.Open();
-
-            try
+            using (var session = new EagerSession())
             {
+                session.Open();
                 action(session);
-            }
-            finally
-            {
-                session.Close();
             }
         }
 

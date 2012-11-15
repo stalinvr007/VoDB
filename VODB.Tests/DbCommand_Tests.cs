@@ -75,13 +75,15 @@ namespace VODB.Tests
         {
             Utils.EagerExecute(session =>
             {
-                var factory = new DbEntitySelectByIdCommandFactory<Employee>(session as IInternalSession,
-                                                                             new Employee());
+                var factory = new DbEntitySelectByIdCommandFactory<Employee>(
+                    session as IInternalSession,
+                    new Employee());
 
-                var query = new DbEntityQueryExecuterEager<Employee>(factory,
-                                                                     new FullEntityLoader<Employee>());
+                var query = new DbEntityQueryExecuterEager<Employee>(
+                    factory,
+                    new FullEntityLoader<Employee>());
 
-                query.Execute();
+                query.Execute().Count();
             });
         }
 
