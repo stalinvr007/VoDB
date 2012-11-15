@@ -66,10 +66,18 @@ namespace VODB
         /// <returns></returns>
         TEntity Update<TEntity>(TEntity entity) where TEntity : DbEntity, new();
 
+        /// <summary>
+        /// Gets the count of entities of the given type.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <returns></returns>
+        int Count<TEntity>() where TEntity : DbEntity, new();
+
     }
 
     internal interface IInternalSession
     {
         DbCommand CreateCommand();
+
     }
 }

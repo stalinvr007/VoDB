@@ -9,6 +9,7 @@ namespace VODB.DbLayer.Loaders
     internal class EntityKeyLoader<TModel> : EntityLoader<TModel>
         where TModel : DbEntity, new()
     {
+
         /// <summary>
         /// Loads the specified entity.
         /// </summary>

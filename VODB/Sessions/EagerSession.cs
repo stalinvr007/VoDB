@@ -31,7 +31,7 @@ namespace VODB.Sessions
         {
             return Run(() => new DbEntityQueryExecuterEager<TEntity>(
                                          new DbEntitySelectCommandFactory<TEntity>(this),
-                                         new FullEntityLoader<TEntity>()
+                                         new FullEntityLoader<TEntity>(this)
                                          ).Execute());
         }
 
@@ -39,7 +39,7 @@ namespace VODB.Sessions
         {
             return Run(() => new DbEntityQueryExecuterEager<TEntity>(
                                          new DbEntitySelectByIdCommandFactory<TEntity>(this, entity),
-                                         new FullEntityLoader<TEntity>()
+                                         new FullEntityLoader<TEntity>(this)
                                          ).Execute().FirstOrDefault());
         }
     }

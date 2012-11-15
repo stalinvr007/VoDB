@@ -42,17 +42,28 @@ namespace VODB
 
         private readonly IDictionary<Type, Object> _ForeignEntities = new Dictionary<Type, Object>();
 
+        internal ISession Session { get; set; }
+
         protected TModel GetValue<TModel>()
-            where TModel : class
+            where TModel : DbEntity, new()
         {
-            object value;
-            _ForeignEntities.TryGetValue(typeof (TModel), out value);
-            return value as TModel;
+            Object value;
+            _ForeignEntities.TryGetValue(typeof(TModel), out value);
+
+            TModel model = value as TModel;
+
+            if (Session != null && model != null && !model.IsLoaded)
+            {
+                model = Session.GetById<TModel>(model) as TModel;
+                SetValue(model);
+            }
+
+            return model;
         }
 
         protected void SetValue<TModel>(TModel value)
         {
-            _ForeignEntities[typeof (TModel)] = value;
+            _ForeignEntities[typeof(TModel)] = value;
         }
 
         #endregion
