@@ -16,25 +16,6 @@ namespace VODB.Tests
     [TestClass]
     public class DbCommand_Tests
     {
-        [TestMethod]
-        public void GetEmployeesData()
-        {
-            using (DbConnection con = new DbConnectionCreator("System.Data.SqlClient").Create())
-            {
-                con.Open();
-
-                Table table = new Employee().Table;
-                DbCommand cmd = con.CreateCommand();
-                cmd.CommandText = table.CommandsHolder.Select;
-
-                var query = new DbQueryExecuterCommandEager(cmd, table);
-
-                Assert.AreEqual(9, query.Execute().Count());
-
-                con.Close();
-            }
-        }
-
 
         [TestMethod]
         public void GetEmployeesEntities()
@@ -137,6 +118,8 @@ namespace VODB.Tests
                     var count = session.GetAll<Employee>().Count();
                     insert.Execute();
 
+
+                    Assert.IsTrue(employee.EmployeeId > 0);
                     Assert.AreEqual(count + 1, session.GetAll<Employee>().Count());
                 });
         }

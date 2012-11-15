@@ -64,13 +64,13 @@
     <Compile Include="DbLayer\DbCommands\IDbCommandFactory.cs" />
     <Compile Include="DbLayer\DbExecuters\DbCommandExecuterBase.cs" />
     <Compile Include="DbLayer\DbExecuters\DbCommandNonQueryExecuter.cs" />
+    <Compile Include="DbLayer\DbExecuters\DbQueryEagerExecuter.cs" />
     <Compile Include="DbLayer\DbExecuters\DbQueryResult.cs" />
     <Compile Include="DbLayer\DbExecuters\DbEntityQueryExecuterLazy.cs" />
     <Compile Include="DbLayer\DbExecuters\DbEntityQueryExecuterEager.cs" />
     <Compile Include="DbLayer\DbExecuters\DbEntityQueryExecuterBase.cs" />
     <Compile Include="DbLayer\DbExecuters\ICommandExecuter.cs" />
     <Compile Include="DbLayer\DbExecuters\IQueryExecuter.cs" />
-    <Compile Include="DbLayer\DbExecuters\DbQueryExecuterCommandEager.cs" />
     <Compile Include="DbLayer\Loaders\EntityKeyLoader.cs" />
     <Compile Include="DbLayer\Loaders\EntityLoader.cs" />
     <Compile Include="DbLayer\Loaders\FieldSetters\BasicFieldSetter.cs" />
