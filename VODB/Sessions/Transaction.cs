@@ -73,6 +73,7 @@ namespace VODB.Sessions
 
             if (_Savepoints.Count > 0)
             {
+                --count;
                 var savepoint = _Savepoints.Last.Value;
                 _Savepoints.RemoveLast();
 
