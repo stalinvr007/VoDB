@@ -43,6 +43,7 @@ namespace VODB.Sessions
             lock (this)
             {
                 CreateConnection();
+                Open();
 
                 if (_transaction != null)
                 {
