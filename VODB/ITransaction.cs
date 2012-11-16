@@ -5,5 +5,6 @@ namespace VODB
     {
         void RollBack();
         void Commit();
+        void SavePoint();
     }
 }
