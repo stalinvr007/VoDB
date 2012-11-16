@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 
 namespace VODB.Sessions
@@ -9,6 +10,8 @@ namespace VODB.Sessions
         private int count = 1;
 
         public Boolean Ended { get; private set; }
+
+        private LinkedList<String> _Savepoints = new LinkedList<String>();
 
         public Transaction(DbTransaction transaction)
         {
@@ -25,7 +28,7 @@ namespace VODB.Sessions
             }
 
             Commit();
-            
+
             if (count != 0) return;
 
             _Transaction.Dispose();
@@ -68,6 +71,17 @@ namespace VODB.Sessions
                 return;
             }
 
+            if (_Savepoints.Count > 0)
+            {
+                var savepoint = _Savepoints.Last.Value;
+                _Savepoints.RemoveLast();
+
+                var trans = _Transaction as System.Data.SqlClient.SqlTransaction;
+                trans.Rollback(savepoint);
+                
+                return;
+            }
+
             CheckTransactionAlive();
 
             count = int.MaxValue;
@@ -91,5 +105,20 @@ namespace VODB.Sessions
                 _Transaction.Commit();
             }
         }
+
+        public void SavePoint()
+        {
+            if (typeof(System.Data.SqlClient.SqlTransaction) != _Transaction.GetType())
+            {
+                throw new NotSupportedException("Save points are available on MsSql connections.");
+            }
+
+            var trans = _Transaction as System.Data.SqlClient.SqlTransaction;
+
+            string savepoint = String.Format("savepoint{0}", _Savepoints.Count);
+            _Savepoints.AddLast(new LinkedListNode<String>(savepoint));
+            trans.Save(savepoint);
+        }
+
     }
 }
