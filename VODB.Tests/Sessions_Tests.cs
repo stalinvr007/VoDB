@@ -2,6 +2,7 @@
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.Tests.Models.Northwind;
+using VODB.Sessions;
 
 namespace VODB.Tests
 {
@@ -53,6 +54,19 @@ namespace VODB.Tests
         }
 
         [TestMethod]
+        public void EagerSession_Exists()
+        {
+            using (var session = new EagerSession())
+            {
+                Assert.IsTrue(session.Exists(new Employee { EmployeeId = 1 }));
+                Assert.IsTrue(session.Exists(new Employee { EmployeeId = 2 }));
+                Assert.IsTrue(session.Exists(new Employee { EmployeeId = 3 }));
+
+                Assert.IsFalse(session.Exists(new Employee { EmployeeId = 123123 }));
+            }
+        }
+
+        [TestMethod]
         public void EagerSession_GetById_ReportsFrom()
         {
             var employee = SessionsFactory.CreateEager().GetById(
@@ -68,7 +82,7 @@ namespace VODB.Tests
         {
             var employee = SessionsFactory.CreateEager().GetById(
                 new Employee { EmployeeId = 1 });
-            
+
             EntitiesAsserts.Assert_Employee_2(employee.ReportsTo);
             EntitiesAsserts.Assert_Employee_1(employee.ReportsTo.ReportsTo);
             EntitiesAsserts.Assert_Employee_2(employee.ReportsTo.ReportsTo.ReportsTo);

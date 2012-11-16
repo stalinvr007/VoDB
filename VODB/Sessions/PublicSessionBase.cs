@@ -62,6 +62,11 @@ namespace VODB.Sessions
             return _InnerSession.Count<TEntity>();
         }
 
+        public bool Exists<TEntity>(TEntity entity) where TEntity : DbEntity, new()
+        {
+            return _InnerSession.Exists(entity);
+        }
+
         public void Dispose()
         {
             if (_InnerSession != null)
@@ -71,5 +76,8 @@ namespace VODB.Sessions
             }
         }
 
+
+
+        
     }
 }

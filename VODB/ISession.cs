@@ -73,6 +73,12 @@ namespace VODB
         /// <returns></returns>
         int Count<TEntity>() where TEntity : DbEntity, new();
 
+        /// <summary>
+        /// Verifies if the entity exists in this session.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <returns></returns>
+        bool Exists<TEntity>(TEntity entity) where TEntity : DbEntity, new();
     }
 
     internal interface IInternalSession
