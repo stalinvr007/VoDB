@@ -45,7 +45,7 @@ namespace VODB.Sessions
                 CreateConnection();
                 Open();
 
-                if (_transaction != null)
+                if (_transaction != null && !_transaction.Ended)
                 {
                     _transaction.BeginNestedTransaction();
                 }
