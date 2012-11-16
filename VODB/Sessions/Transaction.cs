@@ -58,6 +58,11 @@ namespace VODB.Sessions
 
         public void RollBack()
         {
+            if (Ended)
+            {
+                return;
+            }
+
             CheckTransactionAlive();
 
             count = int.MaxValue;
