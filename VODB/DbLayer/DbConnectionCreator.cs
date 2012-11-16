@@ -44,7 +44,7 @@ namespace VODB.DbLayer
                 }
             }
 
-            throw new ConnectionStringNotFoundException(_ProviderName);
+            throw new ConnectionStringNotFoundException(_ProviderName, _ConnectionStringName);
         }
 
         static string GetConnectionStringByProvider(string providerName, String connectionStringName = null)
