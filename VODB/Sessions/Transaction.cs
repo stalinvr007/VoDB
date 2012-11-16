@@ -36,6 +36,11 @@ namespace VODB.Sessions
 
         internal DbCommand CreateCommand()
         {
+            if (_Transaction.Connection == null)
+            {
+                throw new InvalidOperationException("Trying to create a Command withought a connection.");
+            }
+
             var cmd = _Transaction.Connection.CreateCommand();
             cmd.Transaction = _Transaction;
             return cmd;
