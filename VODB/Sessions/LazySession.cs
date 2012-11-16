@@ -8,28 +8,27 @@ using VODB.DbLayer.Loaders;
 
 namespace VODB.Sessions
 {
-    
-    public class EagerSession : PublicSessionBase
+    public class LazySession : PublicSessionBase
     {
-        public EagerSession(IDbConnectionCreator creator = null)
-            : base(new InternalEagerSession(creator))
-        { }   
+        public LazySession(IDbConnectionCreator creator = null)
+            : base(new InternalLazySession(creator))
+        { }
     }
 
-    internal class InternalEagerSession : InternalSession
+    internal class InternalLazySession : InternalSession
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EagerSession"/> class.
         /// </summary>
         /// <param name="creator">The creator.</param>
-        internal InternalEagerSession(IDbConnectionCreator creator = null)
+        internal InternalLazySession(IDbConnectionCreator creator = null)
             : base(creator)
         {
         }
 
         public override IDbQueryResult<TEntity> GetAll<TEntity>()
         {
-            return Run(() => new DbEntityQueryExecuterEager<TEntity>(
+            return Run(() => new DbEntityQueryExecuterLazy<TEntity>(
                                          new DbEntitySelectCommandFactory<TEntity>(this),
                                          new FullEntityLoader<TEntity>(this)
                                          ).Execute());
@@ -37,7 +36,7 @@ namespace VODB.Sessions
 
         public override TEntity GetById<TEntity>(TEntity entity)
         {
-            return Run(() => new DbEntityQueryExecuterEager<TEntity>(
+            return Run(() => new DbEntityQueryExecuterLazy<TEntity>(
                                          new DbEntitySelectByIdCommandFactory<TEntity>(this, entity),
                                          new FullEntityLoader<TEntity>(this)
                                          ).Execute().FirstOrDefault());
