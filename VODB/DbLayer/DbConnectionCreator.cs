@@ -6,7 +6,7 @@ using VODB.Exceptions;
 
 namespace VODB.DbLayer
 {
-    internal class DbConnectionCreator : IDbConnectionCreator
+    public class DbConnectionCreator : IDbConnectionCreator
     {
         private readonly String _ProviderName;
         private readonly String _ConnectionStringName;
