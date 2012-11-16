@@ -96,6 +96,11 @@ namespace VODB.Sessions
                 return;
             }
 
+            if (_Savepoints.Count > 0)
+            {
+                _Savepoints.RemoveLast();
+            }
+
             CheckTransactionAlive();
 
             --count;
