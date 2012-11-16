@@ -1,6 +1,7 @@
+using System;
 namespace VODB
 {
-    public interface ITransaction
+    public interface ITransaction : IDisposable
     {
         void RollBack();
         void Commit();
