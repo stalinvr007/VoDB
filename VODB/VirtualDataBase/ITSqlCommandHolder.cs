@@ -9,5 +9,6 @@ namespace VODB.VirtualDataBase
         string Select { get; }
         string SelectById { get; }
         string Update { get; }
+        string CountById { get; }
     }
 }

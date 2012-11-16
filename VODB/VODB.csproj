@@ -50,6 +50,7 @@
     <Compile Include="DbLayer\DbCommands\DbCommandBypass.cs" />
     <Compile Include="DbLayer\DbCommands\DbCommandFactory.cs" />
     <Compile Include="DbLayer\DbCommands\DbEntityCommandFactory.cs" />
+    <Compile Include="DbLayer\DbCommands\DbEntityCountByIdCommandFactory.cs" />
     <Compile Include="DbLayer\DbCommands\DbEntityCountCommandFactory.cs" />
     <Compile Include="DbLayer\DbCommands\DbEntityDeleteCommandFactory.cs" />
     <Compile Include="DbLayer\DbCommands\DbEntityInsertCommandFactory.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="VirtualDataBase\TableCreator.cs" />
     <Compile Include="VirtualDataBase\TSqlCommandHolder.cs" />
     <Compile Include="Exceptions\EntityKeysNotFoundException.cs" />
+    <Compile Include="VirtualDataBase\TSqlCommands\TCountById.cs" />
     <Compile Include="VirtualDataBase\TSqlCommands\TDelete.cs" />
     <Compile Include="VirtualDataBase\TSqlCommands\TInsert.cs" />
     <Compile Include="VirtualDataBase\TSqlCommands\TSelect.cs" />

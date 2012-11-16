@@ -12,6 +12,7 @@ namespace VODB.VirtualDataBase
 
         private Task<String> _th_select;
         private Task<String> _th_selectById;
+        private Task<String> _th_countById;
         private Task<String> _th_update;
 
         public TSqlCommandHolder(Table table)
@@ -47,6 +48,11 @@ namespace VODB.VirtualDataBase
             get { return _th_delete.Result; }
         }
 
+        public String CountById
+        {
+            get { return _th_countById.Result; }
+        }
+
         public string Count { get; private set; }
 
         #endregion
@@ -58,9 +64,10 @@ namespace VODB.VirtualDataBase
             _th_update = new Task<String>(() => new TUpdate(_table).BuildCmdStr());
             _th_insert = new Task<String>(() => new TInsert(_table).BuildCmdStr());
             _th_delete = new Task<String>(() => new TDelete(_table).BuildCmdStr());
+            _th_countById = new Task<String>(() => new TCountById(_table).BuildCmdStr());
             Count = string.Format("Select count(*) From [{0}]", _table.TableName);
 
-            new TasksCollection(_th_select, _th_selectById, _th_update, _th_insert, _th_delete)
+            new TasksCollection(_th_select, _th_countById, _th_selectById, _th_update, _th_insert, _th_delete)
                 .StartAll();
         }
     }

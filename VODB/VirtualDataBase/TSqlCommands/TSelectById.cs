@@ -5,13 +5,10 @@ using System.Text;
 
 namespace VODB.VirtualDataBase.TSqlCommands
 {
-    
-
     /// <summary>
     /// Builder of Select By Id Commands
     /// </summary>
     internal sealed class TSelectById : TSqlCmdBase {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TSelectById"/> class.
         /// </summary>
