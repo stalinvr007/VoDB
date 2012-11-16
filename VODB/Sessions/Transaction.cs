@@ -3,7 +3,7 @@ using System.Data.Common;
 
 namespace VODB.Sessions
 {
-    internal sealed class Transaction : IDisposable, ITransaction
+    internal sealed class Transaction : ITransaction
     {
         private DbTransaction _Transaction;
         private int count = 1;
