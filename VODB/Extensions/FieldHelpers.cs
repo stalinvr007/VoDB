@@ -20,7 +20,6 @@ namespace VODB.Extensions
             {
                 validator.Validate(entity);
             }
-
         }
 
         /// <summary>
@@ -111,27 +110,15 @@ namespace VODB.Extensions
 
         public static Boolean IsFilled(this DbEntity entity, Field field)
         {
-            var value = field.GetValue(entity);
-
-            if (field.FieldType.IsPrimitive)
+            foreach (var validator in Configuration.FieldIsFilledValidators)
             {
-                return (typeof(int).IsAssignableFrom(field.FieldType) ||
-                                    typeof(Double).IsAssignableFrom(field.FieldType) ||
-                                    typeof(float).IsAssignableFrom(field.FieldType) ||
-                                    typeof(Decimal).IsAssignableFrom(field.FieldType) ||
-                                    typeof(long).IsAssignableFrom(field.FieldType)) && !value.Equals(0);;
+                if (validator.CanHandle(field))
+                {
+                    return validator.Verify(field, entity);
+                }
             }
-            else if (typeof(DateTime).IsAssignableFrom(field.FieldType))
-            {
-                return ((DateTime)value).Year != 1;
-            }
-            else
-            {
-                return value != null && 
-                    (typeof(String).IsAssignableFrom(field.FieldType) && 
-                    !String.IsNullOrEmpty((String)value));
-            }
-
+            
+            throw new FieldValidatorNotFoundException(field.FieldType);
         }
 
         /// <summary>

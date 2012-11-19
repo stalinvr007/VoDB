@@ -2,6 +2,7 @@
 using VODB.DbLayer.DbCommands.DbParameterSetters;
 using VODB.DbLayer.Loaders.FieldSetters;
 using VODB.EntityValidators;
+using VODB.EntityValidators.Fields;
 
 namespace VODB
 {
@@ -12,25 +13,35 @@ namespace VODB
     {
         static Configuration()
         {
+
+            FieldIsFilledValidators = new List<IFieldValidator>
+            {
+                new StringFieldIsFilled(),
+                new NumberFieldIsFilled(),
+                new DateTimeFieldIsFilled(),
+                new DbEntityFieldIsFilled(),
+                new RefTypeFieldIsFilled()
+            };
+
             EntityValidators = new List<IEntityValidator>
-                                   {
-                                       new RequiredFieldsValidator(),
-                                       new KeyFilledValidator()
-                                   };
+            {
+                new RequiredFieldsValidator(),
+                new KeyFilledValidator()
+            };
 
             FieldSetters = new List<IFieldSetter>
-                               {
-                                   new BasicFieldSetter(),
-                                   new DbEntityFieldSetter()
-                               };
+            {
+                new BasicFieldSetter(),
+                new DbEntityFieldSetter()
+            };
 
             ParameterSetters = new List<IParameterSetter>
-                                   {
-                                       new BasicParameterSetter(),
-                                       new DbEntityParameterSetter(),
-                                       new DateTimeParameterSetter(),
-                                       new ByteArrayParameterSetter()
-                                   };
+            {
+                new BasicParameterSetter(),
+                new DbEntityParameterSetter(),
+                new DateTimeParameterSetter(),
+                new ByteArrayParameterSetter()
+            };
         }
 
         /// <summary>
@@ -56,5 +67,13 @@ namespace VODB
         /// The parameter setters.
         /// </value>
         public static ICollection<IParameterSetter> ParameterSetters { get; private set; }
+
+        /// <summary>
+        /// Gets the field is filled validators.
+        /// </summary>
+        /// <value>
+        /// The field is filled validators.
+        /// </value>
+        public static ICollection<IFieldValidator> FieldIsFilledValidators { get; private set; }
     }
 }
