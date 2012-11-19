@@ -68,7 +68,7 @@ namespace VODB.Extensions
             foreach (var setter in Configuration.FieldSetters
                 .Where(setter => setter.CanHandle(field.FieldType)))
             {
-                setter.SetValue(entity, field, value, f => reader.GetValue(f.BindedTo));
+                setter.SetValue(entity, field, value, f => reader.GetValue(f.FieldName));
                 return field;
             }
 
