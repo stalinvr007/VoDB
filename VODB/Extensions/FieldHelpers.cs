@@ -141,7 +141,10 @@ namespace VODB.Extensions
                 {
                     throw new FieldNotFoundException(fieldName, table.TableName, ex);
                 }
-                throw;
+                else
+                {
+                    throw;
+                }
             }
         }
 
