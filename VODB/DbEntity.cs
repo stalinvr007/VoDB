@@ -55,7 +55,7 @@ namespace VODB
 
             if (Session != null && model != null && !model.IsLoaded)
             {
-                model = Session.GetById<TModel>(model) as TModel;
+                model = Session.AsyncGetById<TModel>(model).Result as TModel;
                 SetValue(model);
             }
 
