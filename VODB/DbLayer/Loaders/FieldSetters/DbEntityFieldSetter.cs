@@ -2,6 +2,7 @@ using System;
 using VODB.Exceptions;
 using VODB.VirtualDataBase;
 using VODB.Extensions;
+using System.Linq;
 
 namespace VODB.DbLayer.Loaders.FieldSetters
 {
@@ -28,7 +29,7 @@ namespace VODB.DbLayer.Loaders.FieldSetters
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="getValueFromReader">The get value from reader.</param>
-        public void SetValue(Object entity, Field field, Object value, Func<Field, Object> getValueFromReader)
+        public void SetValue(DbEntity entity, Field field, Object value, Func<Field, Object> getValueFromReader)
         {
             var foreignEntity = CreateInstance(field.FieldType);
 
@@ -41,7 +42,15 @@ namespace VODB.DbLayer.Loaders.FieldSetters
                 }
                 else
                 {
-                    foreignEntity.SetValue(key, getValueFromReader(key), getValueFromReader);
+                    
+                    /* Have to search the entity for a field bindedTo this Key. Or with the same name. */
+                    /* Use the name of that field to use on GetValueFromReader. */
+
+                    var origField = entity.FindField(key.FieldName);
+                    if (origField != null)
+                    {
+                        foreignEntity.SetValue(key, getValueFromReader(origField), getValueFromReader);
+                    }
                 }
             }
             

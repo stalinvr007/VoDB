@@ -99,14 +99,35 @@ namespace VODB.Extensions
                 setter.SetValue(entity, field, value, getValueFromReader);
                 return;
             }
-            
+
             throw new FieldSetterNotFoundException(field.FieldType);
-            
+
         }
     }
 
     internal static class FieldHelpers
     {
+
+        public static Field FindField(this DbEntity entity, String BindOrName)
+        {
+
+            return entity.Table.Fields
+                .FirstOrDefault(field =>
+                 {
+                     if (field.FieldName.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase))
+                     {
+                         return true;
+                     }
+
+                     if (!String.IsNullOrEmpty(field.BindedTo) && field.BindedTo.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase))
+                     {
+                         return true;
+                     }
+
+                     return false;
+                 });
+
+        }
 
         /// <summary>
         /// Determines whether the specified entity is filled.
