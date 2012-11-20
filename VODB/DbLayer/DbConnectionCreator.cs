@@ -47,7 +47,7 @@ namespace VODB.DbLayer
             throw new ConnectionStringNotFoundException(_ProviderName, _ConnectionStringName);
         }
 
-        static string GetConnectionStringByProvider(string providerName, String connectionStringName = null)
+        protected static string GetConnectionStringByProvider(string providerName, String connectionStringName = null)
         {
             ConnectionStringSettingsCollection settings = ConfigurationManager.ConnectionStrings;
 
