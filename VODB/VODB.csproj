@@ -89,6 +89,7 @@
     <Compile Include="EntityValidators\KeyFilledValidator.cs" />
     <Compile Include="Exceptions\FieldValidatorNotFoundException.cs" />
     <Compile Include="Extensions\TasksExtensions.cs" />
+    <Compile Include="ISessionExtensions.cs" />
     <Compile Include="Sessions\EagerSession.cs" />
     <Compile Include="EntityValidators\IEntityValidator.cs" />
     <Compile Include="EntityValidators\RequiredFieldsValidator.cs" />
