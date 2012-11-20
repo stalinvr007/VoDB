@@ -2,7 +2,7 @@ using System;
 
 namespace VODB.Exceptions
 {
-    public class UnableToCreateDbConnectionException : Exception
+    public class UnableToCreateDbConnectionException : VodbException
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UnableToCreateDbConnectionException" /> class.

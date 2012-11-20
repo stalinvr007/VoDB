@@ -88,6 +88,7 @@
     <Compile Include="EntityValidators\Fields\StringFieldIsFilled.cs" />
     <Compile Include="EntityValidators\KeyFilledValidator.cs" />
     <Compile Include="Exceptions\FieldValidatorNotFoundException.cs" />
+    <Compile Include="Exceptions\VodbException.cs" />
     <Compile Include="Extensions\TasksExtensions.cs" />
     <Compile Include="ISessionExtensions.cs" />
     <Compile Include="Sessions\EagerSession.cs" />
