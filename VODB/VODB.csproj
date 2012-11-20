@@ -79,6 +79,7 @@
     <Compile Include="DbLayer\Loaders\FieldSetters\DbEntityFieldSetter.cs" />
     <Compile Include="DbLayer\Loaders\FieldSetters\IFieldSetter.cs" />
     <Compile Include="DbLayer\Loaders\IEntityLoader.cs" />
+    <Compile Include="DbLayer\NameConventionDbConnectionCreator.cs" />
     <Compile Include="EntityValidators\Fields\DateTimeFieldIsFilled.cs" />
     <Compile Include="EntityValidators\Fields\DbEntityFieldIsFilled.cs" />
     <Compile Include="EntityValidators\Fields\FieldIsFilled.cs" />
