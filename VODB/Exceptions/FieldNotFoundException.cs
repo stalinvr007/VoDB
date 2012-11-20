@@ -5,7 +5,7 @@ namespace VODB.Exceptions
     /// <summary>
     /// 
     /// </summary>
-    public class FieldNotFoundException : Exception
+    public class FieldNotFoundException : VodbException
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FieldNotFoundException" /> class.

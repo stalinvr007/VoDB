@@ -30,8 +30,10 @@ namespace VODB.EntityValidators
 
             if (sb.Length <= 0) return;
             
-            sb.Remove(sb.Length - 2, 2);    
-            throw new ValidationException(string.Format("Required fields not set: {{ {0} }}", sb));
+            sb.Remove(sb.Length - 2, 2);
+            throw new ValidationException(
+                string.Format("Required fields not set: {{ {0} }}", sb), 
+                entity.Table.Fields.Where(field => field.IsRequired).Where(field => !entity.IsFilled(field)));
         }
 
         #endregion

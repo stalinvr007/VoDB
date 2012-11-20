@@ -30,7 +30,9 @@ namespace VODB.EntityValidators
             if (sb.Length <= 0) return;
 
             sb.Remove(sb.Length - 2, 2);
-            throw new ValidationException(string.Format("Key fields not set: {{ {0} }}", sb));
+            throw new ValidationException(
+                string.Format("Key fields not set: {{ {0} }}", sb), 
+                entity.Table.KeyFields.Where(field => !entity.IsFilled(field)));
         }
     }
 }

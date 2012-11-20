@@ -2,7 +2,7 @@
 
 namespace VODB.Exceptions
 {
-    public class UnableToInstantiateTypeException : Exception
+    public class UnableToInstantiateTypeException : VodbException
     {
 
 

@@ -1,13 +1,19 @@
 using System;
+using System.Collections.Generic;
+using VODB.VirtualDataBase;
 
 namespace VODB.Exceptions
 {
-    public class ValidationException : Exception
+    public class ValidationException : VodbException
     {
-        public ValidationException(string message)
+        public IEnumerable<Field> Fields { get; private set; }
+        
+        public ValidationException(string message, IEnumerable<Field> fields)
             : base(message)
         {
-
+            Fields = fields;
         }
+
+
     }
 }
