@@ -6,8 +6,13 @@ namespace VODB.Exceptions
     {
 
         public VodbException(String msgMask, params Object[] args)
-            : base(String.Format(msgMask, args))
+            : base(Format(msgMask, args))
         { }
+
+        private static string Format(string msgMask, object[] args)
+        {
+            return args == null || args.Length == 0 ? msgMask : String.Format(msgMask, args);
+        }
 
     }
 }

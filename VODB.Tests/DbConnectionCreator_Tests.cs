@@ -45,5 +45,15 @@ namespace VODB.Tests
             Assert.IsNotNull(connection);
         }
 
+        [TestMethod]
+        public void Create_A_new_Connection_ConventionBased()
+        {
+            var creator = new NameConventionDbConnectionCreator("System.Data.SqlClient");
+            var connection = creator.Create();
+
+            Assert.IsNotNull(connection);
+        }
+
+
     }
 }

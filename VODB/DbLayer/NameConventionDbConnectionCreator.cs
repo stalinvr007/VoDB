@@ -14,7 +14,7 @@ namespace VODB.DbLayer
         /// <param name="providerName">Name of the provider.</param>
         /// <param name="connectionStringName"> </param>
         public NameConventionDbConnectionCreator(String providerName)
-            : base(providerName, GetConnectionStringByProvider(providerName, Environment.MachineName))
+            : base(providerName, Environment.MachineName)
         {
 
         }
