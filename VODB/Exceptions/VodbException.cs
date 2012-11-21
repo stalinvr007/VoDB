@@ -6,8 +6,10 @@ namespace VODB.Exceptions
     {
 
         public VodbException(String msgMask, params Object[] args)
-            : base(Format(msgMask, args))
-        { }
+            : base(Format(msgMask, args)) { }
+
+        public VodbException(Exception innerException, String msgMask, params Object[] args)
+            : base(Format(msgMask, args), innerException) {}
 
         private static string Format(string msgMask, object[] args)
         {

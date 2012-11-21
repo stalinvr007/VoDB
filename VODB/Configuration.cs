@@ -3,6 +3,7 @@ using VODB.DbLayer.DbCommands.DbParameterSetters;
 using VODB.DbLayer.Loaders.FieldSetters;
 using VODB.EntityValidators;
 using VODB.EntityValidators.Fields;
+using VODB.Exceptions.Handling;
 
 namespace VODB
 {
@@ -42,6 +43,11 @@ namespace VODB
                 new DateTimeParameterSetter(),
                 new ByteArrayParameterSetter()
             };
+
+            ExceptionHandlers = new List<IExceptionHandler>
+            {
+                new PrimaryKeyExceptionHandler()
+            };
         }
 
         /// <summary>
@@ -75,5 +81,14 @@ namespace VODB
         /// The field is filled validators.
         /// </value>
         public static ICollection<IFieldValidator> FieldIsFilledValidators { get; private set; }
+
+        /// <summary>
+        /// Gets the exception handlers.
+        /// </summary>
+        /// <value>
+        /// The exception handlers.
+        /// </value>
+        public static ICollection<IExceptionHandler> ExceptionHandlers { get; private set; }
+
     }
 }

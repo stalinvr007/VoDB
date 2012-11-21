@@ -2,6 +2,7 @@ using System;
 using System.Data.SqlClient;
 using VODB.DbLayer.DbCommands;
 using VODB.Exceptions;
+using VODB.Extensions;
 
 namespace VODB.DbLayer.DbExecuters
 {
@@ -22,18 +23,11 @@ namespace VODB.DbLayer.DbExecuters
             {
                 return Execute(_commandFactory.Make().ExecuteNonQuery());
             }
-            catch (SqlException)
-            {
-                throw;
-            }
-            catch (ValidationException)
-            {
-                throw;
-            }
             catch (Exception ex)
             {
-                throw new UnableToExecuteNonQueryException(ex);
+                ex.HandleException();
             }
+            return default(TResult);
         }
 
         #endregion
