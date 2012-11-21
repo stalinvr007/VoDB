@@ -89,7 +89,13 @@
     <Compile Include="EntityValidators\Fields\StringFieldIsFilled.cs" />
     <Compile Include="EntityValidators\KeyFilledValidator.cs" />
     <Compile Include="Exceptions\FieldValidatorNotFoundException.cs" />
+    <Compile Include="Exceptions\Handling\IExceptionHandler.cs" />
+    <Compile Include="Exceptions\Handling\PrimaryKeyExceptionHandler.cs" />
+    <Compile Include="Exceptions\PrimaryKeyViolationException.cs" />
+    <Compile Include="Extensions\ExceptionExtensions.cs" />
+    <Compile Include="Sys\Objects.cs" />
     <Compile Include="Exceptions\VodbException.cs" />
+    <Compile Include="Exceptions\WrongFieldContentException.cs" />
     <Compile Include="Extensions\TasksExtensions.cs" />
     <Compile Include="ISessionExtensions.cs" />
     <Compile Include="Sessions\EagerSession.cs" />
