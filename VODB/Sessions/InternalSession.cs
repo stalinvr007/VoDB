@@ -58,25 +58,25 @@ namespace VODB.Sessions
             }
         }
 
-        public abstract IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : DbEntity, new();
+        public abstract IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : Entity, new();
 
-        public Task<IDbQueryResult<TEntity>> AsyncGetAll<TEntity>() where TEntity : DbEntity, new()
+        public Task<IDbQueryResult<TEntity>> AsyncGetAll<TEntity>() where TEntity : Entity, new()
         {
             return _tasks.Add<IDbQueryResult<TEntity>>(
                 new Task<IDbQueryResult<TEntity>>(new InternalEagerSession(_creator).GetAll<TEntity>).RunAsync()
             );
         }
 
-        public abstract TEntity GetById<TEntity>(TEntity entity) where TEntity : DbEntity, new();
+        public abstract TEntity GetById<TEntity>(TEntity entity) where TEntity : Entity, new();
 
-        public Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : DbEntity, new()
+        public Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : Entity, new()
         {
             return _tasks.Add<TEntity>(
                 new Task<TEntity>(() => new InternalEagerSession(_creator).GetById(entity)).RunAsync()
             );
         }
 
-        public TEntity Insert<TEntity>(TEntity entity) where TEntity : DbEntity, new()
+        public TEntity Insert<TEntity>(TEntity entity) where TEntity : Entity, new()
         {
             var idField = entity.Table.KeyFields.FirstOrDefault(f => f.IsIdentity);
 
@@ -105,7 +105,7 @@ namespace VODB.Sessions
             return entity;
         }
 
-        public void Delete<TEntity>(TEntity entity) where TEntity : DbEntity, new()
+        public void Delete<TEntity>(TEntity entity) where TEntity : Entity, new()
         {
             Run(() =>
                 new DbCommandNonQueryExecuter(
@@ -114,7 +114,7 @@ namespace VODB.Sessions
             );
         }
 
-        public TEntity Update<TEntity>(TEntity entity) where TEntity : DbEntity, new()
+        public TEntity Update<TEntity>(TEntity entity) where TEntity : Entity, new()
         {
             Run(() =>
                 new DbCommandNonQueryExecuter(
@@ -124,7 +124,7 @@ namespace VODB.Sessions
             return entity;
         }
 
-        public int Count<TEntity>() where TEntity : DbEntity, new()
+        public int Count<TEntity>() where TEntity : Entity, new()
         {
             return Run(() =>
                 new DbQueryScalarExecuter<int>(
@@ -133,7 +133,7 @@ namespace VODB.Sessions
             );
         }
 
-        public bool Exists<TEntity>(TEntity entity) where TEntity : DbEntity, new()
+        public bool Exists<TEntity>(TEntity entity) where TEntity : Entity, new()
         {
             return Run(() =>
                 new DbQueryScalarExecuter<int>(

@@ -15,7 +15,7 @@ namespace VODB.EntityValidators
                 onCommand == On.Delete;
         }
 
-        public void Validate(DbEntity entity)
+        public void Validate(Entity entity)
         {
             var nonFilled = entity.Table.KeyFields
                 .Where(field => !entity.IsFilled(field))

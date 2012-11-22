@@ -17,7 +17,7 @@ namespace VODB.Extensions
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <param name="onCommand">The on command.</param>
-        public static void ValidateEntity(this DbEntity entity, On onCommand)
+        public static void ValidateEntity(this Entity entity, On onCommand)
         {
 
             foreach (var validator in Configuration.EntityValidators
@@ -58,7 +58,7 @@ namespace VODB.Extensions
         /// <exception cref="FieldSetterNotFoundException"></exception>
         /// <exception cref="FieldNotFoundException"></exception>
         public static Field SetValue<TModel>(this TModel entity, Field field, object value, DbDataReader reader)
-            where TModel : DbEntity
+            where TModel : Entity
         {
             if (value == null || value == DBNull.Value)
             {
@@ -86,7 +86,7 @@ namespace VODB.Extensions
         /// <returns></returns>
         /// <exception cref="FieldSetterNotFoundException"></exception>
         public static void SetValue<TModel>(this TModel entity, Field field, object value, Func<Field, object> getValueFromReader)
-            where TModel : DbEntity
+            where TModel : Entity
         {
             if (value == null || value == DBNull.Value)
             {
@@ -108,7 +108,7 @@ namespace VODB.Extensions
     internal static class FieldHelpers
     {
 
-        public static Field FindField(this DbEntity entity, String BindOrName)
+        public static Field FindField(this Entity entity, String BindOrName)
         {
 
             return entity.Table.Fields
@@ -136,7 +136,7 @@ namespace VODB.Extensions
         /// <param name="field">The field.</param>
         /// <returns></returns>
         /// <exception cref="FieldValidatorNotFoundException"></exception>
-        public static Boolean IsFilled(this DbEntity entity, Field field)
+        public static Boolean IsFilled(this Entity entity, Field field)
         {
             foreach (var validator in Configuration.FieldIsFilledValidators)
             {
@@ -185,7 +185,7 @@ namespace VODB.Extensions
         /// <param name="entity">The entity.</param>
         /// <exception cref="ParameterSetterNotFoundException"></exception>
         private static void SetParameter<TModel>(this DbCommand dbCommand, Field field, TModel entity)
-            where TModel : DbEntity
+            where TModel : Entity
         {
             var param = dbCommand.CreateParameter();
             param.ParameterName = field.FieldName;
@@ -203,7 +203,7 @@ namespace VODB.Extensions
         /// <param name="entity">The entity.</param>
         /// <exception cref="ParameterSetterNotFoundException"></exception>
         private static void SetOldParameter<TModel>(this DbCommand dbCommand, Field field, TModel entity)
-            where TModel : DbEntity
+            where TModel : Entity
         {
             var param = dbCommand.CreateParameter();
             param.ParameterName = string.Format("Old{0}", field.FieldName);
@@ -222,7 +222,7 @@ namespace VODB.Extensions
         /// <param name="entity">The entity.</param>
         /// <exception cref="ParameterSetterNotFoundException"></exception>
         public static void SetParameters<TModel>(this DbCommand dbCommand, IEnumerable<Field> fields, TModel entity)
-            where TModel : DbEntity
+            where TModel : Entity
         {
             foreach (Field field in fields)
             {
@@ -238,7 +238,7 @@ namespace VODB.Extensions
         /// <param name="entity">The entity.</param>
         /// <exception cref="ParameterSetterNotFoundException"></exception>
         public static void SetOldParameters<TModel>(this DbCommand dbCommand, TModel entity)
-            where TModel : DbEntity
+            where TModel : Entity
         {
             foreach (var field in entity.Table.KeyFields)
             {

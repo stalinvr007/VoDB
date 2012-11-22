@@ -7,7 +7,7 @@ namespace VODB.DbLayer.Loaders
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     internal class FullEntityLoader<TModel> : EntityLoader<TModel>
-        where TModel : DbEntity, new()
+        where TModel : Entity, new()
     {
 
         private readonly ISession _Session;

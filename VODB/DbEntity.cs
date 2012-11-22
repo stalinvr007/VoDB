@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using VODB.Annotations;
 using VODB.Caching;
 using VODB.DbLayer.DbExecuters;
 using VODB.VirtualDataBase;
@@ -7,27 +8,29 @@ using VODB.VirtualDataBase;
 namespace VODB
 {
     /// <summary>
-    /// Gives extra funcionality to an entity. Also indicates this is an entity to map.
+    /// Base class that marks a derived class as an Entity type.
     /// </summary>
-    public abstract class DbEntity
+    public abstract class Entity
     {
-        private readonly Type _Type;
-
-        private Table _table;
-
         private readonly IDictionary<Field, Object> OriginalKeyValues = new Dictionary<Field, object>();
 
+
+        internal abstract Table Table { get; }
         /// <summary>
-        /// Initializes a new instance of the <see cref="DbEntity" /> class.
+        /// Indicates if this entity has been fully loaded.
         /// </summary>
-        protected DbEntity()
-        {
-            _Type = GetType();
-            TablesCache.AsyncAdd(
-                _Type,
-                new TableCreator(_Type)
-                );
-        }
+        /// <value>
+        /// The is loaded.
+        /// </value>
+        internal Boolean IsLoaded { get; set; }
+        /// <summary>
+        /// Gets or sets the session.
+        /// </summary>
+        /// <value>
+        /// The session.
+        /// </value>
+        internal ISession Session { get; set; }
+
 
         internal Object GetKeyOriginalValue(Field field)
         {
@@ -39,14 +42,38 @@ namespace VODB
             OriginalKeyValues[field] = value;
         }
 
+    }
+
+    /// <summary>
+    /// Gives extra funcionality to an entity. Also indicates this is an entity to map.
+    /// </summary>
+    public abstract class DbEntity : Entity
+    {
+
+        private readonly Type _Type;
+
+        private Table _table;
+
+        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbEntity" /> class.
+        /// </summary>
+        protected DbEntity()
+        {
+            _Type = GetType();
+            TablesCache.AsyncAdd(
+                _Type,
+                new TableCreator(_Type)
+            );
+        }
+
         #region FOREIGN KEYS GETTER SETTER
 
         private readonly IDictionary<Type, Object> _ForeignEntities = new Dictionary<Type, Object>();
 
-        internal ISession Session { get; set; }
-
         protected TModel GetValue<TModel>()
-            where TModel : DbEntity, new()
+            where TModel : Entity, new()
         {
             Object value;
             _ForeignEntities.TryGetValue(typeof(TModel), out value);
@@ -63,7 +90,7 @@ namespace VODB
         }
 
         protected IDbQueryResult<TEntity> GetValues<TEntity>()
-            where TEntity : DbEntity, new()
+            where TEntity : Entity, new()
         {
             return Session.GetAll<TEntity>();
         }
@@ -76,17 +103,12 @@ namespace VODB
         #endregion
 
         /// <summary>
-        /// Indicates that this entity has been loaded with database data.
-        /// </summary>
-        internal Boolean IsLoaded { get; set; }
-
-        /// <summary>
         /// Gets the table.
         /// </summary>
         /// <value>
         /// The table.
         /// </value>
-        internal Table Table
+        internal override Table Table
         {
             get
             {
@@ -99,5 +121,6 @@ namespace VODB
                 return _table;
             }
         }
+
     }
 }

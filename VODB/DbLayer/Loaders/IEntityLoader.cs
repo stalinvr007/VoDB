@@ -2,7 +2,8 @@ using System.Data.Common;
 
 namespace VODB.DbLayer.Loaders
 {
-    internal interface IEntityLoader<in TModel> where TModel : DbEntity, new()
+    internal interface IEntityLoader<in TModel> 
+        where TModel : Entity, new()
     {
         /// <summary>
         /// Loads the specified entity.

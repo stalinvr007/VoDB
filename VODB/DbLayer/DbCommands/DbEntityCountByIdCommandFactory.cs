@@ -5,7 +5,7 @@ using VODB.Extensions;
 namespace VODB.DbLayer.DbCommands
 {
     internal sealed class DbEntityCountByIdCommandFactory<TEntity> : DbEntityCommandFactory<TEntity>
-            where TEntity : DbEntity, new()
+            where TEntity : Entity, new()
     {
         public DbEntityCountByIdCommandFactory(IInternalSession internalSession, TEntity entity)
             : base(internalSession, entity)

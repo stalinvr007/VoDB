@@ -3,7 +3,7 @@
 namespace VODB.DbLayer.DbCommands
 {
     internal abstract class DbEntityCommandFactory<TEntity> : DbCommandFactory
-        where TEntity : DbEntity, new()
+        where TEntity : Entity, new()
     {
         private readonly TEntity _entity;
 

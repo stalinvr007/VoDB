@@ -25,7 +25,7 @@
         /// Validates the specified entity. Should throw exception with the validation result if failed.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        void Validate(DbEntity entity);
+        void Validate(Entity entity);
 
 
     }

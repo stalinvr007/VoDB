@@ -6,7 +6,7 @@ using VODB.Extensions;
 namespace VODB.DbLayer.DbCommands
 {
     internal sealed class DbEntityInsertCommandFactory<TEntity> : DbEntityCommandFactory<TEntity>
-        where TEntity : DbEntity, new()
+        where TEntity : Entity, new()
     {
         public DbEntityInsertCommandFactory(IInternalSession internalSession, TEntity entity)
             : base(internalSession, entity)
