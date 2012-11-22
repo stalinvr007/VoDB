@@ -19,7 +19,7 @@ namespace VODB.DbLayer.Loaders.FieldSetters
         /// <returns></returns>
         public Boolean CanHandle(Type type)
         {
-            return typeof(DbEntity).IsAssignableFrom(type);
+            return typeof(Entity).IsAssignableFrom(type);
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace VODB.DbLayer.Loaders.FieldSetters
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="getValueFromReader">The get value from reader.</param>
-        public void SetValue(DbEntity entity, Field field, Object value, Func<Field, Object> getValueFromReader)
+        public void SetValue(Entity entity, Field field, Object value, Func<Field, Object> getValueFromReader)
         {
             var foreignEntity = CreateInstance(field.FieldType);
 

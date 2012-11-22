@@ -11,7 +11,7 @@ namespace VODB.DbLayer.DbExecuters
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     internal abstract class DbEntityQueryExecuterBase<TEntity> : IQueryExecuter<TEntity>
-        where TEntity : DbEntity, new()
+        where TEntity : Entity, new()
     {
 
         private IDbCommandFactory _CommandFactory;

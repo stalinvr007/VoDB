@@ -28,7 +28,7 @@ namespace VODB.DbLayer.Loaders.FieldSetters
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="getValueFromReader">The get value from reader.</param>
-        public void SetValue(DbEntity entity, Field field, Object value, Func<Field, Object> getValueFromReader)
+        public void SetValue(Entity entity, Field field, Object value, Func<Field, Object> getValueFromReader)
         {
             if (value != DBNull.Value)
             {

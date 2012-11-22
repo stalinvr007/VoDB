@@ -7,7 +7,7 @@ namespace VODB.DbLayer.Loaders
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     internal class EntityKeyLoader<TModel> : EntityLoader<TModel>
-        where TModel : DbEntity, new()
+        where TModel : Entity, new()
     {
 
         /// <summary>

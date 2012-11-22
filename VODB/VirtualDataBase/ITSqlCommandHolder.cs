@@ -1,7 +1,7 @@
 ﻿
 namespace VODB.VirtualDataBase
 {
-    interface ITSqlCommandHolder
+    internal interface ITSqlCommandHolder
     {
         string Count { get; }
         string Delete { get; }

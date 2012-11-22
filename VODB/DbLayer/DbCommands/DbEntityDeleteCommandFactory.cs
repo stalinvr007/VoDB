@@ -4,7 +4,8 @@ using VODB.Extensions;
 
 namespace VODB.DbLayer.DbCommands
 {
-    internal sealed class DbEntityDeleteCommandFactory<TEntity> : DbEntityCommandFactory<TEntity> where TEntity : DbEntity, new()
+    internal sealed class DbEntityDeleteCommandFactory<TEntity> : DbEntityCommandFactory<TEntity> 
+        where TEntity : Entity, new()
     {
         public DbEntityDeleteCommandFactory(IInternalSession internalSession, TEntity entity)
             : base(internalSession, entity)

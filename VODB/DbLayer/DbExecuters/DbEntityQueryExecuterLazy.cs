@@ -6,7 +6,7 @@ using VODB.DbLayer.Loaders;
 namespace VODB.DbLayer.DbExecuters
 {
     internal class DbEntityQueryExecuterLazy<TEntity> : DbEntityQueryExecuterBase<TEntity>
-            where TEntity : DbEntity, new()
+            where TEntity : Entity, new()
     {
 
         private readonly IEntityLoader<TEntity> _Loader;

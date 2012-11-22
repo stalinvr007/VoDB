@@ -15,7 +15,7 @@ namespace VODB.EntityValidators
         /// Validates the specified entity. Should throw exception with the validation result if failed.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        public void Validate(DbEntity entity)
+        public void Validate(Entity entity)
         {
             var nonFilled = entity.Table.Fields
                 .Where(field => field.IsRequired)

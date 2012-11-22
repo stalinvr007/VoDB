@@ -4,7 +4,8 @@ using VODB.Extensions;
 
 namespace VODB.DbLayer.DbCommands
 {
-    internal sealed class DbEntityUpdateCommandFactory<TEntity> : DbEntityCommandFactory<TEntity> where TEntity : DbEntity, new()
+    internal sealed class DbEntityUpdateCommandFactory<TEntity> : DbEntityCommandFactory<TEntity> 
+        where TEntity : Entity, new()
     {
         public DbEntityUpdateCommandFactory(IInternalSession internalSession, TEntity entity)
             : base(internalSession, entity)

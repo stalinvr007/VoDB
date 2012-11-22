@@ -18,14 +18,14 @@ namespace VODB
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns></returns>
-        IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : DbEntity, new();
+        IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : Entity, new();
 
         /// <summary>
         /// Gets all entities of the given type from this session. Asynchronously.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns></returns>
-        Task<IDbQueryResult<TEntity>> AsyncGetAll<TEntity>() where TEntity : DbEntity, new();
+        Task<IDbQueryResult<TEntity>> AsyncGetAll<TEntity>() where TEntity : Entity, new();
 
         /// <summary>
         /// Gets the entity by Id.
@@ -33,7 +33,7 @@ namespace VODB
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The entity that contains the key fields filled.</param>
         /// <returns></returns>
-        TEntity GetById<TEntity>(TEntity entity) where TEntity : DbEntity, new();
+        TEntity GetById<TEntity>(TEntity entity) where TEntity : Entity, new();
 
         /// <summary>
         /// Gets the entity by Id. Asynchronously.
@@ -41,7 +41,7 @@ namespace VODB
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The entity that contains the key fields filled.</param>
         /// <returns></returns>
-        Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : DbEntity, new();
+        Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : Entity, new();
 
         /// <summary>
         /// Inserts the specified entity.
@@ -49,14 +49,14 @@ namespace VODB
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
-        TEntity Insert<TEntity>(TEntity entity) where TEntity : DbEntity, new();
+        TEntity Insert<TEntity>(TEntity entity) where TEntity : Entity, new();
 
         /// <summary>
         /// Deletes the specified entity.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        void Delete<TEntity>(TEntity entity) where TEntity : DbEntity, new();
+        void Delete<TEntity>(TEntity entity) where TEntity : Entity, new();
 
         /// <summary>
         /// Updates the specified entity.
@@ -64,21 +64,21 @@ namespace VODB
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
-        TEntity Update<TEntity>(TEntity entity) where TEntity : DbEntity, new();
+        TEntity Update<TEntity>(TEntity entity) where TEntity : Entity, new();
 
         /// <summary>
         /// Gets the count of entities of the given type.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns></returns>
-        int Count<TEntity>() where TEntity : DbEntity, new();
+        int Count<TEntity>() where TEntity : Entity, new();
 
         /// <summary>
         /// Verifies if the entity exists in this session.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns></returns>
-        bool Exists<TEntity>(TEntity entity) where TEntity : DbEntity, new();
+        bool Exists<TEntity>(TEntity entity) where TEntity : Entity, new();
     }
 
     internal interface IInternalSession
