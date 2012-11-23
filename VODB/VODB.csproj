@@ -61,6 +61,7 @@
     <Compile Include="DbLayer\DbCommands\DbParameterSetters\ByteArrayParameterSetter.cs" />
     <Compile Include="DbLayer\DbCommands\DbParameterSetters\DateTimeParameterSetter.cs" />
     <Compile Include="DbLayer\DbCommands\DbParameterSetters\DbEntityParameterSetter.cs" />
+    <Compile Include="DbLayer\DbCommands\DbParameterSetters\DecimalParameterSetter.cs" />
     <Compile Include="DbLayer\DbCommands\DbParameterSetters\IParameterSetter.cs" />
     <Compile Include="DbLayer\DbCommands\IDbCommandFactory.cs" />
     <Compile Include="DbLayer\DbExecuters\DbCommandExecuterBase.cs" />
