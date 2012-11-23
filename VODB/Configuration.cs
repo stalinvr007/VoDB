@@ -41,6 +41,7 @@ namespace VODB
                 new BasicParameterSetter(),
                 new DbEntityParameterSetter(),
                 new DateTimeParameterSetter(),
+                new DecimalParameterSetter(),
                 new ByteArrayParameterSetter()
             };
 
