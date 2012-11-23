@@ -93,6 +93,8 @@
     <Compile Include="Exceptions\Handling\IExceptionHandler.cs" />
     <Compile Include="Exceptions\Handling\PrimaryKeyExceptionHandler.cs" />
     <Compile Include="Exceptions\PrimaryKeyViolationException.cs" />
+    <Compile Include="ExpressionParser\ComparatorExpressionParser.cs" />
+    <Compile Include="ExpressionParser\IExpressionParser.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Sys\Objects.cs" />
     <Compile Include="Exceptions\VodbException.cs" />

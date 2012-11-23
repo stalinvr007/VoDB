@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq.Expressions;
 using VODB.DbLayer.DbCommands;
 using VODB.Exceptions;
 
@@ -20,6 +21,15 @@ namespace VODB.DbLayer.DbExecuters
         /// <param name="args">The args.</param>
         /// <returns></returns>
         IDbAndQueryResult<TEntity> Where(string whereCondition, params object[] args);
+
+        /// <summary>
+        /// Wheres the specified where condition.
+        /// </summary>
+        /// <param name="whereCondition">The where condition.</param>
+        /// <returns></returns>
+        IDbAndQueryResult<TEntity> Where(Expression<Func<TEntity, Boolean>> whereCondition);
+        
+
     }
 
     /// <summary>
@@ -35,6 +45,13 @@ namespace VODB.DbLayer.DbExecuters
         /// <param name="args">The args.</param>
         /// <returns></returns>
         IDbAndQueryResult<TEntity> And(string andCondition, params object[] args);
+
+        /// <summary>
+        /// Adds more conditions to the query.
+        /// </summary>
+        /// <param name="andCondition">The and condition.</param>
+        /// <returns></returns>
+        IDbAndQueryResult<TEntity> And(Expression<Func<TEntity, Boolean>> andCondition);
     }
 
 
