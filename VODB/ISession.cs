@@ -84,6 +84,8 @@ namespace VODB
     internal interface IInternalSession
     {
         DbCommand CreateCommand();
+        void Open();
+        void Close();
 
     }
 }

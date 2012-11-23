@@ -21,53 +21,58 @@ namespace VODB.Tests
         public void GetEmployeesEntities()
         {
             Utils.EagerExecute(session =>
-                              {
-                                  var factory = new DbEntitySelectCommandFactory<Employee>(session as IInternalSession);
+            {
+                var factory = new DbEntitySelectCommandFactory<Employee>(session as IInternalSession);
 
-                                  var query = new DbEntityQueryExecuterEager<Employee>(factory,
-                                                                                       new FullEntityLoader<Employee>());
+                var query = new DbEntityQueryExecuterEager<Employee>((IInternalSession)session,
+                    factory,
+                    new FullEntityLoader<Employee>());
 
-                                  IEnumerable<Employee> result = query.Execute();
+                IEnumerable<Employee> result = query.Execute();
 
-                                  Assert.AreEqual(9, result.Count());
+                Assert.AreEqual(9, result.Count());
 
-                                  Assert.AreEqual(9, result.Count(emp => !String.IsNullOrEmpty(emp.FirstName)));
-                              });
+                Assert.AreEqual(9, result.Count(emp => !String.IsNullOrEmpty(emp.FirstName)));
+            });
         }
 
         [TestMethod]
         public void GetEmployeesEntities_Lazy()
         {
             Utils.EagerExecute(session =>
-                              {
-                                  var factory = new DbEntitySelectCommandFactory<Employee>(session as IInternalSession);
+            {
+                var factory = new DbEntitySelectCommandFactory<Employee>(session as IInternalSession);
 
-                                  var query = new DbEntityQueryExecuterLazy<Employee>(factory,
-                                                                                      new FullEntityLoader<Employee>());
+                var query = new DbEntityQueryExecuterLazy<Employee>(
+                    (IInternalSession)session,
+                    factory,
+                    new FullEntityLoader<Employee>());
 
-                                  IEnumerable<Employee> result = query.Execute();
+                IEnumerable<Employee> result = query.Execute();
 
-                                  Assert.AreEqual(9, result.Count(emp => !String.IsNullOrEmpty(emp.FirstName)));
-                              });
+                Assert.AreEqual(9, result.Count(emp => !String.IsNullOrEmpty(emp.FirstName)));
+            });
         }
 
         [TestMethod]
         public void GetEmployeesById_Eager()
         {
             Utils.EagerExecute(session =>
-                              {
-                                  var factory = new DbEntitySelectByIdCommandFactory<Employee>(session as IInternalSession,
-                                                                                               new Employee { EmployeeId = 1 });
+            {
+                var factory = new DbEntitySelectByIdCommandFactory<Employee>(
+                    session as IInternalSession,
+                    new Employee { EmployeeId = 1 });
 
-                                  var query = new DbEntityQueryExecuterEager<Employee>(factory,
-                                                                                       new FullEntityLoader<Employee>());
+                var query = new DbEntityQueryExecuterEager<Employee>((IInternalSession)session,
+                    factory,
+                    new FullEntityLoader<Employee>());
 
-                                  IEnumerable<Employee> result = query.Execute();
+                IEnumerable<Employee> result = query.Execute();
 
-                                  Assert.AreEqual(1, result.Count());
+                Assert.AreEqual(1, result.Count());
 
-                                  EntitiesAsserts.Assert_Employee_1(result.First());
-                              });
+                EntitiesAsserts.Assert_Employee_1(result.First());
+            });
         }
 
         [TestMethod, ExpectedException(typeof(ValidationException))]
@@ -80,6 +85,7 @@ namespace VODB.Tests
                     new Employee());
 
                 var query = new DbEntityQueryExecuterEager<Employee>(
+                    (IInternalSession)session,
                     factory,
                     new FullEntityLoader<Employee>());
 
