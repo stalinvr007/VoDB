@@ -5,7 +5,7 @@ namespace VODB.Exceptions
     public class FieldValidatorNotFoundException : VodbException
     {
         public FieldValidatorNotFoundException(Type fieldType)
-            : base(String.Format("No handler was found for type [{0}].", fieldType.Name))
+            : base("No handler was found for type [{0}].", fieldType.Name)
         {
         }
     }

@@ -14,6 +14,6 @@ namespace VODB.Exceptions
         /// <param name="tableName">Name of the table.</param>
         /// <param name="ex">The ex.</param>
         public FieldNotFoundException(string fieldName, string tableName, Exception ex)
-            : base(String.Format("The field [{0}] was not found on the table [{1}].", fieldName, tableName), ex) { }
+            : base(ex, "The field [{0}] was not found on the table [{1}].", fieldName, tableName) { }
     }
 }
