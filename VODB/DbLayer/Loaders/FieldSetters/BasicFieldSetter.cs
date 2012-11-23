@@ -18,6 +18,7 @@ namespace VODB.DbLayer.Loaders.FieldSetters
             return type.IsPrimitive || 
                 typeof(String).IsAssignableFrom(type) ||
                 typeof(DateTime).IsAssignableFrom(type) ||
+                typeof(Decimal).IsAssignableFrom(type) ||
                 typeof(Byte[]).IsAssignableFrom(type);
         }
 
