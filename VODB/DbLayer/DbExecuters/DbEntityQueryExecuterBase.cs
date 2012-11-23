@@ -15,9 +15,11 @@ namespace VODB.DbLayer.DbExecuters
     {
 
         private IDbCommandFactory _CommandFactory;
-
-        protected DbEntityQueryExecuterBase(IDbCommandFactory commandFactory)
+        private readonly IInternalSession _Session;
+        
+        protected DbEntityQueryExecuterBase(IInternalSession session, IDbCommandFactory commandFactory)
         {
+            _Session = session;
             _CommandFactory = commandFactory;
         }
 
@@ -49,6 +51,7 @@ namespace VODB.DbLayer.DbExecuters
             var cmd = _CommandFactory.Make();
             try
             {
+                _Session.Open();
                 return GetEntities(cmd.ExecuteReader());
             }
             catch (ValidationException)

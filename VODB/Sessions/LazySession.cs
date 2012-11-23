@@ -28,7 +28,7 @@ namespace VODB.Sessions
 
         public override IDbQueryResult<TEntity> GetAll<TEntity>()
         {
-            return Run(() => new DbEntityQueryExecuterLazy<TEntity>(
+            return Run(() => new DbEntityQueryExecuterLazy<TEntity>(this,
                                          new DbEntitySelectCommandFactory<TEntity>(this),
                                          new FullEntityLoader<TEntity>(this)
                                          ).Execute());
@@ -36,7 +36,7 @@ namespace VODB.Sessions
 
         public override TEntity GetById<TEntity>(TEntity entity)
         {
-            return Run(() => new DbEntityQueryExecuterLazy<TEntity>(
+            return Run(() => new DbEntityQueryExecuterLazy<TEntity>(this,
                                          new DbEntitySelectByIdCommandFactory<TEntity>(this, entity),
                                          new FullEntityLoader<TEntity>(this)
                                          ).Execute().FirstOrDefault());

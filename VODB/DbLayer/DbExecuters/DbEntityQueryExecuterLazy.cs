@@ -10,7 +10,8 @@ namespace VODB.DbLayer.DbExecuters
     {
 
         private readonly IEntityLoader<TEntity> _Loader;
-
+        private readonly IInternalSession _Session;
+        
         /// <summary>
         /// Initializes a new instance of the <see>
         ///                                     <cref>DbDbEntityQueryExecuterLazy{TEntity}</cref>
@@ -18,9 +19,10 @@ namespace VODB.DbLayer.DbExecuters
         /// </summary>
         /// <param name="commandFactory"> </param>
         /// <param name="loader">The loader.</param>
-        public DbEntityQueryExecuterLazy(IDbCommandFactory commandFactory, IEntityLoader<TEntity> loader)
-            : base(commandFactory)
+        public DbEntityQueryExecuterLazy(IInternalSession session, IDbCommandFactory commandFactory, IEntityLoader<TEntity> loader)
+            : base(session, commandFactory)
         {
+            _Session = session;
             _Loader = loader;
         }
         
@@ -44,6 +46,7 @@ namespace VODB.DbLayer.DbExecuters
             finally
             {
                 reader.Close();
+                _Session.Close();
             }
             
         }
