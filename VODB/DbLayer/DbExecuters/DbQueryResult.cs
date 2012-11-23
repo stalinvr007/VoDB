@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Text;
 using VODB.DbLayer.DbCommands;
+using VODB.ExpressionParser;
 
 namespace VODB.DbLayer.DbExecuters
 {
@@ -26,6 +27,8 @@ namespace VODB.DbLayer.DbExecuters
         private readonly IDbCommandFactory _CommandFactory;
         private readonly IQueryExecuter<TEntity> _Executer;
         private readonly StringBuilder _whereCondition;
+        private readonly IExpressionParser<Func<TEntity, Boolean>> _ExpressionParser;
+
 
         public DbQueryResult(IDbCommandFactory commandFactory, IQueryExecuter<TEntity> executer)
         {
@@ -61,6 +64,18 @@ namespace VODB.DbLayer.DbExecuters
         {
             _whereCondition.Append(" And ").AppendFormat(andCondition, args);
             return this;
+        }
+
+
+        public IDbAndQueryResult<TEntity> Where(System.Linq.Expressions.Expression<Func<TEntity, bool>> whereCondition)
+        {
+            return Where(_ExpressionParser.Parse(whereCondition));
+        }
+
+
+        public IDbAndQueryResult<TEntity> And(System.Linq.Expressions.Expression<Func<TEntity, bool>> andCondition)
+        {
+            return And(_ExpressionParser.Parse(andCondition));
         }
     }
 
