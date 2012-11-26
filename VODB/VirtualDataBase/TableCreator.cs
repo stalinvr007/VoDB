@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -31,8 +30,8 @@ namespace VODB.VirtualDataBase
             var table = new Table();
 
             var t1 = new Task<String>(() => GetTableName(_EntityType));
-            var t2 = new Task<IEnumerable<Field>>(() => GetTableFields(_EntityType));
-            var t3 = new Task<IEnumerable<Field>>(() => GetTableKeyFields(_EntityType));
+            var t2 = new Task<IEnumerable<Field>>(() => GetTableFields(table, _EntityType));
+            var t3 = new Task<IEnumerable<Field>>(() => GetTableKeyFields(table, _EntityType));
             var t4 = new Task<ITSqlCommandHolder>(() => new TSqlCommandHolder(table));
             
             t1.Start();
@@ -56,11 +55,11 @@ namespace VODB.VirtualDataBase
             return tableAttr == null ? type.Name : tableAttr.TableName;
         }
 
-        private static IEnumerable<Field> GetTableFields(Type type)
+        private static IEnumerable<Field> GetTableFields(Table table, Type type)
         {
             return type.GetProperties()
                 .Where(info => info.GetAttribute<DbIgnoreAttribute>() == null)
-                .Select(info => SetCommunSettings(GetField(info), info))
+                .Select(info => SetCommunSettings(table, GetField(info), info))
                 .Where(field => !typeof(IEnumerable<DbEntity>).IsAssignableFrom(field.FieldType))
                 .ToList();
         }
@@ -100,8 +99,9 @@ namespace VODB.VirtualDataBase
             };
         }
 
-        private static Field SetCommunSettings(Field field, PropertyInfo info)
+        private static Field SetCommunSettings(Table table, Field field, PropertyInfo info)
         {
+            field.Table = table;
             field.BindedTo = GetBindedTo(info);
             field.IsRequired = (field.IsKey && !field.IsIdentity) || info.GetAttribute<DbRequiredAttribute>() != null;
             return field;
@@ -155,9 +155,9 @@ namespace VODB.VirtualDataBase
             return info.Name;
         }
 
-        private static IEnumerable<Field> GetTableKeyFields(Type type)
+        private static IEnumerable<Field> GetTableKeyFields(Table table, Type type)
         {
-            return GetTableFields(type).Where(f => f.IsKey);
+            return GetTableFields(table, type).Where(f => f.IsKey);
         }
 
 

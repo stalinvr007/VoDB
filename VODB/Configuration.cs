@@ -4,6 +4,7 @@ using VODB.DbLayer.Loaders.FieldSetters;
 using VODB.EntityValidators;
 using VODB.EntityValidators.Fields;
 using VODB.Exceptions.Handling;
+using VODB.ExpressionParser.ExpressionHandlers;
 
 namespace VODB
 {
@@ -49,7 +50,22 @@ namespace VODB
             {
                 new PrimaryKeyExceptionHandler()
             };
+
+
+            WhereExpressionHandlers = new List<IWhereExpressionHandler>
+            {
+                new SimpleWhereExpressionHandler()
+            };
+
         }
+
+        /// <summary>
+        /// Gets the where expression handlers.
+        /// </summary>
+        /// <value>
+        /// The where expression handlers.
+        /// </value>
+        public static ICollection<IWhereExpressionHandler> WhereExpressionHandlers { get; private set; }
 
         /// <summary>
         /// Gets the entity validators.

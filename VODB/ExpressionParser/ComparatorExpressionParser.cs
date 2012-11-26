@@ -1,35 +1,34 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using VODB.Extensions;
 using VODB.VirtualDataBase;
 using System.Linq;
 
 namespace VODB.ExpressionParser
 {
-    class ComparatorExpressionParser<TModel> : IExpressionParser<Func<TModel, Boolean>>
-        where TModel : Entity, new()
+    class ComparatorExpressionParser<TEntity> : IWhereExpressionParser<TEntity> 
+        where TEntity : Entity, new()
     {
 
-        private static Table Table = new TModel().Table;
+        private readonly IDictionary<string, object> _ConditionData = new Dictionary<string, object>(); 
 
-        /// <summary>
-        /// Parses the specified expression.
-        /// </summary>
-        /// <param name="expression">The expression.</param>
-        /// <returns></returns>
-        public String Parse(Expression<Func<TModel, Boolean>> expression)
+        public String Parse(Expression<Func<TEntity, Boolean>> expression)
         {
-            var body = (BinaryExpression)expression.Body;
+            var pair = expression.GetKeyValue();
 
-            var right = (MemberExpression)body.Right;
-            var value = Expression.Lambda(right).Compile().DynamicInvoke();
-            var field = ((MemberExpression)body.Left).Member.Name;
+            var parameter = pair.Key.Table.TableName + pair.Key.FieldName;
 
-            var tableField = Table.Fields.First(f => f.PropertyName.Equals(field, StringComparison.InvariantCultureIgnoreCase));
+            _ConditionData.Add(parameter, pair.Value);
 
-            return String.Format("{0} = '{1}'", tableField.FieldName, value);
+            return String.Format("{0} = @{1}", pair.Key.FieldName, parameter);
         }
-        
 
+
+        public IEnumerable<KeyValuePair<string, object>> ConditionData
+        {
+            get { return _ConditionData; }
+        }
 
     }
 }

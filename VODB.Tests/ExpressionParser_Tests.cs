@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.ExpressionParser;
 
@@ -16,9 +17,11 @@ namespace VODB.Tests
         public void TestMethod2()
         {
             var Name = "Sérgio";
+            var parser = new ComparatorExpressionParser<Model>();
+            
+            Assert.AreEqual("Name = @ModelName", parser.Parse(m => m.Name == Name));
+            Assert.AreEqual(1, parser.ConditionData.Count());
 
-            Assert.AreEqual("Name = 'Sérgio'", new ComparatorExpressionParser<Model>()
-                .Parse(m => m.Name == Name));
         }
     }
 }
