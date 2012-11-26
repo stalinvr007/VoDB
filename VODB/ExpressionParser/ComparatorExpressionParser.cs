@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using VODB.Extensions;
-using VODB.VirtualDataBase;
-using System.Linq;
 
 namespace VODB.ExpressionParser
 {
@@ -11,7 +9,7 @@ namespace VODB.ExpressionParser
         where TEntity : Entity, new()
     {
 
-        private readonly IDictionary<string, object> _ConditionData = new Dictionary<string, object>(); 
+        private readonly IDictionary<Key, object> _ConditionData = new Dictionary<Key, object>(); 
 
         public String Parse(Expression<Func<TEntity, Boolean>> expression)
         {
@@ -19,13 +17,13 @@ namespace VODB.ExpressionParser
 
             var parameter = pair.Key.Table.TableName + pair.Key.FieldName;
 
-            _ConditionData.Add(parameter, pair.Value);
+            _ConditionData.Add(new Key(pair.Key, parameter), pair.Value);
 
             return String.Format("{0} = @{1}", pair.Key.FieldName, parameter);
         }
 
 
-        public IEnumerable<KeyValuePair<string, object>> ConditionData
+        public IEnumerable<KeyValuePair<Key, object>> ConditionData
         {
             get { return _ConditionData; }
         }

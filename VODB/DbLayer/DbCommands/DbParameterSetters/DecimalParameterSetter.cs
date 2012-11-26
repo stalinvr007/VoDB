@@ -12,9 +12,9 @@ namespace VODB.DbLayer.DbCommands.DbParameterSetters
             return typeof(Decimal).IsAssignableFrom(type);
         }
 
-        public void SetValue(DbParameter param, Field field, Object entity)
+        public void SetValue(DbParameter param, Field field, Object value)
         {
-            param.Value = field.GetValue(entity) ?? DBNull.Value;
+            param.Value = value ?? DBNull.Value;
         }
     }
 }

@@ -34,12 +34,24 @@ namespace VODB.Extensions
         /// <param name="field">The field.</param>
         /// <param name="entity">The entity.</param>
         /// <exception cref="ParameterSetterNotFoundException"></exception>
-        public static void SetValue(this DbParameter param, Field field, Object entity)
+        public static void SetValue(this DbParameter param, Field field, Entity entity)
+        {
+            param.SetValue(field, field.GetValue(entity));
+        }
+
+        /// <summary>
+        /// Sets the value.
+        /// </summary>
+        /// <param name="param">The param.</param>
+        /// <param name="field">The field.</param>
+        /// <param name="value">The value.</param>
+        /// <exception cref="ParameterSetterNotFoundException"></exception>
+        public static void SetValue(this DbParameter param, Field field, Object value)
         {
             foreach (var setter in Configuration.ParameterSetters
                 .Where(setter => setter.CanHandle(field.FieldType)))
             {
-                setter.SetValue(param, field, entity);
+                setter.SetValue(param, field, value);
                 return;
             }
 
@@ -190,6 +202,22 @@ namespace VODB.Extensions
             var param = dbCommand.CreateParameter();
             param.ParameterName = field.FieldName;
             param.SetValue(field, entity);
+
+            dbCommand.Parameters.Add(param);
+        }
+
+        /// <summary>
+        /// Sets the parameter.
+        /// </summary>
+        /// <param name="dbCommand">The db command.</param>
+        /// <param name="field">The field.</param>
+        /// <param name="paramName">Name of the param.</param>
+        /// <param name="value">The value.</param>
+        public static void SetParameter(this DbCommand dbCommand, Field field, String paramName, Object value)
+        {
+            var param = dbCommand.CreateParameter();
+            param.ParameterName = paramName;
+            param.SetValue(field, value);
 
             dbCommand.Parameters.Add(param);
         }

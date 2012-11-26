@@ -14,18 +14,18 @@ namespace VODB.DbLayer.DbCommands.DbParameterSetters
             return typeof (Byte[]).IsAssignableFrom(type);
         }
 
-        public void SetValue(DbParameter param, Field field, Object entity)
+        public void SetValue(DbParameter param, Field field, Object value)
         {
-            var value = field.GetValue(entity) as Byte[];
+            var bytes = value as Byte[];
 
-            param.Value = value;
-            if (value == null)
-            {
-                param.Value = new Byte[] {};
-                DbType type = param.DbType;
-                param.Value = DBNull.Value;
-                param.DbType = type;
-            }
+            param.Value = bytes;
+            
+            if (bytes != null) return;
+            
+            param.Value = new Byte[] {};
+            var type = param.DbType;
+            param.Value = DBNull.Value;
+            param.DbType = type;
         }
 
         #endregion

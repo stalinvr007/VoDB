@@ -7,9 +7,9 @@ namespace VODB.DbLayer.DbCommands.DbParameterSetters
     public class BasicParameterSetter : IParameterSetter
     {
 
-        public void SetValue(DbParameter param, Field field, Object entity)
+        public void SetValue(DbParameter param, Field field, Object value)
         {
-            param.Value = field.GetValue(entity) ?? DBNull.Value;
+            param.Value = value ?? DBNull.Value;
         }
 
         public bool CanHandle(Type type)
