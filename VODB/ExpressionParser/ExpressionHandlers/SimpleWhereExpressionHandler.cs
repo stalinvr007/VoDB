@@ -21,8 +21,19 @@ namespace VODB.ExpressionParser.ExpressionHandlers
             
             var body = (BinaryExpression)expression.Body;
 
-            var right = (MemberExpression)body.Right;
-            var value = Expression.Lambda(right).Compile().DynamicInvoke();
+            Object value;
+
+            if (body.Right is ConstantExpression)
+            {
+                var right = (ConstantExpression)body.Right;
+                value = right.Value;
+            }
+            else
+            {
+                var right = (MemberExpression)body.Right;
+                value = Expression.Lambda(right).Compile().DynamicInvoke();    
+            }
+            
             var field = ((MemberExpression)body.Left).Member.Name;
 
             Debug.Assert(entity != null, "entity != null");
