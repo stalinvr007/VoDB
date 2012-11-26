@@ -8,6 +8,7 @@ using VODB.ExpressionParser;
 namespace VODB.DbLayer.DbExecuters
 {
 
+/*
     internal sealed class DbQueryResult
     {
 
@@ -19,9 +20,10 @@ namespace VODB.DbLayer.DbExecuters
         public IEnumerable<Object> Values { get; private set; }
 
     }
-
+*/
 
     internal sealed class DbQueryResult<TEntity> : IDbCommandFactory, IDbAndQueryResult<TEntity>, IDbQueryResult<TEntity>
+        where TEntity : Entity, new()
     {
 
         private readonly IDbCommandFactory _CommandFactory;
@@ -35,6 +37,7 @@ namespace VODB.DbLayer.DbExecuters
             _CommandFactory = commandFactory;
             _Executer = executer;
             _whereCondition = new StringBuilder();
+            _ExpressionParser = new ComparatorExpressionParser<TEntity>();
         }
 
         public IEnumerator<TEntity> GetEnumerator()
@@ -56,12 +59,14 @@ namespace VODB.DbLayer.DbExecuters
 
         public IDbAndQueryResult<TEntity> Where(string whereCondition, params object[] args)
         {
+            // TODO: change de argument set to use the DbParameter.
             _whereCondition.Append(" Where ").AppendFormat(whereCondition, args);
             return this;
         }
 
         public IDbAndQueryResult<TEntity> And(string andCondition, params object[] args)
         {
+            // TODO: change de argument set to use the DbParameter.
             _whereCondition.Append(" And ").AppendFormat(andCondition, args);
             return this;
         }

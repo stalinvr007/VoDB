@@ -15,7 +15,7 @@ namespace VODB.Tests
         [TestMethod]
         public void TestMethod2()
         {
-            const string Name = "Sérgio";
+            var Name = "Sérgio";
 
             Assert.AreEqual("Name = 'Sérgio'", new ComparatorExpressionParser<Model>()
                 .Parse(m => m.Name == Name));

@@ -1,11 +1,16 @@
 using System;
 using System.Linq.Expressions;
+using VODB.VirtualDataBase;
+using System.Linq;
 
 namespace VODB.ExpressionParser
 {
     class ComparatorExpressionParser<TModel> : IExpressionParser<Func<TModel, Boolean>>
-        where TModel : Entity
+        where TModel : Entity, new()
     {
+
+        private static Table Table = new TModel().Table;
+
         /// <summary>
         /// Parses the specified expression.
         /// </summary>
@@ -18,9 +23,13 @@ namespace VODB.ExpressionParser
             var right = (MemberExpression)body.Right;
             var value = Expression.Lambda(right).Compile().DynamicInvoke();
             var field = ((MemberExpression)body.Left).Member.Name;
-            
-            return String.Format("{0} = '{1}'", field, value);
+
+            var tableField = Table.Fields.First(f => f.PropertyName.Equals(field, StringComparison.InvariantCultureIgnoreCase));
+
+            return String.Format("{0} = '{1}'", tableField.FieldName, value);
         }
         
+
+
     }
 }

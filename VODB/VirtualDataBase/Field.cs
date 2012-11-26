@@ -20,6 +20,17 @@ namespace VODB.VirtualDataBase
         }
 
         /// <summary>
+        /// Gets the name of the property.
+        /// </summary>
+        /// <value>
+        /// The name of the property.
+        /// </value>
+        public String PropertyName
+        {
+            get { return _Prop.Name; }
+        }      
+
+        /// <summary>
         /// Gets or sets the name of the field.
         /// </summary>
         /// <value>
