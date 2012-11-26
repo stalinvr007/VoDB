@@ -18,6 +18,25 @@ namespace VODB.Tests
         }
 
         [TestMethod]
+        public void EagerSession_GetAll_withConditionExpression()
+        {
+            var id = 1;
+            var employees = SessionsFactory.CreateEager()
+                .GetAll<Employee>().Where(m => m.EmployeeId == id);
+
+            Assert.AreEqual(1, employees.Count());
+        }
+
+        [TestMethod]
+        public void EagerSession_GetAll_withConditionExpression_IdConst()
+        {
+            var employees = SessionsFactory.CreateEager()
+                .GetAll<Employee>().Where(m => m.EmployeeId == 1);
+
+            Assert.AreEqual(1, employees.Count());
+        }
+
+        [TestMethod]
         public void EagerSession_Count()
         {
             Assert.AreEqual(9, SessionsFactory.CreateEager().Count<Employee>());
