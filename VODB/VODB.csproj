@@ -93,8 +93,12 @@
     <Compile Include="Exceptions\Handling\IExceptionHandler.cs" />
     <Compile Include="Exceptions\Handling\PrimaryKeyExceptionHandler.cs" />
     <Compile Include="Exceptions\PrimaryKeyViolationException.cs" />
+    <Compile Include="Exceptions\WhereExpressionHandlerNotFoundException.cs" />
     <Compile Include="ExpressionParser\ComparatorExpressionParser.cs" />
+    <Compile Include="ExpressionParser\ExpressionHandlers\IWhereExpressionHandler.cs" />
+    <Compile Include="ExpressionParser\ExpressionHandlers\SimpleWhereExpressionHandler.cs" />
     <Compile Include="ExpressionParser\IExpressionParser.cs" />
+    <Compile Include="ExpressionParser\IWhereExpressionParser.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Sys\Objects.cs" />
     <Compile Include="Exceptions\VodbException.cs" />

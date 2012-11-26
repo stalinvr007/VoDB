@@ -28,7 +28,15 @@ namespace VODB.VirtualDataBase
         public String PropertyName
         {
             get { return _Prop.Name; }
-        }      
+        }
+
+        /// <summary>
+        /// Gets or sets the table.
+        /// </summary>
+        /// <value>
+        /// The table.
+        /// </value>
+        internal Table Table { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the field.
