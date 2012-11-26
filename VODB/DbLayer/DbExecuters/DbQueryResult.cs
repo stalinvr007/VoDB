@@ -4,23 +4,10 @@ using System.Data.Common;
 using System.Text;
 using VODB.DbLayer.DbCommands;
 using VODB.ExpressionParser;
+using VODB.Extensions;
 
 namespace VODB.DbLayer.DbExecuters
 {
-
-/*
-    internal sealed class DbQueryResult
-    {
-
-        public DbQueryResult(IEnumerable<Object> values)
-        {
-            Values = values;
-        }
-
-        public IEnumerable<Object> Values { get; private set; }
-
-    }
-*/
 
     internal sealed class DbQueryResult<TEntity> : IDbCommandFactory, IDbAndQueryResult<TEntity>, IDbQueryResult<TEntity>
         where TEntity : Entity, new()
@@ -29,7 +16,7 @@ namespace VODB.DbLayer.DbExecuters
         private readonly IDbCommandFactory _CommandFactory;
         private readonly IQueryExecuter<TEntity> _Executer;
         private readonly StringBuilder _whereCondition;
-        private readonly IExpressionParser<Func<TEntity, Boolean>> _ExpressionParser;
+        private readonly IWhereExpressionParser<TEntity> _ExpressionParser;
 
 
         public DbQueryResult(IDbCommandFactory commandFactory, IQueryExecuter<TEntity> executer)
@@ -54,6 +41,12 @@ namespace VODB.DbLayer.DbExecuters
         {
             var cmd = _CommandFactory.Make();
             cmd.CommandText += _whereCondition.ToString();
+
+            foreach (var data in _ExpressionParser.ConditionData)
+            {
+                cmd.SetParameter(data.Key.Field, data.Key.ParamName, data.Value);
+            }
+
             return cmd;
         }
 

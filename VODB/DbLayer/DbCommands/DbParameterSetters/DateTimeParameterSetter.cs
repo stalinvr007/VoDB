@@ -13,13 +13,13 @@ namespace VODB.DbLayer.DbCommands.DbParameterSetters
             return typeof (DateTime).IsAssignableFrom(type);
         }
 
-        public void SetValue(DbParameter param, Field field, Object entity)
+        public void SetValue(DbParameter param, Field field, Object value)
         {
-            var value = field.GetValue(entity) as DateTime?;
+            var date = value as DateTime?;
 
-            param.Value = (value == null || value.Value.Year == 1)
+            param.Value = (date == null || date.Value.Year == 1)
                               ? DBNull.Value
-                              : (Object) value.Value;
+                              : (Object)date.Value;
         }
 
         #endregion

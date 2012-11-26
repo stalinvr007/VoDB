@@ -15,9 +15,9 @@ namespace VODB.DbLayer.DbCommands.DbParameterSetters
             return typeof (DbEntity).IsAssignableFrom(type);
         }
 
-        public void SetValue(DbParameter param, Field field, Object entity)
+        public void SetValue(DbParameter param, Field field, Object value)
         {
-            var foreignEntity = field.GetValue(entity) as DbEntity;
+            var foreignEntity = value as DbEntity;
 
             if (foreignEntity == null)
             {
@@ -25,7 +25,7 @@ namespace VODB.DbLayer.DbCommands.DbParameterSetters
             }
             else
             {
-                Field foreignKey = foreignEntity.Table.KeyFields
+                var foreignKey = foreignEntity.Table.KeyFields
                     .FirstOrDefault(key => key.FieldName.Equals(field.BindedTo) || key.FieldName.Equals(field.FieldName));
 
                 param.SetValue(foreignKey, foreignEntity);

@@ -13,7 +13,7 @@ namespace VODB.ExpressionParser
         /// <value>
         /// The condition data.
         /// </value>
-        IEnumerable<KeyValuePair<string, object>>  ConditionData { get; }
+        IEnumerable<KeyValuePair<Key, object>>  ConditionData { get; }
     
     }
 }

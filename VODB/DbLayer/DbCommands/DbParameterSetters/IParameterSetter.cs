@@ -8,6 +8,6 @@ namespace VODB.DbLayer.DbCommands.DbParameterSetters
     {
         Boolean CanHandle(Type type);
 
-        void SetValue(DbParameter param, Field field, Object entity);
+        void SetValue(DbParameter param, Field field, Object value);
     }
 }
