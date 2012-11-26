@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using VODB.Annotations;
 using VODB.Caching;
 using VODB.DbLayer.DbExecuters;
 using VODB.VirtualDataBase;
@@ -78,11 +77,11 @@ namespace VODB
             Object value;
             _ForeignEntities.TryGetValue(typeof(TModel), out value);
 
-            TModel model = value as TModel;
+            var model = value as TModel;
 
             if (Session != null && model != null && !model.IsLoaded)
             {
-                model = Session.AsyncGetById<TModel>(model).Result as TModel;
+                model = Session.AsyncGetById(model).Result;
                 SetValue(model);
             }
 
