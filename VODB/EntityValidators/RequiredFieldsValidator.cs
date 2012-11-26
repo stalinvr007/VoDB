@@ -1,8 +1,6 @@
-using System;
 using System.Linq;
 using System.Text;
 using VODB.Exceptions;
-using VODB.VirtualDataBase;
 using VODB.Extensions;
 
 namespace VODB.EntityValidators

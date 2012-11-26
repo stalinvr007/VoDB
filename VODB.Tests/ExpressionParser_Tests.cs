@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq.Expressions;
 using VODB.ExpressionParser;
 
 namespace VODB.Tests
@@ -8,7 +7,7 @@ namespace VODB.Tests
     [TestClass]
     public class ExpressionParser_Tests
     {
-        class Model : DbEntity
+        sealed class Model : DbEntity
         {
             public String Name { get; set; }
         }
@@ -16,11 +15,10 @@ namespace VODB.Tests
         [TestMethod]
         public void TestMethod2()
         {
-            String Name = "Sérgio";
-            
+            const string Name = "Sérgio";
+
             Assert.AreEqual("Name = 'Sérgio'", new ComparatorExpressionParser<Model>()
                 .Parse(m => m.Name == Name));
         }
-
     }
 }
