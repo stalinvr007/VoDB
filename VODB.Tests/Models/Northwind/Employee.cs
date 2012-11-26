@@ -2,13 +2,15 @@
 using System;
 using System.Collections.Generic;
 
-namespace VODB.Tests.Models.Northwind {
+namespace VODB.Tests.Models.Northwind
+{
 
     /// <summary>
     /// 
     /// </summary>
     [DbTable("Employees")]
-    public sealed class Employee : DbEntity {
+    public sealed class Employee : DbEntity
+    {
 
         [DbIdentity]
         public int EmployeeId { get; set; }
@@ -46,7 +48,8 @@ namespace VODB.Tests.Models.Northwind {
         public Byte[] Photo { get; set; }
 
         [DbBind("EmployeeId")]
-        public Employee ReportsTo {
+        public Employee ReportsTo
+        {
             get { return GetValue<Employee>(); }
             set { SetValue(value); }
         }
@@ -58,7 +61,7 @@ namespace VODB.Tests.Models.Northwind {
         /// </summary>
         public IEnumerable<Employee> ReportedFrom
         {
-            get { return GetValues<Employee>().Where("ReportsTo = '{0}'", EmployeeId); }
+            get { return GetValues<Employee>().Where(m => m.ReportsTo == this); }
         }
 
         /// <summary>
@@ -66,7 +69,7 @@ namespace VODB.Tests.Models.Northwind {
         /// </summary>
         public IEnumerable<EmployeeTerritories> Territories
         {
-            get { return GetValues<EmployeeTerritories>().Where("EmployeeId = '{0}')", EmployeeId); }
+            get { return GetValues<EmployeeTerritories>().Where(m => m.Employee == this); }
         }
 
         [DbIgnore]
