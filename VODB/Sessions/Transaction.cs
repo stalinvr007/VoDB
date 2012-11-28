@@ -60,7 +60,7 @@ namespace VODB.Sessions
         internal void BeginNestedTransaction()
         {
             CheckTransactionAlive();
-
+            SavePoint();
             ++count;
         }
 
@@ -112,7 +112,7 @@ namespace VODB.Sessions
             }
         }
 
-        public void SavePoint()
+        private void SavePoint()
         {
             if (typeof(System.Data.SqlClient.SqlTransaction) != _Transaction.GetType())
             {
