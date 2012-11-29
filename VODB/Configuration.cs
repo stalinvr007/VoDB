@@ -4,7 +4,9 @@ using VODB.DbLayer.Loaders.FieldSetters;
 using VODB.EntityValidators;
 using VODB.EntityValidators.Fields;
 using VODB.Exceptions.Handling;
+using VODB.ExpressionParser;
 using VODB.ExpressionParser.ExpressionHandlers;
+using System;
 
 namespace VODB
 {
@@ -13,6 +15,7 @@ namespace VODB
     /// </summary>
     public static class Configuration
     {
+        
         static Configuration()
         {
 
@@ -58,6 +61,16 @@ namespace VODB
                 new SimpleWhereExpressionHandler()
             };
 
+            WhereExpressionFormatters = new List<IWhereExpressionFormatter>
+            {
+                new EqualityWhereExpressionFormatter(),
+                new NonEqualityWhereExpressionFormatter(),
+                new GreaterOrEqualWhereExpressionFormatter(),
+                new SmallerOrEqualWhereExpressionFormatter(),
+                new SmallerWhereExpressionFormatter(),
+                new GreaterWhereExpressionFormatter()
+            };
+
         }
 
         /// <summary>
@@ -67,6 +80,14 @@ namespace VODB
         /// The where expression handlers.
         /// </value>
         public static ICollection<IWhereExpressionHandler> WhereExpressionHandlers { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the where expression formatters.
+        /// </summary>
+        /// <value>
+        /// The where expression formatters.
+        /// </value>
+        public static ICollection<IWhereExpressionFormatter> WhereExpressionFormatters { get; private set; }
 
         /// <summary>
         /// Gets the entity validators.

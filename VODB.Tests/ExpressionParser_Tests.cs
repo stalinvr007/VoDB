@@ -11,10 +11,12 @@ namespace VODB.Tests
         sealed class Model : DbEntity
         {
             public String Name { get; set; }
+
+            public int Age { get; set; }
         }
 
         [TestMethod]
-        public void TestMethod2()
+        public void EqualParser()
         {
             var Name = "Sérgio";
             var parser = new ComparatorExpressionParser<Model>();
@@ -22,6 +24,60 @@ namespace VODB.Tests
             Assert.AreEqual("Name = @ModelName", parser.Parse(m => m.Name == Name));
             Assert.AreEqual(1, parser.ConditionData.Count());
 
+        }
+
+        [TestMethod]
+        public void EqualParser_ConstVar()
+        {
+            var parser = new ComparatorExpressionParser<Model>();
+
+            Assert.AreEqual("Name = @ModelName", parser.Parse(m => m.Name == "Sérgio"));
+            Assert.AreEqual(1, parser.ConditionData.Count());
+        }
+
+        [TestMethod]
+        public void NotEqualParser_ConstVar()
+        {
+            var parser = new ComparatorExpressionParser<Model>();
+
+            Assert.AreEqual("Name != @ModelName", parser.Parse(m => m.Name != "Sérgio"));
+            Assert.AreEqual(1, parser.ConditionData.Count());
+        }
+
+        [TestMethod]
+        public void GreaterThanParser_ConstVar()
+        {
+            var parser = new ComparatorExpressionParser<Model>();
+
+            Assert.AreEqual("Age > @ModelAge", parser.Parse(m => m.Age > 10));
+            Assert.AreEqual(1, parser.ConditionData.Count());
+        }
+
+        [TestMethod]
+        public void GreaterThanOrEqualParser_ConstVar()
+        {
+            var parser = new ComparatorExpressionParser<Model>();
+
+            Assert.AreEqual("Age >= @ModelAge", parser.Parse(m => m.Age >= 10));
+            Assert.AreEqual(1, parser.ConditionData.Count());
+        }
+
+        [TestMethod]
+        public void SmallerThanOrEqualParser_ConstVar()
+        {
+            var parser = new ComparatorExpressionParser<Model>();
+
+            Assert.AreEqual("Age <= @ModelAge", parser.Parse(m => m.Age <= 10));
+            Assert.AreEqual(1, parser.ConditionData.Count());
+        }
+
+        [TestMethod]
+        public void SmallerThanParser_ConstVar()
+        {
+            var parser = new ComparatorExpressionParser<Model>();
+
+            Assert.AreEqual("Age < @ModelAge", parser.Parse(m => m.Age < 10));
+            Assert.AreEqual(1, parser.ConditionData.Count());
         }
     }
 }

@@ -5,10 +5,10 @@ using VODB.Extensions;
 
 namespace VODB.ExpressionParser
 {
+
     class ComparatorExpressionParser<TEntity> : IWhereExpressionParser<TEntity> 
         where TEntity : Entity, new()
     {
-
         private readonly IDictionary<Key, object> _ConditionData = new Dictionary<Key, object>(); 
 
         public String Parse(Expression<Func<TEntity, Boolean>> expression)
@@ -19,7 +19,7 @@ namespace VODB.ExpressionParser
 
             _ConditionData.Add(new Key(pair.Key, parameter), pair.Value);
 
-            return String.Format("{0} = @{1}", pair.Key.FieldName, parameter);
+            return expression.GetWherePiece(pair.Key.FieldName, parameter);
         }
 
 
