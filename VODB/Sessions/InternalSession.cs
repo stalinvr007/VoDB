@@ -33,7 +33,7 @@ namespace VODB.Sessions
 
         private bool InTransaction
         {
-            get { return _transaction != null; }
+            get { return _transaction != null && !_transaction.Ended; }
         }
 
         #region ISession Members
@@ -45,7 +45,7 @@ namespace VODB.Sessions
                 CreateConnection();
                 Open();
 
-                if (_transaction != null && !_transaction.Ended)
+                if (InTransaction)
                 {
                     _transaction.BeginNestedTransaction();
                 }
