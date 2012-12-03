@@ -108,6 +108,7 @@
     <Compile Include="ExpressionParser\Key.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\ExpressionsExtensions.cs" />
+    <Compile Include="IQueryResultExtensions.cs" />
     <Compile Include="Sys\Objects.cs" />
     <Compile Include="Exceptions\VodbException.cs" />
     <Compile Include="Exceptions\WrongFieldContentException.cs" />

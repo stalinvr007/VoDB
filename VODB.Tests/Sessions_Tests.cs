@@ -28,6 +28,16 @@ namespace VODB.Tests
         }
 
         [TestMethod]
+        public void EagerSession_GetAll_withInConditionExpression()
+        {
+
+            var employees = SessionsFactory.CreateEager()
+                .GetAll<Employee>().In(new int[] { 1, 2, 3 }, id => (emp) => emp.EmployeeId == id);
+
+            Assert.AreEqual(3, employees.Count());
+        }
+
+        [TestMethod]
         public void EagerSession_GetAll_withConditionExpression_IdConst()
         {
             var employees = SessionsFactory.CreateEager()
