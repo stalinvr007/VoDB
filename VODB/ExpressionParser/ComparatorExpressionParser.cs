@@ -28,5 +28,11 @@ namespace VODB.ExpressionParser
             get { return _ConditionData; }
         }
 
+
+
+        public void ClearData()
+        {
+            _ConditionData.Clear();
+        }
     }
 }

@@ -14,6 +14,11 @@ namespace VODB.ExpressionParser
         /// The condition data.
         /// </value>
         IEnumerable<KeyValuePair<Key, object>>  ConditionData { get; }
-    
+
+
+        /// <summary>
+        /// Clears the data.
+        /// </summary>
+        void ClearData();
     }
 }

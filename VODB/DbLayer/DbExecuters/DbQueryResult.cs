@@ -18,7 +18,6 @@ namespace VODB.DbLayer.DbExecuters
         private readonly StringBuilder _whereCondition;
         private readonly IWhereExpressionParser<TEntity> _ExpressionParser;
 
-
         public DbQueryResult(IDbCommandFactory commandFactory, IQueryExecuter<TEntity> executer)
         {
             _CommandFactory = commandFactory;
@@ -30,6 +29,7 @@ namespace VODB.DbLayer.DbExecuters
         public IEnumerator<TEntity> GetEnumerator()
         {
             return _Executer.GetEnumerator();
+            
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -47,19 +47,20 @@ namespace VODB.DbLayer.DbExecuters
                 cmd.SetParameter(data.Key.Field, data.Key.ParamName, data.Value);
             }
 
+            _ExpressionParser.ClearData();
+            _whereCondition.Clear();
+
             return cmd;
         }
 
         public IDbAndQueryResult<TEntity> Where(string whereCondition, params object[] args)
         {
-            // TODO: change de argument set to use the DbParameter.
             _whereCondition.Append(" Where ").AppendFormat(whereCondition, args);
             return this;
         }
 
         public IDbAndQueryResult<TEntity> And(string andCondition, params object[] args)
         {
-            // TODO: change de argument set to use the DbParameter.
             _whereCondition.Append(" And ").AppendFormat(andCondition, args);
             return this;
         }
@@ -69,7 +70,6 @@ namespace VODB.DbLayer.DbExecuters
         {
             return Where(_ExpressionParser.Parse(whereCondition));
         }
-
 
         public IDbAndQueryResult<TEntity> And(System.Linq.Expressions.Expression<Func<TEntity, bool>> andCondition)
         {

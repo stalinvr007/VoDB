@@ -5,7 +5,7 @@ using System.Text;
 
 namespace VODB
 {
-    
+
     public static class ISessionExtensions
     {
 
@@ -44,5 +44,7 @@ namespace VODB
         }
 
     }
+
+
 
 }
