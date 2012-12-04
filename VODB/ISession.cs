@@ -14,6 +14,12 @@ namespace VODB
         ITransaction BeginTransaction();
 
         /// <summary>
+        /// Executes the T-SQL statements.
+        /// </summary>
+        /// <param name="SqlStatements">The SQL statements.</param>
+        void ExecuteTSql(String SqlStatements);
+
+        /// <summary>
         /// Gets all entities of the given type from this session.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
