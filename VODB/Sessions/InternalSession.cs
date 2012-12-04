@@ -58,6 +58,13 @@ namespace VODB.Sessions
             }
         }
 
+        public void ExecuteTSql(String SqlStatements)
+        {
+            new DbCommandNonQueryExecuter(
+                new TSQLDbCommandFactory(this, SqlStatements)
+            ).Execute();
+        }
+
         public abstract IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : Entity, new();
 
         public Task<IDbQueryResult<TEntity>> AsyncGetAll<TEntity>() where TEntity : Entity, new()

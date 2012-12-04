@@ -22,6 +22,11 @@ namespace VODB.Sessions
             return _InnerSession.BeginTransaction();
         }
 
+        public void ExecuteTSql(string SqlStatements)
+        {
+            _InnerSession.ExecuteTSql(SqlStatements);
+        }
+
         public IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : Entity, new()
         {
             return _InnerSession.GetAll<TEntity>();
@@ -75,8 +80,6 @@ namespace VODB.Sessions
                 _InnerSession = null;
             }
         }
-
-
 
         
     }
