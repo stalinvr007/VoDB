@@ -6,7 +6,7 @@ using System.Text;
 
 namespace VODB.Exceptions.Handling
 {
-    public class UniqueKeyExceptionHandler : IExceptionHandler
+    public class TruncatedExceptionHandler : IExceptionHandler
     {
 
         /// <summary>
@@ -17,7 +17,7 @@ namespace VODB.Exceptions.Handling
         public Boolean CanHandle(Exception exception)
         {
             return typeof(SqlException).IsAssignableFrom(exception.GetType()) &&
-                exception.Message.Contains("Violation of UNIQUE KEY");
+                exception.Message.Contains("String or binary data would be truncated.");
         }
         /// <summary>
         /// Handles the specified exception.
@@ -25,7 +25,7 @@ namespace VODB.Exceptions.Handling
         /// <param name="exception">The exception.</param>
         public void Handle(Exception exception)
         {
-            throw new UniqueKeyViolationException(exception);
+            throw new TruncatedException(exception);
         }
     }
 }

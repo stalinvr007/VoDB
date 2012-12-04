@@ -93,8 +93,10 @@
     <Compile Include="Exceptions\FieldValidatorNotFoundException.cs" />
     <Compile Include="Exceptions\Handling\IExceptionHandler.cs" />
     <Compile Include="Exceptions\Handling\PrimaryKeyExceptionHandler.cs" />
+    <Compile Include="Exceptions\Handling\TruncatedExceptionHandler.cs" />
     <Compile Include="Exceptions\Handling\UniqueKeyExceptionHandler.cs" />
     <Compile Include="Exceptions\PrimaryKeyViolationException.cs" />
+    <Compile Include="Exceptions\TruncatedException.cs" />
     <Compile Include="Exceptions\UniqueKeyViolationException.cs" />
     <Compile Include="Exceptions\WhereExpressionFormatterNotFoundException.cs" />
     <Compile Include="Exceptions\WhereExpressionHandlerNotFoundException.cs" />
