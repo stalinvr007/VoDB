@@ -32,7 +32,9 @@ namespace VODB.Tests
         {
 
             var employees = SessionsFactory.CreateEager()
-                .GetAll<Employee>().In(new int[] { 1, 2, 3 }, id => (emp) => emp.EmployeeId == id);
+                .GetAll<Employee>().In(
+                    new int[] { 1, 2, 3 }, 
+                    id => emp => emp.EmployeeId == id);
 
             Assert.AreEqual(3, employees.Count());
         }
