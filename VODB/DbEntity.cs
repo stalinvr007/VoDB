@@ -17,8 +17,6 @@ namespace VODB
 
         private Table _table;
 
-        
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DbEntity" /> class.
         /// </summary>
