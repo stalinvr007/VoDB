@@ -11,6 +11,8 @@ namespace VODB.Sessions
 
         public Boolean Ended { get; private set; }
 
+        public Boolean RolledBack { get; private set; }
+
         private LinkedList<String> _Savepoints = new LinkedList<String>();
 
         public Transaction(DbTransaction transaction)
@@ -71,6 +73,8 @@ namespace VODB.Sessions
                 return;
             }
 
+            RolledBack = true;
+
             if (_Savepoints.Count > 0)
             {
                 --count;
@@ -126,5 +130,7 @@ namespace VODB.Sessions
             trans.Save(savepoint);
         }
 
+
+        
     }
 }
