@@ -13,7 +13,7 @@ namespace VODB.Sessions
 
         public Boolean RolledBack { get; private set; }
 
-        private LinkedList<String> _Savepoints = new LinkedList<String>();
+        private readonly LinkedList<String> _Savepoints = new LinkedList<String>();
 
         public Transaction(DbTransaction transaction)
         {
@@ -29,7 +29,10 @@ namespace VODB.Sessions
                 return;
             }
 
-            Commit();
+            if (!RolledBack)
+            {
+                Commit();    
+            }
 
             if (count != 0) return;
 
@@ -82,8 +85,11 @@ namespace VODB.Sessions
                 _Savepoints.RemoveLast();
 
                 var trans = _Transaction as System.Data.SqlClient.SqlTransaction;
-                trans.Rollback(savepoint);
-                
+                if (trans != null)
+                {
+                    trans.Rollback(savepoint);
+                }
+
                 return;
             }
 
@@ -109,9 +115,11 @@ namespace VODB.Sessions
             CheckTransactionAlive();
 
             --count;
-            if (count == 0)
+            if (count != 0) return;
+            
+            Ended = true;
+            if (!RolledBack)
             {
-                Ended = true;
                 _Transaction.Commit();
             }
         }
@@ -125,9 +133,12 @@ namespace VODB.Sessions
 
             var trans = _Transaction as System.Data.SqlClient.SqlTransaction;
 
-            string savepoint = String.Format("savepoint{0}", _Savepoints.Count);
+            var savepoint = String.Format("savepoint{0}", _Savepoints.Count);
             _Savepoints.AddLast(new LinkedListNode<String>(savepoint));
-            trans.Save(savepoint);
+            if (trans != null)
+            {
+                trans.Save(savepoint);
+            }
         }
 
 

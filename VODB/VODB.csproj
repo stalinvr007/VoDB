@@ -62,6 +62,7 @@
     <Compile Include="DbLayer\DbCommands\DbParameterSetters\DateTimeParameterSetter.cs" />
     <Compile Include="DbLayer\DbCommands\DbParameterSetters\DbEntityParameterSetter.cs" />
     <Compile Include="DbLayer\DbCommands\DbParameterSetters\DecimalParameterSetter.cs" />
+    <Compile Include="DbLayer\DbCommands\DbParameterSetters\GuidParameterSetter.cs" />
     <Compile Include="DbLayer\DbCommands\DbParameterSetters\IParameterSetter.cs" />
     <Compile Include="DbLayer\DbCommands\FromFileDbCommandFactory.cs" />
     <Compile Include="DbLayer\DbCommands\IDbCommandFactory.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Exceptions\Handling\UniqueKeyExceptionHandler.cs" />
     <Compile Include="Exceptions\PrimaryKeyViolationException.cs" />
     <Compile Include="Exceptions\TruncatedException.cs" />
+    <Compile Include="Exceptions\UnableToSetFieldException.cs" />
     <Compile Include="Exceptions\UniqueKeyViolationException.cs" />
     <Compile Include="Exceptions\WhereExpressionFormatterNotFoundException.cs" />
     <Compile Include="Exceptions\WhereExpressionHandlerNotFoundException.cs" />

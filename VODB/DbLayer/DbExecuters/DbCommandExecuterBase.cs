@@ -1,7 +1,5 @@
 using System;
-using System.Data.SqlClient;
 using VODB.DbLayer.DbCommands;
-using VODB.Exceptions;
 using VODB.Extensions;
 
 namespace VODB.DbLayer.DbExecuters
