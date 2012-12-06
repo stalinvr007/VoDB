@@ -19,7 +19,8 @@ namespace VODB.DbLayer.Loaders.FieldSetters
                 typeof(String).IsAssignableFrom(type) ||
                 typeof(DateTime).IsAssignableFrom(type) ||
                 typeof(Decimal).IsAssignableFrom(type) ||
-                typeof(Byte[]).IsAssignableFrom(type);
+                typeof(Byte[]).IsAssignableFrom(type) ||
+                typeof(Guid).IsAssignableFrom(type);
         }
 
         /// <summary>

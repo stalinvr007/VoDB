@@ -2,7 +2,6 @@ using System;
 using VODB.Exceptions;
 using VODB.VirtualDataBase;
 using VODB.Extensions;
-using System.Linq;
 
 namespace VODB.DbLayer.Loaders.FieldSetters
 {
@@ -29,6 +28,7 @@ namespace VODB.DbLayer.Loaders.FieldSetters
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="getValueFromReader">The get value from reader.</param>
+        /// <exception cref="UnableToSetFieldException"></exception>
         public void SetValue(Entity entity, Field field, Object value, Func<Field, Object> getValueFromReader)
         {
             var foreignEntity = CreateInstance(field.FieldType);
@@ -42,7 +42,6 @@ namespace VODB.DbLayer.Loaders.FieldSetters
                 }
                 else
                 {
-                    
                     /* Have to search the entity for a field bindedTo this Key. Or with the same name. */
                     /* Use the name of that field to use on GetValueFromReader. */
 
@@ -53,8 +52,9 @@ namespace VODB.DbLayer.Loaders.FieldSetters
                     }
                 }
             }
-            
+
             field.SetValue(entity, foreignEntity);
+
         }
 
         private static DbEntity CreateInstance(Type type)
@@ -66,7 +66,7 @@ namespace VODB.DbLayer.Loaders.FieldSetters
             catch (Exception ex)
             {
                 throw new UnableToInstantiateTypeException(type, ex);
-            }            
+            }
         }
 
     }
