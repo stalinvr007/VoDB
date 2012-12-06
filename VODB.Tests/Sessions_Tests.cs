@@ -49,6 +49,19 @@ namespace VODB.Tests
         }
 
         [TestMethod]
+        public void MoreComplexQuery()
+        {
+            var employees = SessionsFactory.CreateEager()
+                 .GetAll<Employee>()
+                      .Where(m => m.EmployeeId > 0)
+                      .And(m => m.EmployeeId < 10)
+                 .OrderBy(m => m.City)
+                 .Descending();
+
+            Assert.AreEqual(9, employees.Count());
+        }
+
+        [TestMethod]
         public void EagerSession_GetAll_withConditionExpression()
         {
             var id = 1;
