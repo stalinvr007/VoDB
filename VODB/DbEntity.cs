@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using VODB.Caching;
 using VODB.DbLayer.DbExecuters;
+using VODB.Exceptions;
 using VODB.VirtualDataBase;
 
 namespace VODB
 {
-
     /// <summary>
     /// Gives extra funcionality to an entity. Also indicates this is an entity to map.
     /// </summary>
@@ -53,6 +53,10 @@ namespace VODB
         protected IDbQueryResult<TEntity> GetValues<TEntity>()
             where TEntity : Entity, new()
         {
+            if (Session == null)
+            {
+                throw new SessionNotFoundException(Table.TableName);
+            }
             return Session.GetAll<TEntity>();
         }
 
