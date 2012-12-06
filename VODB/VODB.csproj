@@ -99,6 +99,7 @@
     <Compile Include="Exceptions\Handling\UniqueKeyExceptionHandler.cs" />
     <Compile Include="Exceptions\PrimaryKeyViolationException.cs" />
     <Compile Include="Exceptions\TruncatedException.cs" />
+    <Compile Include="Exceptions\UnableToSetParameterValueException.cs" />
     <Compile Include="Exceptions\UniqueKeyViolationException.cs" />
     <Compile Include="Exceptions\WhereExpressionFormatterNotFoundException.cs" />
     <Compile Include="Exceptions\WhereExpressionHandlerNotFoundException.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Exceptions\VodbException.cs" />
     <Compile Include="Extensions\TasksExtensions.cs" />
     <Compile Include="ISessionExtensions.cs" />
+    <Compile Include="Exceptions\SessionNotFoundException.cs" />
     <Compile Include="Sessions\EagerSession.cs" />
     <Compile Include="EntityValidators\IEntityValidator.cs" />
     <Compile Include="EntityValidators\RequiredFieldsValidator.cs" />
