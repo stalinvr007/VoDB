@@ -18,6 +18,37 @@ namespace VODB.Tests
         }
 
         [TestMethod]
+        public void EagerSession_GetAll_OrderedByFirstName()
+        {
+            var employee = SessionsFactory.CreateEager()
+                .GetAll<Employee>().OrderBy(e => e.FirstName)
+                .First();
+
+            EntitiesAsserts.Assert_Employee_2(employee);
+
+        }
+
+        [TestMethod]
+        public void EagerSession_GetAll_OrderedByCity_Descending()
+        {
+            var employee2 = SessionsFactory.CreateEager()
+                .GetAll<Employee>()
+                .OrderBy(e => e.City)
+                .Descending()
+                .First();
+
+            EntitiesAsserts.Assert_Employee_2(employee2);
+
+            var employee3 = SessionsFactory.CreateEager()
+                .GetAll<Employee>()
+                .OrderBy(e => e.City)
+                .First();
+
+            EntitiesAsserts.Assert_Employee_3(employee3);
+
+        }
+
+        [TestMethod]
         public void EagerSession_GetAll_withConditionExpression()
         {
             var id = 1;

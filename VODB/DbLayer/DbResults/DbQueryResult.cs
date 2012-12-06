@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Text;
 using VODB.DbLayer.DbCommands;
+using VODB.DbLayer.DbExecuters;
 using VODB.ExpressionParser;
 using VODB.Extensions;
 
-namespace VODB.DbLayer.DbExecuters
+namespace VODB.DbLayer.DbResults
 {
 
-    internal sealed class DbQueryResult<TEntity> : IDbCommandFactory, IDbAndQueryResult<TEntity>, IDbQueryResult<TEntity>
+    internal sealed class DbQueryResult<TEntity> : IDbCommandFactory, 
+                                                    IDbAndQueryResult<TEntity>, 
+                                                    IDbQueryResult<TEntity>, 
+                                                    IDbOrderedResult<TEntity>,
+                                                    IDbOrderedDescResult<TEntity>
         where TEntity : Entity, new()
     {
 
@@ -65,7 +70,6 @@ namespace VODB.DbLayer.DbExecuters
             return this;
         }
 
-
         public IDbAndQueryResult<TEntity> Where(System.Linq.Expressions.Expression<Func<TEntity, bool>> whereCondition)
         {
             return Where(_ExpressionParser.Parse(whereCondition));
@@ -74,6 +78,18 @@ namespace VODB.DbLayer.DbExecuters
         public IDbAndQueryResult<TEntity> And(System.Linq.Expressions.Expression<Func<TEntity, bool>> andCondition)
         {
             return And(_ExpressionParser.Parse(andCondition));
+        }
+
+        public IDbOrderedResult<TEntity> OrderBy<TField>(System.Linq.Expressions.Expression<Func<TEntity, TField>> orderByField)
+        {
+            _whereCondition.Append(new FieldGetterExpressionParser<TEntity, TField>().Parse(orderByField));
+            return this;
+        }
+
+        public IDbOrderedDescResult<TEntity> Descending()
+        {
+            _whereCondition.Append(" desc");
+            return this;
         }
     }
 

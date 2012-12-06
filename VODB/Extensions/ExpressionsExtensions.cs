@@ -14,11 +14,12 @@ namespace VODB.Extensions
         /// <summary>
         /// Gets the key value.
         /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="expression">The expression.</param>
         /// <returns></returns>
-        /// <exception cref="VODB.Exceptions.WhereExpressionHandlerNotFoundException"></exception>
-        public static KeyValuePair<Field, object> GetKeyValue<TModel>(this Expression<Func<TModel, bool>> expression)
+        /// <exception cref="WhereExpressionHandlerNotFoundException"></exception>
+        public static KeyValuePair<Field, object> GetKeyValue<TEntity>(this Expression<Func<TEntity, bool>> expression)
+             where TEntity : Entity, new()
         {
             foreach (var handler in Configuration.WhereExpressionHandlers
                 .Where(handler => handler.CanHandle(expression)))

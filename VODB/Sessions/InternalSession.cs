@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using VODB.DbLayer;
 using VODB.DbLayer.DbCommands;
 using VODB.DbLayer.DbExecuters;
+using VODB.DbLayer.DbResults;
 using VODB.Extensions;
 
 namespace VODB.Sessions

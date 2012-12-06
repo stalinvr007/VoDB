@@ -79,5 +79,12 @@ namespace VODB.Tests
             Assert.AreEqual("Age < @ModelAge", parser.Parse(m => m.Age < 10));
             Assert.AreEqual(1, parser.ConditionData.Count());
         }
+        
+        [TestMethod]
+        public void FieldParser()
+        {
+            var parser = new FieldGetterExpressionParser<Model, String>();
+            Assert.AreEqual(" Order by Name", parser.Parse(m => m.Name));
+        }
     }
 }
