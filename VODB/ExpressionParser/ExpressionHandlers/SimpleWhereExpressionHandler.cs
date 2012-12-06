@@ -38,7 +38,8 @@ namespace VODB.ExpressionParser.ExpressionHandlers
 
             Debug.Assert(entity != null, "entity != null");
 
-            var tableField = entity.Table.Fields.First(f => f.PropertyName.Equals(field, StringComparison.InvariantCultureIgnoreCase));
+            var tableField = entity.Table.Fields.First(f => 
+                f.PropertyName.Equals(field, StringComparison.InvariantCultureIgnoreCase));
 
             return new KeyValuePair<Field, object>(tableField, value);
         }
