@@ -92,6 +92,8 @@ namespace VODB.Sessions
                     new DbEntityInsertCommandFactory<TEntity>(this, entity)
                     ).Execute();
 
+                entity.Session = this;
+
                 if (idField == null)
                 {
                     return null;
@@ -127,6 +129,8 @@ namespace VODB.Sessions
                     new DbEntityUpdateCommandFactory<TEntity>(this, entity)
                 ).Execute()
             );
+
+            entity.Session = this;
             return entity;
         }
 
@@ -141,6 +145,8 @@ namespace VODB.Sessions
 
         public bool Exists<TEntity>(TEntity entity) where TEntity : Entity, new()
         {
+            entity.Session = this;
+
             return Run(() =>
                 new DbQueryScalarExecuter<int>(
                     new DbEntityCountByIdCommandFactory<TEntity>(this, entity).Make()
@@ -240,10 +246,5 @@ namespace VODB.Sessions
             _tasks = null;
         }
 
-
-
-
-
-        
     }
 }
