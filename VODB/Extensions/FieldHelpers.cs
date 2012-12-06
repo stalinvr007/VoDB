@@ -51,7 +51,15 @@ namespace VODB.Extensions
             foreach (var setter in Configuration.ParameterSetters
                 .Where(setter => setter.CanHandle(field.FieldType)))
             {
-                setter.SetValue(param, field, value);
+
+                try
+                {
+                    setter.SetValue(param, field, value);
+                }
+                catch (Exception e)
+                {
+                    throw new UnableToSetFieldException(e, field.Table.TableName, field, value);
+                }
                 return;
             }
 
