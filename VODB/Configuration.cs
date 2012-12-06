@@ -6,7 +6,6 @@ using VODB.EntityValidators.Fields;
 using VODB.Exceptions.Handling;
 using VODB.ExpressionParser;
 using VODB.ExpressionParser.ExpressionHandlers;
-using System;
 
 namespace VODB
 {
@@ -46,7 +45,8 @@ namespace VODB
                 new DbEntityParameterSetter(),
                 new DateTimeParameterSetter(),
                 new DecimalParameterSetter(),
-                new ByteArrayParameterSetter()
+                new ByteArrayParameterSetter(),
+                new GuidParameterSetter()
             };
 
             ExceptionHandlers = new List<IExceptionHandler>
