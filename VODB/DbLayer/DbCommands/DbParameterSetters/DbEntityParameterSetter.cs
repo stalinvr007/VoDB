@@ -26,7 +26,9 @@ namespace VODB.DbLayer.DbCommands.DbParameterSetters
             else
             {
                 var foreignKey = foreignEntity.Table.KeyFields
-                    .FirstOrDefault(key => key.FieldName.Equals(field.BindedTo) || key.FieldName.Equals(field.FieldName));
+                    .FirstOrDefault(key => 
+                        key.FieldName.Equals(field.BindedTo, StringComparison.InvariantCultureIgnoreCase) ||
+                        key.FieldName.Equals(field.FieldName, StringComparison.InvariantCultureIgnoreCase));
 
                 param.SetValue(foreignKey, foreignEntity);
             }
