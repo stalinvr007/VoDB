@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using VODB.DbLayer.DbCommands;
+using VODB.DbLayer.DbResults;
 using VODB.Exceptions;
 
 namespace VODB.DbLayer.DbExecuters
