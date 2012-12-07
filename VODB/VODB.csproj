@@ -72,11 +72,8 @@
     <Compile Include="DbLayer\DbExecuters\DbEntityQueryExecuterEager.cs" />
     <Compile Include="DbLayer\DbExecuters\DbEntityQueryExecuterBase.cs" />
     <Compile Include="DbLayer\DbExecuters\ICommandExecuter.cs" />
-    <Compile Include="DbLayer\DbResults\IDbAndQueryResult.cs" />
-    <Compile Include="DbLayer\DbResults\IDbOrderedDescResult.cs" />
-    <Compile Include="DbLayer\DbResults\IDbOrderedResult.cs" />
-    <Compile Include="DbLayer\DbResults\IDbQueryResult.cs" />
     <Compile Include="DbLayer\DbExecuters\IQueryExecuter.cs" />
+    <Compile Include="DbLayer\DbResults\IDbQueryResult.cs" />
     <Compile Include="DbLayer\Loaders\EntityKeyLoader.cs" />
     <Compile Include="DbLayer\Loaders\EntityLoader.cs" />
     <Compile Include="DbLayer\Loaders\FieldSetters\BasicFieldSetter.cs" />

@@ -84,6 +84,39 @@ namespace VODB.Tests
         }
 
         [TestMethod]
+        public void EagerSession_GetAll_withInConditionExpression_Improved()
+        {
+            var employees = SessionsFactory.CreateEager()
+                .GetAll<Employee>()
+                    .Where(m => m.EmployeeId)
+                    .In(1, 2, 3);
+
+            Assert.AreEqual(3, employees.Count());
+        }
+
+        [TestMethod]
+        public void EagerSession_GetAll_withInConditionExpression_Improved_Complex()
+        {
+            var employees = SessionsFactory.CreateEager()
+                .GetAll<Employee>()
+                    .Where(m => m.EmployeeId).In(1, 2, 3, 4, 5, 6, 7)
+                    .And(m => m.EmployeeId >= 2);
+
+            Assert.AreEqual(6, employees.Count());
+        }
+
+        [TestMethod]
+        public void EagerSession_GetAll_Between()
+        {
+            var employees = SessionsFactory.CreateEager()
+                .GetAll<Employee>()
+                    .Where(m => m.EmployeeId)
+                    .Between(1, 5);
+
+            Assert.AreEqual(5, employees.Count());
+        }
+
+        [TestMethod]
         public void EagerSession_GetAll_withConditionExpression_IdConst()
         {
             var employees = SessionsFactory.CreateEager()
