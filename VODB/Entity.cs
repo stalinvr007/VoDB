@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using VODB.Caching;
 using VODB.DbLayer.DbExecuters;
 using VODB.VirtualDataBase;
+using System.Linq;
 
 namespace VODB
 {
+
     /// <summary>
     /// Base class that marks a derived class as an Entity type.
     /// </summary>
