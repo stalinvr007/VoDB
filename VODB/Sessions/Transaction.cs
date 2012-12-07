@@ -76,33 +76,36 @@ namespace VODB.Sessions
                 return;
             }
 
-            RolledBack = true;
-
-            if (_Savepoints.Count > 0)
+            if (!RolledBack)
             {
-                --count;
-                var savepoint = _Savepoints.Last.Value;
-                _Savepoints.RemoveLast();
+                RolledBack = true;
 
-                var trans = _Transaction as System.Data.SqlClient.SqlTransaction;
-                if (trans != null)
+                if (_Savepoints.Count > 0)
                 {
-                    trans.Rollback(savepoint);
-                }
+                    --count;
+                    var savepoint = _Savepoints.Last.Value;
+                    _Savepoints.RemoveLast();
 
-                return;
+                    var trans = _Transaction as System.Data.SqlClient.SqlTransaction;
+                    if (trans != null)
+                    {
+                        trans.Rollback(savepoint);
+                    }
+
+                    return;
+                }
             }
 
             CheckTransactionAlive();
 
-            count = int.MaxValue;
+            count = 0;
             Ended = true;
             _Transaction.Rollback();
         }
 
         public void Commit()
         {
-            if (Ended)
+            if (Ended || RolledBack)
             {
                 return;
             }
