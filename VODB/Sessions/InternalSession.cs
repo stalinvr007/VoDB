@@ -40,22 +40,21 @@ namespace VODB.Sessions
 
         public ITransaction BeginTransaction()
         {
-            lock (this)
+
+            CreateConnection();
+            Open();
+
+            if (InTransaction)
             {
-                CreateConnection();
-                Open();
-
-                if (InTransaction)
-                {
-                    _transaction.BeginNestedTransaction();
-                }
-                else
-                {
-                    _transaction = new Transaction(_connection.BeginTransaction());
-                }
-
-                return _transaction;
+                _transaction.BeginNestedTransaction();
             }
+            else
+            {
+                _transaction = new Transaction(_connection.BeginTransaction());
+            }
+
+            return _transaction;
+
         }
 
         public void ExecuteTSql(String SqlStatements)
@@ -110,7 +109,7 @@ namespace VODB.Sessions
                     Convert.ChangeType(id, idField.FieldType),
                     field => Convert.ChangeType(id, idField.FieldType));
             }
-            
+
             return entity;
         }
 
@@ -161,43 +160,39 @@ namespace VODB.Sessions
 
         public DbCommand CreateCommand()
         {
-            lock (this)
-            {
-                CreateConnection();
 
-                return InTransaction
-                           ? _transaction.CreateCommand()
-                           : _connection.CreateCommand();
-            }
+            CreateConnection();
+
+            return InTransaction
+                       ? _transaction.CreateCommand()
+                       : _connection.CreateCommand();
+
         }
 
 
         public void Open()
         {
-            lock (this)
-            {
-                CreateConnection();
 
-                if (_connection.State == ConnectionState.Open)
-                {
-                    return;
-                }
-                _connection.Open();
+            CreateConnection();
+
+            if (_connection.State == ConnectionState.Open)
+            {
+                return;
             }
+            _connection.Open();
 
         }
 
         public void Close()
         {
-            lock (this)
+
+            if (_connection == null || _connection.State == ConnectionState.Closed ||
+                (InTransaction && !_transaction.Ended) || _tasks.Count > 0)
             {
-                if (_connection == null || _connection.State == ConnectionState.Closed ||
-                    (InTransaction && !_transaction.Ended) || _tasks.Count > 0)
-                {
-                    return;
-                }
-                _connection.Close();
+                return;
             }
+            _connection.Close();
+
         }
 
         #endregion
