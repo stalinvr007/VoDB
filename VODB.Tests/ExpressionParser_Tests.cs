@@ -84,7 +84,7 @@ namespace VODB.Tests
         public void FieldParser()
         {
             var parser = new FieldGetterExpressionParser<Model, String>();
-            Assert.AreEqual(" Order by Name", parser.Parse(m => m.Name));
+            Assert.AreEqual("Name", parser.Parse(m => m.Name));
         }
     }
 }
