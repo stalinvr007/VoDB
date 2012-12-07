@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ninject">
-      <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -165,9 +162,6 @@
     <Compile Include="VirtualDataBase\TSqlCommands\TSqlCmdBase.cs" />
     <Compile Include="VirtualDataBase\TSqlCommands\TUpdate.cs" />
     <Compile Include="VirtualDataBase\TSqlCommands\TWhere.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
