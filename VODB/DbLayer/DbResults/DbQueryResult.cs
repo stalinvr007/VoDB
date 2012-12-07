@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq.Expressions;
+using System.Linq;
 using System.Text;
 using VODB.DbLayer.DbCommands;
 using VODB.DbLayer.DbExecuters;
@@ -137,13 +138,13 @@ namespace VODB.DbLayer.DbResults
 
         #region IDbFieldFilterResult
 
-        public IDbAndQueryResult<TEntity> In<TField>(params TField[] args)
+        public IDbAndQueryResult<TEntity> In<TField>(IEnumerable<TField> args)
         {
             _whereCondition
                 .Append(_FilterField.FieldName)
                 .Append(" in (");
 
-            for (int i = 0; i < args.Length; i++)
+            foreach (var arg in args)
             {
                 var paramName = String.Format("@{0}in{1}", _FilterField.FieldName, _parameters.Count);
 
@@ -151,10 +152,7 @@ namespace VODB.DbLayer.DbResults
                     .Append(paramName)
                     .Append(", ");
 
-                _parameters.Add(new KeyValuePair<Key, Object>(
-                    new Key(_FilterField, paramName),
-                    args[i]
-                ));
+                _parameters.Add(new KeyValuePair<Key, Object>(new Key(_FilterField, paramName),arg));
             }
 
             _whereCondition
@@ -164,12 +162,11 @@ namespace VODB.DbLayer.DbResults
             return this;
         }
 
-
         public IDbAndQueryResult<TEntity> Between<TField>(TField firstValue, TField secondValue)
         {
             var paramName1 = String.Format("@{0}in{1}", _FilterField.FieldName, _parameters.Count);
             _parameters.Add(new KeyValuePair<Key, Object>(new Key(_FilterField, paramName1), firstValue));
-            
+
             var paramName2 = String.Format("@{0}in{1}", _FilterField.FieldName, _parameters.Count);
             _parameters.Add(new KeyValuePair<Key, Object>(new Key(_FilterField, paramName2), secondValue));
 
@@ -181,6 +178,9 @@ namespace VODB.DbLayer.DbResults
         }
 
         #endregion
+
+
+
     }
 
 }

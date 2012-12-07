@@ -48,8 +48,9 @@ namespace VODB.Extensions
         /// <exception cref="ParameterSetterNotFoundException"></exception>
         public static void SetValue(this DbParameter param, Field field, Object value)
         {
+            var type = value == null ? field.FieldType : value.GetType();
             foreach (var setter in Configuration.ParameterSetters
-                .Where(setter => setter.CanHandle(field.FieldType)))
+                .Where(setter => setter.CanHandle(type)))
             {
 
                 try

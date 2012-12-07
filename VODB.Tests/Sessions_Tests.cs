@@ -77,7 +77,7 @@ namespace VODB.Tests
             var employees = SessionsFactory.CreateEager()
                 .GetAll<Employee>()
                     .Where(m => m.EmployeeId)
-                    .In(1, 2, 3);
+                    .In(new[] { 1, 2, 3 });
 
             Assert.AreEqual(3, employees.Count());
         }
@@ -87,7 +87,7 @@ namespace VODB.Tests
         {
             var employees = SessionsFactory.CreateEager()
                 .GetAll<Employee>()
-                    .Where(m => m.EmployeeId).In(1, 2, 3, 4, 5, 6, 7)
+                    .Where(m => m.EmployeeId).In(new[] { 1, 2, 3, 4, 5, 6, 7 })
                     .And(m => m.EmployeeId >= 2);
 
             Assert.AreEqual(6, employees.Count());
@@ -100,6 +100,20 @@ namespace VODB.Tests
                 .GetAll<Employee>()
                     .Where(m => m.EmployeeId)
                     .Between(1, 5);
+
+            Assert.AreEqual(5, employees.Count());
+        }
+
+        [TestMethod]
+        public void EagerSession_GetAll_In_using_collection()
+        {
+            var collection = new EagerSession()
+                .GetAll<Employee>()
+                .Where(m => m.EmployeeId <= 5);
+
+            var employees = SessionsFactory.CreateEager()
+                .GetAll<Employee>()
+                .Where(m => m.EmployeeId).In(collection);
 
             Assert.AreEqual(5, employees.Count());
         }
