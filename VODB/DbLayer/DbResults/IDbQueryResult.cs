@@ -100,13 +100,14 @@ namespace VODB.DbLayer.DbResults
 
     public interface IDbFieldFilterResult<TEntity>
     {
+
         /// <summary>
-        /// filters the field withing the specified arguments.
+        /// filters the field withing the specified in the collection.
         /// </summary>
         /// <typeparam name="TField">The type of the field.</typeparam>
-        /// <param name="args">The args.</param>
+        /// <param name="collection">The collection.</param>
         /// <returns></returns>
-        IDbAndQueryResult<TEntity> In<TField>(params TField[] args);
+        IDbAndQueryResult<TEntity> In<TField>(IEnumerable<TField> collection);
 
         /// <summary>
         /// Filters the field using the between condition.
