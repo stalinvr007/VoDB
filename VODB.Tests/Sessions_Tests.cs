@@ -18,6 +18,50 @@ namespace VODB.Tests
         }
 
         [TestMethod]
+        public void EagerSession_GetAll_OrderedByFirstName()
+        {
+            var employee = SessionsFactory.CreateEager()
+                .GetAll<Employee>().OrderBy(e => e.FirstName)
+                .First();
+
+            EntitiesAsserts.Assert_Employee_2(employee);
+
+        }
+
+        [TestMethod]
+        public void EagerSession_GetAll_OrderedByCity_Descending()
+        {
+            var employee2 = SessionsFactory.CreateEager()
+                .GetAll<Employee>()
+                .OrderBy(e => e.City)
+                .Descending()
+                .First();
+
+            EntitiesAsserts.Assert_Employee_2(employee2);
+
+            var employee3 = SessionsFactory.CreateEager()
+                .GetAll<Employee>()
+                .OrderBy(e => e.City)
+                .First();
+
+            EntitiesAsserts.Assert_Employee_3(employee3);
+
+        }
+
+        [TestMethod]
+        public void MoreComplexQuery()
+        {
+            var employees = SessionsFactory.CreateEager()
+                 .GetAll<Employee>()
+                      .Where(m => m.EmployeeId > 0)
+                      .And(m => m.EmployeeId < 10)
+                 .OrderBy(m => m.City)
+                 .Descending();
+
+            Assert.AreEqual(9, employees.Count());
+        }
+
+        [TestMethod]
         public void EagerSession_GetAll_withConditionExpression()
         {
             var id = 1;
@@ -30,13 +74,48 @@ namespace VODB.Tests
         [TestMethod]
         public void EagerSession_GetAll_withInConditionExpression()
         {
-
             var employees = SessionsFactory.CreateEager()
-                .GetAll<Employee>().In(
-                    new int[] { 1, 2, 3 }, 
-                    id => emp => emp.EmployeeId == id);
+                .GetAll<Employee>()
+                    .Where(m => m.EmployeeId)
+                    .In(new[] { 1, 2, 3 });
 
             Assert.AreEqual(3, employees.Count());
+        }
+
+        [TestMethod]
+        public void EagerSession_GetAll_withInConditionExpression_Complex()
+        {
+            var employees = SessionsFactory.CreateEager()
+                .GetAll<Employee>()
+                    .Where(m => m.EmployeeId).In(new[] { 1, 2, 3, 4, 5, 6, 7 })
+                    .And(m => m.EmployeeId >= 2);
+
+            Assert.AreEqual(6, employees.Count());
+        }
+
+        [TestMethod]
+        public void EagerSession_GetAll_Between()
+        {
+            var employees = SessionsFactory.CreateEager()
+                .GetAll<Employee>()
+                    .Where(m => m.EmployeeId)
+                    .Between(1, 5);
+
+            Assert.AreEqual(5, employees.Count());
+        }
+
+        [TestMethod]
+        public void EagerSession_GetAll_In_using_collection()
+        {
+            var collection = new EagerSession()
+                .GetAll<Employee>()
+                .Where(m => m.EmployeeId <= 5);
+
+            var employees = SessionsFactory.CreateEager()
+                .GetAll<Employee>()
+                .Where(m => m.EmployeeId).In(collection);
+
+            Assert.AreEqual(5, employees.Count());
         }
 
         [TestMethod]

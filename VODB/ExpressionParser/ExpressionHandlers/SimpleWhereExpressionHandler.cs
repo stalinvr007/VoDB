@@ -9,15 +9,15 @@ namespace VODB.ExpressionParser.ExpressionHandlers
 {
     class SimpleWhereExpressionHandler : IWhereExpressionHandler
     {
-        public bool CanHandle<TEntity>(Expression<Func<TEntity, bool>> expression)
+        public bool CanHandle<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : Entity, new()
         {
             return typeof (Entity).IsAssignableFrom(typeof (TEntity)) &&
                    expression.Body is BinaryExpression;
         }
 
-        public KeyValuePair<Field, object> Handle<TEntity>(Expression<Func<TEntity, bool>> expression)
+        public KeyValuePair<Field, object> Handle<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : Entity, new()
         {
-            var entity = Activator.CreateInstance<TEntity>() as Entity;
+            var entity = new TEntity();
             
             var body = (BinaryExpression)expression.Body;
 
@@ -38,7 +38,8 @@ namespace VODB.ExpressionParser.ExpressionHandlers
 
             Debug.Assert(entity != null, "entity != null");
 
-            var tableField = entity.Table.Fields.First(f => f.PropertyName.Equals(field, StringComparison.InvariantCultureIgnoreCase));
+            var tableField = entity.Table.Fields.First(f => 
+                f.PropertyName.Equals(field, StringComparison.InvariantCultureIgnoreCase));
 
             return new KeyValuePair<Field, object>(tableField, value);
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using VODB.DbLayer;
 using VODB.DbLayer.DbCommands;
 using VODB.DbLayer.DbExecuters;
+using VODB.DbLayer.DbResults;
 using VODB.DbLayer.Loaders;
 
 namespace VODB.Sessions

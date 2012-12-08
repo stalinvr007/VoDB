@@ -15,8 +15,8 @@ namespace VODB.ExpressionParser
         {
             var pair = expression.GetKeyValue();
 
-            var parameter = pair.Key.Table.TableName + pair.Key.FieldName;
-
+            var parameter = pair.Key.Table.TableName + pair.Key.FieldName + _ConditionData.Count;
+            
             _ConditionData.Add(new Key(pair.Key, parameter), pair.Value);
 
             return expression.GetWherePiece(pair.Key.FieldName, parameter);
