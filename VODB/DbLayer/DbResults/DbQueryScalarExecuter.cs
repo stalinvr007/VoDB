@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
+using VODB.DbLayer.DbExecuters;
 
-namespace VODB.DbLayer.DbExecuters
+namespace VODB.DbLayer.DbResults
 {
-    internal sealed class DbQueryScalarExecuter<TResult> : 
-        ICommandExecuter<TResult>
+    internal sealed class DbQueryScalarExecuter<TResult> : ICommandExecuter<TResult>
     {
         private readonly DbCommand _Command;
         /// <summary>

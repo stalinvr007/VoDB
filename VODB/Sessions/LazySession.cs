@@ -2,6 +2,7 @@ using System.Linq;
 using VODB.DbLayer;
 using VODB.DbLayer.DbCommands;
 using VODB.DbLayer.DbExecuters;
+using VODB.DbLayer.DbResults;
 using VODB.DbLayer.Loaders;
 
 namespace VODB.Sessions
@@ -24,7 +25,7 @@ namespace VODB.Sessions
         {
         }
 
-        public override IDbQueryResult<TEntity> GetAll<TEntity>()
+        public override IDbQueryResult<TEntity> GetAll<TEntity>() 
         {
             return Run(() => new DbEntityQueryExecuterLazy<TEntity>(this,
                                          new DbEntitySelectCommandFactory<TEntity>(this),

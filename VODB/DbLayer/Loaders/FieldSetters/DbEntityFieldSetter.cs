@@ -36,7 +36,8 @@ namespace VODB.DbLayer.Loaders.FieldSetters
             /* Attempts to fill the key fields for this foreignEntity. */
             foreach (var key in foreignEntity.Table.KeyFields)
             {
-                if (key.FieldName.Equals(field.BindedTo) || key.FieldName.Equals(field.FieldName))
+                if (key.FieldName.Equals(field.BindedTo, StringComparison.InvariantCultureIgnoreCase) || 
+                    key.FieldName.Equals(field.FieldName, StringComparison.InvariantCultureIgnoreCase))
                 {
                     foreignEntity.SetValue(key, value, getValueFromReader);
                 }
