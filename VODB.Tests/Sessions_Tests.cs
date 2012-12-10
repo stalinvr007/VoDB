@@ -112,9 +112,24 @@ namespace VODB.Tests
                 .Where(m => m.EmployeeId <= 5);
 
             var employees = session.GetAll<Employee>()
-                .Where(m => m.EmployeeId).In(collection);
+                .Where(m => m.EmployeeId)
+                .In<Employee>(collection);
 
             Assert.AreEqual(5, employees.Count());
+        }
+
+        [TestMethod]
+        public void EagerSession_GetAll_In_using_collection_diffNames()
+        {
+            ISession session = new EagerSession();
+
+            var employee = session.GetById(new Employee { EmployeeId = 5 });
+
+            var employees = session.GetAll<Employee>()
+                .Where(m => m.EmployeeId)
+                .In<Employee>(employee.ReportedFrom);
+
+            Assert.AreEqual(3, employees.Count());
         }
 
         [TestMethod]
