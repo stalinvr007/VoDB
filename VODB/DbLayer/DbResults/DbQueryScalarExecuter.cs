@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
 using VODB.DbLayer.DbExecuters;
 
 namespace VODB.DbLayer.DbResults
@@ -10,8 +7,11 @@ namespace VODB.DbLayer.DbResults
     internal sealed class DbQueryScalarExecuter<TResult> : ICommandExecuter<TResult>
     {
         private readonly DbCommand _Command;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="DbQueryEagerExecuter" /> class.
+        /// Initializes a new instance of the <see>
+        ///                                     <cref>DbQueryEagerExecuter</cref>
+        ///                                   </see>  class.
         /// </summary>
         /// <param name="command">The command.</param>
         public DbQueryScalarExecuter(DbCommand command)
