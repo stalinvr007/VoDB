@@ -16,7 +16,7 @@ namespace VODB.Tests
 
         public static void EagerExecuteWithinTransaction(Action<ISession> action)
         {
-            EagerExecute((session) =>
+            EagerExecute(session =>
             {
                 var trans = session.BeginTransaction();
                 try

@@ -15,11 +15,12 @@ namespace VODB.DbLayer.DbExecuters
     {
         private readonly IEntityLoader<TEntity> _Loader;
         private readonly IInternalSession _Session;
-        
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbEntityQueryExecuterEager{TEntity}" /> class.
         /// </summary>
+        /// <param name="session">The session</param>
         /// <param name="commandFactory">The command factory.</param>
         /// <param name="loader">The loader.</param>
         public DbEntityQueryExecuterEager(IInternalSession session, IDbCommandFactory commandFactory, IEntityLoader<TEntity> loader)

@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using VODB.DbLayer.DbCommands;
-using VODB.DbLayer.DbExecuters;
 
 namespace VODB
 {
@@ -38,23 +32,12 @@ namespace VODB
         /// <summary>
         /// Executes a action Within the transaction.
         /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="session">The session.</param>
         /// <param name="action">The action.</param>
-        public static void WithinTransaction<TResult>(this ISession session, Action action)
+        public static void WithinTransaction(this ISession session, Action action)
         {
             session.WithinTransaction<Object>(() => { action(); return null; });
         }
-
-        /// <summary>
-        /// Executes the SQL file.
-        /// </summary>
-        /// <param name="filepath">The filepath.</param>
-        public static void ExecuteSqlFile(this ISession session, String filepath)
-        {
-            session.ExecuteSqlFile(File.ReadAllText(filepath));
-        }
-
     }
 
 

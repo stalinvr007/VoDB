@@ -4,11 +4,10 @@ namespace VODB.Exceptions
 {
     public abstract class VodbException : Exception
     {
-
-        public VodbException(String msgMask, params Object[] args)
+        protected VodbException(String msgMask, params Object[] args)
             : base(Format(msgMask, args)) { }
 
-        public VodbException(Exception innerException, String msgMask, params Object[] args)
+        protected VodbException(Exception innerException, String msgMask, params Object[] args)
             : base(Format(msgMask, args), innerException) {}
 
         private static string Format(string msgMask, object[] args)

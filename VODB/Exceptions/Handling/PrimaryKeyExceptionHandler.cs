@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
 
 namespace VODB.Exceptions.Handling
 {
@@ -11,7 +8,7 @@ namespace VODB.Exceptions.Handling
 
         public bool CanHandle(Exception exception)
         {
-            return typeof(SqlException).IsAssignableFrom(exception.GetType()) && 
+            return exception is SqlException && 
                 exception.Message.Contains("Violation of PRIMARY KEY");
         }
 
