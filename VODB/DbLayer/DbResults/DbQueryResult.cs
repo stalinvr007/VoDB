@@ -190,7 +190,10 @@ namespace VODB.DbLayer.DbResults
         {
             Parameters = collection.Parameters;
             _whereCondition
-                .AppendFormat("{0} In (Select {0} from {1}", _FilterField.FieldName, collection.TableName)
+                .AppendFormat("{0} In (Select {1} from {2}", 
+                    _FilterField.FieldName, 
+                    _FilterField.BindedTo ?? _FilterField.FieldName, 
+                    collection.TableName)
                 .Append(collection.WhereCondition)
                 .Append(")");
 

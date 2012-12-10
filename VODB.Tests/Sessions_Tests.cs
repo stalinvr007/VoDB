@@ -119,7 +119,7 @@ namespace VODB.Tests
         }
 
         [TestMethod]
-        public void EagerSession_GetAll_In_using_collection_diffNames()
+        public void EagerSession_GetAll_In_using_collection_SameNames()
         {
             ISession session = new EagerSession();
 
@@ -130,6 +130,20 @@ namespace VODB.Tests
                 .In<Employee>(employee.ReportedFrom);
 
             Assert.AreEqual(3, employees.Count());
+        }
+
+        [TestMethod]
+        public void EagerSession_GetAll_In_using_collection_diffNames()
+        {
+            ISession session = new EagerSession();
+
+            Employee employee4 = new Employee { EmployeeId = 4 };
+            var orders = session.GetAll<Orders>()
+                .Where(o => o.Shipper)
+                .In(session.GetAll<Shippers>().Where(s => s.ShipperId == 2))
+                .And(o => o.Employee == employee4);
+
+            Assert.AreEqual(70, orders.Count());
         }
 
         [TestMethod]
