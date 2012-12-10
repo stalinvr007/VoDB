@@ -8,6 +8,7 @@ using VODB.DbLayer.DbExecuters;
 using VODB.ExpressionParser;
 using VODB.Extensions;
 using VODB.VirtualDataBase;
+using System.Linq;
 
 namespace VODB.DbLayer.DbResults
 {
@@ -27,6 +28,29 @@ namespace VODB.DbLayer.DbResults
         private readonly IWhereExpressionParser<TEntity> _ExpressionParser;
         private readonly ICollection<KeyValuePair<Key, Object>> _parameters;
         private Field _FilterField;
+
+        #region IDbResult
+
+        public String TableName { get { return new TEntity().Table.TableName; } }
+
+        public String WhereCondition { get { return _whereCondition.ToString(); } }
+
+        public IEnumerable<KeyValuePair<Key, Object>> Parameters
+        {
+            get
+            {
+                return _ExpressionParser.ConditionData.Union(_parameters);
+            }
+            set
+            {
+                foreach (var item in value)
+                {
+                    _parameters.Add(item);
+                }
+            }
+        }
+
+        #endregion
 
         public DbQueryResult(IDbCommandFactory commandFactory, IQueryExecuter<TEntity> executer)
         {
@@ -69,7 +93,6 @@ namespace VODB.DbLayer.DbResults
 
             return cmd;
         }
-
 
         #region IDbQueryResult
 
@@ -139,19 +162,21 @@ namespace VODB.DbLayer.DbResults
 
         public IDbAndQueryResult<TEntity> In<TField>(IEnumerable<TField> args)
         {
+
+            if (args is IDbResult)
+            {
+                return InResult((IDbResult)args);
+            }
+
             _whereCondition
                 .Append(_FilterField.FieldName)
                 .Append(" in (");
 
             foreach (var arg in args)
             {
-                var paramName = String.Format("@{0}in{1}", _FilterField.FieldName, _parameters.Count);
-
                 _whereCondition
-                    .Append(paramName)
+                    .Append(AddParameter(_FilterField, arg))
                     .Append(", ");
-
-                _parameters.Add(new KeyValuePair<Key, Object>(new Key(_FilterField, paramName),arg));
             }
 
             _whereCondition
@@ -161,25 +186,36 @@ namespace VODB.DbLayer.DbResults
             return this;
         }
 
+        private IDbAndQueryResult<TEntity> InResult(IDbResult collection)
+        {
+            Parameters = collection.Parameters;
+            _whereCondition
+                .AppendFormat("{0} In (Select {0} from {1}", _FilterField.FieldName, collection.TableName)
+                .Append(collection.WhereCondition)
+                .Append(")");
+
+            return this;
+        }
+
         public IDbAndQueryResult<TEntity> Between<TField>(TField firstValue, TField secondValue)
         {
-            var paramName1 = String.Format("@{0}in{1}", _FilterField.FieldName, _parameters.Count);
-            _parameters.Add(new KeyValuePair<Key, Object>(new Key(_FilterField, paramName1), firstValue));
-
-            var paramName2 = String.Format("@{0}in{1}", _FilterField.FieldName, _parameters.Count);
-            _parameters.Add(new KeyValuePair<Key, Object>(new Key(_FilterField, paramName2), secondValue));
-
             _whereCondition
                 .Append(_FilterField.FieldName)
-                .AppendFormat(" Between {0} And {1}", paramName1, paramName2);
+                .AppendFormat(" Between {0} And {1}", 
+                    AddParameter(_FilterField, firstValue), 
+                    AddParameter(_FilterField, secondValue));
 
             return this;
         }
 
         #endregion
 
-
-
+        private String AddParameter(Field field, Object value)
+        {
+            var paramName = String.Format("@{0}{1}{2}", field.FieldName, Environment.TickCount, _parameters.Count);
+            _parameters.Add(new KeyValuePair<Key, Object>(new Key(field, paramName), value));
+            return paramName;
+        }
     }
 
 }

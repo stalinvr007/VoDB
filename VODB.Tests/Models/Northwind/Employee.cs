@@ -1,6 +1,7 @@
 ﻿using VODB.Annotations;
 using System;
 using System.Collections.Generic;
+using VODB.DbLayer.DbResults;
 
 namespace VODB.Tests.Models.Northwind
 {
@@ -59,7 +60,7 @@ namespace VODB.Tests.Models.Northwind
         /// <summary>
         /// Gets a collection of employees that reports to this one.
         /// </summary>
-        public IEnumerable<Employee> ReportedFrom
+        public IDbAndQueryResult<Employee> ReportedFrom
         {
             get { return GetValues<Employee>().Where(m => m.ReportsTo == this); }
         }
@@ -67,7 +68,7 @@ namespace VODB.Tests.Models.Northwind
         /// <summary>
         /// Gets the territories.
         /// </summary>
-        public IEnumerable<EmployeeTerritories> Territories
+        public IDbAndQueryResult<EmployeeTerritories> Territories
         {
             get { return GetValues<EmployeeTerritories>().Where(m => m.Employee == this); }
         }

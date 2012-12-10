@@ -6,13 +6,13 @@ namespace VODB.Tests.Models.Northwind {
     [DbTable("Order Details")]
     public class OrderDetails : DbEntity {
 
-        [DbField("OrderId"), DbKey]
+        [DbKey("OrderId")]
         public Orders Order {
             get { return GetValue<Orders>(); }
             set { SetValue(value); }
         }
 
-        [DbField("ProductId"), DbKey]
+        [DbKey("ProductId")]
         public Products Product {
             get { return GetValue<Products>(); }
             set { SetValue(value); }

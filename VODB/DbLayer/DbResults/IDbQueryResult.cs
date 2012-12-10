@@ -1,15 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using VODB.ExpressionParser;
 
 namespace VODB.DbLayer.DbResults
 {
+
+    public interface IDbResult
+    {
+        IEnumerable<KeyValuePair<Key, Object>> Parameters { get; }
+
+        String TableName { get; }
+
+        String WhereCondition { get; }
+
+    }
 
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    public interface IDbQueryResult<TEntity> : IEnumerable<TEntity>
+    public interface IDbQueryResult<TEntity> : IEnumerable<TEntity>, IDbResult
     {
 
         /// <summary>
@@ -42,13 +53,14 @@ namespace VODB.DbLayer.DbResults
         /// <param name="orderByField">The order by field.</param>
         /// <returns></returns>
         IDbOrderedResult<TEntity> OrderBy<TField>(Expression<Func<TEntity, TField>> orderByField);
+
     }
 
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    public interface IDbAndQueryResult<TEntity> : IEnumerable<TEntity>
+    public interface IDbAndQueryResult<TEntity> : IEnumerable<TEntity>, IDbResult
     {
         /// <summary>
         /// Adds more conditions to the query.
@@ -82,12 +94,12 @@ namespace VODB.DbLayer.DbResults
         IDbOrderedResult<TEntity> OrderBy<TField>(Expression<Func<TEntity, TField>> orderByField);
     }
 
-    public interface IDbOrderedDescResult<TEntity> : IEnumerable<TEntity>
+    public interface IDbOrderedDescResult<TEntity> : IEnumerable<TEntity>, IDbResult
     {
 
     }
 
-    public interface IDbOrderedResult<TEntity> : IEnumerable<TEntity>
+    public interface IDbOrderedResult<TEntity> : IEnumerable<TEntity>, IDbResult
     {
 
         IDbOrderedDescResult<TEntity> Descending();
@@ -95,7 +107,7 @@ namespace VODB.DbLayer.DbResults
     }
 
 
-    public interface IDbFieldFilterResult<TEntity>
+    public interface IDbFieldFilterResult<TEntity> : IDbResult
     {
 
         /// <summary>
