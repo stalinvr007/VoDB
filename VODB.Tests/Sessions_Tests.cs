@@ -29,6 +29,17 @@ namespace VODB.Tests
         }
 
         [TestMethod]
+        public void EagerSession_GetAll_OrderedByFirstName_TSql()
+        {
+            var employee = SessionsFactory.CreateEager()
+                .GetAll<Employee>().TSqlOrderBy(e => e.FirstName)
+                .First();
+
+            EntitiesAsserts.Assert_Employee_2(employee);
+
+        }
+
+        [TestMethod]
         public void EagerSession_GetAll_OrderedByCity_Descending()
         {
             var employee2 = SessionsFactory.CreateEager()
