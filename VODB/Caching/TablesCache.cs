@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using VODB.VirtualDataBase;
 
@@ -13,19 +12,6 @@ namespace VODB.Caching
     {
         private static readonly IDictionary<Type, Table> _tables = new Dictionary<Type, Table>();
         private static readonly IDictionary<Type, Task> _pendingTasks = new Dictionary<Type, Task>();
-
-        /// <summary>
-        /// Adds the specified type.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="table">The table.</param>
-        public static void Add(Type type, Table table)
-        {
-            lock (_tables)
-            {
-                _tables[type] = table;
-            }
-        }
 
         /// <summary>
         /// Adds a Table to the cache asynchronously.

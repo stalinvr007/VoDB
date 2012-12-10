@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq.Expressions;
-using System.Linq;
 using System.Text;
 using VODB.DbLayer.DbCommands;
 using VODB.DbLayer.DbExecuters;

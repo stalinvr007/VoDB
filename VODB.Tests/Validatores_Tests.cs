@@ -22,22 +22,18 @@ namespace VODB.Tests
                 Assert.AreEqual("Required fields not set: { [LastName], [FirstName] }", ex.Message);
                 throw;
             }
-            
+
 
         }
 
         [TestMethod, ExpectedException(typeof(TruncatedException))]
         public void BigNamesThrowException()
         {
-            Utils.EagerExecute(session =>
-            {
-                session.Insert(new Employee
-                {
-                    FirstName = "adoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandleradoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandleradoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandleradoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandleradoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandleradoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandlerok",
-                    LastName = "adsads"
-                });
-
-            });
+            Utils.EagerExecute(session => session.Insert(new Employee
+                  {
+                      FirstName = "adoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandleradoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandleradoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandleradoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandleradoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandleradoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandlerok",
+                      LastName = "adsads"
+                  }));
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.Sessions;
 using VODB.Tests.Models.Northwind;
 
@@ -15,8 +14,7 @@ namespace VODB.Tests
             using (var session = new EagerSession())
             {
 
-                
-                using (var transaction = session.BeginTransaction())
+                using (session.BeginTransaction())
                 {
                     Employee sergio;
                     Employee sergio1;

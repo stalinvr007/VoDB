@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using VODB.DbLayer;
-using VODB.DbLayer.DbCommands;
-using VODB.DbLayer.DbExecuters;
 using VODB.DbLayer.DbResults;
-using VODB.DbLayer.Loaders;
 
 namespace VODB.Sessions
 {
@@ -13,7 +6,7 @@ namespace VODB.Sessions
     {
         private ISession _InnerSession;
 
-        public PublicSessionBase(ISession innerSession)
+        protected PublicSessionBase(ISession innerSession)
         {
             _InnerSession = innerSession;
         }
@@ -40,12 +33,12 @@ namespace VODB.Sessions
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : Entity, new()
         {
-            return _InnerSession.GetById<TEntity>(entity);
+            return _InnerSession.GetById(entity);
         }
 
         public System.Threading.Tasks.Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : Entity, new()
         {
-            return _InnerSession.AsyncGetById<TEntity>(entity);
+            return _InnerSession.AsyncGetById(entity);
         }
 
         public TEntity Insert<TEntity>(TEntity entity) where TEntity : Entity, new()

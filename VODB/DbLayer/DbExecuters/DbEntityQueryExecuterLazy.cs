@@ -11,13 +11,14 @@ namespace VODB.DbLayer.DbExecuters
 
         private readonly IEntityLoader<TEntity> _Loader;
         private readonly IInternalSession _Session;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see>
-        ///                                     <cref>DbDbEntityQueryExecuterLazy{TEntity}</cref>
-        ///                                   </see>  class.
+        /// <cref>DbDbEntityQueryExecuterLazy{TEntity}</cref>
+        /// </see>  class.
         /// </summary>
-        /// <param name="commandFactory"> </param>
+        /// <param name="session">The session.</param>
+        /// <param name="commandFactory">The command factory.</param>
         /// <param name="loader">The loader.</param>
         public DbEntityQueryExecuterLazy(IInternalSession session, IDbCommandFactory commandFactory, IEntityLoader<TEntity> loader)
             : base(session, commandFactory)

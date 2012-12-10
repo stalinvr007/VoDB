@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
-using VODB.DbLayer.DbExecuters;
 using VODB.DbLayer.DbResults;
 
 namespace VODB

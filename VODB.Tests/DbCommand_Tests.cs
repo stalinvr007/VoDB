@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using VODB.DbLayer;
 using VODB.DbLayer.DbCommands;
 using VODB.DbLayer.DbExecuters;
 using VODB.DbLayer.Loaders;
 using VODB.Tests.Models.Northwind;
-using VODB.VirtualDataBase;
 using VODB.Exceptions;
 
 namespace VODB.Tests

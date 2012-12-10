@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.Tests.Models.Northwind;
 using VODB.EntityValidators;
 using VODB.Exceptions;
@@ -53,7 +52,7 @@ namespace VODB.Tests
         public void KeysFilled_Ok_Test()
         {
             new KeyFilledValidator()
-                .Validate(new Employee() { EmployeeId = 1 });
+                .Validate(new Employee { EmployeeId = 1 });
         }
 
         [TestMethod]
