@@ -107,12 +107,11 @@ namespace VODB.Tests
         [TestMethod]
         public void EagerSession_GetAll_In_using_collection()
         {
-            var collection = new EagerSession()
-                .GetAll<Employee>()
+            ISession session = new EagerSession();
+            var collection = session.GetAll<Employee>()
                 .Where(m => m.EmployeeId <= 5);
 
-            var employees = SessionsFactory.CreateEager()
-                .GetAll<Employee>()
+            var employees = session.GetAll<Employee>()
                 .Where(m => m.EmployeeId).In(collection);
 
             Assert.AreEqual(5, employees.Count());
