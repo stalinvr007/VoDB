@@ -94,13 +94,9 @@ namespace VODB.Sessions
 
                 entity.Session = this;
 
-                if (idField == null)
-                {
-                    return null;
-                }
-
-                return new DbQueryScalarExecuter<Object>(
-                    new DbCommandBypass(this, "Select @@IDENTITY").Make()).Execute();
+                return idField == null ? null : 
+                    new DbQueryScalarExecuter<Object>(
+                        new DbCommandBypass(this, "Select @@IDENTITY").Make()).Execute();
             });
 
             if (idField != null)
@@ -232,12 +228,13 @@ namespace VODB.Sessions
                 _transaction = null;
             }
 
-            if (_connection != null)
+            if (_connection == null)
             {
-                _connection.Dispose();
-                _connection = null;
+                return;
             }
-
+            
+            _connection.Dispose();
+            _connection = null;
             _creator = null;
             _tasks = null;
         }
