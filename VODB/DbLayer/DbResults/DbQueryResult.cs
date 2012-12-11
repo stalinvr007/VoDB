@@ -211,6 +211,29 @@ namespace VODB.DbLayer.DbResults
             return this;
         }
 
+        public IDbAndQueryResult<TEntity> Like(String value, WildCard token = WildCard.Both)
+        {
+            _whereCondition
+                .Append(_FilterField.FieldName)
+                .Append(" Like '");
+
+            if (token == WildCard.Left || token == WildCard.Both)
+            {
+                _whereCondition.Append("%");
+            }
+
+            _whereCondition.Append(value);
+
+            if (token == WildCard.Right || token == WildCard.Both)
+            {
+                _whereCondition.Append("%");
+            }
+
+            _whereCondition.Append("'");
+
+            return this;
+        }
+
         #endregion
 
         private String AddParameter(Field field, Object value)
@@ -219,6 +242,8 @@ namespace VODB.DbLayer.DbResults
             _parameters.Add(new KeyValuePair<Key, Object>(new Key(field, paramName), value));
             return paramName;
         }
+
+        
     }
 
 }

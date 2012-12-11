@@ -107,8 +107,24 @@ namespace VODB.DbLayer.DbResults
     }
 
 
+    public enum WildCard
+    {
+        Left,
+        Right,
+        Both,
+        None
+    }
+
     public interface IDbFieldFilterResult<TEntity> : IDbResult
     {
+
+        /// <summary>
+        /// Likes the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        IDbAndQueryResult<TEntity> Like(String value, WildCard token = WildCard.Both);
 
         /// <summary>
         /// filters the field withing the specified in the collection.
@@ -126,5 +142,6 @@ namespace VODB.DbLayer.DbResults
         /// <param name="secondValue">The second value.</param>
         /// <returns></returns>
         IDbAndQueryResult<TEntity> Between<TField>(TField firstValue, TField secondValue);
+
     }
 }
