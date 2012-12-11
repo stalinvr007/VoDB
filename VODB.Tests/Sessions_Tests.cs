@@ -29,6 +29,28 @@ namespace VODB.Tests
         }
 
         [TestMethod]
+        public void EagerSession_GetEmployeeList_ReportsToFilter()
+        {
+            /* 
+             * Select * from Employees Where EmployeeId in 
+             *      (Select EmployeeId From Employees Where FirstName = 'Andrew') 
+             */
+            var employees1 = new EagerSession()
+                .GetAll<Employee>().Where(e => e.ReportsTo.FirstName == "Andrew");
+
+            EntitiesAsserts.Assert_Employee_2(employees1.First());
+
+            /* 
+             * Select * From Employees Where EmployeeId in 
+             *      (Select EmployeeId From Employees Where EmployeeId = 1)
+             */
+            var employees2 = new EagerSession()
+                .GetAll<Employee>().Where(e => e.ReportsTo.EmployeeId == 1);
+
+            EntitiesAsserts.Assert_Employee_2(employees2.First());
+        }
+
+        [TestMethod]
         public void EagerSession_GetAll_OrderedByFirstName_TSql()
         {
             var employee = SessionsFactory.CreateEager()
@@ -124,7 +146,7 @@ namespace VODB.Tests
 
             var employees = session.GetAll<Employee>()
                 .Where(m => m.EmployeeId)
-                .In<Employee>(collection);
+                .In(collection);
 
             Assert.AreEqual(5, employees.Count());
         }
@@ -138,7 +160,7 @@ namespace VODB.Tests
 
             var employees = session.GetAll<Employee>()
                 .Where(m => m.EmployeeId)
-                .In<Employee>(employee.ReportedFrom);
+                .In(employee.ReportedFrom);
 
             Assert.AreEqual(3, employees.Count());
         }
@@ -148,7 +170,7 @@ namespace VODB.Tests
         {
             ISession session = new EagerSession();
 
-            Employee employee4 = new Employee { EmployeeId = 4 };
+            var employee4 = new Employee { EmployeeId = 4 };
             var orders = session.GetAll<Orders>()
                 .Where(o => o.Shipper)
                 .In(session.GetAll<Shippers>().Where(s => s.ShipperId == 2))

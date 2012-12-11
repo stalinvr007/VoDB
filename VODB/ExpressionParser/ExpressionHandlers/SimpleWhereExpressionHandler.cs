@@ -21,6 +21,10 @@ namespace VODB.ExpressionParser.ExpressionHandlers
             
             var body = (BinaryExpression)expression.Body;
 
+            var parser = new ExpressionBodyParser();
+            parser.Entity = entity;
+            parser.Parse(body);
+
             Object value;
 
             if (body.Right is ConstantExpression)

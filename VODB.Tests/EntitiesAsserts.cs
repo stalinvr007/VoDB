@@ -64,7 +64,7 @@ namespace VODB.Tests
             Assert.AreEqual("Leverling", employee.LastName);
             Assert.AreEqual("Sales Representative", employee.Title);
             Assert.AreEqual("Ms.", employee.TitleOfCourtesy);
-            Assert.AreEqual(new DateTime(), employee.BirthDate);
+            Assert.AreEqual(new DateTime(1963,08,30), employee.BirthDate);
             Assert.AreEqual(new DateTime(1992, 4, 1), employee.HireDate);
             Assert.AreEqual("722 Moss Bay Blvd.", employee.Address);
             Assert.AreEqual("Kirkland", employee.City);
@@ -72,13 +72,13 @@ namespace VODB.Tests
             Assert.AreEqual("98033", employee.PostalCode);
             Assert.AreEqual("USA", employee.Country);
             Assert.AreEqual("(206) 555-3412", employee.HomePhone);
-            Assert.AreEqual("3524", employee.Extension);
+            Assert.AreEqual("3355", employee.Extension);
             Assert.AreEqual(21722, employee.Photo.Count());
             Assert.AreEqual(
                 "Janet has a BS degree in chemistry from Boston College (1984).  She has also completed a certificate program in food retailing management.  Janet was hired as a sales associate in 1991 and promoted to sales representative in February 1992.",
                 employee.Notes);
             Assert.AreEqual("http://accweb/emmployees/leverling.bmp", employee.PhotoPath);
-            Assert.IsNull(employee.ReportsTo);
+            Assert.IsNotNull(employee.ReportsTo);
         }
     }
 }
