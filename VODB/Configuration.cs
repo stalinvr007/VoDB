@@ -6,6 +6,7 @@ using VODB.EntityValidators.Fields;
 using VODB.Exceptions.Handling;
 using VODB.ExpressionParser;
 using VODB.ExpressionParser.ExpressionHandlers;
+using VODB.ExpressionParser.TSqlBuilding;
 
 namespace VODB
 {
@@ -72,7 +73,14 @@ namespace VODB
                 new GreaterWhereExpressionFormatter()
             };
 
+            TSqlBuilders = new List<ITSqlBuilder>()
+            {
+
+            };
+
         }
+
+        public static ICollection<ITSqlBuilder> TSqlBuilders { get; private set; }
 
         /// <summary>
         /// Gets the where expression handlers.
