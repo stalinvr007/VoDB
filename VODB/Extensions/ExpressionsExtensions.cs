@@ -39,7 +39,14 @@ namespace VODB.Extensions
         /// <returns></returns>
         public static ITSqlBuilder BuildSql(this IExpressionBodyParser parser)
         {
-            return Configuration.TSqlBuilders.Where(b => b.CanBuild(parser)).First();
+            var builder = Configuration.TSqlBuilders.Where(b => b.CanBuild(parser)).FirstOrDefault();
+
+            if (builder == null)
+            {
+                throw new TSqlBuilderNotFoundException();
+            }
+
+            return builder;
         }
 
         /// <summary>

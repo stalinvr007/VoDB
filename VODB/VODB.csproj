@@ -97,6 +97,7 @@
     <Compile Include="Exceptions\Handling\UniqueKeyExceptionHandler.cs" />
     <Compile Include="Exceptions\PrimaryKeyViolationException.cs" />
     <Compile Include="Exceptions\TruncatedException.cs" />
+    <Compile Include="Exceptions\TSqlBuilderNotFoundException.cs" />
     <Compile Include="Exceptions\UnableToSetParameterValueException.cs" />
     <Compile Include="Exceptions\UniqueKeyViolationException.cs" />
     <Compile Include="Exceptions\WhereExpressionFormatterNotFoundException.cs" />
@@ -104,8 +105,10 @@
     <Compile Include="ExpressionParser\ComparatorExpressionParser.cs" />
     <Compile Include="ExpressionParser\ExpressionBodyParser.cs" />
     <Compile Include="ExpressionParser\FieldGetterExpressionParser.cs" />
+    <Compile Include="ExpressionParser\TSqlBuilding\ComplexTSqlBuilder.cs" />
     <Compile Include="ExpressionParser\TSqlBuilding\ITSqlBuilder.cs" />
     <Compile Include="ExpressionParser\TSqlBuilding\SimpleWhereTSqlBuilder.cs" />
+    <Compile Include="ExpressionParser\TSqlBuilding\TSqlBuilderBase.cs" />
     <Compile Include="ExpressionParser\WhereExpressionFormatters.cs" />
     <Compile Include="ExpressionParser\ExpressionHandlers\IWhereExpressionHandler.cs" />
     <Compile Include="ExpressionParser\ExpressionHandlers\SimpleWhereExpressionHandler.cs" />

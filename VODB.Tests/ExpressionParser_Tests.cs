@@ -20,8 +20,8 @@ namespace VODB.Tests
         {
             var Name = "Sérgio";
             var parser = new ComparatorExpressionParser<Model>();
-            
-            Assert.AreEqual("Name = @ModelName0", parser.Parse(m => m.Name == Name));
+
+            StringAssert.Contains(parser.Parse(m => m.Name == Name), "Name = @Name");
             Assert.AreEqual(1, parser.ConditionData.Count());
 
         }
@@ -31,7 +31,7 @@ namespace VODB.Tests
         {
             var parser = new ComparatorExpressionParser<Model>();
 
-            Assert.AreEqual("Name = @ModelName0", parser.Parse(m => m.Name == "Sérgio"));
+            StringAssert.Contains(parser.Parse(m => m.Name == "Sérgio"), "Name = @Name");
             Assert.AreEqual(1, parser.ConditionData.Count());
         }
 
@@ -40,7 +40,7 @@ namespace VODB.Tests
         {
             var parser = new ComparatorExpressionParser<Model>();
 
-            Assert.AreEqual("Name != @ModelName0", parser.Parse(m => m.Name != "Sérgio"));
+            StringAssert.Contains(parser.Parse(m => m.Name != "Sérgio"), "Name != @Name");
             Assert.AreEqual(1, parser.ConditionData.Count());
         }
 
@@ -49,7 +49,7 @@ namespace VODB.Tests
         {
             var parser = new ComparatorExpressionParser<Model>();
 
-            Assert.AreEqual("Age > @ModelAge0", parser.Parse(m => m.Age > 10));
+            StringAssert.Contains(parser.Parse(m => m.Age > 10), "Age > @Age");
             Assert.AreEqual(1, parser.ConditionData.Count());
         }
 
@@ -58,7 +58,7 @@ namespace VODB.Tests
         {
             var parser = new ComparatorExpressionParser<Model>();
 
-            Assert.AreEqual("Age >= @ModelAge0", parser.Parse(m => m.Age >= 10));
+            StringAssert.Contains(parser.Parse(m => m.Age >= 10), "Age >= @Age");
             Assert.AreEqual(1, parser.ConditionData.Count());
         }
 
@@ -67,7 +67,7 @@ namespace VODB.Tests
         {
             var parser = new ComparatorExpressionParser<Model>();
 
-            Assert.AreEqual("Age <= @ModelAge0", parser.Parse(m => m.Age <= 10));
+            StringAssert.Contains(parser.Parse(m => m.Age <= 10), "Age <= @Age");
             Assert.AreEqual(1, parser.ConditionData.Count());
         }
 
@@ -76,7 +76,7 @@ namespace VODB.Tests
         {
             var parser = new ComparatorExpressionParser<Model>();
 
-            Assert.AreEqual("Age < @ModelAge0", parser.Parse(m => m.Age < 10));
+            StringAssert.Contains(parser.Parse(m => m.Age < 10), "Age < @Age");
             Assert.AreEqual(1, parser.ConditionData.Count());
         }
         

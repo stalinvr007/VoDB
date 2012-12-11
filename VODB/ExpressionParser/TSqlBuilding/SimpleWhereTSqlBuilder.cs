@@ -6,40 +6,18 @@ using VODB.Exceptions;
 
 namespace VODB.ExpressionParser.TSqlBuilding
 {
-    public class SimpleWhereTSqlBuilder : ITSqlBuilder
+
+    class SimpleWhereTSqlBuilder : TSqlBuilderBase
     {
-        ICollection<KeyValuePair<Key, Object>> _parameters = new List<KeyValuePair<Key, Object>>();
-        private IExpressionBodyParser _Parser;
-        
-        /// <summary>
-        /// Determines whether this instance can build the Sql using the specified parser.
-        /// </summary>
-        /// <param name="parser">The parser.</param>
-        /// <returns></returns>
-        public Boolean CanBuild(IExpressionBodyParser parser)
+        protected override Boolean CanBuildSql(IExpressionBodyParser parser)
         {
-            _Parser = parser;
             return !parser.IsComplex;
         }
-
-        /// <summary>
-        /// Gets the parameters used on the Sql Statement.
-        /// </summary>
-        /// <value>
-        /// The parameters.
-        /// </value>
-        public IEnumerable<KeyValuePair<Key, Object>> Parameters
-        {
-            get { return _parameters; }
-        }
         
-        /// <summary>
-        /// Builds Sql.
-        /// </summary>
-        /// <returns></returns>
-        public String Build()
+        public override String Build(int paramCount)
         {
-            _parameters.Add(new KeyValuePair<Key, object>(new Key(_Parser.Field, ""), _Parser.Value));
+            var paramName = String.Format("{0}{1}", _Parser.Field.FieldName, paramCount);
+            _parameters.Add(new KeyValuePair<Key, object>(new Key(_Parser.Field, paramName), _Parser.Value));
 
             var formatter = Configuration.WhereExpressionFormatters.First(w => w.CanFormat(_Parser.NodeType));
 
@@ -48,7 +26,8 @@ namespace VODB.ExpressionParser.TSqlBuilding
                 throw new WhereExpressionFormatterNotFoundException();
             }
 
-            return formatter.Format(_Parser.Field.FieldName, "");
+            return formatter.Format(_Parser.Field.FieldName, paramName);
         }
+
     }
 }
