@@ -13,23 +13,25 @@ namespace VODB.ExpressionParser
 
         public String Parse(Expression<Func<TEntity, Boolean>> expression)
         {
-            var pair = expression.GetKeyValue();
-
-            var parameter = pair.Key.Table.TableName + pair.Key.FieldName + _ConditionData.Count;
+            var parser = new ExpressionBodyParser(expression);
             
-            _ConditionData.Add(new Key(pair.Key, parameter), pair.Value);
+            parser.Parse();
 
-            return expression.GetWherePiece(pair.Key.FieldName, parameter);
+            var sqlBuilder = parser.BuildSql();
+
+            foreach (var param in sqlBuilder.Parameters)
+            {
+                _ConditionData.Add(param);
+            }
+            
+            return sqlBuilder.Build();
         }
-
 
         public IEnumerable<KeyValuePair<Key, object>> ConditionData
         {
             get { return _ConditionData; }
         }
-
-
-
+        
         public void ClearData()
         {
             _ConditionData.Clear();

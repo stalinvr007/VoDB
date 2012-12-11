@@ -170,11 +170,10 @@ namespace VODB.Tests
         {
             ISession session = new EagerSession();
 
-            var employee4 = new Employee { EmployeeId = 4 };
             var orders = session.GetAll<Orders>()
                 .Where(o => o.Shipper)
                 .In(session.GetAll<Shippers>().Where(s => s.ShipperId == 2))
-                .And(o => o.Employee == employee4);
+                .And(o => o.Employee.EmployeeId == 4);
 
             Assert.AreEqual(70, orders.Count());
         }

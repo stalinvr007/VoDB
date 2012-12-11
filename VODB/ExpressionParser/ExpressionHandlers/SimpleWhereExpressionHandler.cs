@@ -11,41 +11,19 @@ namespace VODB.ExpressionParser.ExpressionHandlers
     {
         public bool CanHandle<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : Entity, new()
         {
-            return typeof (Entity).IsAssignableFrom(typeof (TEntity)) &&
+            return typeof(Entity).IsAssignableFrom(typeof(TEntity)) &&
                    expression.Body is BinaryExpression;
         }
 
         public KeyValuePair<Field, object> Handle<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : Entity, new()
-        {
-            var entity = new TEntity();
-            
-            var body = (BinaryExpression)expression.Body;
-
-            var parser = new ExpressionBodyParser();
-            parser.Entity = entity;
-            parser.Parse(body);
-
-            Object value;
-
-            if (body.Right is ConstantExpression)
+        {            
+            var parser = new ExpressionBodyParser(expression.Body)
             {
-                var right = (ConstantExpression)body.Right;
-                value = right.Value;
-            }
-            else
-            {
-                var right = (MemberExpression)body.Right;
-                value = Expression.Lambda(right).Compile().DynamicInvoke();    
-            }
+                Entity = new TEntity()
+            };
+            parser.Parse();
             
-            var field = ((MemberExpression)body.Left).Member.Name;
-
-            Debug.Assert(entity != null, "entity != null");
-
-            var tableField = entity.Table.Fields.First(f => 
-                f.PropertyName.Equals(field, StringComparison.InvariantCultureIgnoreCase));
-
-            return new KeyValuePair<Field, object>(tableField, value);
+            return new KeyValuePair<Field, object>(parser.Field, parser.Value);
         }
     }
 }

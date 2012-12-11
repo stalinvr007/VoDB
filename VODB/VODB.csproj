@@ -104,6 +104,8 @@
     <Compile Include="ExpressionParser\ComparatorExpressionParser.cs" />
     <Compile Include="ExpressionParser\ExpressionBodyParser.cs" />
     <Compile Include="ExpressionParser\FieldGetterExpressionParser.cs" />
+    <Compile Include="ExpressionParser\TSqlBuilding\ITSqlBuilder.cs" />
+    <Compile Include="ExpressionParser\TSqlBuilding\SimpleWhereTSqlBuilder.cs" />
     <Compile Include="ExpressionParser\WhereExpressionFormatters.cs" />
     <Compile Include="ExpressionParser\ExpressionHandlers\IWhereExpressionHandler.cs" />
     <Compile Include="ExpressionParser\ExpressionHandlers\SimpleWhereExpressionHandler.cs" />

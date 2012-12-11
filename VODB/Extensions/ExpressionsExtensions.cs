@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using VODB.Exceptions;
+using VODB.ExpressionParser;
+using VODB.ExpressionParser.TSqlBuilding;
 using VODB.VirtualDataBase;
 
 namespace VODB.Extensions
@@ -31,6 +33,16 @@ namespace VODB.Extensions
 
 
         /// <summary>
+        /// Builds the SQL.
+        /// </summary>
+        /// <param name="parser">The parser.</param>
+        /// <returns></returns>
+        public static ITSqlBuilder BuildSql(this IExpressionBodyParser parser)
+        {
+            return Configuration.TSqlBuilders.Where(b => b.CanBuild(parser)).First();
+        }
+
+        /// <summary>
         /// Gets the where piece.
         /// </summary>
         /// <typeparam name="TModel">The type of the model.</typeparam>
@@ -49,6 +61,7 @@ namespace VODB.Extensions
 
             throw new WhereExpressionFormatterNotFoundException();
         }
+
 
     }
 }

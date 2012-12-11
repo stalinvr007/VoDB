@@ -12,6 +12,18 @@ namespace VODB.Extensions
     internal static class ConfigurationHelpers
     {
 
+
+        /// <summary>
+        /// Gets the field by name.
+        /// </summary>
+        /// <param name="fields">The fields.</param>
+        /// <param name="fieldName">Name of the field.</param>
+        /// <returns></returns>
+        public static Field GetFieldByName(this IEnumerable<Field> fields, String fieldName)
+        {
+            return fields.FirstOrDefault(f => f.FieldName.Equals(fieldName, StringComparison.InvariantCultureIgnoreCase));
+        }
+
         /// <summary>
         /// Validates the entity.
         /// </summary>
