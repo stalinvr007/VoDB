@@ -24,10 +24,16 @@ namespace VODB.ExpressionParser.TSqlBuilding
         IEnumerable<KeyValuePair<Key, Object>> Parameters { get; }
 
         /// <summary>
+        /// Clears the parameters.
+        /// </summary>
+        void ClearParameters();
+
+        /// <summary>
         /// Builds Sql.
         /// </summary>
+        /// <param name="paramCount">The param count.</param>
         /// <returns></returns>
-        String Build();
+        String Build(int paramCount);
 
     }
 }

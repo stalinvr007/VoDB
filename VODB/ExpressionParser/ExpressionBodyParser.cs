@@ -8,7 +8,7 @@ using VODB.VirtualDataBase;
 namespace VODB.ExpressionParser
 {
 
-    internal interface IExpressionBodyParser
+    public interface IExpressionBodyParser
     {
         Entity Entity { get; set; }
         String FieldName { get; }
@@ -20,11 +20,11 @@ namespace VODB.ExpressionParser
         void Parse();
     }
 
-    class ExpressionBodyParser : IExpressionBodyParser
+    public class ExpressionBodyParser : IExpressionBodyParser
     {
 
         private readonly Expression _Expression;
-        
+
         public ExpressionBodyParser(Expression expression)
         {
             _Expression = expression;
@@ -42,7 +42,13 @@ namespace VODB.ExpressionParser
 
         public Object Value { get; private set; }
 
-        public Boolean IsComplex { get { return BodyParser != null; } }
+        public Boolean IsComplex
+        {
+            get
+            {
+                return BodyParser != null;
+            }
+        }
 
         public void Parse()
         {
@@ -84,24 +90,28 @@ namespace VODB.ExpressionParser
             }
 
             FieldName = expression.Member.Name;
-            
+
 
             if (typeof(Entity).IsAssignableFrom(expression.Type))
             {
                 Entity = Activator.CreateInstance(expression.Type) as Entity;
-                Field = Entity.FindField(FieldName);    
+                Field = Entity.FindField(FieldName);
             }
             else
             {
                 Field = Entity.FindField(FieldName);
-                BodyParser = new ExpressionBodyParser(expression.Expression)
+
+                if (expression.Expression.NodeType != ExpressionType.Parameter)
                 {
-                    Entity = Entity
-                };
-                BodyParser.Parse();
+                    BodyParser = new ExpressionBodyParser(expression.Expression)
+                    {
+                        Entity = Entity
+                    };
+                    BodyParser.Parse();
+                }
             }
 
-            
+
         }
     }
 }

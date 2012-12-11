@@ -75,7 +75,8 @@ namespace VODB
 
             TSqlBuilders = new List<ITSqlBuilder>()
             {
-
+                new SimpleWhereTSqlBuilder(),
+                new ComplexTSqlBuilder()
             };
 
         }

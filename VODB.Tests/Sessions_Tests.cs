@@ -32,16 +32,16 @@ namespace VODB.Tests
         public void EagerSession_GetEmployeeList_ReportsToFilter()
         {
             /* 
-             * Select * from Employees Where EmployeeId in 
-             *      (Select EmployeeId From Employees Where FirstName = 'Andrew') 
+             * Select * from Employees Where ReportsTo in 
+             *      (Select EmployeeId From Employees Where FirstName = 'Andrew')
              */
             var employees1 = new EagerSession()
                 .GetAll<Employee>().Where(e => e.ReportsTo.FirstName == "Andrew");
 
-            EntitiesAsserts.Assert_Employee_2(employees1.First());
+            EntitiesAsserts.Assert_Employee_1(employees1.First());
 
             /* 
-             * Select * From Employees Where EmployeeId in 
+             * Select * From Employees Where ReportsTo in 
              *      (Select EmployeeId From Employees Where EmployeeId = 1)
              */
             var employees2 = new EagerSession()
