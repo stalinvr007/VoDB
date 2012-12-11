@@ -18,7 +18,7 @@ namespace VODB.ExpressionParser.TSqlBuilding
         {
             if (parser != null)
             {
-                if (typeof(Entity).IsAssignableFrom(parser.Field.FieldType))
+                if (!parser.IsComplex)
                 {
                     return String.Format("{0} In (Select {1} From {2}",
                         parser.Field.FieldName,
