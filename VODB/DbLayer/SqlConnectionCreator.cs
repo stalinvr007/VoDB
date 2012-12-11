@@ -1,9 +1,9 @@
 namespace VODB.DbLayer
 {
-    public sealed class SqlConnectionCreator : DbConnectionCreator
+    public sealed class SqlConnectionCreator : NameConventionDbConnectionCreator
     {
         public SqlConnectionCreator()
-            : base("System.Data.SqlClient", null)
+            : base("System.Data.SqlClient")
         {
         }
     }
