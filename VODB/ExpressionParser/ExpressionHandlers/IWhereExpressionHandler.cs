@@ -27,4 +27,5 @@ namespace VODB.ExpressionParser.ExpressionHandlers
         KeyValuePair<Field, object> Handle<TEntity>(Expression<Func<TEntity, Boolean>> expression) where TEntity : Entity, new();
 
     }
+
 }

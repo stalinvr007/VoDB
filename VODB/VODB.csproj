@@ -102,6 +102,7 @@
     <Compile Include="Exceptions\WhereExpressionFormatterNotFoundException.cs" />
     <Compile Include="Exceptions\WhereExpressionHandlerNotFoundException.cs" />
     <Compile Include="ExpressionParser\ComparatorExpressionParser.cs" />
+    <Compile Include="ExpressionParser\ExpressionBodyParser.cs" />
     <Compile Include="ExpressionParser\FieldGetterExpressionParser.cs" />
     <Compile Include="ExpressionParser\WhereExpressionFormatters.cs" />
     <Compile Include="ExpressionParser\ExpressionHandlers\IWhereExpressionHandler.cs" />
