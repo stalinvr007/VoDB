@@ -146,21 +146,29 @@ namespace VODB.Extensions
         public static Field FindField(this Entity entity, String BindOrName)
         {
 
+            var _field = entity.Table.Fields
+                            .FirstOrDefault(field =>
+                             {
+                                 if (field.FieldName.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase))
+                                 {
+                                     return true;
+                                 }
+
+                                 if (!String.IsNullOrEmpty(field.BindedTo) && field.BindedTo.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase))
+                                 {
+                                     return true;
+                                 }
+
+                                 return false;
+                             });
+
+            if (_field != null)
+            {
+                return _field;
+            }
+
             return entity.Table.Fields
-                .FirstOrDefault(field =>
-                 {
-                     if (field.FieldName.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase))
-                     {
-                         return true;
-                     }
-
-                     if (!String.IsNullOrEmpty(field.BindedTo) && field.BindedTo.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase))
-                     {
-                         return true;
-                     }
-
-                     return false;
-                 });
+                .FirstOrDefault(f => f.PropertyName.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase));
 
         }
 

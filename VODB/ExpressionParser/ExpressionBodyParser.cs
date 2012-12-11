@@ -90,17 +90,10 @@ namespace VODB.ExpressionParser
             }
 
             FieldName = expression.Member.Name;
+            Field = Entity.FindField(FieldName);
 
-
-            if (typeof(Entity).IsAssignableFrom(expression.Type))
+            if (!typeof(Entity).IsAssignableFrom(expression.Type))
             {
-                Entity = Activator.CreateInstance(expression.Type) as Entity;
-                Field = Entity.FindField(FieldName);
-            }
-            else
-            {
-                Field = Entity.FindField(FieldName);
-
                 if (expression.Expression.NodeType != ExpressionType.Parameter)
                 {
                     BodyParser = new ExpressionBodyParser(expression.Expression)
