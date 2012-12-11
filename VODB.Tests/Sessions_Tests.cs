@@ -3,6 +3,7 @@ using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.Tests.Models.Northwind;
 using VODB.Sessions;
+using VODB.DbLayer.DbResults;
 
 namespace VODB.Tests
 {
@@ -15,6 +16,26 @@ namespace VODB.Tests
             var employees = SessionsFactory.CreateEager().GetAll<Employee>();
 
             Assert.AreEqual(9, employees.Count());
+        }
+
+        [TestMethod]
+        public void EagerSession_GetAll_LikeCondition()
+        {
+            var employees = SessionsFactory.CreateEager()
+                .GetAll<Employee>()
+                .Where(e => e.LastName).Like("an");
+
+            Assert.AreEqual(2, employees.Count());
+        }
+
+        [TestMethod]
+        public void EagerSession_GetAll_LikeCondition_Left()
+        {
+            var employees = SessionsFactory.CreateEager()
+                .GetAll<Employee>()
+                .Where(e => e.LastName).Like("r", WildCard.Left);
+
+            Assert.AreEqual(1, employees.Count());
         }
 
         [TestMethod]
