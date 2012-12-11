@@ -13,7 +13,7 @@ namespace VODB.Tests
         [TestMethod]
         public void EntityKeyLoader_Employees()
         {
-            using (DbConnection con = new DbConnectionCreator("System.Data.SqlClient").Create())
+            using (DbConnection con = new NameConventionDbConnectionCreator("System.Data.SqlClient").Create())
             {
                 con.Open();
 
@@ -42,7 +42,7 @@ namespace VODB.Tests
         [TestMethod]
         public void FullEntityLoader_Employees()
         {
-            using (DbConnection con = new DbConnectionCreator("System.Data.SqlClient").Create())
+            using (DbConnection con = new NameConventionDbConnectionCreator("System.Data.SqlClient").Create())
             {
                 con.Open();
 
