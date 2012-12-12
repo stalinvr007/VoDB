@@ -9,7 +9,7 @@ namespace VODB.DbLayer
     public class DbConnectionCreator : IDbConnectionCreator
     {
         private readonly String _ProviderName;
-        private readonly String _ConnectionStringName;
+        private volatile String _ConnectionStringName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbConnectionCreator" /> class.
@@ -22,7 +22,7 @@ namespace VODB.DbLayer
             _ProviderName = providerName;
         }
 
-        public DbConnection Create()
+        private DbConnection InternalCreate()
         {
             String connectionString = GetConnectionStringByProvider(_ProviderName, _ConnectionStringName);
 
@@ -30,13 +30,11 @@ namespace VODB.DbLayer
             {
                 try
                 {
-                    DbProviderFactory factory = DbProviderFactories.GetFactory(_ProviderName);
+                    var factory = DbProviderFactories.GetFactory(_ProviderName);
                     var connection = factory.CreateConnection();
-                    if (connection != null)
-                    {
-                        connection.ConnectionString = connectionString;
-                        return connection;
-                    }
+
+                    connection.ConnectionString = connectionString;
+                    return connection;
                 }
                 catch (Exception ex)
                 {
@@ -44,10 +42,28 @@ namespace VODB.DbLayer
                 }
             }
 
+            return null;
+        }
+        public DbConnection Create()
+        {
+            var connection = InternalCreate();
+            if (connection != null)
+            {
+                return connection;
+            }
+            
+            _ConnectionStringName = null;            
+            connection = InternalCreate();
+
+            if (connection != null)
+            {
+                return connection;
+            }
+            
             throw new ConnectionStringNotFoundException(_ProviderName, _ConnectionStringName);
         }
 
-        private static string GetConnectionStringByProvider(string providerName, String connectionStringName = null)
+        private string GetConnectionStringByProvider(string providerName, String connectionStringName = null)
         {
             ConnectionStringSettingsCollection settings = ConfigurationManager.ConnectionStrings;
 
