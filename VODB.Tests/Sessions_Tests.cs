@@ -118,6 +118,19 @@ namespace VODB.Tests
         }
 
         [TestMethod]
+        public void MoreComplexQuery2()
+        {
+            var employees = SessionsFactory.CreateEager()
+                 .GetAll<Employee>()
+                      .Where(e => e.LastName).Like("r")
+                      .Or(e => e.LastName).Like("a")
+                 .OrderBy(m => m.City)
+                 .Descending();
+
+            Assert.AreEqual(8, employees.Count());
+        }
+
+        [TestMethod]
         public void MoreComplexQuery()
         {
             var employees = SessionsFactory.CreateEager()
