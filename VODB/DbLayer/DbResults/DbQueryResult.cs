@@ -302,7 +302,7 @@ namespace VODB.DbLayer.DbResults
 
         private String AddParameter(Field field, Object value)
         {
-            var paramName = String.Format("@{0}{1}{2}", field.FieldName, Environment.TickCount, _parameters.Count);
+            var paramName = String.Format("@{0}db{1}", field.FieldName, _parameters.Count);
             _parameters.Add(new KeyValuePair<Key, Object>(new Key(field, paramName), value));
             return paramName;
         }
