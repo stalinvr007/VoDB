@@ -9,6 +9,7 @@ using VODB.ExpressionParser;
 using VODB.Extensions;
 using VODB.VirtualDataBase;
 using System.Linq;
+using System.Collections;
 
 namespace VODB.DbLayer.DbResults
 {
@@ -24,11 +25,11 @@ namespace VODB.DbLayer.DbResults
 
         private readonly IDbCommandFactory _CommandFactory;
         private readonly IQueryExecuter<TEntity> _Executer;
-        private readonly StringBuilder _whereCondition;
         private readonly IWhereExpressionParser<TEntity> _ExpressionParser;
         private readonly ICollection<KeyValuePair<Key, Object>> _parameters;
         private Field _FilterField;
-
+        private readonly LinkedList<ConditionPart> _parts;
+        
         #region IDbResult
 
         public String TableName { get { return new TEntity().Table.TableName; } }
@@ -56,9 +57,9 @@ namespace VODB.DbLayer.DbResults
         {
             _CommandFactory = commandFactory;
             _Executer = executer;
-            _whereCondition = new StringBuilder();
             _ExpressionParser = new ComparatorExpressionParser<TEntity>();
             _parameters = new List<KeyValuePair<Key, Object>>();
+            _parts = new LinkedList<ConditionPart>();
         }
 
         public IEnumerator<TEntity> GetEnumerator()
@@ -67,7 +68,7 @@ namespace VODB.DbLayer.DbResults
 
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
@@ -82,6 +83,8 @@ namespace VODB.DbLayer.DbResults
 
         public DbCommand Make()
         {
+            var _whereCondition = new StringBuilder();
+
             var cmd = _CommandFactory.Make();
             cmd.CommandText += _whereCondition.ToString();
 
@@ -89,31 +92,39 @@ namespace VODB.DbLayer.DbResults
             SetParameters(cmd, _parameters);
 
             _ExpressionParser.ClearData();
-            _whereCondition.Clear();
+            _parts.Clear();
 
             return cmd;
+        }
+
+        private DbQueryResult<TEntity> AddCondition(Operation operation, String condition)
+        {
+            _parts.Add(new ConditionPart
+            {
+                Operation = Operation.Where,
+                Condition = condition
+            });
+            return this;
         }
 
         #region IDbQueryResult
 
         public IDbAndQueryResult<TEntity> Where(string whereCondition, params object[] args)
         {
-            _whereCondition.Append(" Where ").AppendFormat(whereCondition, args);
-            return this;
+            return AddCondition(Operation.Where, String.Format(whereCondition, args));
         }
 
         public IDbAndQueryResult<TEntity> Where(Expression<Func<TEntity, bool>> whereCondition)
         {
-            return Where(_ExpressionParser.Parse(whereCondition));
+            return AddCondition(Operation.Where, _ExpressionParser.Parse(whereCondition));
         }
 
         public IDbFieldFilterResult<TEntity> Where<TField>(Expression<Func<TEntity, TField>> field)
         {
-            _whereCondition.Append(" Where ");
             var parser = new FieldGetterExpressionParser<TEntity, TField>();
             parser.Parse(field);
             _FilterField = parser.Field;
-            return this;
+            return AddCondition(Operation.Where, "");
         }
 
         #endregion
@@ -122,22 +133,20 @@ namespace VODB.DbLayer.DbResults
 
         public IDbAndQueryResult<TEntity> And(string andCondition, params object[] args)
         {
-            _whereCondition.Append(" And ").AppendFormat(andCondition, args);
-            return this;
+            return AddCondition(Operation.And, String.Format(andCondition, args));
         }
 
         public IDbFieldFilterResult<TEntity> And<TField>(Expression<Func<TEntity, TField>> field)
         {
-            _whereCondition.Append(" And ");
             var parser = new FieldGetterExpressionParser<TEntity, TField>();
             parser.Parse(field);
             _FilterField = parser.Field;
-            return this;
+            return AddCondition(Operation.And, "");
         }
 
         public IDbAndQueryResult<TEntity> And(Expression<Func<TEntity, bool>> andCondition)
         {
-            return And(_ExpressionParser.Parse(andCondition));
+            return AddCondition(Operation.And, _ExpressionParser.Parse(andCondition));
         }
 
         #endregion
@@ -146,14 +155,12 @@ namespace VODB.DbLayer.DbResults
 
         public IDbOrderedResult<TEntity> OrderBy<TField>(Expression<Func<TEntity, TField>> orderByField)
         {
-            _whereCondition.Append(" Order By ").Append(new FieldGetterExpressionParser<TEntity, TField>().Parse(orderByField));
-            return this;
+            return AddCondition(Operation.OrderBy, new FieldGetterExpressionParser<TEntity, TField>().Parse(orderByField));
         }
 
         public IDbOrderedDescResult<TEntity> Descending()
         {
-            _whereCondition.Append(" desc");
-            return this;
+            return AddCondition(Operation.Desc, "");
         }
 
         #endregion
@@ -167,6 +174,7 @@ namespace VODB.DbLayer.DbResults
             {
                 return InResult((IDbResult)args);
             }
+            var _whereCondition = new StringBuilder();
 
             _whereCondition
                 .Append(_FilterField.FieldName)
@@ -183,11 +191,14 @@ namespace VODB.DbLayer.DbResults
                 .Remove(_whereCondition.Length - 2, 2)
                 .Append(") ");
 
+            _parts.Last.Value.Condition = _whereCondition.ToString();
             return this;
         }
 
         private IDbAndQueryResult<TEntity> InResult(IDbResult collection)
         {
+            var _whereCondition = new StringBuilder();
+
             Parameters = collection.Parameters;
             _whereCondition
                 .AppendFormat("{0} In (Select {1} from {2}", 
@@ -197,22 +208,27 @@ namespace VODB.DbLayer.DbResults
                 .Append(collection.WhereCondition)
                 .Append(")");
 
+            _parts.Last.Value.Condition = _whereCondition.ToString();
             return this;
         }
 
         public IDbAndQueryResult<TEntity> Between<TField>(TField firstValue, TField secondValue)
         {
+            var _whereCondition = new StringBuilder();
+
             _whereCondition
                 .Append(_FilterField.FieldName)
                 .AppendFormat(" Between {0} And {1}", 
                     AddParameter(_FilterField, firstValue), 
                     AddParameter(_FilterField, secondValue));
 
+            _parts.Last.Value.Condition = _whereCondition.ToString();
             return this;
         }
 
         public IDbAndQueryResult<TEntity> Like(String value, WildCard token = WildCard.Both)
         {
+            var _whereCondition = new StringBuilder();
             _whereCondition
                 .Append(_FilterField.FieldName)
                 .Append(" Like '");
@@ -231,6 +247,7 @@ namespace VODB.DbLayer.DbResults
 
             _whereCondition.Append("'");
 
+            _parts.Last.Value.Condition = _whereCondition.ToString();
             return this;
         }
 

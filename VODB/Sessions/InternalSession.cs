@@ -188,7 +188,7 @@ namespace VODB.Sessions
                 return;
             }
             _connection.Close();
-
+            _connection = null;
         }
 
         #endregion
