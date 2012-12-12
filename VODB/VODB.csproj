@@ -65,6 +65,7 @@
     <Compile Include="DbLayer\DbCommands\TSQLDbCommandFactory.cs" />
     <Compile Include="DbLayer\DbExecuters\DbCommandExecuterBase.cs" />
     <Compile Include="DbLayer\DbExecuters\DbCommandNonQueryExecuter.cs" />
+    <Compile Include="DbLayer\DbResults\ConditionPart.cs" />
     <Compile Include="DbLayer\DbResults\DbQueryScalarExecuter.cs" />
     <Compile Include="DbLayer\DbResults\DbQueryResult.cs" />
     <Compile Include="DbLayer\DbExecuters\DbEntityQueryExecuterLazy.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="DbLayer\DbExecuters\ICommandExecuter.cs" />
     <Compile Include="DbLayer\DbExecuters\IQueryExecuter.cs" />
     <Compile Include="DbLayer\DbResults\IDbQueryResult.cs" />
+    <Compile Include="DbLayer\DbResults\Operation.cs" />
     <Compile Include="DbLayer\Loaders\EntityKeyLoader.cs" />
     <Compile Include="DbLayer\Loaders\EntityLoader.cs" />
     <Compile Include="DbLayer\Loaders\FieldSetters\BasicFieldSetter.cs" />
