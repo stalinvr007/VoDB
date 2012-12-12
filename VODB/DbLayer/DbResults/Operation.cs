@@ -12,15 +12,42 @@ using System.Linq;
 
 namespace VODB.DbLayer.DbResults
 {
+
+    internal static class Operations
+    {
+        private static String[] strings = new[] 
+        {
+            " And ",
+            " Or ",
+            " Where ",
+            " Like ",
+            " Order By ",
+            " Desc "
+        };
+
+        public static String GetString(this Operation operation)
+        {
+            if ((int)operation < 0)
+            {
+                return null;
+            }
+
+            return strings[(int)operation];
+        }
+
+    }
+
     public enum Operation
     {
-        And,
-        Or,
-        Where,
-        Like,
-        In,
-        Between,
-        OrderBy,
-        Desc
+        Between = -2,
+        In = -1,
+        
+        And = 0,
+        Or = 1,
+        Where = 2,
+        Like = 3,
+        OrderBy = 4,
+        Desc = 5        
+
     }
 }
