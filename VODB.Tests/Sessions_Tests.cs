@@ -102,6 +102,21 @@ namespace VODB.Tests
 
         }
 
+
+        [TestMethod]
+        public void QueryWith_OrCondition()
+        {
+            var employees = SessionsFactory.CreateEager()
+                 .GetAll<Employee>()
+                      .Where(m => m.EmployeeId == 1)
+                      .Or(m => m.EmployeeId == 4)
+                      .Or(m => m.EmployeeId == 2)
+                      .Or(m=> m.EmployeeId == 5)
+                      .And(m => m.EmployeeId > 3);
+
+            Assert.AreEqual(2, employees.Count());
+        }
+
         [TestMethod]
         public void MoreComplexQuery()
         {

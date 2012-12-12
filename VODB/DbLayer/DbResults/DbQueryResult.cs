@@ -34,7 +34,7 @@ namespace VODB.DbLayer.DbResults
 
         public String TableName { get { return new TEntity().Table.TableName; } }
 
-        public String WhereCondition { get { return _whereCondition.ToString(); } }
+        public String WhereCondition { get { return BuildWhereCondition(_parts); } }
 
         public IEnumerable<KeyValuePair<Key, Object>> Parameters
         {
@@ -81,12 +81,28 @@ namespace VODB.DbLayer.DbResults
             }
         }
 
+        private static String BuildWhereCondition(LinkedList<ConditionPart> parts)
+        {
+            var sql = new StringBuilder();
+
+            foreach (var current in parts)
+            {
+                var operation = current.Operation.GetString();
+
+                if (operation != null)
+                {
+                    sql.Append(operation);
+                }
+                sql.Append(current.Condition);
+            }
+
+            return sql.ToString();
+        }
+
         public DbCommand Make()
         {
-            var _whereCondition = new StringBuilder();
-
             var cmd = _CommandFactory.Make();
-            cmd.CommandText += _whereCondition.ToString();
+            cmd.CommandText += WhereCondition;
 
             SetParameters(cmd, _ExpressionParser.ConditionData);
             SetParameters(cmd, _parameters);
@@ -99,9 +115,9 @@ namespace VODB.DbLayer.DbResults
 
         private DbQueryResult<TEntity> AddCondition(Operation operation, String condition)
         {
-            _parts.Add(new ConditionPart
+            _parts.AddLast(new ConditionPart
             {
-                Operation = Operation.Where,
+                Operation = operation,
                 Condition = condition
             });
             return this;
@@ -149,6 +165,23 @@ namespace VODB.DbLayer.DbResults
             return AddCondition(Operation.And, _ExpressionParser.Parse(andCondition));
         }
 
+        public IDbFieldFilterResult<TEntity> Or<TField>(Expression<Func<TEntity, TField>> field)
+        {
+            var parser = new FieldGetterExpressionParser<TEntity, TField>();
+            parser.Parse(field);
+            _FilterField = parser.Field;
+
+            _parts.Last.Value.Condition = "(" + _parts.Last.Value.Condition;
+            return AddCondition(Operation.Or, "");
+        }
+
+        public IDbAndQueryResult<TEntity> Or(Expression<Func<TEntity, bool>> orCondition)
+        {
+            _parts.Last.Value.Condition = "(" + _parts.Last.Value.Condition;
+
+            return AddCondition(Operation.Or, _ExpressionParser.Parse(orCondition) + ")");
+        }
+
         #endregion
 
         #region OrderedResult
@@ -178,7 +211,7 @@ namespace VODB.DbLayer.DbResults
 
             _whereCondition
                 .Append(_FilterField.FieldName)
-                .Append(" in (");
+                .Append(" In (");
 
             foreach (var arg in args)
             {
@@ -191,7 +224,7 @@ namespace VODB.DbLayer.DbResults
                 .Remove(_whereCondition.Length - 2, 2)
                 .Append(") ");
 
-            _parts.Last.Value.Condition = _whereCondition.ToString();
+            AppendToConditions(_whereCondition);
             return this;
         }
 
@@ -208,7 +241,7 @@ namespace VODB.DbLayer.DbResults
                 .Append(collection.WhereCondition)
                 .Append(")");
 
-            _parts.Last.Value.Condition = _whereCondition.ToString();
+            AppendToConditions(_whereCondition);
             return this;
         }
 
@@ -222,7 +255,7 @@ namespace VODB.DbLayer.DbResults
                     AddParameter(_FilterField, firstValue), 
                     AddParameter(_FilterField, secondValue));
 
-            _parts.Last.Value.Condition = _whereCondition.ToString();
+            AppendToConditions(_whereCondition);
             return this;
         }
 
@@ -247,11 +280,25 @@ namespace VODB.DbLayer.DbResults
 
             _whereCondition.Append("'");
 
-            _parts.Last.Value.Condition = _whereCondition.ToString();
+            AppendToConditions(_whereCondition);
             return this;
         }
 
         #endregion
+
+        private void AppendToConditions(StringBuilder builder)
+        {
+            _parts.Last.Value.Condition = FinishOrCondition(builder).ToString();
+        }
+
+        private StringBuilder FinishOrCondition(StringBuilder builder)
+        {
+            if (_parts.Last.Value.Operation == Operation.Or)
+            {
+                builder.Append(")");
+            }
+            return builder;
+        }
 
         private String AddParameter(Field field, Object value)
         {
@@ -260,7 +307,6 @@ namespace VODB.DbLayer.DbResults
             return paramName;
         }
 
-        
     }
 
 }

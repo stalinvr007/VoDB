@@ -83,6 +83,21 @@ namespace VODB.DbLayer.DbResults
         /// <typeparam name="TField">The type of the field.</typeparam>
         /// <param name="field">The field.</param>
         /// <returns></returns>
+        IDbFieldFilterResult<TEntity> Or<TField>(Expression<Func<TEntity, TField>> field);
+
+        /// <summary>
+        /// Adds more conditions to the query.
+        /// </summary>
+        /// <param name="andCondition">The and condition.</param>
+        /// <returns></returns>
+        IDbAndQueryResult<TEntity> Or(Expression<Func<TEntity, Boolean>> orCondition);
+
+        /// <summary>
+        /// Starts a field filter.
+        /// </summary>
+        /// <typeparam name="TField">The type of the field.</typeparam>
+        /// <param name="field">The field.</param>
+        /// <returns></returns>
         IDbFieldFilterResult<TEntity> And<TField>(Expression<Func<TEntity, TField>> field);
 
         /// <summary>
