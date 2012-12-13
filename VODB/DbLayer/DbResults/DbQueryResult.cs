@@ -107,9 +107,6 @@ namespace VODB.DbLayer.DbResults
             SetParameters(cmd, _ExpressionParser.ConditionData);
             SetParameters(cmd, _parameters);
 
-            _ExpressionParser.ClearData();
-            _parts.Clear();
-
             return cmd;
         }
 
