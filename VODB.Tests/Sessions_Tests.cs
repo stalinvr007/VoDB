@@ -19,6 +19,31 @@ namespace VODB.Tests
         }
 
         [TestMethod]
+        public void EagerSession_WhereCondition_ShouldBeKept_ByResult()
+        {
+            var session = new EagerSession();
+            var query1 = session.GetAll<Employee>()
+                .Where(m => m.EmployeeId > 4);
+
+            var query2 = session.GetAll<Employee>()
+                .Where(m => m.EmployeeId == 2);
+
+            var query3 = session.GetAll<Employee>()
+                .Where(m => m.EmployeeId == 2)
+                .Or(m => m.EmployeeId == 3);
+
+
+            Assert.AreEqual(5, query1.Count());
+            Assert.AreEqual(1, query2.Count());
+            Assert.AreEqual(2, query3.Count());
+
+            Assert.AreEqual(5, query1.Count());
+            Assert.AreEqual(1, query2.Count());
+            Assert.AreEqual(2, query3.Count());
+
+        }
+
+        [TestMethod]
         public void EagerSession_GetAll_LikeCondition()
         {
             var employees = SessionsFactory.CreateEager()
