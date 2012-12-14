@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using VODB.VirtualDataBase;
+using VODB.Extensions;
+
 
 namespace VODB.ExpressionParser
 {
@@ -27,9 +29,9 @@ namespace VODB.ExpressionParser
 
             var entity = new TEntity();
             string field = ((MemberExpression)expression.Body).Member.Name;
-            Field = entity.Table.Fields
-                .First(f => f.PropertyName.Equals(field, StringComparison.InvariantCultureIgnoreCase));
-            
+
+            Field = entity.FindField(field);
+
             return Field.FieldName;
         }
     }
