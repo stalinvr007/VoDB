@@ -36,7 +36,7 @@ namespace VODB.ExpressionParser.TSqlBuilding
                     {
                         _parameters.Add(param);
                     }
-                    return Build(paramCount, parser.BodyParser) + result;
+                    return Build(paramCount, parser.Next) + result;
                 }
             }
 

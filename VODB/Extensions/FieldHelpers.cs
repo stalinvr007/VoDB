@@ -74,7 +74,7 @@ namespace VODB.Extensions
                 {
                     throw new UnableToSetParameterValueException(ex, field.Table.TableName, field, value);
                 }
-                
+
                 return;
             }
 
@@ -145,31 +145,34 @@ namespace VODB.Extensions
 
         public static Field FindField(this Entity entity, String BindOrName)
         {
+            return entity.Table.FindField(BindOrName);
+        }
 
-            var _field = entity.Table.Fields
+        public static Field FindField(this Table table, String BindOrName)
+        {
+            var _field = table.Fields
                             .FirstOrDefault(field =>
-                             {
-                                 if (field.FieldName.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase))
-                                 {
-                                     return true;
-                                 }
+                            {
+                                if (field.FieldName.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    return true;
+                                }
 
-                                 if (!String.IsNullOrEmpty(field.BindedTo) && field.BindedTo.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase))
-                                 {
-                                     return true;
-                                 }
+                                if (!String.IsNullOrEmpty(field.BindedTo) && field.BindedTo.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    return true;
+                                }
 
-                                 return false;
-                             });
+                                return false;
+                            });
 
             if (_field != null)
             {
                 return _field;
             }
 
-            return entity.Table.Fields
+            return table.Fields
                 .FirstOrDefault(f => f.PropertyName.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase));
-
         }
 
         /// <summary>

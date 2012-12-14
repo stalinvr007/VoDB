@@ -13,7 +13,7 @@ namespace VODB.ExpressionParser
         Entity Entity { get; set; }
         String FieldName { get; }
         Field Field { get; }
-        ExpressionBodyParser BodyParser { get; }
+        ExpressionBodyParser Next { get; }
         ExpressionType NodeType { get; }
         Object Value { get; }
         Boolean IsComplex { get; }
@@ -36,17 +36,21 @@ namespace VODB.ExpressionParser
 
         public Field Field { get; private set; }
 
-        public ExpressionBodyParser BodyParser { get; private set; }
+        public ExpressionBodyParser Next { get; private set; }
+
+        public ExpressionBodyParser Previous { get; private set; }
 
         public ExpressionType NodeType { get; private set; }
 
         public Object Value { get; private set; }
 
+
+
         public Boolean IsComplex
         {
             get
             {
-                return BodyParser != null;
+                return Next != null;
             }
         }
 
@@ -96,11 +100,19 @@ namespace VODB.ExpressionParser
             {
                 if (expression.Expression.NodeType != ExpressionType.Parameter)
                 {
-                    BodyParser = new ExpressionBodyParser(expression.Expression)
+                    Next = new ExpressionBodyParser(expression.Expression)
                     {
-                        Entity = Entity
+                        Entity = Entity,
+                        Previous = this
                     };
-                    BodyParser.Parse();
+                    Next.Parse();
+                }
+            }
+            else
+            {
+                if (Previous != null && Previous.Field == null)
+                {
+                    Previous.Field = ((Entity)Activator.CreateInstance(Field.FieldType)).FindField(Previous.FieldName);
                 }
             }
 
