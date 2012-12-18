@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using VODB.Annotations;
 using VODB.Extensions;
 
-namespace VODB.VirtualDataBase
+namespace VODB.Infrastructure
 {
     /// <summary>
     /// Creates Tables with fields.
@@ -116,7 +116,6 @@ namespace VODB.VirtualDataBase
 
             return info.Name;
         }
-
 
         private static Boolean IsIdentityField(PropertyInfo info)
         {

@@ -89,7 +89,7 @@
     <Compile Include="EntityValidators_Tests.cs" />
     <Compile Include="Transaction_Tests.cs" />
     <Compile Include="EntityEquality_Tests.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="DynamicProxy_Tests.cs" />
     <Compile Include="Validatores_Tests.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>

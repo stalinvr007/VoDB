@@ -7,7 +7,7 @@ using VODB.DbLayer.DbCommands;
 using VODB.DbLayer.DbExecuters;
 using VODB.ExpressionParser;
 using VODB.Extensions;
-using VODB.VirtualDataBase;
+using VODB.Infrastructure;
 using System.Linq;
 using System.Collections;
 

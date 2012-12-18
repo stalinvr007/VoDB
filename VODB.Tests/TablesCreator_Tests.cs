@@ -6,7 +6,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.Annotations;
 using VODB.Caching;
 using VODB.Tests.Models.Northwind;
-using VODB.VirtualDataBase;
+using VODB.Infrastructure;
+using VODB.Core.Infrastructure;
 
 namespace VODB.Tests
 {
@@ -90,7 +91,6 @@ namespace VODB.Tests
             Assert.AreEqual(2, table.Fields.Count());
         }
 
-
         [TestMethod]
         public void CreateTable_FromDbEntity_MultipleInstances_Test()
         {
@@ -102,7 +102,6 @@ namespace VODB.Tests
 
             Assert.AreEqual(1, TablesCache.GetTables().Count(t => t.TableName.Equals("AutoCachedEntity")));
         }
-
 
         [TestMethod]
         public void CreateTable_UsingAnnotations_Test()
@@ -180,6 +179,37 @@ namespace VODB.Tests
             }
 
             Assert.IsNotNull(entity.Table.CommandsHolder.Select);
+        }
+
+        [TestMethod]
+        public void FieldMapping_Test()
+        {
+            var fieldMapping = new FieldMapping<EmployeeNew>();
+            var fields = fieldMapping.GetFields().ToList();
+
+            Assert.AreEqual("EmployeeId", fields[0].FieldName);
+            Assert.AreEqual("LastName", fields[1].FieldName);
+            Assert.AreEqual("FirstName", fields[2].FieldName);
+            Assert.AreEqual("Title", fields[3].FieldName);
+            Assert.AreEqual("TitleOfCourtesy", fields[4].FieldName);
+            Assert.AreEqual("BirthDate", fields[5].FieldName);
+            Assert.AreEqual("HireDate", fields[6].FieldName);
+            Assert.AreEqual("Address", fields[7].FieldName);
+            Assert.AreEqual("City", fields[8].FieldName);
+            Assert.AreEqual("Region", fields[9].FieldName);
+            Assert.AreEqual("PostalCode", fields[10].FieldName);
+            Assert.AreEqual("Country", fields[11].FieldName);
+            Assert.AreEqual("HomePhone", fields[12].FieldName);
+            Assert.AreEqual("Extension", fields[13].FieldName);
+            Assert.AreEqual("Notes", fields[14].FieldName);
+            Assert.AreEqual("Photo", fields[15].FieldName);
+            Assert.AreEqual("ReportsTo", fields[16].FieldName);
+            Assert.AreEqual("PhotoPath", fields[17].FieldName);
+
+            Assert.IsTrue(fields[0].IsKey);
+
+            Assert.AreEqual(fields.Count-1, fields.Count(f => !f.IsKey));
+
         }
     }
 }

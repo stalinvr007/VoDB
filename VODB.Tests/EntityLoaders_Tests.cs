@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.DbLayer;
 using VODB.DbLayer.Loaders;
 using VODB.Tests.Models.Northwind;
-using VODB.VirtualDataBase;
+using VODB.Infrastructure;
 
 namespace VODB.Tests
 {

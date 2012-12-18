@@ -50,14 +50,8 @@ namespace VODB.Tests.Models.Northwind
 
         public String PhotoPath { get; set; }
 
-        /// <summary>
-        /// Gets a collection of employees that reports to this one.
-        /// </summary>
         public virtual IEnumerable<EmployeeNew> ReportedFrom { get; set; }
 
-        /// <summary>
-        /// Gets the territories.
-        /// </summary>
         public IEnumerable<EmployeeTerritories> Territories { get; set; }
 
     }

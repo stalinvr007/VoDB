@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using VODB.VirtualDataBase.TSqlCommands;
+using VODB.Infrastructure.TSqlCommands;
 
-namespace VODB.VirtualDataBase
+namespace VODB.Infrastructure
 {
     internal sealed class TSqlCommandHolder : ITSqlCommandHolder
     {

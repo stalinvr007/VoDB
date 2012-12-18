@@ -4,7 +4,7 @@ using System.Data.Common;
 using System.Linq;
 using VODB.EntityValidators;
 using VODB.Exceptions;
-using VODB.VirtualDataBase;
+using VODB.Infrastructure;
 
 namespace VODB.Extensions
 {

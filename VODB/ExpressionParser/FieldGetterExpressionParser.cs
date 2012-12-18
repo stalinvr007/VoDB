@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using VODB.VirtualDataBase;
+using VODB.Infrastructure;
 using VODB.Extensions;
 
 
