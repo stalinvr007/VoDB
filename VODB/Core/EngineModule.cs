@@ -14,7 +14,10 @@ namespace VODB.Core
 
         public override void Load()
         {
-            Bind(typeof(IFieldMapping<>)).To(typeof(FieldMapping<>)).InSingletonScope();
+            Bind(typeof(IFieldMapper<>)).To(typeof(FieldMapper<>)).InSingletonScope();
+            Bind(typeof(ITableMapper<>)).To(typeof(TableMapper<>)).InSingletonScope();
+
+            Bind<IEntityTables>().To<EntityTables>().InSingletonScope();
         }
     }
 

@@ -10,12 +10,12 @@ using System.Reflection;
 namespace VODB.Core.Infrastructure
 {
 
-    interface IFieldMapping<TEntity>
+    interface IFieldMapper<TEntity>
     {
         IEnumerable<Field> GetFields();
     }
 
-    class FieldMapping<TEntity> : IFieldMapping<TEntity>
+    class FieldMapper<TEntity> : IFieldMapper<TEntity>
     {
         #region Static Auxiliary Functions
 

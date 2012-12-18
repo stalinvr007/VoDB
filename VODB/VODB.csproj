@@ -52,7 +52,10 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Core\Engine.cs" />
     <Compile Include="Core\EngineModule.cs" />
-    <Compile Include="Core\Infrastructure\FieldMapping.cs" />
+    <Compile Include="Core\Infrastructure\TableMapper.cs" />
+    <Compile Include="Exceptions\EntityMapNotFoundException.cs" />
+    <Compile Include="Core\EntityTables.cs" />
+    <Compile Include="Core\Infrastructure\FieldMapper.cs" />
     <Compile Include="DbEntity.cs" />
     <Compile Include="DbLayer\DbCommands\DbCommandBypass.cs" />
     <Compile Include="DbLayer\DbCommands\DbCommandFactory.cs" />
@@ -93,7 +96,7 @@
     <Compile Include="DbLayer\Loaders\IEntityLoader.cs" />
     <Compile Include="DbLayer\NameConventionDbConnectionCreator.cs" />
     <Compile Include="Entity.cs" />
-    <Compile Include="EntityConfig.cs" />
+    <Compile Include="DB.cs" />
     <Compile Include="EntityEquality.cs" />
     <Compile Include="EntityValidators\Fields\DateTimeFieldIsFilled.cs" />
     <Compile Include="EntityValidators\Fields\DbEntityFieldIsFilled.cs" />
