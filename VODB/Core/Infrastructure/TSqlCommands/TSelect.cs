@@ -3,7 +3,7 @@ using System.Text;
 
 
 
-namespace VODB.VirtualDataBase.TSqlCommands
+namespace VODB.Infrastructure.TSqlCommands
 {
 
 

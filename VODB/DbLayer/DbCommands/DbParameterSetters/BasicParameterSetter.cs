@@ -1,6 +1,6 @@
 using System;
 using System.Data.Common;
-using VODB.VirtualDataBase;
+using VODB.Infrastructure;
 
 namespace VODB.DbLayer.DbCommands.DbParameterSetters
 {

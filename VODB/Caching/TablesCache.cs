@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using VODB.VirtualDataBase;
+using VODB.Infrastructure;
 
 namespace VODB.Caching
 {

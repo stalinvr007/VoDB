@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace VODB.VirtualDataBase
+namespace VODB.Infrastructure
 {
     /// <summary>
     /// Represents a DataBase Table Field.

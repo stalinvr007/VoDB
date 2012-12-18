@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.Tests.Models.Northwind;
-using VODB.VirtualDataBase;
-using VODB.VirtualDataBase.TSqlCommands;
+using VODB.Infrastructure;
+using VODB.Infrastructure.TSqlCommands;
 
 namespace VODB.Tests {
 

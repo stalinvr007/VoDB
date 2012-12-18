@@ -12,7 +12,7 @@ namespace VODB.Tests
     public class Interceptor : IInterceptor
     {
         public void Intercept(IInvocation invocation)
-        {
+        { 
 
             invocation.Proceed();
             invocation.ReturnValue = "This is my result.";
@@ -26,10 +26,10 @@ namespace VODB.Tests
     }
 
     [TestClass]
-    public class Moq_Tests
+    public class DynamicProxy_Tests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void SimpleInterceptor_ResultChanger()
         {
             var proxyGenerator = new ProxyGenerator();
             var hw = proxyGenerator.CreateClassProxy<HelloWorld>(new Interceptor());

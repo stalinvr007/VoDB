@@ -1,5 +1,5 @@
 ﻿
-namespace VODB.VirtualDataBase
+namespace VODB.Infrastructure
 {
     internal interface ITSqlCommandHolder
     {

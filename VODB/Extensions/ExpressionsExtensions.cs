@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using VODB.Exceptions;
 using VODB.ExpressionParser;
 using VODB.ExpressionParser.TSqlBuilding;
-using VODB.VirtualDataBase;
+using VODB.Infrastructure;
 
 namespace VODB.Extensions
 {

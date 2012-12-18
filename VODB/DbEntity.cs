@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using VODB.Caching;
 using VODB.DbLayer.DbResults;
 using VODB.Exceptions;
-using VODB.VirtualDataBase;
+using VODB.Infrastructure;
 
 namespace VODB
 {

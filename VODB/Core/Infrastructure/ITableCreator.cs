@@ -1,4 +1,4 @@
-﻿namespace VODB.VirtualDataBase
+﻿namespace VODB.Infrastructure
 {
     /// <summary>
     /// Creates Tables with fields.

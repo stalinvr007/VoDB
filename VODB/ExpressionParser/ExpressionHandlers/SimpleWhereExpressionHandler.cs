@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using VODB.VirtualDataBase;
+using VODB.Infrastructure;
 
 namespace VODB.ExpressionParser.ExpressionHandlers
 {
