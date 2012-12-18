@@ -38,12 +38,17 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.3.1.0\lib\net40-client\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -62,6 +67,7 @@
     <Compile Include="EntitiesAsserts.cs" />
     <Compile Include="ExpressionParser_Tests.cs" />
     <Compile Include="Models\Northwind\Categories.cs" />
+    <Compile Include="Models\Northwind\EmployeeNew.cs" />
     <Compile Include="Models\Northwind\CustomerCustomerDemo.cs" />
     <Compile Include="Models\Northwind\CustomerDemographics.cs" />
     <Compile Include="Models\Northwind\Customers.cs" />
@@ -83,6 +89,7 @@
     <Compile Include="EntityValidators_Tests.cs" />
     <Compile Include="Transaction_Tests.cs" />
     <Compile Include="EntityEquality_Tests.cs" />
+    <Compile Include="UnitTest1.cs" />
     <Compile Include="Validatores_Tests.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
@@ -94,6 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
