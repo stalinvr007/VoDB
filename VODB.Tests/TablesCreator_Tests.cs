@@ -184,7 +184,7 @@ namespace VODB.Tests
         [TestMethod]
         public void FieldMapping_Test()
         {
-            var fieldMapping = new FieldMapping<EmployeeNew>();
+            var fieldMapping = new FieldMapper<EmployeeNew>();
             var fields = fieldMapping.GetFields().ToList();
 
             Assert.AreEqual("EmployeeId", fields[0].FieldName);
