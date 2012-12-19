@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using VODB.Infrastructure;
 
 namespace VODB.Core.Infrastructure
@@ -37,10 +38,11 @@ namespace VODB.Core.Infrastructure
             table.Fields = _FieldMapper.GetFields().ToList();
             table.KeyFields = table.Fields.Where(f => f.IsKey).ToList();
 
+            Parallel.ForEach(table.Fields, f => f.Table = table);
+
             return table;
         }
-
-
+        
     }
 
 }

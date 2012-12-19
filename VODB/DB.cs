@@ -11,10 +11,18 @@ namespace VODB
     {
 
         static IEntityTables _tables = Engine.Get<IEntityTables>();
-        
+
         public static void Map<TEntity>()
         {
-            _tables.Map<TEntity>();
+            Tables.Map<TEntity>();
+        }
+
+        internal static IEntityTables Tables
+        {
+            get
+            {
+                return _tables;
+            }
         }
 
     }
