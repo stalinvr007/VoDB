@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using VODB.Core.Infrastructure;
 using VODB.Exceptions;
-using VODB.Infrastructure;
+using VODB.Core.Infrastructure;
+using System.Threading.Tasks;
 
 namespace VODB.Core
 {
@@ -17,9 +18,9 @@ namespace VODB.Core
 
     internal class EntityTables : IEntityTables
     {
-        
+
         readonly IDictionary<Type, Table> _tables = new Dictionary<Type, Table>();
-        
+
         public Table GetTable<TEntity>()
         {
             Table table;
@@ -33,9 +34,11 @@ namespace VODB.Core
 
         public void Map<TEntity>()
         {
-            var mapper = Engine.Get<ITableMapper<TEntity>>();
-
-            _tables[typeof(TEntity)] = mapper.Table;
+            _tables[typeof(TEntity)] = new AsyncTable(
+                new Task<Table>(() =>
+                {
+                    return Engine.Get<ITableMapper<TEntity>>().Table;
+                }));
         }
 
     }

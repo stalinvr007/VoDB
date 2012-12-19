@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using VODB.Extensions;
-using VODB.Infrastructure;
+using VODB.Core.Infrastructure;
 
 namespace VODB.DbLayer.Loaders
 {

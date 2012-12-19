@@ -1,30 +1,30 @@
 using System.Text;
 
-
-
-
 namespace VODB.Core.Infrastructure.TSqlCommands
 {
-
-
     /// <summary>
-    /// Builder of Select By Id Commands
+    /// Builder of Count Commands
     /// </summary>
-    internal sealed class TSelect : TSqlCmdBase {
+    internal class TCount : TSqlCmdBase
+    {
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TSelect"/> class.
+        /// Initializes a new instance of the <see cref="TSelectById"/> class.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        public TSelect(Table entity)
-            : base(entity) {
+        public TCount(Table entity)
+            : base(entity)
+        {
 
-        }/// <summary>
+        }
+
+        /// <summary>
         /// Builds the CMD STR.
         /// </summary>
         /// <param name="sb">The sb.</param>
-        protected override void BuildCmdStr(StringBuilder sb) {
-                sb.Append("Select * ")
+        protected override void BuildCmdStr(StringBuilder sb)
+        {
+            sb.Append("Select Count(*) ")
                     .Append(" From [")
                     .Append(Table.TableName)
                     .Append("]");

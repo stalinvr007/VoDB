@@ -52,7 +52,10 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Core\Engine.cs" />
     <Compile Include="Core\EngineModule.cs" />
+    <Compile Include="Core\Infrastructure\AsyncTable.cs" />
     <Compile Include="Core\Infrastructure\TableMapper.cs" />
+    <Compile Include="Core\Infrastructure\TSqlCommandHolderLazy.cs" />
+    <Compile Include="Core\Infrastructure\TSqlCommands\TCount.cs" />
     <Compile Include="Exceptions\EntityMapNotFoundException.cs" />
     <Compile Include="Core\EntityTables.cs" />
     <Compile Include="Core\Infrastructure\FieldMapper.cs" />

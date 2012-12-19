@@ -1,6 +1,6 @@
 using System;
 using VODB.Exceptions;
-using VODB.Infrastructure;
+using VODB.Core.Infrastructure;
 using VODB.Extensions;
 
 namespace VODB.DbLayer.Loaders.FieldSetters

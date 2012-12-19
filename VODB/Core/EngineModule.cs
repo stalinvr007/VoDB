@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using VODB.Core.Infrastructure;
-using VODB.Infrastructure;
 
 namespace VODB.Core
 {
@@ -16,6 +15,7 @@ namespace VODB.Core
         {
             Bind(typeof(IFieldMapper<>)).To(typeof(FieldMapper<>)).InSingletonScope();
             Bind(typeof(ITableMapper<>)).To(typeof(TableMapper<>)).InSingletonScope();
+            Bind<ITSqlCommandHolder>().To<TSqlCommandHolderLazy>();
 
             Bind<IEntityTables>().To<EntityTables>().InSingletonScope();
         }

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace VODB.Infrastructure
+namespace VODB.Core.Infrastructure
 {
 
     /// <summary>
     /// Represents a DataBase Table.
     /// </summary>
-    internal sealed class Table
+    internal class Table
     {
 
         /// <summary>
@@ -16,7 +17,7 @@ namespace VODB.Infrastructure
         /// <value>
         /// The name of the table.
         /// </value>
-        public String TableName { get; set; }
+        public virtual String TableName { get; set; }
 
         /// <summary>
         /// Gets or sets the fields.
@@ -24,7 +25,7 @@ namespace VODB.Infrastructure
         /// <value>
         /// The fields.
         /// </value>
-        public IEnumerable<Field> Fields { get; set; }
+        public virtual IEnumerable<Field> Fields { get; set; }
 
         /// <summary>
         /// Gets or sets the key fields.
@@ -32,7 +33,7 @@ namespace VODB.Infrastructure
         /// <value>
         /// The key fields.
         /// </value>
-        public IEnumerable<Field> KeyFields { get; set; }
+        public virtual IEnumerable<Field> KeyFields { get; set; }
 
         /// <summary>
         /// Gets or sets the commands holder.
@@ -40,7 +41,7 @@ namespace VODB.Infrastructure
         /// <value>
         /// The commands holder.
         /// </value>
-        public ITSqlCommandHolder CommandsHolder { get; set; }
+        public virtual ITSqlCommandHolder CommandsHolder { get; set; }
 
     }
 }

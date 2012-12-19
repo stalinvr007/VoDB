@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VODB.Infrastructure;
+using VODB.Annotations;
+using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Infrastructure
 {
@@ -17,9 +18,11 @@ namespace VODB.Core.Infrastructure
     {
 
         private readonly IFieldMapper<TEntity> _FieldMapper;
+        private readonly ITSqlCommandHolder _SqlCommands;
 
-        public TableMapper(IFieldMapper<TEntity> fieldMapper)
+        public TableMapper(IFieldMapper<TEntity> fieldMapper, ITSqlCommandHolder sqlCommands)
         {
+            _SqlCommands = sqlCommands;
             _FieldMapper = fieldMapper;
         }
 
@@ -35,14 +38,27 @@ namespace VODB.Core.Infrastructure
         {
             var table = new Table();
 
-            table.Fields = _FieldMapper.GetFields().ToList();
-            table.KeyFields = table.Fields.Where(f => f.IsKey).ToList();
+            Parallel.Invoke(
+                () => table.TableName = GetTableName(typeof(TEntity)),
+                () => table.Fields = _FieldMapper.GetFields().ToList(),
+                () => table.KeyFields = _FieldMapper.GetFields().Where(f => f.IsKey).ToList(),
+                () => { 
+                    table.CommandsHolder = _SqlCommands; 
+                    table.CommandsHolder.Table = table; 
+                }
+            );
 
             Parallel.ForEach(table.Fields, f => f.Table = table);
 
             return table;
         }
-        
+
+        private static String GetTableName(Type type)
+        {
+            var tableAttr = type.GetCustomAttributes(typeof(DbTableAttribute), true).FirstOrDefault() as DbTableAttribute;
+
+            return tableAttr == null ? type.Name : tableAttr.TableName;
+        }
     }
 
 }

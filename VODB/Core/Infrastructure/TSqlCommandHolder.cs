@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using VODB.Infrastructure.TSqlCommands;
+using VODB.Core.Infrastructure.TSqlCommands;
 
-namespace VODB.Infrastructure
+namespace VODB.Core.Infrastructure
 {
     internal sealed class TSqlCommandHolder : ITSqlCommandHolder
     {
-        private readonly Table _table;
+        private Table _table;
         private Task<String> _th_delete;
         private Task<String> _th_insert;
 
@@ -15,10 +15,22 @@ namespace VODB.Infrastructure
         private Task<String> _th_countById;
         private Task<String> _th_update;
 
+        public Table Table
+        {
+            get
+            {
+                return _table;
+            }
+            set
+            {
+                _table = value; 
+                RunBuildCommandThreads();
+            }
+        }
+
         public TSqlCommandHolder(Table table)
         {
-            _table = table;
-            RunBuildCommandThreads();
+            Table = table;
         }
 
         #region ITSqlCommandHolder Members

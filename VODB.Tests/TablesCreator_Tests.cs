@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.Annotations;
 using VODB.Caching;
 using VODB.Tests.Models.Northwind;
-using VODB.Infrastructure;
+using VODB.Core.Infrastructure;
 using VODB.Core.Infrastructure;
 
 namespace VODB.Tests
@@ -177,14 +177,14 @@ namespace VODB.Tests
         [TestMethod]
         public void TableMapper_Test()
         {
-
             DB.Map<EmployeeNew>();
 
             var table = DB.Tables.GetTable<EmployeeNew>();
-
+            
             Assert.IsNotNull(table);
             AssertFields(table.Fields.ToList());
 
+            Assert.AreEqual("Employees", table.TableName);
         }
 
         private static void AssertFields(List<Field> fields)
@@ -212,5 +212,6 @@ namespace VODB.Tests
 
             Assert.AreEqual(fields.Count - 1, fields.Count(f => !f.IsKey));
         }
+    
     }
 }
