@@ -5,7 +5,7 @@ using VODB.Extensions;
 namespace VODB.DbLayer.DbCommands
 {
     internal sealed class DbEntitySelectByIdCommandFactory<TEntity> : DbEntityCommandFactory<TEntity>
-        where TEntity : Entity, new()
+        where TEntity : new()
     {
         public DbEntitySelectByIdCommandFactory(IInternalSession internalSession, TEntity entity)
             : base(internalSession, entity)
@@ -14,10 +14,11 @@ namespace VODB.DbLayer.DbCommands
 
         protected override DbCommand Make(DbCommand dbCommand, TEntity entity)
         {
-            entity.ValidateEntity(On.SelectById);
+            var inEntity = entity as Entity;
+            inEntity.ValidateEntity(On.SelectById);
 
-            dbCommand.CommandText = entity.Table.CommandsHolder.SelectById;
-            dbCommand.SetParameters(entity.Table.KeyFields, entity);
+            dbCommand.CommandText = inEntity.Table.CommandsHolder.SelectById;
+            dbCommand.SetParameters(inEntity.Table.KeyFields, inEntity);
 
             return dbCommand;
         }

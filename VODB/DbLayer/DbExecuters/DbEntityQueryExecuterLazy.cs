@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Data.Common;
+using VODB.Core.Execution.Factories;
 using VODB.DbLayer.DbCommands;
 using VODB.DbLayer.Loaders;
 
 namespace VODB.DbLayer.DbExecuters
 {
     internal class DbEntityQueryExecuterLazy<TEntity> : DbEntityQueryExecuterBase<TEntity>
-            where TEntity : Entity, new()
+            where TEntity : new()
     {
 
         private readonly IEntityLoader<TEntity> _Loader;

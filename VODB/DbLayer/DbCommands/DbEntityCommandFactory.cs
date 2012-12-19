@@ -1,9 +1,10 @@
 ﻿using System.Data.Common;
+using VODB.Core.Execution.Factories;
 
 namespace VODB.DbLayer.DbCommands
 {
     internal abstract class DbEntityCommandFactory<TEntity> : DbCommandFactory
-        where TEntity : Entity, new()
+        where TEntity : new()
     {
         private readonly TEntity _entity;
 

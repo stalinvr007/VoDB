@@ -1,6 +1,6 @@
 using System.Data.Common;
 
-namespace VODB.DbLayer.DbCommands
+namespace VODB.Core.Execution.Factories
 {
     internal abstract class DbCommandFactory : IDbCommandFactory
     {

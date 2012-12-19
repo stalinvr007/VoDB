@@ -7,7 +7,7 @@ namespace VODB.ExpressionParser
 {
 
     class ComparatorExpressionParser<TEntity> : IWhereExpressionParser<TEntity> 
-        where TEntity : Entity, new()
+        where TEntity : new()
     {
         private readonly IDictionary<Key, object> _ConditionData = new Dictionary<Key, object>();
 
@@ -15,7 +15,7 @@ namespace VODB.ExpressionParser
         {
             var parser = new ExpressionBodyParser(expression.Body)
             {
-                Entity = new TEntity()
+                Entity = new TEntity() as Entity
             };
 
             parser.Parse();

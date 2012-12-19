@@ -6,11 +6,13 @@ using VODB.Exceptions;
 using VODB.ExpressionParser;
 using VODB.ExpressionParser.TSqlBuilding;
 using VODB.Core.Infrastructure;
+using VODB.Core;
 
 namespace VODB.Extensions
 {
     static class ExpressionsExtensions
     {
+        static IConfiguration Configuration = Engine.Get<IConfiguration>();
 
         /// <summary>
         /// Gets the key value.

@@ -4,7 +4,7 @@ using System.Linq;
 using VODB.Extensions;
 using VODB.Core.Infrastructure;
 
-namespace VODB.DbLayer.DbCommands.DbParameterSetters
+namespace VODB.Core.Execution.DbParameterSetters
 {
     public class DbEntityParameterSetter : IParameterSetter
     {

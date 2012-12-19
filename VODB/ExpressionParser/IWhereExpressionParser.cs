@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace VODB.ExpressionParser
 {
     interface IWhereExpressionParser<TEntity> : IExpressionParser<Func<TEntity, bool>>
-        where TEntity : Entity, new()
+        where TEntity : new()
     {
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
+using VODB.Core.Execution.Factories;
 using VODB.DbLayer;
 using VODB.DbLayer.DbCommands;
 using VODB.DbLayer.DbExecuters;
@@ -64,27 +65,29 @@ namespace VODB.Sessions
             ).Execute();
         }
 
-        public abstract IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : Entity, new();
+        public abstract IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : new();
 
-        public Task<IDbQueryResult<TEntity>> AsyncGetAll<TEntity>() where TEntity : Entity, new()
+        public Task<IDbQueryResult<TEntity>> AsyncGetAll<TEntity>() where TEntity : new()
         {
             return _tasks.Add<IDbQueryResult<TEntity>>(
                 new Task<IDbQueryResult<TEntity>>(new InternalEagerSession(_creator).GetAll<TEntity>).RunAsync()
             );
         }
 
-        public abstract TEntity GetById<TEntity>(TEntity entity) where TEntity : Entity, new();
+        public abstract TEntity GetById<TEntity>(TEntity entity) where TEntity : new();
 
-        public Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : Entity, new()
+        public Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : new()
         {
             return _tasks.Add<TEntity>(
                 new Task<TEntity>(() => new InternalEagerSession(_creator).GetById(entity)).RunAsync()
             );
         }
 
-        public TEntity Insert<TEntity>(TEntity entity) where TEntity : Entity, new()
+        public TEntity Insert<TEntity>(TEntity entity) where TEntity : new()
         {
-            var idField = entity.Table.KeyFields.FirstOrDefault(f => f.IsIdentity);
+            var inEntity = entity as Entity;
+
+            var idField = inEntity.Table.KeyFields.FirstOrDefault(f => f.IsIdentity);
 
             var id = Run(() =>
             {
@@ -92,7 +95,7 @@ namespace VODB.Sessions
                     new DbEntityInsertCommandFactory<TEntity>(this, entity)
                     ).Execute();
 
-                entity.Session = this;
+                inEntity.Session = this;
 
                 return idField == null ? null : 
                     new DbQueryScalarExecuter<Object>(
@@ -101,7 +104,7 @@ namespace VODB.Sessions
 
             if (idField != null)
             {
-                entity.SetValue(idField,
+                inEntity.SetValue(idField,
                     Convert.ChangeType(id, idField.FieldType),
                     field => Convert.ChangeType(id, idField.FieldType));
             }
@@ -109,8 +112,9 @@ namespace VODB.Sessions
             return entity;
         }
 
-        public void Delete<TEntity>(TEntity entity) where TEntity : Entity, new()
+        public void Delete<TEntity>(TEntity entity) where TEntity : new()
         {
+            var inEntity = entity as Entity;
             Run(() =>
                 new DbCommandNonQueryExecuter(
                     new DbEntityDeleteCommandFactory<TEntity>(this, entity)
@@ -118,19 +122,20 @@ namespace VODB.Sessions
             );
         }
 
-        public TEntity Update<TEntity>(TEntity entity) where TEntity : Entity, new()
+        public TEntity Update<TEntity>(TEntity entity) where TEntity : new()
         {
+            var inEntity = entity as Entity;
             Run(() =>
                 new DbCommandNonQueryExecuter(
                     new DbEntityUpdateCommandFactory<TEntity>(this, entity)
                 ).Execute()
             );
 
-            entity.Session = this;
+            inEntity.Session = this;
             return entity;
         }
 
-        public int Count<TEntity>() where TEntity : Entity, new()
+        public int Count<TEntity>() where TEntity : new()
         {
             return Run(() =>
                 new DbQueryScalarExecuter<int>(
@@ -139,9 +144,11 @@ namespace VODB.Sessions
             );
         }
 
-        public bool Exists<TEntity>(TEntity entity) where TEntity : Entity, new()
+        public bool Exists<TEntity>(TEntity entity) where TEntity : new()
         {
-            entity.Session = this;
+            var inEntity = entity as Entity;
+
+            inEntity.Session = this;
 
             return Run(() =>
                 new DbQueryScalarExecuter<int>(

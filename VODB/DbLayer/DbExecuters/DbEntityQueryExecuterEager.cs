@@ -2,6 +2,7 @@
 using System.Data.Common;
 using VODB.DbLayer.Loaders;
 using VODB.DbLayer.DbCommands;
+using VODB.Core.Execution.Factories;
 
 namespace VODB.DbLayer.DbExecuters
 {
@@ -11,7 +12,7 @@ namespace VODB.DbLayer.DbExecuters
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     internal class DbEntityQueryExecuterEager<TEntity> : DbEntityQueryExecuterBase<TEntity>
-        where TEntity : Entity, new()
+        where TEntity :  new()
     {
         private readonly IEntityLoader<TEntity> _Loader;
         private readonly IInternalSession _Session;

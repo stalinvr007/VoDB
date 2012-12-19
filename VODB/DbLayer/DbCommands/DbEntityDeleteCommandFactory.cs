@@ -5,7 +5,7 @@ using VODB.Extensions;
 namespace VODB.DbLayer.DbCommands
 {
     internal sealed class DbEntityDeleteCommandFactory<TEntity> : DbEntityCommandFactory<TEntity> 
-        where TEntity : Entity, new()
+        where TEntity : new()
     {
         public DbEntityDeleteCommandFactory(IInternalSession internalSession, TEntity entity)
             : base(internalSession, entity)
@@ -14,10 +14,11 @@ namespace VODB.DbLayer.DbCommands
 
         protected override DbCommand Make(DbCommand dbCommand, TEntity entity)
         {
-            entity.ValidateEntity(On.Delete);
+            var inEntity = entity as Entity;
+            inEntity.ValidateEntity(On.Delete);
 
-            dbCommand.CommandText = entity.Table.CommandsHolder.Delete;
-            dbCommand.SetParameters(entity.Table.KeyFields, entity);
+            dbCommand.CommandText = inEntity.Table.CommandsHolder.Delete;
+            dbCommand.SetParameters(inEntity.Table.KeyFields, inEntity);
             return dbCommand;
         }
     }
