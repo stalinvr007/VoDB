@@ -2,13 +2,23 @@
 using System.Text;
 
 
-namespace VODB.Infrastructure.TSqlCommands
+namespace VODB.Core.Infrastructure.TSqlCommands
 {
+
+    internal interface ITSqlCommand
+    {
+        /// <summary>
+        /// Builds the CMD STR.
+        /// </summary>
+        /// <returns></returns>
+        String BuildCmdStr();
+    }
 
     /// <summary>
     /// Base to build a TSqlCommand
     /// </summary>
-    internal abstract class TSqlCmdBase {
+    internal abstract class TSqlCmdBase : ITSqlCommand
+    {
         /// <summary>
         /// Gets the entity.
         /// </summary>

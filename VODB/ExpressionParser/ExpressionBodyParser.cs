@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using VODB.Exceptions;
 using VODB.Extensions;
-using VODB.Infrastructure;
+using VODB.Core.Infrastructure;
 
 namespace VODB.ExpressionParser
 {

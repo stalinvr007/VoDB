@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using VODB.Annotations;
 using VODB.Extensions;
 
-namespace VODB.Infrastructure
+namespace VODB.Core.Infrastructure
 {
     /// <summary>
     /// Creates Tables with fields.

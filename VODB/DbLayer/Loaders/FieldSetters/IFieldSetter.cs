@@ -1,5 +1,5 @@
 ﻿using System;
-using VODB.Infrastructure;
+using VODB.Core.Infrastructure;
 
 namespace VODB.DbLayer.Loaders.FieldSetters
 {

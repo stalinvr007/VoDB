@@ -3,7 +3,7 @@ using System.Text;
 using VODB.Exceptions;
 
 
-namespace VODB.Infrastructure.TSqlCommands
+namespace VODB.Core.Infrastructure.TSqlCommands
 {
     /// <summary>
     /// Builder for Where Condition

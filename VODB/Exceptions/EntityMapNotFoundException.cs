@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using VODB.Infrastructure;
+using VODB.Core.Infrastructure;
 
 namespace VODB.Exceptions
 {

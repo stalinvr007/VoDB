@@ -1,11 +1,11 @@
 using System.Text;
 
-namespace VODB.Infrastructure.TSqlCommands
+namespace VODB.Core.Infrastructure.TSqlCommands
 {
     /// <summary>
-    /// Builder of Select By Id Commands
+    /// Builder of Count By Id Commands
     /// </summary>
-    internal sealed class TCountById : TSqlCmdBase
+    internal sealed class TCountById : TCount
     {
 
         /// <summary>
@@ -24,15 +24,7 @@ namespace VODB.Infrastructure.TSqlCommands
         /// <param name="sb">The sb.</param>
         protected override void BuildCmdStr(StringBuilder sb)
         {
-            if (Table.TableName.ToLower().StartsWith("sys."))
-                sb.Append("Select Count(*) ")
-                    .Append(" From ")
-                    .Append(Table.TableName);
-            else
-                sb.Append("Select Count(*) ")
-                    .Append(" From [")
-                    .Append(Table.TableName)
-                    .Append("]");
+            base.BuildCmdStr(sb);
 
             sb.Append(" Where ")
               .Append(new TWhere(Table).BuildCmdStr());

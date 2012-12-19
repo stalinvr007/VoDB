@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using VODB.Annotations;
-using VODB.Infrastructure;
+using VODB.Core.Infrastructure;
 using VODB.Extensions;
 using System.Reflection;
 

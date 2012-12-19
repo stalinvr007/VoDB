@@ -3,7 +3,7 @@ using System.Text;
 
 
 
-namespace VODB.Infrastructure.TSqlCommands
+namespace VODB.Core.Infrastructure.TSqlCommands
 {
     /// <summary>
     /// Builder of Select By Id Commands
