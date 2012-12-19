@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using VODB.Core;
 using VODB.Exceptions;
 
 namespace VODB.ExpressionParser.TSqlBuilding
@@ -9,6 +10,8 @@ namespace VODB.ExpressionParser.TSqlBuilding
 
     class SimpleWhereTSqlBuilder : TSqlBuilderBase
     {
+        static IConfiguration Configuration = Engine.Get<IConfiguration>();
+
         protected override Boolean CanBuildSql(IExpressionBodyParser parser)
         {
             return !parser.IsComplex;

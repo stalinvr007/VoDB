@@ -8,7 +8,7 @@ using VODB.Extensions;
 namespace VODB.ExpressionParser
 {
     public class FieldGetterExpressionParser<TEntity, TField> : IExpressionParser<Func<TEntity, TField>>
-         where TEntity : Entity, new()
+         where TEntity : new()
     {
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace VODB.ExpressionParser
         public String Parse(Expression<Func<TEntity, TField>> expression)
         {
 
-            var entity = new TEntity();
+            var entity = new TEntity() as Entity;
             string field = ((MemberExpression)expression.Body).Member.Name;
 
             Field = entity.FindField(field);

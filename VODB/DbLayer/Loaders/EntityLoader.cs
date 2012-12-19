@@ -10,7 +10,7 @@ namespace VODB.DbLayer.Loaders
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     internal abstract class EntityLoader<TModel> : IEntityLoader<TModel> 
-        where TModel : Entity, new()
+        where TModel : new()
     {
         #region FIELD GETTER SETTER
 
@@ -36,11 +36,12 @@ namespace VODB.DbLayer.Loaders
         /// <returns></returns>
         protected void SetValue(TModel entity, Field field, object value, DbDataReader reader)
         {
+            var inEntity = entity as Entity;
             if (field.IsKey)
             {
-                entity.AddKeyOriginalValue(field, value);
+                inEntity.AddKeyOriginalValue(field, value);
             }
-            entity.SetValue(field, value, reader);
+            inEntity.SetValue(field, value, reader);
         }
 
         #endregion

@@ -5,6 +5,7 @@ using System.Linq;
 using VODB.EntityValidators;
 using VODB.Exceptions;
 using VODB.Core.Infrastructure;
+using VODB.Core;
 
 namespace VODB.Extensions
 {
@@ -12,6 +13,7 @@ namespace VODB.Extensions
     internal static class ConfigurationHelpers
     {
 
+        static IConfiguration Configuration = Engine.Get<IConfiguration>();
 
         /// <summary>
         /// Gets the field by name.
@@ -142,6 +144,7 @@ namespace VODB.Extensions
 
     internal static class FieldHelpers
     {
+        static IConfiguration Configuration = Engine.Get<IConfiguration>();
 
         public static Field FindField(this Entity entity, String BindOrName)
         {

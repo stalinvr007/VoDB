@@ -21,47 +21,47 @@ namespace VODB.Sessions
             _InnerSession.ExecuteTSql(SqlStatements);
         }
 
-        public IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : Entity, new()
+        public IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : new()
         {
             return _InnerSession.GetAll<TEntity>();
         }
 
-        public System.Threading.Tasks.Task<IDbQueryResult<TEntity>> AsyncGetAll<TEntity>() where TEntity : Entity, new()
+        public System.Threading.Tasks.Task<IDbQueryResult<TEntity>> AsyncGetAll<TEntity>() where TEntity : new()
         {
             return _InnerSession.AsyncGetAll<TEntity>();
         }
 
-        public TEntity GetById<TEntity>(TEntity entity) where TEntity : Entity, new()
+        public TEntity GetById<TEntity>(TEntity entity) where TEntity : new()
         {
             return _InnerSession.GetById(entity);
         }
 
-        public System.Threading.Tasks.Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : Entity, new()
+        public System.Threading.Tasks.Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : new()
         {
             return _InnerSession.AsyncGetById(entity);
         }
 
-        public TEntity Insert<TEntity>(TEntity entity) where TEntity : Entity, new()
+        public TEntity Insert<TEntity>(TEntity entity) where TEntity : new()
         {
             return _InnerSession.Insert(entity);
         }
 
-        public void Delete<TEntity>(TEntity entity) where TEntity : Entity, new()
+        public void Delete<TEntity>(TEntity entity) where TEntity : new()
         {
             _InnerSession.Delete(entity);
         }
 
-        public TEntity Update<TEntity>(TEntity entity) where TEntity : Entity, new()
+        public TEntity Update<TEntity>(TEntity entity) where TEntity : new()
         {
             return _InnerSession.Update(entity);
         }
 
-        public int Count<TEntity>() where TEntity : Entity, new()
+        public int Count<TEntity>() where TEntity : new()
         {
             return _InnerSession.Count<TEntity>();
         }
 
-        public bool Exists<TEntity>(TEntity entity) where TEntity : Entity, new()
+        public bool Exists<TEntity>(TEntity entity) where TEntity : new()
         {
             return _InnerSession.Exists(entity);
         }

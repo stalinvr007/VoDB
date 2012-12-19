@@ -6,7 +6,7 @@ using VODB.Extensions;
 namespace VODB.DbLayer.DbCommands
 {
     internal sealed class DbEntityInsertCommandFactory<TEntity> : DbEntityCommandFactory<TEntity>
-        where TEntity : Entity, new()
+        where TEntity : new()
     {
         public DbEntityInsertCommandFactory(IInternalSession internalSession, TEntity entity)
             : base(internalSession, entity)
@@ -15,12 +15,13 @@ namespace VODB.DbLayer.DbCommands
 
         protected override DbCommand Make(DbCommand dbCommand, TEntity entity)
         {
-            entity.ValidateEntity(On.Insert);
+            var inEntity = entity as Entity;
+            inEntity.ValidateEntity(On.Insert);
 
-            dbCommand.CommandText = entity.Table.CommandsHolder.Insert;
+            dbCommand.CommandText = inEntity.Table.CommandsHolder.Insert;
             dbCommand.SetParameters(
-                entity.Table.Fields.Where(field => !field.IsIdentity),
-                entity);
+                inEntity.Table.Fields.Where(field => !field.IsIdentity),
+                inEntity);
 
             return dbCommand;
         }

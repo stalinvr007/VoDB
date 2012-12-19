@@ -35,6 +35,7 @@ namespace VODB.Sessions
 
         public override TEntity GetById<TEntity>(TEntity entity)
         {
+            var inEntity = entity as Entity;
             return Run(() => new DbEntityQueryExecuterLazy<TEntity>(this,
                                          new DbEntitySelectByIdCommandFactory<TEntity>(this, entity),
                                          new FullEntityLoader<TEntity>(this)

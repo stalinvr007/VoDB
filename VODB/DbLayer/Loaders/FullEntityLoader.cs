@@ -7,7 +7,7 @@ namespace VODB.DbLayer.Loaders
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     internal class FullEntityLoader<TModel> : EntityLoader<TModel>
-        where TModel : Entity, new()
+        where TModel : new()
     {
 
         private readonly ISession _Session;
@@ -24,14 +24,15 @@ namespace VODB.DbLayer.Loaders
         /// <returns></returns>
         public override void Load(TModel entity, DbDataReader reader)
         {
-            if (entity == null) return;
-            foreach (var field in entity.Table.Fields)
+            var inEntity = entity as Entity;
+            if (inEntity == null) return;
+            foreach (var field in inEntity.Table.Fields)
             {
                 SetValue(entity, field, GetValue(reader, field.FieldName), reader);
             }
 
-            entity.Session = _Session;
-            entity.IsLoaded = true;
+            inEntity.Session = _Session;
+            inEntity.IsLoaded = true;
         }
     }
 }

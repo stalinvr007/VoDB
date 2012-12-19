@@ -2,9 +2,9 @@ using System;
 using System.Data.Common;
 using VODB.Core.Infrastructure;
 
-namespace VODB.DbLayer.DbCommands.DbParameterSetters
+namespace VODB.Core.Execution.DbParameterSetters
 {
-    public class GuidParameterSetter : IParameterSetter
+    public class BasicParameterSetter : IParameterSetter
     {
 
         public void SetValue(DbParameter param, Field field, Object value)
@@ -14,7 +14,8 @@ namespace VODB.DbLayer.DbCommands.DbParameterSetters
 
         public bool CanHandle(Type type)
         {
-            return typeof(Guid).IsAssignableFrom(type);
+            return type.IsPrimitive || 
+                typeof(String).IsAssignableFrom(type);
         }
 
     }

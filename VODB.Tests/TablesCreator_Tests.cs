@@ -8,6 +8,7 @@ using VODB.Caching;
 using VODB.Tests.Models.Northwind;
 using VODB.Core.Infrastructure;
 using VODB.Core.Infrastructure;
+using VODB.Core;
 
 namespace VODB.Tests
 {
@@ -177,9 +178,9 @@ namespace VODB.Tests
         [TestMethod]
         public void TableMapper_Test()
         {
-            DB.Map<EmployeeNew>();
+            Engine.Map<EmployeeNew>();
 
-            var table = DB.Tables.GetTable<EmployeeNew>();
+            var table = Engine.GetTable<EmployeeNew>();
             
             Assert.IsNotNull(table);
             AssertFields(table.Fields.ToList());

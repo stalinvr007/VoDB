@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using VODB.Core.Execution.Factories;
 using VODB.DbLayer.DbCommands;
 using VODB.DbLayer.DbResults;
 using VODB.Exceptions;
@@ -12,7 +13,7 @@ namespace VODB.DbLayer.DbExecuters
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     internal abstract class DbEntityQueryExecuterBase<TEntity> : IQueryExecuter<TEntity>
-        where TEntity : Entity, new()
+        where TEntity : new()
     {
 
         private IDbCommandFactory _CommandFactory;

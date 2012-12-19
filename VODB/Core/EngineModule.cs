@@ -25,7 +25,7 @@ namespace VODB.Core
     {
         public override void Load()
         {
-
+            Bind<IConfiguration>().To<Configuration>().InSingletonScope();
         }
     }
 }

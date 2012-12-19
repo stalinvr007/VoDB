@@ -2,7 +2,7 @@
 using System.Data.Common;
 using VODB.Core.Infrastructure;
 
-namespace VODB.DbLayer.DbCommands.DbParameterSetters
+namespace VODB.Core.Execution.DbParameterSetters
 {
     public interface IParameterSetter
     {

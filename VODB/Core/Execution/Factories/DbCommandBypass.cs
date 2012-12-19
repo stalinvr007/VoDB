@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 
-namespace VODB.DbLayer.DbCommands
+namespace VODB.Core.Execution.Factories
 {
     internal sealed class DbCommandBypass : DbCommandFactory
     {

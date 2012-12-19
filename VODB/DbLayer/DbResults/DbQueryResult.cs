@@ -10,6 +10,7 @@ using VODB.Extensions;
 using VODB.Core.Infrastructure;
 using System.Linq;
 using System.Collections;
+using VODB.Core.Execution.Factories;
 
 namespace VODB.DbLayer.DbResults
 {
@@ -20,7 +21,7 @@ namespace VODB.DbLayer.DbResults
                                                     IDbOrderedResult<TEntity>,
                                                     IDbOrderedDescResult<TEntity>,
                                                     IDbFieldFilterResult<TEntity>
-        where TEntity : Entity, new()
+        where TEntity : new()
     {
 
         private readonly IDbCommandFactory _CommandFactory;
@@ -29,10 +30,10 @@ namespace VODB.DbLayer.DbResults
         private readonly ICollection<KeyValuePair<Key, Object>> _parameters;
         private Field _FilterField;
         private readonly LinkedList<ConditionPart> _parts;
-        
+
         #region IDbResult
 
-        public String TableName { get { return new TEntity().Table.TableName; } }
+        public String TableName { get { return (new TEntity() as Entity).Table.TableName; } }
 
         public String WhereCondition { get { return BuildWhereCondition(_parts); } }
 
@@ -231,9 +232,9 @@ namespace VODB.DbLayer.DbResults
 
             Parameters = collection.Parameters;
             _whereCondition
-                .AppendFormat("{0} In (Select {1} from {2}", 
-                    _FilterField.FieldName, 
-                    _FilterField.BindedTo ?? _FilterField.FieldName, 
+                .AppendFormat("{0} In (Select {1} from {2}",
+                    _FilterField.FieldName,
+                    _FilterField.BindedTo ?? _FilterField.FieldName,
                     collection.TableName)
                 .Append(collection.WhereCondition)
                 .Append(")");
@@ -248,8 +249,8 @@ namespace VODB.DbLayer.DbResults
 
             _whereCondition
                 .Append(_FilterField.FieldName)
-                .AppendFormat(" Between {0} And {1}", 
-                    AddParameter(_FilterField, firstValue), 
+                .AppendFormat(" Between {0} And {1}",
+                    AddParameter(_FilterField, firstValue),
                     AddParameter(_FilterField, secondValue));
 
             AppendToConditions(_whereCondition);
