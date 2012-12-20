@@ -36,12 +36,11 @@ namespace VODB.DbLayer.Loaders
         /// <returns></returns>
         protected void SetValue(TModel entity, Field field, object value, DbDataReader reader)
         {
-            var inEntity = entity as Entity;
             if (field.IsKey)
             {
-                inEntity.AddKeyOriginalValue(field, value);
+                // inEntity.AddKeyOriginalValue(field, value);
             }
-            inEntity.SetValue(field, value, reader);
+            entity.SetValue(field, value, reader);
         }
 
         #endregion

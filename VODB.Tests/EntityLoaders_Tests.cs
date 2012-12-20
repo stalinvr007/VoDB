@@ -4,6 +4,7 @@ using VODB.DbLayer;
 using VODB.DbLayer.Loaders;
 using VODB.Tests.Models.Northwind;
 using VODB.Core.Infrastructure;
+using VODB.Core;
 
 namespace VODB.Tests
 {
@@ -19,7 +20,7 @@ namespace VODB.Tests
 
                 var employee = new Employee();
 
-                Table table = employee.Table;
+                Table table = Engine.GetTable<Employee>();
                 DbCommand cmd = con.CreateCommand();
                 cmd.CommandText = table.CommandsHolder.Select;
 
@@ -48,7 +49,7 @@ namespace VODB.Tests
 
                 var employee = new Employee();
 
-                Table table = employee.Table;
+                Table table = Engine.GetTable<Employee>();
                 DbCommand cmd = con.CreateCommand();
                 cmd.CommandText = table.CommandsHolder.Select;
 

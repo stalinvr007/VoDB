@@ -11,7 +11,7 @@ namespace VODB.Tests
         public void InnerTransactions()
         {
 
-            using (var session = new EagerSession())
+            using (var session = new Session(null, null))
             {
 
                 using (session.BeginTransaction())

@@ -19,7 +19,7 @@ namespace VODB.DbLayer.Loaders.FieldSetters
         /// <returns></returns>
         public Boolean CanHandle(Type type)
         {
-            return typeof(Entity).IsAssignableFrom(type);
+            return Engine.IsMapped(type);
         }
 
         /// <summary>

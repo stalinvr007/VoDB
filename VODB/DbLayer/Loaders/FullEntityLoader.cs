@@ -24,15 +24,13 @@ namespace VODB.DbLayer.Loaders
         /// <returns></returns>
         public override void Load(TModel entity, DbDataReader reader)
         {
-            var inEntity = entity as Entity;
-            if (inEntity == null) return;
-            foreach (var field in inEntity.Table.Fields)
+
+            if (entity == null) return;
+            foreach (var field in entity.GetTable().Fields)
             {
                 SetValue(entity, field, GetValue(reader, field.FieldName), reader);
             }
 
-            inEntity.Session = _Session;
-            inEntity.IsLoaded = true;
         }
     }
 }

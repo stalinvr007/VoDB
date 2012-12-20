@@ -15,7 +15,7 @@ namespace VODB.ExpressionParser
         {
             var parser = new ExpressionBodyParser(expression.Body)
             {
-                Entity = new TEntity() as Entity
+                Entity = new TEntity()
             };
 
             parser.Parse();

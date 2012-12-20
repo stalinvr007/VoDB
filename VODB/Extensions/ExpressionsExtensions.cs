@@ -22,7 +22,7 @@ namespace VODB.Extensions
         /// <returns></returns>
         /// <exception cref="WhereExpressionHandlerNotFoundException"></exception>
         public static KeyValuePair<Field, object> GetKeyValue<TEntity>(this Expression<Func<TEntity, bool>> expression)
-             where TEntity : Entity, new()
+             where TEntity : class, new()
         {
             foreach (var handler in Configuration.WhereExpressionHandlers
                 .Where(handler => handler.CanHandle(expression)))

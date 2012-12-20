@@ -12,7 +12,7 @@ namespace VODB.Core
 
         static IKernel kernel = new StandardKernel(
             new InfrastructureModule(), 
-            new EngineModule()
+            new EngineModules()
         );
 
         static IEntityTables _tables = Get<IEntityTables>();
@@ -35,6 +35,16 @@ namespace VODB.Core
         public static void Map<TEntity>()
         {
             _tables.Map<TEntity>();
+        }
+
+        public static Boolean IsMapped(Type entityType)
+        {
+            return _tables.IsMapped(entityType);
+        }
+
+        public static Boolean IsMapped<TEntity>()
+        {
+            return _tables.IsMapped<TEntity>();
         }
         
     }

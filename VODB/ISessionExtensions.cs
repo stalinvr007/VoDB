@@ -38,6 +38,10 @@ namespace VODB
         {
             session.WithinTransaction<Object>(() => { action(); return null; });
         }
+    
+
+
+
     }
 
 

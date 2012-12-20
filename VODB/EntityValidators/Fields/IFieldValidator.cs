@@ -11,7 +11,7 @@ namespace VODB.EntityValidators.Fields
 
         Boolean CanHandle(Field field);
 
-        Boolean Verify(Field field, Entity entity);
+        Boolean Verify<TEntity>(Field field, TEntity entity);
 
     }
 }

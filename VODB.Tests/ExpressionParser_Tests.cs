@@ -8,7 +8,7 @@ namespace VODB.Tests
     [TestClass]
     public class ExpressionParser_Tests
     {
-        sealed class Model : DbEntity
+        sealed class Model
         {
             public String Name { get; private set; }
 

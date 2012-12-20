@@ -6,6 +6,7 @@ using VODB.Annotations;
 using VODB.Core.Infrastructure;
 using VODB.Extensions;
 using System.Reflection;
+using System.Collections;
 
 namespace VODB.Core.Infrastructure
 {
@@ -120,6 +121,7 @@ namespace VODB.Core.Infrastructure
         public IEnumerable<Field> GetFields(Type entityType)
         {
             return entityType.GetProperties()
+                .Where(info => !info.PropertyType.IsGenericType)
                 .Where(info => info.GetAttribute<DbIgnoreAttribute>() == null)
                 .Select(info => SetCommunSettings(GetField(info), info));
         }
