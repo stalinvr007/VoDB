@@ -51,6 +51,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Core\Engine.cs" />
     <Compile Include="Core\EngineModules.cs" />
+    <Compile Include="Core\Execution\Executers\DbResults\QueryResult.cs" />
     <Compile Include="Core\Execution\Executers\NonQueryExecuters.cs" />
     <Compile Include="Core\Execution\Executers\IStatementExecuter.cs" />
     <Compile Include="Core\Execution\Executers\QueryExecuters.cs" />
@@ -75,9 +76,9 @@
     <Compile Include="Core\Execution\DbParameterSetters\GuidParameterSetter.cs" />
     <Compile Include="Core\Execution\DbParameterSetters\IParameterSetter.cs" />
     <Compile Include="Core\Execution\Factories\IDbCommandFactory.cs" />
-    <Compile Include="DbLayer\DbResults\ConditionPart.cs" />
-    <Compile Include="DbLayer\DbResults\IDbQueryResult.cs" />
-    <Compile Include="DbLayer\DbResults\Operation.cs" />
+    <Compile Include="Core\Execution\Executers\DbResults\ConditionPart.cs" />
+    <Compile Include="Core\Execution\Executers\DbResults\IDbQueryResult.cs" />
+    <Compile Include="Core\Execution\Executers\DbResults\Operation.cs" />
     <Compile Include="Core\Loaders\EntityKeyLoader.cs" />
     <Compile Include="Core\Loaders\EntityLoader.cs" />
     <Compile Include="Core\Loaders\FieldSetters\BasicFieldSetter.cs" />

@@ -44,6 +44,11 @@ namespace VODB.Sessions
 
         #endregion        
 
+        public Transaction()
+        {
+            Ended = true;
+        }
+
         private void CheckTransactionAlive()
         {
             if (_Transaction == null)
@@ -131,6 +136,7 @@ namespace VODB.Sessions
         {
             if (_Transaction == null)
             {
+                Ended = false;
                 _Transaction = connection.BeginTransaction();
             }
             else

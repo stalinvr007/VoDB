@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using VODB.ExpressionParser;
 
-namespace VODB.DbLayer.DbResults
+namespace VODB.Core.Execution.Executers.DbResults
 {
 
     public interface IDbResult

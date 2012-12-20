@@ -21,7 +21,7 @@ namespace VODB.Core.Loaders
             if (entity == null) return;
             foreach (var field in entity.GetTable().Fields)
             {
-                SetValue(entity, field, GetValue(reader, field.FieldName), reader);
+                SetValue(entity, field, reader.GetValue(field.FieldName), reader);
             }
 
         }
