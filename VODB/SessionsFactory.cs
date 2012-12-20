@@ -7,7 +7,7 @@ namespace VODB
     {
         public static ISession CreateEager(IDbConnectionCreator creator = null)
         {
-            return new InternalEagerSession(creator);
+            return new EagerSession(creator);
         }
     }
 }

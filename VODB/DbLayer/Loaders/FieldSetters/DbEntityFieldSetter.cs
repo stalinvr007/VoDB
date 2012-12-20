@@ -2,6 +2,7 @@ using System;
 using VODB.Exceptions;
 using VODB.Core.Infrastructure;
 using VODB.Extensions;
+using VODB.Core;
 
 namespace VODB.DbLayer.Loaders.FieldSetters
 {
@@ -28,12 +29,14 @@ namespace VODB.DbLayer.Loaders.FieldSetters
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="getValueFromReader">The get value from reader.</param>
-        public void SetValue(Entity entity, Field field, Object value, Func<Field, Object> getValueFromReader)
+        public void SetValue<TEntity>(TEntity entity, Field field, Object value, Func<Field, Object> getValueFromReader)
         {
             var foreignEntity = CreateInstance(field.FieldType);
 
+            var table = Engine.GetTable(field.FieldType);
+
             /* Attempts to fill the key fields for this foreignEntity. */
-            foreach (var key in foreignEntity.Table.KeyFields)
+            foreach (var key in table.KeyFields)
             {
                 if (key.FieldName.Equals(field.BindedTo, StringComparison.InvariantCultureIgnoreCase) || 
                     key.FieldName.Equals(field.FieldName, StringComparison.InvariantCultureIgnoreCase))
@@ -57,11 +60,11 @@ namespace VODB.DbLayer.Loaders.FieldSetters
 
         }
 
-        private static DbEntity CreateInstance(Type type)
+        private static Object CreateInstance(Type type)
         {
             try
             {
-                return Activator.CreateInstance(type) as DbEntity;
+                return Activator.CreateInstance(type);
             }
             catch (Exception ex)
             {

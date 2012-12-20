@@ -95,7 +95,6 @@ namespace VODB.Extensions
         /// <exception cref="FieldSetterNotFoundException"></exception>
         /// <exception cref="FieldNotFoundException"></exception>
         public static Field SetValue<TModel>(this TModel entity, Field field, object value, DbDataReader reader)
-            where TModel : Entity
         {
             if (value == null || value == DBNull.Value)
             {
@@ -123,7 +122,6 @@ namespace VODB.Extensions
         /// <returns></returns>
         /// <exception cref="FieldSetterNotFoundException"></exception>
         public static void SetValue<TModel>(this TModel entity, Field field, object value, Func<Field, object> getValueFromReader)
-            where TModel : Entity
         {
             if (value == null || value == DBNull.Value)
             {
@@ -146,9 +144,9 @@ namespace VODB.Extensions
     {
         static IConfiguration Configuration = Engine.Get<IConfiguration>();
 
-        public static Field FindField(this Entity entity, String BindOrName)
+        public static Field FindField<TEntity>(this TEntity entity, String BindOrName)
         {
-            return entity.Table.FindField(BindOrName);
+            return Engine.GetTable(entity.GetType()).FindField(BindOrName);
         }
 
         public static Field FindField(this Table table, String BindOrName)

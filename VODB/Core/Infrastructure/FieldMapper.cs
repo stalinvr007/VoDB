@@ -10,12 +10,17 @@ using System.Reflection;
 namespace VODB.Core.Infrastructure
 {
 
+    interface IFieldMapper
+    {
+        IEnumerable<Field> GetFields(Type entityType);
+    }
+
     interface IFieldMapper<TEntity>
     {
         IEnumerable<Field> GetFields();
     }
 
-    class FieldMapper<TEntity> : IFieldMapper<TEntity>
+    class FieldMapper : IFieldMapper
     {
         #region Static Auxiliary Functions
 
@@ -107,19 +112,36 @@ namespace VODB.Core.Infrastructure
                 IsIdentity = IsIdentityField(info)
             };
         }
-        
+
         #endregion
+
+        #region IFieldMapping<TEntity> Implementation
+        
+        public IEnumerable<Field> GetFields(Type entityType)
+        {
+            return entityType.GetProperties()
+                .Where(info => info.GetAttribute<DbIgnoreAttribute>() == null)
+                .Select(info => SetCommunSettings(GetField(info), info));
+        }
+
+        #endregion
+    }
+
+    class FieldMapper<TEntity> : IFieldMapper<TEntity>
+    {
+
+        private readonly IFieldMapper _FieldMapper;
+
+        public FieldMapper(IFieldMapper fieldMapper)
+        {
+            _FieldMapper = fieldMapper;
+        }
 
         #region IFieldMapping<TEntity> Implementation
 
         public virtual IEnumerable<Field> GetFields()
         {
-            var type = typeof(TEntity);
-
-            return type.GetProperties()
-                .Where(info => info.GetAttribute<DbIgnoreAttribute>() == null)
-                .Select(info => SetCommunSettings(GetField(info), info))
-                .ToList();
+            return _FieldMapper.GetFields(typeof(TEntity));
         } 
 
         #endregion
