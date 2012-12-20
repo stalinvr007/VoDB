@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using VODB.Core;
 using VODB.Core.Execution.Executers;
 using VODB.DbLayer;
-using VODB.DbLayer.DbResults;
+using VODB.Core.Execution.Executers.DbResults;
 
 namespace VODB
 {

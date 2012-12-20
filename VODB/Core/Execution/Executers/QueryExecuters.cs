@@ -14,19 +14,9 @@ namespace VODB.Core.Execution.Executers
 
         protected override DbDataReader Execute<TEntity>(DbCommand cmd, Table table, TEntity entity)
         {
-            cmd.SetParameters(table.Fields, entity);
+            cmd.SetParameters(table.KeyFields, entity);
             return cmd.ExecuteReader();
         }
     }
 
-    class SelectExecuter : StatementExecuterBase<DbDataReader>
-    {
-        public SelectExecuter(IStatementGetter getter) : base(getter) { }
-
-        protected override DbDataReader Execute<TEntity>(DbCommand cmd, Table table, TEntity entity)
-        {
-            cmd.SetParameters(table.Fields, entity);
-            return cmd.ExecuteReader();
-        }
-    }
 }

@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using VODB.Core.Execution.Executers;
+using VODB.Core.Execution.Executers.DbResults;
 using VODB.Core.Execution.Statements;
 using VODB.Core.Infrastructure;
 using VODB.Core.Loaders;
@@ -74,6 +75,7 @@ namespace VODB.Core
             Bind<IStatementGetter>().To<DeleteGetter>().WhenInjectedInto<DeleteExecuter>().InSingletonScope();
             Bind<IStatementGetter>().To<CountGetter>().WhenInjectedInto<CountExecuter>().InSingletonScope();
             Bind<IStatementGetter>().To<CountByIdGetter>().WhenInjectedInto<CountByIdExecuter>().InSingletonScope();
+            Bind<IStatementGetter>().To<SelectByIdGetter>().WhenInjectedInto<SelectByIdExecuter>().InSingletonScope();
 
             Bind<IStatementExecuter<int>>().To<InsertExecuter>().InSingletonScope().Named(Commands.Insert.ToString());
             Bind<IStatementExecuter<int>>().To<UpdateExecuter>().InSingletonScope().Named(Commands.Update.ToString());
@@ -83,8 +85,8 @@ namespace VODB.Core
             Bind<IStatementExecuter<int>>().To<CountByIdExecuter>().InSingletonScope().Named(Commands.CountById.ToString());
 
             Bind<IStatementExecuter<DbDataReader>>().To<SelectByIdExecuter>().InSingletonScope().Named(Commands.SelectById.ToString());
-            Bind<IStatementExecuter<DbDataReader>>().To<SelectExecuter>().InSingletonScope().Named(Commands.Select.ToString());
 
+            Bind<IQueryResultGetter>().To<QueryResultGetter>().InSingletonScope();
             Bind<IEntityLoader>().To<FullEntityLoader>().InSingletonScope();
         }
     }

@@ -21,10 +21,10 @@ namespace VODB.Core.Execution.Executers
         {
             var cmd = session.CreateCommand();
 
+            session.Open();
             var table = entity.GetTable();
             cmd.CommandText = _Getter.GetStatement(table.CommandsHolder);
-            cmd.SetParameters(table.Fields, entity);
-
+            
             return Execute(cmd, table, entity);
         }
 

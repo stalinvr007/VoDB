@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using VODB.Core;
 using VODB.Core.Infrastructure;
+using VODB.Core.Loaders;
 using VODB.EntityValidators;
 using VODB.Exceptions;
 
@@ -22,6 +23,19 @@ namespace VODB
         public static Boolean IsEntity(this Type entityType)
         {
             return Engine.IsMapped(entityType);
+        }
+
+        public static IEnumerable<TEntity> LazyLoadAll<TEntity>(this IEntityLoader loader, IInternalSession session, DbDataReader reader)
+            where TEntity : new()
+        {
+            session.Open();
+            while (reader.Read())
+            {
+                var entity = new TEntity();
+                loader.Load(entity, reader);
+                yield return entity;
+            }
+            session.Close();
         }
 
     }
