@@ -22,7 +22,7 @@ namespace VODB.Core.Infrastructure
         {
             get
             {
-                return FillCommand(ref _count, new TCountById(Table));
+                return FillCommand(ref _count, new TCount(Table));
             }
         }
 
@@ -76,7 +76,7 @@ namespace VODB.Core.Infrastructure
         {
             get
             {
-                return FillCommand(ref _countById, new TCount(Table));
+                return FillCommand(ref _countById, new TCountById(Table));
             }
         }
     }

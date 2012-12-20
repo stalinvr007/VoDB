@@ -4,13 +4,14 @@ using System.Linq.Expressions;
 using VODB.Exceptions;
 using VODB.Extensions;
 using VODB.Core.Infrastructure;
+using VODB.Core;
 
 namespace VODB.ExpressionParser
 {
 
     public interface IExpressionBodyParser
     {
-        Entity Entity { get; set; }
+        Object Entity { get; set; }
         String FieldName { get; }
         Field Field { get; }
         ExpressionBodyParser Next { get; }
@@ -30,7 +31,7 @@ namespace VODB.ExpressionParser
             _Expression = expression;
         }
 
-        public Entity Entity { get; set; }
+        public Object Entity { get; set; }
 
         public String FieldName { get; private set; }
 
@@ -43,8 +44,6 @@ namespace VODB.ExpressionParser
         public ExpressionType NodeType { get; private set; }
 
         public Object Value { get; private set; }
-
-
 
         public Boolean IsComplex
         {
@@ -96,7 +95,7 @@ namespace VODB.ExpressionParser
             FieldName = expression.Member.Name;
             Field = Entity.FindField(FieldName);
 
-            if (!typeof(Entity).IsAssignableFrom(expression.Type))
+            if (!Engine.IsMapped(expression.Type))
             {
                 if (expression.Expression.NodeType != ExpressionType.Parameter)
                 {
@@ -112,7 +111,8 @@ namespace VODB.ExpressionParser
             {
                 if (Previous != null && Previous.Field == null)
                 {
-                    Previous.Field = ((Entity)Activator.CreateInstance(Field.FieldType)).FindField(Previous.FieldName);
+                    Previous.Field = Activator.CreateInstance(Field.FieldType)
+                                              .FindField(Previous.FieldName);
                 }
             }
 

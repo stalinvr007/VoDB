@@ -27,7 +27,7 @@ namespace VODB.ExpressionParser
         public String Parse(Expression<Func<TEntity, TField>> expression)
         {
 
-            var entity = new TEntity() as Entity;
+            var entity = new TEntity();
             string field = ((MemberExpression)expression.Body).Member.Name;
 
             Field = entity.FindField(field);

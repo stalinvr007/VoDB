@@ -4,7 +4,14 @@ using System.Data.Common;
 
 namespace VODB.Sessions
 {
-    internal sealed class Transaction : ITransaction
+    interface IInternalTransaction : ITransaction
+    {
+        ITransaction BeginTransaction(DbConnection connection);
+        DbCommand CreateCommand();
+        Boolean Ended { get; }
+    }
+
+    internal sealed class Transaction : IInternalTransaction
     {
         private DbTransaction _Transaction;
         private int count = 1;
@@ -15,7 +22,7 @@ namespace VODB.Sessions
 
         private readonly LinkedList<String> _Savepoints = new LinkedList<String>();
 
-        public Transaction(DbTransaction transaction)
+        public Transaction(DbTransaction transaction = null)
         {
             _Transaction = transaction;
         }
@@ -42,17 +49,7 @@ namespace VODB.Sessions
 
         #endregion
 
-        internal DbCommand CreateCommand()
-        {
-            if (_Transaction.Connection == null)
-            {
-                throw new InvalidOperationException("Trying to create a Command withought a connection.");
-            }
-
-            var cmd = _Transaction.Connection.CreateCommand();
-            cmd.Transaction = _Transaction;
-            return cmd;
-        }
+        
 
         private void CheckTransactionAlive()
         {
@@ -61,14 +58,7 @@ namespace VODB.Sessions
                 throw new MissingFieldException("Transaction", "transaction");
             }
         }
-
-        internal void BeginNestedTransaction()
-        {
-            CheckTransactionAlive();
-            SavePoint();
-            ++count;
-        }
-
+        
         public void RollBack()
         {
             if (Ended)
@@ -144,7 +134,37 @@ namespace VODB.Sessions
             }
         }
 
-
+        public ITransaction BeginTransaction(DbConnection connection)
+        {
+            if (_Transaction == null)
+            {
+                _Transaction = connection.BeginTransaction();
+            }
+            else
+            {
+                BeginNestedTransaction();
+            }
+            return this;
+        }
         
+        public DbCommand CreateCommand()
+        {
+            if (_Transaction.Connection == null)
+            {
+                throw new InvalidOperationException("Trying to create a Command withought a connection.");
+            }
+
+            var cmd = _Transaction.Connection.CreateCommand();
+            cmd.Transaction = _Transaction;
+            return cmd;
+        }
+
+        internal void BeginNestedTransaction()
+        {
+            CheckTransactionAlive();
+            SavePoint();
+            ++count;
+        }
+
     }
 }

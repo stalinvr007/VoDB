@@ -31,7 +31,7 @@ namespace VODB.Extensions
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <param name="onCommand">The on command.</param>
-        public static void ValidateEntity(this Entity entity, On onCommand)
+        public static void ValidateEntity<TEntity>(this TEntity entity, On onCommand)
         {
 
             foreach (var validator in Configuration.EntityValidators
@@ -48,9 +48,9 @@ namespace VODB.Extensions
         /// <param name="field">The field.</param>
         /// <param name="entity">The entity.</param>
         /// <exception cref="ParameterSetterNotFoundException"></exception>
-        public static void SetValue(this DbParameter param, Field field, Entity entity)
+        public static void SetValue(this DbParameter param, Field field, Object entity)
         {
-            param.SetValue(field, field.GetValue(entity));
+            param.SetParamValue(field, field.GetValue(entity));
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace VODB.Extensions
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <exception cref="ParameterSetterNotFoundException"></exception>
-        public static void SetValue(this DbParameter param, Field field, Object value)
+        public static void SetParamValue(this DbParameter param, Field field, Object value)
         {
             var type = value == null ? field.FieldType : value.GetType();
             foreach (var setter in Configuration.ParameterSetters
@@ -183,7 +183,7 @@ namespace VODB.Extensions
         /// <param name="field">The field.</param>
         /// <returns></returns>
         /// <exception cref="FieldValidatorNotFoundException"></exception>
-        public static Boolean IsFilled(this Entity entity, Field field)
+        public static Boolean IsFilled<TEntity>(this TEntity entity, Field field)
         {
             foreach (var validator in Configuration.FieldIsFilledValidators)
             {
@@ -228,8 +228,7 @@ namespace VODB.Extensions
         /// <param name="field">The field.</param>
         /// <param name="entity">The entity.</param>
         /// <exception cref="ParameterSetterNotFoundException"></exception>
-        private static void SetParameter<TModel>(this DbCommand dbCommand, Field field, TModel entity)
-            where TModel : Entity
+        private static void SetParameter<TEntity>(this DbCommand dbCommand, Field field, TEntity entity)
         {
             var param = dbCommand.CreateParameter();
             param.ParameterName = field.FieldName;
@@ -262,8 +261,7 @@ namespace VODB.Extensions
         /// <param name="field">The field.</param>
         /// <param name="entity">The entity.</param>
         /// <exception cref="ParameterSetterNotFoundException"></exception>
-        private static void SetOldParameter<TModel>(this DbCommand dbCommand, Field field, TModel entity)
-            where TModel : Entity
+        private static void SetOldParameter<TEntity>(this DbCommand dbCommand, Field field, TEntity entity)
         {
             var param = dbCommand.CreateParameter();
             param.ParameterName = string.Format("Old{0}", field.FieldName);
@@ -281,8 +279,7 @@ namespace VODB.Extensions
         /// <param name="fields">The fields.</param>
         /// <param name="entity">The entity.</param>
         /// <exception cref="ParameterSetterNotFoundException"></exception>
-        public static void SetParameters<TModel>(this DbCommand dbCommand, IEnumerable<Field> fields, TModel entity)
-            where TModel : Entity
+        public static void SetParameters<TEntity>(this DbCommand dbCommand, IEnumerable<Field> fields, TEntity entity)
         {
             foreach (Field field in fields)
             {
@@ -297,10 +294,10 @@ namespace VODB.Extensions
         /// <param name="dbCommand">The db command.</param>
         /// <param name="entity">The entity.</param>
         /// <exception cref="ParameterSetterNotFoundException"></exception>
-        public static void SetOldParameters<TModel>(this DbCommand dbCommand, TModel entity)
-            where TModel : Entity
+        public static void SetOldParameters<TEntity>(this DbCommand dbCommand, TEntity entity)
         {
-            foreach (var field in entity.Table.KeyFields)
+
+            foreach (var field in Engine.GetTable<TEntity>().KeyFields)
             {
                 dbCommand.SetOldParameter(field, entity);
             }

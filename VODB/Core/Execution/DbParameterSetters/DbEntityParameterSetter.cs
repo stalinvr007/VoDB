@@ -12,12 +12,12 @@ namespace VODB.Core.Execution.DbParameterSetters
 
         public Boolean CanHandle(Type type)
         {
-            return typeof (DbEntity).IsAssignableFrom(type);
+            return type.IsEntity();
         }
 
         public void SetValue(DbParameter param, Field field, Object value)
         {
-            var foreignEntity = value as DbEntity;
+            var foreignEntity = value;
 
             if (foreignEntity == null)
             {
@@ -25,7 +25,7 @@ namespace VODB.Core.Execution.DbParameterSetters
             }
             else
             {
-                var foreignKey = foreignEntity.Table.KeyFields
+                var foreignKey = foreignEntity.GetTable().KeyFields
                     .FirstOrDefault(key => 
                         key.FieldName.Equals(field.BindedTo, StringComparison.InvariantCultureIgnoreCase) ||
                         key.FieldName.Equals(field.FieldName, StringComparison.InvariantCultureIgnoreCase));

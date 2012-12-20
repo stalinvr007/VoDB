@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using VODB.Core.Infrastructure;
+using VODB.DbLayer;
+using VODB.Sessions;
 
 namespace VODB.Core
 {
@@ -24,11 +26,23 @@ namespace VODB.Core
         }
     }
 
-    internal class EngineModule : NinjectModule
+    internal class EngineModules : NinjectModule
     {
         public override void Load()
         {
             Bind<IConfiguration>().To<Configuration>().InSingletonScope();
         }
     }
+
+    internal class SessionModule : NinjectModule
+    {
+        public override void Load()
+        {
+            Bind<IInternalTransaction>().To<Transaction>();
+            Bind<IDbConnectionCreator>().To<NameConventionDbConnectionCreator>();
+
+
+        }
+    }
+
 }

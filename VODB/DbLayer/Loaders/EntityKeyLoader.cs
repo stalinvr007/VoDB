@@ -1,4 +1,5 @@
 using System.Data.Common;
+using VODB.Core;
 
 namespace VODB.DbLayer.Loaders
 {
@@ -7,7 +8,7 @@ namespace VODB.DbLayer.Loaders
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     internal class EntityKeyLoader<TModel> : EntityLoader<TModel>
-        where TModel : Entity, new()
+        where TModel : new()
     {
 
         /// <summary>
@@ -19,7 +20,9 @@ namespace VODB.DbLayer.Loaders
         public override void Load(TModel entity, DbDataReader reader)
         {
             if (entity == null) return;
-            foreach (var field in entity.Table.KeyFields)
+            var table = Engine.GetTable(entity.GetType());
+
+            foreach (var field in table.KeyFields)
             {
                 SetValue(entity, field, GetValue(reader, field.FieldName), reader);
             }

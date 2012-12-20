@@ -5,12 +5,8 @@ using VODB.DbLayer.DbResults;
 
 namespace VODB.Tests.Models.Northwind
 {
-
-    /// <summary>
-    /// 
-    /// </summary>
     [DbTable("Employees")]
-    public sealed class Employee : DbEntity
+    public class Employee
     {
 
         [DbIdentity]
@@ -49,29 +45,13 @@ namespace VODB.Tests.Models.Northwind
         public Byte[] Photo { get; set; }
 
         [DbBind("EmployeeId")]
-        public Employee ReportsTo
-        {
-            get { return GetValue<Employee>(); }
-            set { SetValue(value); }
-        }
+        public virtual Employee ReportsTo { get; set; }
 
         public String PhotoPath { get; set; }
 
-        /// <summary>
-        /// Gets a collection of employees that reports to this one.
-        /// </summary>
-        public IDbAndQueryResult<Employee> ReportedFrom
-        {
-            get { return GetValues<Employee>().Where(m => m.ReportsTo == this); }
-        }
+        public virtual IEnumerable<Employee> ReportedFrom { get; set; }
 
-        /// <summary>
-        /// Gets the territories.
-        /// </summary>
-        public IDbAndQueryResult<EmployeeTerritories> Territories
-        {
-            get { return GetValues<EmployeeTerritories>().Where(m => m.Employee == this); }
-        }
+        //public virtual IEnumerable<EmployeeTerritories> Territories { get; set; }
 
         [DbIgnore]
         public bool NonExistingField { get; set; }
