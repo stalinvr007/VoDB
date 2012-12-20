@@ -22,11 +22,6 @@ namespace VODB.Sessions
 
         private readonly LinkedList<String> _Savepoints = new LinkedList<String>();
 
-        public Transaction(DbTransaction transaction = null)
-        {
-            _Transaction = transaction;
-        }
-
         #region IDisposable Members
 
         public void Dispose()

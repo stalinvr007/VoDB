@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.Annotations;
-using VODB.Caching;
 using VODB.Tests.Models.Northwind;
 using VODB.Core.Infrastructure;
 using VODB.Core;

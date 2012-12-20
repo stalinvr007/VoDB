@@ -12,15 +12,27 @@ namespace VODB.Core
 
         static IKernel kernel = new StandardKernel(
             new InfrastructureModule(), 
+            new SessionModule(),
             new EngineModules()
         );
 
         static IEntityTables _tables = Get<IEntityTables>();
+        
+        #region Kernel Wrapper
 
         public static TClass Get<TClass>()
         {
             return kernel.Get<TClass>();
         }
+
+        public static TClass Get<TClass>(Commands cmd)
+        {
+            return kernel.Get<TClass>(cmd.ToString());
+        }
+        
+        #endregion
+
+        #region IEntityTablesWrapper
 
         public static Table GetTable<TEntity>()
         {
@@ -46,6 +58,7 @@ namespace VODB.Core
         {
             return _tables.IsMapped<TEntity>();
         }
-        
+
+        #endregion
     }
 }

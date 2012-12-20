@@ -48,11 +48,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Annotations\Attributes.cs" />
-    <Compile Include="Caching\TablesCache.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Core\Engine.cs" />
     <Compile Include="Core\EngineModules.cs" />
-    <Compile Include="Core\Execution\IQuery.cs" />
+    <Compile Include="Core\Execution\Executers\NonQueryExecuters.cs" />
+    <Compile Include="Core\Execution\Executers\IStatementExecuter.cs" />
+    <Compile Include="Core\Execution\Executers\ScalarExecuters.cs" />
+    <Compile Include="Core\Execution\Executers\StatementExecuterBase.cs" />
+    <Compile Include="Core\Execution\Statements\ISatementGetter.cs" />
+    <Compile Include="Core\Execution\Statements\SatementGetters.cs" />
     <Compile Include="Core\Infrastructure\AsyncTable.cs" />
     <Compile Include="Core\Infrastructure\TableMapper.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommandHolderLazy.cs" />
@@ -139,14 +143,12 @@
     <Compile Include="Exceptions\ConnectionStringNotFoundException.cs" />
     <Compile Include="DbLayer\DbConnectionCreator.cs" />
     <Compile Include="DbLayer\IDbConnectionCreator.cs" />
-    <Compile Include="Extensions\FieldHelpers.cs" />
     <Compile Include="Extensions\ReflectionExtensions.cs" />
-    <Compile Include="Sessions\Session.cs" />
+    <Compile Include="Sessions\InternalSession.cs" />
+    <Compile Include="Session.cs" />
     <Compile Include="Sessions\Transaction.cs" />
     <Compile Include="Core\Infrastructure\Field.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Core\Infrastructure\ITableCreator.cs" />
-    <Compile Include="Core\Infrastructure\ITSqlCommandHolder.cs" />
     <Compile Include="Core\Infrastructure\Table.cs" />
     <Compile Include="Exceptions\EntityKeysNotFoundException.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TCountById.cs" />

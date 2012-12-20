@@ -12,7 +12,7 @@ namespace VODB.Tests
         public void InnerTransactions()
         {
 
-            using (var session = new Session(null, null))
+            using (var session = new Session())
             {
 
                 using (session.BeginTransaction())
