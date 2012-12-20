@@ -20,10 +20,11 @@ namespace VODB.Core.Loaders.FieldSetters
         /// Sets the value.
         /// </summary>
         /// <param name="entity">The entity.</param>
+        /// <param name="session"></param>
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="getValueFromReader">The get value from reader.</param>
-        void SetValue<TEntity>(TEntity entity, Field field, Object value, Func<Field, Object> getValueFromReader);
+        void SetValue<TEntity>(TEntity entity, ISession session, Field field, Object value, Func<Field, Object> getValueFromReader);
 
     }
 }

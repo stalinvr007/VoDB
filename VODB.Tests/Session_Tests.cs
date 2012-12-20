@@ -100,7 +100,7 @@ namespace VODB.Tests
         public void Session_GetAll_OrderedByFirstName_TSql()
         {
             var employee = new Session()
-                .GetAll<Employee>().TSqlOrderBy(e => e.FirstName)
+                .GetAll<Employee>().OrderBy(e => e.FirstName)
                 .First();
 
             EntitiesAsserts.Assert_Employee_2(employee);

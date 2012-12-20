@@ -26,10 +26,11 @@ namespace VODB.Core.Loaders.FieldSetters
         /// Sets the value.
         /// </summary>
         /// <param name="entity">The entity.</param>
+        /// <param name="session"></param>
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="getValueFromReader">The get value from reader.</param>
-        public void SetValue<TEntity>(TEntity entity, Field field, Object value, Func<Field, Object> getValueFromReader)
+        public void SetValue<TEntity>(TEntity entity, ISession session, Field field, Object value, Func<Field, Object> getValueFromReader)
         {
             var foreignEntity = CreateInstance(field.FieldType);
 
@@ -41,7 +42,7 @@ namespace VODB.Core.Loaders.FieldSetters
                 if (key.FieldName.Equals(field.BindedTo, StringComparison.InvariantCultureIgnoreCase) || 
                     key.FieldName.Equals(field.FieldName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foreignEntity.SetValue(key, value, getValueFromReader);
+                    foreignEntity.SetValue(session, key, value, getValueFromReader);
                 }
                 else
                 {
@@ -51,7 +52,7 @@ namespace VODB.Core.Loaders.FieldSetters
                     var origField = entity.FindField(key.FieldName);
                     if (origField != null)
                     {
-                        foreignEntity.SetValue(key, getValueFromReader(origField), getValueFromReader);
+                        foreignEntity.SetValue(session, key, getValueFromReader(origField), getValueFromReader);
                     }
                 }
             }

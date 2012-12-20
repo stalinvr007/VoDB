@@ -13,15 +13,16 @@ namespace VODB.Core.Loaders
         /// Loads the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
+        /// <param name="session"></param>
         /// <param name="reader">The reader.</param>
         /// <returns></returns>
-        public override void Load<TEntity>(TEntity entity, DbDataReader reader)
+        public override void Load<TEntity>(TEntity entity, ISession session, DbDataReader reader)
         {
 
             if (entity == null) return;
             foreach (var field in entity.GetTable().Fields)
             {
-                SetValue(entity, field, reader.GetValue(field.FieldName), reader);
+                SetValue(entity, session, field, reader.GetValue(field.FieldName), reader);
             }
 
         }

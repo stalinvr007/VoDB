@@ -21,6 +21,7 @@ namespace VODB.Core.Execution.Executers.DbResults
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     public interface IDbQueryResult<TEntity> : IEnumerable<TEntity>, IDbResult
+        where TEntity : class, new()
     {
 
         /// <summary>

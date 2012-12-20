@@ -27,7 +27,7 @@ namespace VODB.Sessions
         private readonly IStatementExecuter<DbDataReader> _SelectByIdExecuter;
         private readonly IQueryResultGetter _QueryResultGetter;
         private readonly IEntityLoader _EntityLoader;
-        
+
         public InternalSession(
             IDbConnectionCreator creator,
             IInternalTransaction transaction,
@@ -141,8 +141,13 @@ namespace VODB.Sessions
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            return _EntityLoader.LazyLoadAll<TEntity>(this, _SelectByIdExecuter.Execute(entity, this))
-                .ToList().FirstOrDefault();
+            var reader = _SelectByIdExecuter.Execute(entity, this);
+            if (reader.Read())
+            {
+                _EntityLoader.Load(entity, this, reader);
+                return entity;
+            }
+            return null;
         }
 
         public TEntity Insert<TEntity>(TEntity entity) where TEntity : class, new()

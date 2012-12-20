@@ -30,7 +30,7 @@ namespace VODB.Tests
                 Assert.IsTrue(reader.Read());
 
                 new EntityKeyLoader()
-                    .Load<Employee>(employee, reader);
+                    .Load<Employee>(employee, null, reader);
 
                 reader.Close();
 
@@ -59,7 +59,7 @@ namespace VODB.Tests
                 Assert.IsTrue(reader.Read());
 
                 new FullEntityLoader()
-                    .Load<Employee>(employee, reader);
+                    .Load<Employee>(employee, null, reader);
 
                 reader.Close();
 

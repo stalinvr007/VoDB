@@ -123,7 +123,6 @@
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\ExpressionsExtensions.cs" />
     <Compile Include="Exceptions\VodbException.cs" />
-    <Compile Include="Extensions\IDbQueryResultExtensions.cs" />
     <Compile Include="IConfiguration.cs" />
     <Compile Include="InternalExtensions.cs" />
     <Compile Include="ISessionExtensions.cs" />

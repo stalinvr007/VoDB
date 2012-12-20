@@ -33,13 +33,13 @@ namespace VODB.Core.Loaders
         /// <param name="value">The value.</param>
         /// <param name="reader"> </param>
         /// <returns></returns>
-        protected void SetValue<TEntity>(TEntity entity, Field field, object value, DbDataReader reader)
+        protected void SetValue<TEntity>(TEntity entity, ISession session, Field field, object value, DbDataReader reader)
         {
             if (field.IsKey)
             {
                 // inEntity.AddKeyOriginalValue(field, value);
             }
-            entity.SetValue(field, value, reader);
+            entity.SetValue(session, field, value, reader);
         }
 
         #endregion
@@ -48,8 +48,9 @@ namespace VODB.Core.Loaders
         /// Loads the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
+        /// <param name="session"></param>
         /// <param name="reader">The reader.</param>
         /// <returns></returns>
-        public abstract void Load<TEntity>(TEntity entity, DbDataReader reader);
+        public abstract void Load<TEntity>(TEntity entity, ISession session, DbDataReader reader);
     }
 }
