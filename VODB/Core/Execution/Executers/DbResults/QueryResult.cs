@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using VODB.Core.Execution.Statements;
+using VODB.Core.Infrastructure;
 using VODB.Core.Loaders;
 using VODB.ExpressionParser;
 
@@ -13,26 +14,32 @@ namespace VODB.Core.Execution.Executers.DbResults
 
     interface IQueryResultGetter
     {
-        IDbQueryResult<TEntity> GetQueryResult<TEntity>(IInternalSession session, IEntityLoader loader);
+        IDbQueryResult<TEntity> GetQueryResult<TEntity>(IInternalSession session, IEntityLoader loader)
+            where TEntity : class, new();
+
     }
 
     class QueryResultGetter : IQueryResultGetter
     {
         public IDbQueryResult<TEntity> GetQueryResult<TEntity>(IInternalSession session, IEntityLoader loader)
+            where TEntity : class, new()
         {
             return new QueryResult<TEntity>(session, loader);
         }
     }
 
     class QueryResult<TEntity> : IDbQueryResult<TEntity>
+        where TEntity : class, new()
     {
         private readonly IInternalSession _Session;
         private readonly IEntityLoader _Loader;
+        private readonly Table _Table;
         
         public QueryResult(IInternalSession session, IEntityLoader loader)
         {
             _Loader = loader;
-            _Session = session; 
+            _Session = session;
+            _Table = Engine.GetTable<TEntity>();
         }
 
         public IDbAndQueryResult<TEntity> Where(string whereCondition, params object[] args)
@@ -57,7 +64,18 @@ namespace VODB.Core.Execution.Executers.DbResults
 
         public IEnumerator<TEntity> GetEnumerator()
         {
-            throw new NotImplementedException();
+            var cmd = _Session.CreateCommand();
+            _Session.Open();
+            cmd.CommandText = WhereCondition;
+
+            var reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                TEntity newTEntity = new TEntity();
+                _Loader.Load(newTEntity, _Session as ISession, reader);
+                yield return newTEntity;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -72,12 +90,12 @@ namespace VODB.Core.Execution.Executers.DbResults
 
         public string TableName
         {
-            get { throw new NotImplementedException(); }
+            get { return _Table.TableName; }
         }
 
         public string WhereCondition
         {
-            get { throw new NotImplementedException(); }
+            get { return _Table.CommandsHolder.Select; }
         }
     }
 

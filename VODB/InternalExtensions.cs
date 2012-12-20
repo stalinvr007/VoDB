@@ -25,19 +25,6 @@ namespace VODB
             return Engine.IsMapped(entityType);
         }
 
-        public static IEnumerable<TEntity> LazyLoadAll<TEntity>(this IEntityLoader loader, IInternalSession session, DbDataReader reader)
-            where TEntity : new()
-        {
-            session.Open();
-            while (reader.Read())
-            {
-                var entity = new TEntity();
-                loader.Load(entity, reader);
-                yield return entity;
-            }
-            session.Close();
-        }
-
     }
 
     internal static class ConfigurationHelpers
@@ -118,13 +105,14 @@ namespace VODB
         /// </summary>
         /// <typeparam name="TModel">The type of the model.</typeparam>
         /// <param name="entity">The entity.</param>
+        /// <param name="session"></param>
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="reader">The reader.</param>
         /// <returns></returns>
         /// <exception cref="FieldSetterNotFoundException"></exception>
         /// <exception cref="FieldNotFoundException"></exception>
-        public static Field SetValue<TModel>(this TModel entity, Field field, object value, DbDataReader reader)
+        public static Field SetValue<TModel>(this TModel entity, ISession session, Field field, object value, DbDataReader reader)
         {
             if (value == null || value == DBNull.Value)
             {
@@ -134,7 +122,7 @@ namespace VODB
             foreach (var setter in Configuration.FieldSetters
                 .Where(setter => setter.CanHandle(field.FieldType)))
             {
-                setter.SetValue(entity, field, value, f => reader.GetValue(f.FieldName));
+                setter.SetValue(entity, session, field, value, f => reader.GetValue(f.FieldName));
                 return field;
             }
 
@@ -146,12 +134,13 @@ namespace VODB
         /// </summary>
         /// <typeparam name="TModel">The type of the model.</typeparam>
         /// <param name="entity">The entity.</param>
+        /// <param name="session"></param>
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="getValueFromReader">The get value from reader.</param>
         /// <returns></returns>
         /// <exception cref="FieldSetterNotFoundException"></exception>
-        public static void SetValue<TModel>(this TModel entity, Field field, object value, Func<Field, object> getValueFromReader)
+        public static void SetValue<TModel>(this TModel entity, ISession session, Field field, object value, Func<Field, object> getValueFromReader)
         {
             if (value == null || value == DBNull.Value)
             {
@@ -161,7 +150,7 @@ namespace VODB
             foreach (var setter in Configuration.FieldSetters
                 .Where(setter => setter.CanHandle(field.FieldType)))
             {
-                setter.SetValue(entity, field, value, getValueFromReader);
+                setter.SetValue(entity, session, field, value, getValueFromReader);
                 return;
             }
 
@@ -241,12 +230,7 @@ namespace VODB
             }
             catch (Exception ex)
             {
-                var table = reader.GetSchemaTable();
-                if (table != null && !table.Columns.Contains(fieldName))
-                {
-                    throw new FieldNotFoundException(fieldName, table.TableName, ex);
-                }
-                throw;
+                throw new FieldNotFoundException(fieldName, "", ex);
             }
         }
 

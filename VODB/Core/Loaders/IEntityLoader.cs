@@ -9,7 +9,8 @@ namespace VODB.Core.Loaders
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
+        /// <param name="session"></param>
         /// <param name="reader">The reader.</param>
-        void Load<TEntity>(TEntity entity, DbDataReader reader);
+        void Load<TEntity>(TEntity entity, ISession session, DbDataReader reader);
     }
 }

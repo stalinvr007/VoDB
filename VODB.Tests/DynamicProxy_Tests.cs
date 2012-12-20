@@ -8,7 +8,6 @@ using Castle.DynamicProxy;
 
 namespace VODB.Tests
 {
-    [Serializable]
     public class Interceptor : IInterceptor
     {
         public void Intercept(IInvocation invocation)
