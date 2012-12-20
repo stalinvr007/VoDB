@@ -3,14 +3,13 @@ using System.Data.Common;
 using VODB.Extensions;
 using VODB.Core.Infrastructure;
 
-namespace VODB.DbLayer.Loaders
+namespace VODB.Core.Loaders
 {
     /// <summary>
     /// Loads data into an entity from a DataReader.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
-    internal abstract class EntityLoader<TModel> : IEntityLoader<TModel> 
-        where TModel : new()
+    internal abstract class EntityLoader : IEntityLoader
     {
         #region FIELD GETTER SETTER
 
@@ -34,7 +33,7 @@ namespace VODB.DbLayer.Loaders
         /// <param name="value">The value.</param>
         /// <param name="reader"> </param>
         /// <returns></returns>
-        protected void SetValue(TModel entity, Field field, object value, DbDataReader reader)
+        protected void SetValue<TEntity>(TEntity entity, Field field, object value, DbDataReader reader)
         {
             if (field.IsKey)
             {
@@ -51,6 +50,6 @@ namespace VODB.DbLayer.Loaders
         /// <param name="entity">The entity.</param>
         /// <param name="reader">The reader.</param>
         /// <returns></returns>
-        public abstract void Load(TModel entity, DbDataReader reader);
+        public abstract void Load<TEntity>(TEntity entity, DbDataReader reader);
     }
 }

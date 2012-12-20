@@ -2,11 +2,13 @@ using Ninject;
 using Ninject.Modules;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using VODB.Core.Execution.Executers;
 using VODB.Core.Execution.Statements;
 using VODB.Core.Infrastructure;
+using VODB.Core.Loaders;
 using VODB.DbLayer;
 using VODB.Sessions;
 
@@ -20,7 +22,10 @@ namespace VODB.Core
         Update,
 
         Count,
-        CountById
+        CountById,
+
+        Select,
+        SelectById
     }
 
     class BindAttribute : NamedAttribute
@@ -76,6 +81,11 @@ namespace VODB.Core
 
             Bind<IStatementExecuter<int>>().To<CountExecuter>().InSingletonScope().Named(Commands.Count.ToString());
             Bind<IStatementExecuter<int>>().To<CountByIdExecuter>().InSingletonScope().Named(Commands.CountById.ToString());
+
+            Bind<IStatementExecuter<DbDataReader>>().To<SelectByIdExecuter>().InSingletonScope().Named(Commands.SelectById.ToString());
+            Bind<IStatementExecuter<DbDataReader>>().To<SelectExecuter>().InSingletonScope().Named(Commands.Select.ToString());
+
+            Bind<IEntityLoader>().To<FullEntityLoader>().InSingletonScope();
         }
     }
 

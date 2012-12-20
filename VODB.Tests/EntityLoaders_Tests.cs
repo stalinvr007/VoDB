@@ -1,7 +1,7 @@
 ﻿using System.Data.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.DbLayer;
-using VODB.DbLayer.Loaders;
+using VODB.Core.Loaders;
 using VODB.Tests.Models.Northwind;
 using VODB.Core.Infrastructure;
 using VODB.Core;
@@ -29,8 +29,8 @@ namespace VODB.Tests
                 Assert.IsNotNull(reader);
                 Assert.IsTrue(reader.Read());
 
-                new EntityKeyLoader<Employee>()
-                    .Load(employee, reader);
+                new EntityKeyLoader()
+                    .Load<Employee>(employee, reader);
 
                 reader.Close();
 
@@ -58,8 +58,8 @@ namespace VODB.Tests
                 Assert.IsNotNull(reader);
                 Assert.IsTrue(reader.Read());
 
-                new FullEntityLoader<Employee>()
-                    .Load(employee, reader);
+                new FullEntityLoader()
+                    .Load<Employee>(employee, reader);
 
                 reader.Close();
 

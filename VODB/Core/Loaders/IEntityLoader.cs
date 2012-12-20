@@ -1,16 +1,15 @@
 using System.Data.Common;
 
-namespace VODB.DbLayer.Loaders
+namespace VODB.Core.Loaders
 {
-    internal interface IEntityLoader<in TModel> 
-        where TModel : new()
+    internal interface IEntityLoader
     {
         /// <summary>
         /// Loads the specified entity.
         /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
         /// <param name="reader">The reader.</param>
-        /// <returns></returns>
-        void Load(TModel entity, DbDataReader reader);
+        void Load<TEntity>(TEntity entity, DbDataReader reader);
     }
 }

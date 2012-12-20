@@ -42,9 +42,7 @@ namespace VODB.Sessions
             _Transaction = null;
         }
 
-        #endregion
-
-        
+        #endregion        
 
         private void CheckTransactionAlive()
         {

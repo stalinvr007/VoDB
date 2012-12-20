@@ -53,6 +53,7 @@
     <Compile Include="Core\EngineModules.cs" />
     <Compile Include="Core\Execution\Executers\NonQueryExecuters.cs" />
     <Compile Include="Core\Execution\Executers\IStatementExecuter.cs" />
+    <Compile Include="Core\Execution\Executers\QueryExecuters.cs" />
     <Compile Include="Core\Execution\Executers\ScalarExecuters.cs" />
     <Compile Include="Core\Execution\Executers\StatementExecuterBase.cs" />
     <Compile Include="Core\Execution\Statements\ISatementGetter.cs" />
@@ -77,12 +78,12 @@
     <Compile Include="DbLayer\DbResults\ConditionPart.cs" />
     <Compile Include="DbLayer\DbResults\IDbQueryResult.cs" />
     <Compile Include="DbLayer\DbResults\Operation.cs" />
-    <Compile Include="DbLayer\Loaders\EntityKeyLoader.cs" />
-    <Compile Include="DbLayer\Loaders\EntityLoader.cs" />
-    <Compile Include="DbLayer\Loaders\FieldSetters\BasicFieldSetter.cs" />
-    <Compile Include="DbLayer\Loaders\FieldSetters\DbEntityFieldSetter.cs" />
-    <Compile Include="DbLayer\Loaders\FieldSetters\IFieldSetter.cs" />
-    <Compile Include="DbLayer\Loaders\IEntityLoader.cs" />
+    <Compile Include="Core\Loaders\EntityKeyLoader.cs" />
+    <Compile Include="Core\Loaders\EntityLoader.cs" />
+    <Compile Include="Core\Loaders\FieldSetters\BasicFieldSetter.cs" />
+    <Compile Include="Core\Loaders\FieldSetters\DbEntityFieldSetter.cs" />
+    <Compile Include="Core\Loaders\FieldSetters\IFieldSetter.cs" />
+    <Compile Include="Core\Loaders\IEntityLoader.cs" />
     <Compile Include="DbLayer\NameConventionDbConnectionCreator.cs" />
     <Compile Include="EntityValidators\Fields\DateTimeFieldIsFilled.cs" />
     <Compile Include="EntityValidators\Fields\DbEntityFieldIsFilled.cs" />
@@ -138,7 +139,7 @@
     <Compile Include="Exceptions\UnableToExecuteQueryException.cs" />
     <Compile Include="Exceptions\UnableToInstantiateTypeException.cs" />
     <Compile Include="Exceptions\FieldNotFoundException.cs" />
-    <Compile Include="DbLayer\Loaders\FullEntityLoader.cs" />
+    <Compile Include="Core\Loaders\FullEntityLoader.cs" />
     <Compile Include="Exceptions\UnableToCreateDbConnectionException.cs" />
     <Compile Include="Exceptions\ConnectionStringNotFoundException.cs" />
     <Compile Include="DbLayer\DbConnectionCreator.cs" />

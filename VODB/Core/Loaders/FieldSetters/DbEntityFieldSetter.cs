@@ -4,7 +4,7 @@ using VODB.Core.Infrastructure;
 using VODB.Extensions;
 using VODB.Core;
 
-namespace VODB.DbLayer.Loaders.FieldSetters
+namespace VODB.Core.Loaders.FieldSetters
 {
     /// <summary>
     /// Sets the value for a DbEntity type field.
