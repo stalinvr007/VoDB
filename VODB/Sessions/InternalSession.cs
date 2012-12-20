@@ -1,23 +1,43 @@
-﻿using System;
+using Ninject;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VODB.Core;
+using VODB.Core.Execution.Executers;
 using VODB.DbLayer;
 using VODB.DbLayer.DbResults;
 
 namespace VODB.Sessions
 {
-    class Session : ISession, IInternalSession
+    class InternalSession : ISession, IInternalSession
     {
         private DbConnection _connection;
         private IInternalTransaction _Transaction;
         private IDbConnectionCreator _Creator;
-        
-        public Session(IDbConnectionCreator creator, IInternalTransaction transaction)
+        private readonly IStatementExecuter<int> _InsertExecuter;
+        private readonly IStatementExecuter<int> _UpdateExecuter;
+        private readonly IStatementExecuter<int> _DeleteExecuter;
+        private readonly IStatementExecuter<int> _CountExecuter;
+        private readonly IStatementExecuter<int> _CountByIdExecuter;
+
+        public InternalSession(
+            IDbConnectionCreator creator,
+            IInternalTransaction transaction,
+            [Bind(Commands.Insert)] IStatementExecuter<int> insertExecuter,
+            [Bind(Commands.Update)] IStatementExecuter<int> updateExecuter,
+            [Bind(Commands.Delete)] IStatementExecuter<int> deleteExecuter,
+            [Bind(Commands.Count)] IStatementExecuter<int> countExecuter,
+            [Bind(Commands.CountById)] IStatementExecuter<int> countByIdExecuter)
         {
+            _CountByIdExecuter = countByIdExecuter;
+            _CountExecuter = countExecuter;
+            _DeleteExecuter = deleteExecuter;
+            _UpdateExecuter = updateExecuter;
+            _InsertExecuter = insertExecuter;
             _Creator = creator;
             _Transaction = transaction;
         }
@@ -91,7 +111,7 @@ namespace VODB.Sessions
             _connection = null;
             _Creator = null;
         }
-        
+
         #region ISession Implementation
 
         public ITransaction BeginTransaction()
@@ -109,24 +129,15 @@ namespace VODB.Sessions
             throw new NotImplementedException();
         }
 
-        public Task<IDbQueryResult<TEntity>> AsyncGetAll<TEntity>() where TEntity : class, new()
-        {
-            throw new NotImplementedException();
-        }
-
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : class, new()
         {
             throw new NotImplementedException();
         }
 
         public TEntity Insert<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            throw new NotImplementedException();
+            _InsertExecuter.Execute(entity, this);
+            return entity;
         }
 
         public void Delete<TEntity>(TEntity entity) where TEntity : class, new()

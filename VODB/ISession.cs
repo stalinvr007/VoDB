@@ -26,27 +26,12 @@ namespace VODB
         IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : class, new();
 
         /// <summary>
-        /// Gets all entities of the given type from this session. Asynchronously.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the entity.</typeparam>
-        /// <returns></returns>
-        Task<IDbQueryResult<TEntity>> AsyncGetAll<TEntity>() where TEntity : class, new();
-
-        /// <summary>
         /// Gets the entity by Id.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The entity that contains the key fields filled.</param>
         /// <returns></returns>
         TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new();
-
-        /// <summary>
-        /// Gets the entity by Id. Asynchronously.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the entity.</typeparam>
-        /// <param name="entity">The entity that contains the key fields filled.</param>
-        /// <returns></returns>
-        Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : class, new();
 
         /// <summary>
         /// Inserts the specified entity.
