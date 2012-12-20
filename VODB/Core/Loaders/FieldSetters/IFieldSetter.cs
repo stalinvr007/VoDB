@@ -1,7 +1,7 @@
 ﻿using System;
 using VODB.Core.Infrastructure;
 
-namespace VODB.DbLayer.Loaders.FieldSetters
+namespace VODB.Core.Loaders.FieldSetters
 {
     /// <summary>
     /// Represents a field value setter.

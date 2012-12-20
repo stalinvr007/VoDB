@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using VODB.Core.Execution.DbParameterSetters;
-using VODB.DbLayer.Loaders.FieldSetters;
+using VODB.Core.Loaders.FieldSetters;
 using VODB.EntityValidators;
 using VODB.EntityValidators.Fields;
 using VODB.Exceptions.Handling;
