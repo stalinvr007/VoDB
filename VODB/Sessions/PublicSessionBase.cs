@@ -1,3 +1,4 @@
+using VODB.Core;
 using VODB.DbLayer.DbResults;
 
 namespace VODB.Sessions
@@ -5,6 +6,8 @@ namespace VODB.Sessions
     public class PublicSessionBase : ISession
     {
         private ISession _InnerSession;
+
+        
 
         protected PublicSessionBase(ISession innerSession)
         {
@@ -23,6 +26,7 @@ namespace VODB.Sessions
 
         public IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : new()
         {
+            Engine.Map<TEntity>();
             return _InnerSession.GetAll<TEntity>();
         }
 
@@ -33,6 +37,7 @@ namespace VODB.Sessions
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : new()
         {
+            Engine.Map<TEntity>();
             return _InnerSession.GetById(entity);
         }
 
@@ -43,26 +48,31 @@ namespace VODB.Sessions
 
         public TEntity Insert<TEntity>(TEntity entity) where TEntity : new()
         {
+            Engine.Map<TEntity>();
             return _InnerSession.Insert(entity);
         }
 
         public void Delete<TEntity>(TEntity entity) where TEntity : new()
         {
+            Engine.Map<TEntity>();
             _InnerSession.Delete(entity);
         }
 
         public TEntity Update<TEntity>(TEntity entity) where TEntity : new()
         {
+            Engine.Map<TEntity>();
             return _InnerSession.Update(entity);
         }
 
         public int Count<TEntity>() where TEntity : new()
         {
+            Engine.Map<TEntity>();
             return _InnerSession.Count<TEntity>();
         }
 
         public bool Exists<TEntity>(TEntity entity) where TEntity : new()
         {
+            Engine.Map<TEntity>();
             return _InnerSession.Exists(entity);
         }
 

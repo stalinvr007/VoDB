@@ -13,7 +13,11 @@ namespace VODB.Core
     {
         Table GetTable<TEntity>();
 
+        Table GetTable(Type type);
+
         void Map<TEntity>();
+
+        void Map(Type type);
     }
 
     internal class EntityTables : IEntityTables
@@ -23,23 +27,39 @@ namespace VODB.Core
 
         public Table GetTable<TEntity>()
         {
+            return GetTable(typeof(TEntity));
+        }
+
+        public Table GetTable(Type type)
+        {
             Table table;
-            if (_tables.TryGetValue(typeof(TEntity), out table))
+            if (_tables.TryGetValue(type, out table))
             {
                 return table;
             }
 
-            throw new EntityMapNotFoundException<TEntity>();
+            Map(type);
+
+            return GetTable(type);
         }
 
         public void Map<TEntity>()
         {
-            _tables[typeof(TEntity)] = new AsyncTable(
-                new Task<Table>(() =>
-                {
-                    return Engine.Get<ITableMapper<TEntity>>().Table;
-                }));
+            Map(typeof(TEntity));
         }
 
+        public void Map(Type type)
+        {
+            if (_tables.ContainsKey(type))
+            {
+                return;
+            }
+
+            _tables[type] = new AsyncTable(
+                new Task<Table>(() =>
+                {
+                    return Engine.Get<ITableMapper>().GetTable(type);
+                }));
+        }
     }
 }

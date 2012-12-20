@@ -27,6 +27,11 @@ namespace VODB.Core
             return _tables.GetTable<TEntity>();
         }
 
+        public static Table GetTable(Type type)
+        {
+            return _tables.GetTable(type);
+        }
+
         public static void Map<TEntity>()
         {
             _tables.Map<TEntity>();

@@ -168,7 +168,7 @@ namespace VODB.Tests
         [TestMethod]
         public void FieldMapping_Test()
         {
-            var fieldMapping = new FieldMapper<EmployeeNew>();
+            var fieldMapping = new FieldMapper<EmployeeNew>(new FieldMapper());
             var fields = fieldMapping.GetFields().ToList();
 
             AssertFields(fields);

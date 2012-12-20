@@ -9,42 +9,40 @@ using VODB.Core.Infrastructure;
 namespace VODB.Core.Infrastructure
 {
 
+
+    interface ITableMapper
+    {
+        Table GetTable(Type type);
+    }
+
     interface ITableMapper<TEntity>
     {
         Table Table { get; }
     }
 
-    class TableMapper<TEntity> : ITableMapper<TEntity>
+    class TableMapper : ITableMapper
     {
-
-        private readonly IFieldMapper<TEntity> _FieldMapper;
+        private readonly IFieldMapper _FieldMapper;
         private readonly ITSqlCommandHolder _SqlCommands;
 
-        public TableMapper(IFieldMapper<TEntity> fieldMapper, ITSqlCommandHolder sqlCommands)
+        public TableMapper(IFieldMapper fieldMapper, ITSqlCommandHolder sqlCommands)
         {
             _SqlCommands = sqlCommands;
             _FieldMapper = fieldMapper;
         }
 
-        public Table Table
-        {
-            get
-            {
-                return CreateTable();
-            }
-        }
-
-        private Table CreateTable()
+        public Table GetTable(Type type)
         {
             var table = new Table();
 
             Parallel.Invoke(
-                () => table.TableName = GetTableName(typeof(TEntity)),
-                () => table.Fields = _FieldMapper.GetFields().ToList(),
-                () => table.KeyFields = _FieldMapper.GetFields().Where(f => f.IsKey).ToList(),
-                () => { 
-                    table.CommandsHolder = _SqlCommands; 
-                    table.CommandsHolder.Table = table; 
+                () => table.TableName = GetTableName(type),
+                () => table.Fields = _FieldMapper.GetFields(type).ToList(),
+                () => table.KeyFields = _FieldMapper.GetFields(type).Where(f => f.IsKey).ToList(),
+                () =>
+                {
+                    table.CommandsHolder = _SqlCommands;
+                    table.CommandsHolder.Table = table;
                 }
             );
 
@@ -59,6 +57,26 @@ namespace VODB.Core.Infrastructure
 
             return tableAttr == null ? type.Name : tableAttr.TableName;
         }
+
+    }
+
+    class TableMapper<TEntity> : ITableMapper<TEntity>
+    {
+
+        private readonly ITableMapper _TableMapper;
+        public TableMapper(ITableMapper tableMapper)
+        {
+            _TableMapper = tableMapper;
+        }
+
+        public Table Table
+        {
+            get
+            {
+                return _TableMapper.GetTable(typeof(TEntity));
+            }
+        }
+
     }
 
 }
