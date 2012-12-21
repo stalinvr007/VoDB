@@ -22,7 +22,7 @@ namespace VODB.Core.Execution.Executers
             var cmd = session.CreateCommand();
 
             session.Open();
-            var table = entity.GetTable();
+            var table = Engine.GetTable(entity.GetType());
             cmd.CommandText = _Getter.GetStatement(table.CommandsHolder);
             
             return Execute(cmd, table, entity);

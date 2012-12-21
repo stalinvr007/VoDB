@@ -41,7 +41,7 @@ namespace VODB.Core.Loaders.FieldSetters
         /// <param name="getValueFromReader">The get value from reader.</param>
         public void SetValue<TEntity>(TEntity entity, ISession session, Field field, Object value, Func<Field, Object> getValueFromReader)
         {
-            var foreignEntity = _Factory.Make(field.FieldType);
+            var foreignEntity = _Factory.Make(field.FieldType, session);
 
             var table = Engine.GetTable(field.FieldType);
 

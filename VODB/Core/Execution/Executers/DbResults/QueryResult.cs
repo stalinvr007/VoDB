@@ -72,13 +72,20 @@ namespace VODB.Core.Execution.Executers.DbResults
             cmd.CommandText = WhereCondition;
 
             var reader = cmd.ExecuteReader();
-
-            while (reader.Read())
+            try
             {
-                TEntity newTEntity = _EntityFactory.Make<TEntity>();
-                _Loader.Load(newTEntity, _Session as ISession, reader);
-                yield return newTEntity;
+                while (reader.Read())
+                {
+                    TEntity newTEntity = _EntityFactory.Make<TEntity>(_Session as ISession);
+                    _Loader.Load(newTEntity, _Session as ISession, reader);
+                    yield return newTEntity;
+                }
             }
+            finally
+            {
+                reader.Close();
+            }
+            
         }
 
         IEnumerator IEnumerable.GetEnumerator()
