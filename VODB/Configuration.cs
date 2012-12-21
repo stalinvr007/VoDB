@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using VODB.Core.Execution.DbParameterSetters;
+using VODB.Core.Loaders.Factories;
 using VODB.Core.Loaders.FieldSetters;
 using VODB.EntityValidators;
 using VODB.EntityValidators.Fields;
@@ -37,7 +38,7 @@ namespace VODB
             FieldSetters = new List<IFieldSetter>
             {
                 new BasicFieldSetter(),
-                new DbEntityFieldSetter()
+                new DbEntityFieldSetter(new EntityProxyFactory())
             };
 
             ParameterSetters = new List<IParameterSetter>

@@ -11,6 +11,7 @@ using VODB.Core.Execution.Executers;
 using VODB.DbLayer;
 using VODB.Core.Execution.Executers.DbResults;
 using VODB.Core.Loaders;
+using VODB.Core.Loaders.Factories;
 
 namespace VODB.Sessions
 {
@@ -27,7 +28,8 @@ namespace VODB.Sessions
         private readonly IStatementExecuter<DbDataReader> _SelectByIdExecuter;
         private readonly IQueryResultGetter _QueryResultGetter;
         private readonly IEntityLoader _EntityLoader;
-
+        private readonly IEntityFactory _EntityFactory;
+        
         public InternalSession(
             IDbConnectionCreator creator,
             IInternalTransaction transaction,
@@ -38,8 +40,10 @@ namespace VODB.Sessions
             [Bind(Commands.CountById)] IStatementExecuter<int> countByIdExecuter,
             [Bind(Commands.SelectById)] IStatementExecuter<DbDataReader> selectByIdExecuter,
             IQueryResultGetter queryResultGetter,
-            IEntityLoader entityLoader)
+            IEntityLoader entityLoader,
+            IEntityFactory entityFactory)
         {
+            _EntityFactory = entityFactory;
             _EntityLoader = entityLoader;
             _QueryResultGetter = queryResultGetter;
             _SelectByIdExecuter = selectByIdExecuter;
@@ -136,7 +140,7 @@ namespace VODB.Sessions
 
         public IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : class, new()
         {
-            return _QueryResultGetter.GetQueryResult<TEntity>(this, _EntityLoader);
+            return _QueryResultGetter.GetQueryResult<TEntity>(this, _EntityLoader, _EntityFactory);
         }
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
@@ -144,8 +148,9 @@ namespace VODB.Sessions
             var reader = _SelectByIdExecuter.Execute(entity, this);
             if (reader.Read())
             {
-                _EntityLoader.Load(entity, this, reader);
-                return entity;
+                TEntity newEntity = _EntityFactory.Make<TEntity>();
+                _EntityLoader.Load(newEntity, this, reader);
+                return newEntity;
             }
             return null;
         }

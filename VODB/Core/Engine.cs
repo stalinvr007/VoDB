@@ -13,7 +13,8 @@ namespace VODB.Core
         static IKernel kernel = new StandardKernel(
             new InfrastructureModule(), 
             new SessionModule(),
-            new EngineModules()
+            new EngineModules(),
+            new ConfigurationModule()
         );
 
         static IEntityTables _tables = Get<IEntityTables>();
