@@ -10,7 +10,7 @@ namespace VODB.Tests.Models.Northwind
     {
 
         [DbKey]
-        public int TerritoryId { get; set; }
+        public String TerritoryId { get; set; }
 
         [DbRequired]
         public String TerritoryDescription { get; set; }

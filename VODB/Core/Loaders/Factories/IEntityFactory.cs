@@ -7,45 +7,12 @@ using System.Text;
 
 namespace VODB.Core.Loaders.Factories
 {
-    public class Interceptor : IInterceptor
-    {
-        private readonly ISession _Session;
-
-        IDictionary<MethodInfo, Object> lastResult = new Dictionary<MethodInfo, Object>();
-        
-        public Interceptor(ISession session)
-        {
-            _Session = session;
-        }
-
-        public void Intercept(IInvocation invocation)
-        {
-            invocation.Proceed();
-
-            var method = invocation.Method;
-            if (!method.Name.StartsWith("get_"))
-            {
-                return;
-            }
-            
-            Object result;
-            if (lastResult.TryGetValue(method, out result))
-            {
-                invocation.ReturnValue = result;
-                return;
-            }
-
-            invocation.ReturnValue = lastResult[method] = _Session.GetById(invocation.ReturnValue);
-        }
-
-    }
-
     internal class EntityProxyFactory : IEntityFactory
     {
 
         static ProxyGenerator proxyGenerator = new ProxyGenerator();
 
-        public Object Make(Type type, ISession session)
+        public Object Make(Type type, IInternalSession session)
         {
             if (type.Namespace.Equals("Castle.Proxies"))
             {
@@ -56,8 +23,8 @@ namespace VODB.Core.Loaders.Factories
         }
     }
 
-    public interface IEntityFactory
+    interface IEntityFactory
     {
-        Object Make(Type type, ISession session);
+        Object Make(Type type, IInternalSession session);
     }
 }

@@ -28,6 +28,14 @@ namespace VODB.Core.Infrastructure
         public virtual IEnumerable<Field> Fields { get; set; }
 
         /// <summary>
+        /// Gets or sets the fields.
+        /// </summary>
+        /// <value>
+        /// The fields.
+        /// </value>
+        public virtual IEnumerable<Field> CollectionFields { get; set; }
+
+        /// <summary>
         /// Gets or sets the key fields.
         /// </summary>
         /// <value>

@@ -6,7 +6,7 @@ namespace VODB.Core.Loaders
 
     internal class EntityKeyLoader : EntityLoader
     {
-        public override void Load<TEntity>(TEntity entity, ISession session, DbDataReader reader)
+        public override void Load<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader)
         {
             if (entity == null) return;
             

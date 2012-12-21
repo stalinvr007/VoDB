@@ -99,6 +99,8 @@ namespace VODB.Core
             Bind<IQueryResultGetter>().To<QueryResultGetter>().InSingletonScope();
             Bind<IEntityLoader>().To<FullEntityLoader>().InSingletonScope();
             Bind<IEntityFactory>().To<EntityProxyFactory>().InSingletonScope();;
+
+            Bind<IQueryExecuter>().To<QueryExecuter>().InSingletonScope();
         }
     }
 

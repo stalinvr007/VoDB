@@ -50,6 +50,11 @@ namespace VODB.Core
             _tables.Map<TEntity>();
         }
 
+        public static void Map(Type type)
+        {
+            _tables.Map(type);
+        }
+
         public static Boolean IsMapped(Type entityType)
         {
             return _tables.IsMapped(entityType);

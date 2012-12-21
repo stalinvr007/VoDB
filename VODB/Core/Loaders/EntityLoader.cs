@@ -33,7 +33,7 @@ namespace VODB.Core.Loaders
         /// <param name="value">The value.</param>
         /// <param name="reader"> </param>
         /// <returns></returns>
-        protected void SetValue<TEntity>(TEntity entity, ISession session, Field field, object value, DbDataReader reader)
+        protected void SetValue<TEntity>(TEntity entity, IInternalSession session, Field field, object value, DbDataReader reader)
         {
             if (field.IsKey)
             {
@@ -51,6 +51,6 @@ namespace VODB.Core.Loaders
         /// <param name="session"></param>
         /// <param name="reader">The reader.</param>
         /// <returns></returns>
-        public abstract void Load<TEntity>(TEntity entity, ISession session, DbDataReader reader);
+        public abstract void Load<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader);
     }
 }

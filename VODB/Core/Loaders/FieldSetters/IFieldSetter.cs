@@ -6,7 +6,7 @@ namespace VODB.Core.Loaders.FieldSetters
     /// <summary>
     /// Represents a field value setter.
     /// </summary>
-    public interface IFieldSetter
+    interface IFieldSetter
     {
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace VODB.Core.Loaders.FieldSetters
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="getValueFromReader">The get value from reader.</param>
-        void SetValue<TEntity>(TEntity entity, ISession session, Field field, Object value, Func<Field, Object> getValueFromReader);
+        void SetValue<TEntity>(TEntity entity, IInternalSession session, Field field, Object value, Func<Field, Object> getValueFromReader);
 
     }
 }

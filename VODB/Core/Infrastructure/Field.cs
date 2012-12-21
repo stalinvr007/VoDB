@@ -31,6 +31,14 @@ namespace VODB.Core.Infrastructure
         }
 
         /// <summary>
+        /// Gets the property.
+        /// </summary>
+        /// <value>
+        /// The property.
+        /// </value>
+        public PropertyInfo Property { get { return _Prop; } }
+
+        /// <summary>
         /// Gets or sets the table.
         /// </summary>
         /// <value>
@@ -85,6 +93,14 @@ namespace VODB.Core.Infrastructure
         /// The is required.
         /// </value>
         public Boolean IsRequired { get; set; }
+
+        /// <summary>
+        /// Gets or sets the is a collection.
+        /// </summary>
+        /// <value>
+        /// The is collection.
+        /// </value>
+        public Boolean IsCollection { get; set; }
 
         /// <summary>
         /// Gets or sets the value.

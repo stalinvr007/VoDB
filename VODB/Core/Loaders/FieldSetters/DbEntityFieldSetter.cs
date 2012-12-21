@@ -11,7 +11,7 @@ namespace VODB.Core.Loaders.FieldSetters
     /// <summary>
     /// Sets the value for a DbEntity type field.
     /// </summary>
-    public sealed class DbEntityFieldSetter : IFieldSetter
+    sealed class DbEntityFieldSetter : IFieldSetter
     {
 
         private readonly IEntityFactory _Factory;
@@ -39,7 +39,7 @@ namespace VODB.Core.Loaders.FieldSetters
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="getValueFromReader">The get value from reader.</param>
-        public void SetValue<TEntity>(TEntity entity, ISession session, Field field, Object value, Func<Field, Object> getValueFromReader)
+        public void SetValue<TEntity>(TEntity entity, IInternalSession session, Field field, Object value, Func<Field, Object> getValueFromReader)
         {
             var foreignEntity = _Factory.Make(field.FieldType, session);
 
