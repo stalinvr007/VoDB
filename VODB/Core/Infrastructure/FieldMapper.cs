@@ -74,6 +74,7 @@ namespace VODB.Core.Infrastructure
 
         private static Field SetCommunSettings(Field field, PropertyInfo info)
         {
+            field.IsCollection = info.PropertyType.IsGenericType;
             field.BindedTo = GetBindedTo(info);
             field.IsRequired = (field.IsKey && !field.IsIdentity) || info.GetAttribute<DbRequiredAttribute>() != null;
             return field;
@@ -121,7 +122,6 @@ namespace VODB.Core.Infrastructure
         public IEnumerable<Field> GetFields(Type entityType)
         {
             return entityType.GetProperties()
-                .Where(info => !info.PropertyType.IsGenericType)
                 .Where(info => info.GetAttribute<DbIgnoreAttribute>() == null)
                 .Select(info => SetCommunSettings(GetField(info), info));
         }

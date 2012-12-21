@@ -52,11 +52,15 @@
     <Compile Include="Core\Engine.cs" />
     <Compile Include="Core\EngineModules.cs" />
     <Compile Include="Core\Execution\Executers\DbResults\QueryResult.cs" />
+    <Compile Include="Core\Execution\Executers\IQueryExecuter.cs" />
     <Compile Include="Core\Execution\Executers\NonQueryExecuters.cs" />
     <Compile Include="Core\Execution\Executers\IStatementExecuter.cs" />
     <Compile Include="Core\Execution\Executers\QueryExecuters.cs" />
     <Compile Include="Core\Execution\Executers\ScalarExecuters.cs" />
     <Compile Include="Core\Execution\Executers\StatementExecuterBase.cs" />
+    <Compile Include="Core\Execution\SqlQueryBuilders\ISqlQueryBuilder.cs" />
+    <Compile Include="Core\Execution\SqlQueryBuilders\SqlQueryBuilder.cs" />
+    <Compile Include="Core\Execution\SqlQueryBuilders\Parameter.cs" />
     <Compile Include="Core\Execution\Statements\ISatementGetter.cs" />
     <Compile Include="Core\Execution\Statements\SatementGetters.cs" />
     <Compile Include="Core\Infrastructure\AsyncTable.cs" />
@@ -64,6 +68,7 @@
     <Compile Include="Core\Infrastructure\TSqlCommandHolderLazy.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TCount.cs" />
     <Compile Include="Core\Loaders\Factories\IEntityFactory.cs" />
+    <Compile Include="Core\Loaders\Factories\Interceptor.cs" />
     <Compile Include="Exceptions\EntityMapNotFoundException.cs" />
     <Compile Include="Core\EntityTables.cs" />
     <Compile Include="Core\Infrastructure\FieldMapper.cs" />

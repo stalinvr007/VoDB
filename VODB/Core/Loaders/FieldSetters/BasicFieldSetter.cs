@@ -6,7 +6,7 @@ namespace VODB.Core.Loaders.FieldSetters
     /// <summary>
     /// Sets the field value. 
     /// </summary>
-    public sealed class BasicFieldSetter : IFieldSetter
+    sealed class BasicFieldSetter : IFieldSetter
     {
         /// <summary>
         /// Determines whether this instance can handle the specified type.
@@ -31,7 +31,7 @@ namespace VODB.Core.Loaders.FieldSetters
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="getValueFromReader">The get value from reader.</param>
-        public void SetValue<TEntity>(TEntity entity, ISession session, Field field, Object value, Func<Field, Object> getValueFromReader)
+        public void SetValue<TEntity>(TEntity entity, IInternalSession session, Field field, Object value, Func<Field, Object> getValueFromReader)
         {
             if (value != DBNull.Value)
             {

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,6 +14,18 @@ namespace VODB.Core.Infrastructure
         {
             _Task = mappingTask;
             mappingTask.Start();
+            mappingTask.ContinueWith(task =>
+            {
+                foreach (var field in InnerTable.CollectionFields)
+                {
+                    Engine.Map(field.FieldType.GetGenericArguments()[0]);
+                }
+
+                foreach (var field in InnerTable.Fields.Where(f => f.Property.GetGetMethod().IsVirtual))
+                {
+                    Engine.Map(field.FieldType);
+                }
+            });
         }
 
         Table InnerTable { get { return _Task.Result; } }
@@ -39,6 +52,18 @@ namespace VODB.Core.Infrastructure
             set
             {
                 InnerTable.Fields = value;
+            }
+        }
+
+        public override IEnumerable<Field> CollectionFields
+        {
+            get
+            {
+                return InnerTable.CollectionFields;
+            }
+            set
+            {
+                InnerTable.CollectionFields = value;
             }
         }
 

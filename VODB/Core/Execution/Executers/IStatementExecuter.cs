@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
+using VODB.Core.Execution.SqlPartialBuilders;
 using VODB.Core.Execution.Statements;
 using VODB.Core.Infrastructure;
 

@@ -9,6 +9,7 @@ using VODB.Core.Loaders;
 using VODB.Core.Loaders.Factories;
 using VODB.EntityValidators;
 using VODB.Exceptions;
+using VODB.ExpressionParser;
 
 namespace VODB
 {
@@ -32,9 +33,17 @@ namespace VODB
             return Engine.IsMapped(entityType);
         }
 
-        public static TEntity Make<TEntity>(this IEntityFactory factory, ISession session)
+        public static TEntity Make<TEntity>(this IEntityFactory factory, IInternalSession session)
         {
             return (TEntity)factory.Make(typeof(TEntity), session);
+        }
+
+        public static void SetParameters(this DbCommand cmd, IEnumerable<KeyValuePair<Key, Object>> collection)
+        {
+            foreach (var data in collection)
+            {
+                cmd.SetParameter(data.Key.Field, data.Key.ParamName, data.Value);
+            }
         }
 
     }
@@ -131,7 +140,7 @@ namespace VODB
         /// <returns></returns>
         /// <exception cref="FieldSetterNotFoundException"></exception>
         /// <exception cref="FieldNotFoundException"></exception>
-        public static Field SetValue<TModel>(this TModel entity, ISession session, Field field, object value, DbDataReader reader)
+        public static Field SetValue<TModel>(this TModel entity, IInternalSession session, Field field, object value, DbDataReader reader)
         {
             if (value == null || value == DBNull.Value)
             {
@@ -159,7 +168,7 @@ namespace VODB
         /// <param name="getValueFromReader">The get value from reader.</param>
         /// <returns></returns>
         /// <exception cref="FieldSetterNotFoundException"></exception>
-        public static void SetValue<TModel>(this TModel entity, ISession session, Field field, object value, Func<Field, object> getValueFromReader)
+        public static void SetValue<TModel>(this TModel entity, IInternalSession session, Field field, object value, Func<Field, object> getValueFromReader)
         {
             if (value == null || value == DBNull.Value)
             {
@@ -189,8 +198,12 @@ namespace VODB
 
         public static Field FindField(this Table table, String BindOrName)
         {
-            var _field = table.Fields
-                            .FirstOrDefault(field =>
+            return table.Fields.FindField(BindOrName);
+        }
+
+        public static Field FindField(this IEnumerable<Field> fields, String BindOrName)
+        {
+            var _field = fields.FirstOrDefault(field =>
                             {
                                 if (field.FieldName.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase))
                                 {
@@ -210,7 +223,7 @@ namespace VODB
                 return _field;
             }
 
-            return table.Fields
+            return fields
                 .FirstOrDefault(f => f.PropertyName.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase));
         }
 

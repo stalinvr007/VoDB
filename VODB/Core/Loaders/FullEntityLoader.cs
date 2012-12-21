@@ -16,7 +16,7 @@ namespace VODB.Core.Loaders
         /// <param name="session"></param>
         /// <param name="reader">The reader.</param>
         /// <returns></returns>
-        public override void Load<TEntity>(TEntity entity, ISession session, DbDataReader reader)
+        public override void Load<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader)
         {
 
             if (entity == null) return;

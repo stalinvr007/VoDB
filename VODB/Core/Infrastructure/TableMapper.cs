@@ -37,7 +37,8 @@ namespace VODB.Core.Infrastructure
 
             Parallel.Invoke(
                 () => table.TableName = GetTableName(type),
-                () => table.Fields = _FieldMapper.GetFields(type).ToList(),
+                () => table.Fields = _FieldMapper.GetFields(type).Where(f => !f.IsCollection) .ToList(),
+                () => table.CollectionFields = _FieldMapper.GetFields(type).Where(f => f.IsCollection).ToList(),
                 () => table.KeyFields = _FieldMapper.GetFields(type).Where(f => f.IsKey).ToList(),
                 () =>
                 {

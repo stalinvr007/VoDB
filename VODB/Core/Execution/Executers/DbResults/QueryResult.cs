@@ -55,14 +55,6 @@ namespace VODB.Core.Execution.Executers.DbResults
         
         #region Auxiliary Methods
 
-        private void SetParameters(DbCommand cmd, IEnumerable<KeyValuePair<Key, Object>> collection)
-        {
-            foreach (var data in collection)
-            {
-                cmd.SetParameter(data.Key.Field, data.Key.ParamName, data.Value);
-            }
-        }
-
         private QueryResult<TEntity> AddCondition(Operation operation, String condition)
         {
             _Parts.AddLast(new ConditionPart
@@ -145,16 +137,16 @@ namespace VODB.Core.Execution.Executers.DbResults
             _Session.Open();
             cmd.CommandText = WhereCondition;
 
-            SetParameters(cmd, _ExpressionParser.ConditionData);
-            SetParameters(cmd, _Parameters);
+            cmd.SetParameters(_ExpressionParser.ConditionData);
+            cmd.SetParameters(_Parameters);
 
             var reader = cmd.ExecuteReader();
             try
             {
                 while (reader.Read())
                 {
-                    TEntity newTEntity = _EntityFactory.Make<TEntity>(_Session as ISession);
-                    _Loader.Load(newTEntity, _Session as ISession, reader);
+                    TEntity newTEntity = _EntityFactory.Make<TEntity>(_Session);
+                    _Loader.Load(newTEntity, _Session, reader);
                     yield return newTEntity;
                 }
             }
