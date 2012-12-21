@@ -48,10 +48,8 @@ namespace VODB.Tests.Models.Northwind
         public virtual Employee ReportsTo { get; set; }
 
         public String PhotoPath { get; set; }
-
-        public virtual IEnumerable<Employee> ReportedFrom { get; set; }
-
-        //public virtual IEnumerable<EmployeeTerritories> Territories { get; set; }
+        
+        public virtual IEnumerable<EmployeeTerritories> Territories { get; set; }
 
         [DbIgnore]
         public bool NonExistingField { get; set; }

@@ -225,19 +225,19 @@ namespace VODB.Tests
             Assert.AreEqual(5, employees.Count());
         }
 
-        [TestMethod]
-        public void Session_GetAll_In_using_collection_SameNames()
-        {
-            ISession session = new Session();
+        //[TestMethod]
+        //public void Session_GetAll_In_using_collection_SameNames()
+        //{
+        //    ISession session = new Session();
 
-            var employee = session.GetById(new Employee { EmployeeId = 5 });
+        //    var employee = session.GetById(new Employee { EmployeeId = 5 });
 
-            var employees = session.GetAll<Employee>()
-                .Where(m => m.EmployeeId)
-                .In(employee.ReportedFrom);
+        //    var employees = session.GetAll<Employee>()
+        //        .Where(m => m.EmployeeId)
+        //        .In(employee.ReportedFrom);
 
-            Assert.AreEqual(3, employees.Count());
-        }
+        //    Assert.AreEqual(3, employees.Count());
+        //}
 
         //[TestMethod]
         //public void Session_GetAll_In_using_collection_diffNames()
@@ -310,12 +310,12 @@ namespace VODB.Tests
         }
 
         [TestMethod]
-        public void Session_GetById_ReportsFrom()
+        public void Session_GetById_Territories()
         {
             var employee = new Session().GetById(
                 new Employee { EmployeeId = 1 });
 
-            Assert.AreEqual(1, employee.ReportedFrom.Count());
+            Assert.AreEqual(1, employee.Territories.Count());
 
             EntitiesAsserts.Assert_Employee_1(employee);
         }
