@@ -6,6 +6,7 @@ using System.Text;
 using VODB.Core;
 using VODB.Core.Infrastructure;
 using VODB.Core.Loaders;
+using VODB.Core.Loaders.Factories;
 using VODB.EntityValidators;
 using VODB.Exceptions;
 
@@ -23,6 +24,11 @@ namespace VODB
         public static Boolean IsEntity(this Type entityType)
         {
             return Engine.IsMapped(entityType);
+        }
+
+        public static TEntity Make<TEntity>(this IEntityFactory factory)
+        {
+            return (TEntity)factory.Make(typeof(TEntity));
         }
 
     }

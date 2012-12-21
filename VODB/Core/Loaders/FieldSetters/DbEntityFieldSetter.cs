@@ -3,6 +3,8 @@ using VODB.Exceptions;
 using VODB.Core.Infrastructure;
 using VODB.Extensions;
 using VODB.Core;
+using Castle.DynamicProxy;
+using VODB.Core.Loaders.Factories;
 
 namespace VODB.Core.Loaders.FieldSetters
 {
@@ -11,6 +13,13 @@ namespace VODB.Core.Loaders.FieldSetters
     /// </summary>
     public sealed class DbEntityFieldSetter : IFieldSetter
     {
+
+        private readonly IEntityFactory _Factory;
+
+        public DbEntityFieldSetter(IEntityFactory factory)
+        {
+            _Factory = factory;
+        }
 
         /// <summary>
         /// Determines whether this instance can handle the specified type.
@@ -32,7 +41,7 @@ namespace VODB.Core.Loaders.FieldSetters
         /// <param name="getValueFromReader">The get value from reader.</param>
         public void SetValue<TEntity>(TEntity entity, ISession session, Field field, Object value, Func<Field, Object> getValueFromReader)
         {
-            var foreignEntity = CreateInstance(field.FieldType);
+            var foreignEntity = _Factory.Make(field.FieldType);
 
             var table = Engine.GetTable(field.FieldType);
 
@@ -61,17 +70,7 @@ namespace VODB.Core.Loaders.FieldSetters
 
         }
 
-        private static Object CreateInstance(Type type)
-        {
-            try
-            {
-                return Activator.CreateInstance(type);
-            }
-            catch (Exception ex)
-            {
-                throw new UnableToInstantiateTypeException(type, ex);
-            }
-        }
-
     }
+
+    
 }

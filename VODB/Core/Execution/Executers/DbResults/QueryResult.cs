@@ -7,6 +7,7 @@ using System.Text;
 using VODB.Core.Execution.Statements;
 using VODB.Core.Infrastructure;
 using VODB.Core.Loaders;
+using VODB.Core.Loaders.Factories;
 using VODB.ExpressionParser;
 
 namespace VODB.Core.Execution.Executers.DbResults
@@ -14,17 +15,17 @@ namespace VODB.Core.Execution.Executers.DbResults
 
     interface IQueryResultGetter
     {
-        IDbQueryResult<TEntity> GetQueryResult<TEntity>(IInternalSession session, IEntityLoader loader)
+        IDbQueryResult<TEntity> GetQueryResult<TEntity>(IInternalSession session, IEntityLoader loader, IEntityFactory entityFactory)
             where TEntity : class, new();
 
     }
 
     class QueryResultGetter : IQueryResultGetter
     {
-        public IDbQueryResult<TEntity> GetQueryResult<TEntity>(IInternalSession session, IEntityLoader loader)
+        public IDbQueryResult<TEntity> GetQueryResult<TEntity>(IInternalSession session, IEntityLoader loader, IEntityFactory entityFactory)
             where TEntity : class, new()
         {
-            return new QueryResult<TEntity>(session, loader);
+            return new QueryResult<TEntity>(session, loader, entityFactory);
         }
     }
 
@@ -34,9 +35,11 @@ namespace VODB.Core.Execution.Executers.DbResults
         private readonly IInternalSession _Session;
         private readonly IEntityLoader _Loader;
         private readonly Table _Table;
-        
-        public QueryResult(IInternalSession session, IEntityLoader loader)
+        private readonly IEntityFactory _EntityFactory;
+
+        public QueryResult(IInternalSession session, IEntityLoader loader, IEntityFactory entityFactory)
         {
+            _EntityFactory = entityFactory;
             _Loader = loader;
             _Session = session;
             _Table = Engine.GetTable<TEntity>();
@@ -72,7 +75,7 @@ namespace VODB.Core.Execution.Executers.DbResults
 
             while (reader.Read())
             {
-                TEntity newTEntity = new TEntity();
+                TEntity newTEntity = _EntityFactory.Make<TEntity>();
                 _Loader.Load(newTEntity, _Session as ISession, reader);
                 yield return newTEntity;
             }
