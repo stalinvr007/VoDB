@@ -51,10 +51,8 @@ namespace VODB.Core.Loaders.Factories
             {
                 return Make(type.BaseType, session);
             }
-            
-            var result = proxyGenerator.CreateClassProxy(type, new Interceptor(session));
 
-            return result;
+            return proxyGenerator.CreateClassProxy(type, new Interceptor(session));
         }
     }
 
