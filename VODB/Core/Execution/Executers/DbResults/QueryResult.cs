@@ -135,7 +135,7 @@ namespace VODB.Core.Execution.Executers.DbResults
         {
             var cmd = _Session.CreateCommand();
             _Session.Open();
-            cmd.CommandText = WhereCondition;
+            cmd.CommandText = _Table.CommandsHolder.Select + WhereCondition;
 
             cmd.SetParameters(_ExpressionParser.ConditionData);
             cmd.SetParameters(_Parameters);
@@ -182,7 +182,7 @@ namespace VODB.Core.Execution.Executers.DbResults
             get { return _Table.TableName; }
         }
 
-        public String WhereCondition { get { return _Table.CommandsHolder.Select + BuildWhereCondition(_Parts); } }
+        public String WhereCondition { get { return BuildWhereCondition(_Parts); } }
 
         #endregion
 

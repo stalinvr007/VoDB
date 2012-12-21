@@ -28,14 +28,14 @@ namespace VODB.Core.Execution.SqlPartialBuilders
         }
 
         /// <summary>
-        /// Adds the condition. 
+        /// Adds the condition.
         /// </summary>
         /// <param name="field">The field.</param>
-        /// <param name="entity">The entity.</param>
+        /// <param name="value">The value.</param>
         /// <returns></returns>
-        public ISqlQueryBuilder AddCondition(Field field, Object entity)
+        public ISqlQueryBuilder AddCondition(Field field, Object value)
         {
-            _Parameters.Add(new Parameter(field, field.FieldName + _Parameters.Count, entity));
+            _Parameters.Add(new Parameter(field, "p" + _Parameters.Count, value));
             return this;
         }
 
@@ -44,11 +44,12 @@ namespace VODB.Core.Execution.SqlPartialBuilders
             get {
                 var sb = new StringBuilder();
 
-                sb.Append(_Table.CommandsHolder.Select);
+                sb.Append(_Table.CommandsHolder.Select)
+                    .Append(" Where ");
 
                 foreach (var param in _Parameters)
                 {
-                    sb.AppendFormat("{0} = {1}", param.Field.FieldName, param.ParamName);
+                    sb.AppendFormat("{0} = @{1}", param.Field.FieldName, param.ParamName);
                 }
                 
                 return sb.ToString();
