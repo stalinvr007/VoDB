@@ -9,13 +9,12 @@ namespace VODB.Core.Execution.SqlPartialBuilders
 {
     class Parameter : Key
     {
-        private readonly Object _Entity;
-        public Parameter(Field field, string paramName, Object entity)
+        public Parameter(Field field, string paramName, Object value)
             : base(field, paramName)
         {
-            _Entity = entity;
+            Value = value;
         }
 
-        public Object Value { get { return Field.GetValue(_Entity); } }
+        public Object Value { get; set; }
     }
 }

@@ -315,7 +315,7 @@ namespace VODB.Tests
             var employee = new Session().GetById(
                 new Employee { EmployeeId = 1 });
 
-            Assert.AreEqual(1, employee.Territories.Count());
+            Assert.AreEqual(2, employee.Territories.Count());
 
             EntitiesAsserts.Assert_Employee_1(employee);
         }
@@ -331,7 +331,6 @@ namespace VODB.Tests
             EntitiesAsserts.Assert_Employee_2(employee.ReportsTo.ReportsTo.ReportsTo);
             EntitiesAsserts.Assert_Employee_1(employee);
         }
-
 
         [TestMethod]
         public void Session_Insert_Employee()

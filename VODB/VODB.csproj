@@ -55,7 +55,8 @@
     <Compile Include="Core\Execution\Executers\IQueryExecuter.cs" />
     <Compile Include="Core\Execution\Executers\NonQueryExecuters.cs" />
     <Compile Include="Core\Execution\Executers\IStatementExecuter.cs" />
-    <Compile Include="Core\Execution\Executers\QueryExecuters.cs" />
+    <Compile Include="Core\Execution\Executers\QueryExecuter.cs" />
+    <Compile Include="Core\Execution\Executers\SelectByIdExecuter.cs" />
     <Compile Include="Core\Execution\Executers\ScalarExecuters.cs" />
     <Compile Include="Core\Execution\Executers\StatementExecuterBase.cs" />
     <Compile Include="Core\Execution\SqlQueryBuilders\ISqlQueryBuilder.cs" />

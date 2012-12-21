@@ -13,7 +13,7 @@ namespace VODB.Core.Loaders.Factories
     class Interceptor : IInterceptor
     {
         private readonly IInternalSession _Session;
-        
+
 
         IDictionary<MethodInfo, Object> lastResult = new Dictionary<MethodInfo, Object>();
 
@@ -70,12 +70,25 @@ namespace VODB.Core.Loaders.Factories
         {
             if (invocation.Method.ReturnType.IsGenericType)
             {
+                // Todo: this code is kind of strange... Aply some refectoring strategy here.
+
                 string fieldName = invocation.Method.Name.Remove(0, 4);
-                var field = Engine.GetTable(invocation.Method.ReflectedType).CollectionFields.FindField(fieldName);
+                var callerTable = Engine.GetTable(invocation.Method.ReflectedType);
+                var field = callerTable.CollectionFields.FindField(fieldName);
                 var builder = new SqlQueryBuilder(field);
 
-
                 Type entityType = invocation.Method.ReturnType.GetGenericArguments()[0];
+
+                var foreignTable = Engine.GetTable(entityType);
+
+                foreach (var keyField in callerTable.KeyFields)
+                {
+                    builder.AddCondition(
+                        foreignTable.FindField(keyField.FieldName),
+                        keyField.GetValue(invocation.InvocationTarget));
+                }
+
+
                 var method = ProxyGenericIteratorMethod.MakeGenericMethod(entityType);
 
                 return method.Invoke(null, new[] { invocation.InvocationTarget,
