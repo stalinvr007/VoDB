@@ -225,32 +225,32 @@ namespace VODB.Tests
             Assert.AreEqual(5, employees.Count());
         }
 
-        //[TestMethod]
-        //public void Session_GetAll_In_using_collection_SameNames()
-        //{
-        //    ISession session = new Session();
+        [TestMethod]
+        public void Session_GetAll_In_using_collection_SameNames()
+        {
+            ISession session = new Session();
 
-        //    var employee = session.GetById(new Employee { EmployeeId = 5 });
+            var employee = session.GetById(new Employee { EmployeeId = 5 });
+            
+            var employees = session.GetAll<Employee>()
+                .Where(m => m.EmployeeId)
+                .In(session.GetAll<Employee>().Where(m => m.ReportsTo == employee));
 
-        //    var employees = session.GetAll<Employee>()
-        //        .Where(m => m.EmployeeId)
-        //        .In(employee.ReportedFrom);
+            Assert.AreEqual(3, employees.Count());
+        }
 
-        //    Assert.AreEqual(3, employees.Count());
-        //}
+        [TestMethod]
+        public void Session_GetAll_In_using_collection_diffNames()
+        {
+            ISession session = new Session();
 
-        //[TestMethod]
-        //public void Session_GetAll_In_using_collection_diffNames()
-        //{
-        //    ISession session = new Session();
+            var orders = session.GetAll<Orders>()
+                .Where(o => o.Shipper)
+                .In(session.GetAll<Shippers>().Where(s => s.ShipperId == 2))
+                .And(o => o.Employee.EmployeeId == 4);
 
-        //    var orders = session.GetAll<Orders>()
-        //        .Where(o => o.Shipper)
-        //        .In(session.GetAll<Shippers>().Where(s => s.ShipperId == 2))
-        //        .And(o => o.Employee.EmployeeId == 4);
-
-        //    Assert.AreEqual(70, orders.Count());
-        //}
+            Assert.AreEqual(70, orders.Count());
+        }
 
         [TestMethod]
         public void Session_GetAll_withConditionExpression_IdConst()

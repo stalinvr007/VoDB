@@ -40,6 +40,11 @@ namespace VODB.Core
         
         public Table GetTable(Type type)
         {
+            if (type.Namespace.Equals("Castle.Proxies"))
+            {
+                type = type.BaseType;
+            }
+
             Table table;
             if (_tables.TryGetValue(type, out table))
             {
@@ -67,7 +72,7 @@ namespace VODB.Core
         
         public bool IsMapped(Type type)
         {
-            return _tables.ContainsKey(type);
+            return _tables.ContainsKey(type) || _tables.ContainsKey(type.BaseType);
         }
     }
 }
