@@ -79,7 +79,14 @@ namespace VODB
         /// <exception cref="ParameterSetterNotFoundException"></exception>
         public static void SetValue(this DbParameter param, Field field, Object entity)
         {
-            param.SetParamValue(field, field.GetValue(entity));
+            if (Engine.IsMapped(entity.GetType()))
+            {
+                param.SetParamValue(field, field.GetValue(entity));
+            }
+            else
+            {
+                param.SetParamValue(field, entity);
+            }
         }
 
         /// <summary>
