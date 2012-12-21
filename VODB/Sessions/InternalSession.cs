@@ -15,7 +15,7 @@ using VODB.Core.Loaders.Factories;
 
 namespace VODB.Sessions
 {
-    class InternalSession : ISession, IInternalSession
+    class InternalSession : IInternalSession
     {
         private DbConnection _connection;
         private IInternalTransaction _Transaction;
@@ -146,12 +146,19 @@ namespace VODB.Sessions
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
         {
             var reader = _SelectByIdExecuter.Execute(entity, this);
-            if (reader.Read())
+            try
             {
-                TEntity newEntity = _EntityFactory.Make<TEntity>();
-                _EntityLoader.Load(newEntity, this, reader);
-                return newEntity;
+                if (reader.Read())
+                {
+                    TEntity newEntity = _EntityFactory.Make(entity.GetType(), this) as TEntity;
+                    _EntityLoader.Load(newEntity, this, reader);
+                    return newEntity;
+                }
             }
+            finally
+            {
+                reader.Close();
+            }            
             return null;
         }
 

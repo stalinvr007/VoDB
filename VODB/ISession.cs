@@ -71,7 +71,7 @@ namespace VODB
         bool Exists<TEntity>(TEntity entity) where TEntity : class, new();
     }
 
-    internal interface IInternalSession
+    internal interface IInternalSession : ISession
     {
         DbCommand CreateCommand();
         void Open();

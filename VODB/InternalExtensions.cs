@@ -18,7 +18,13 @@ namespace VODB
 
         public static Table GetTable<TEntity>(this TEntity entity)
         {
-            return Engine.GetTable<TEntity>();
+            Type entityType = entity.GetType();
+            if (entityType.Namespace.Equals("Castle.Proxies"))
+            {
+                return Engine.GetTable(entityType.BaseType);
+            }
+
+            return Engine.GetTable(entityType);
         }
 
         public static Boolean IsEntity(this Type entityType)
@@ -26,9 +32,9 @@ namespace VODB
             return Engine.IsMapped(entityType);
         }
 
-        public static TEntity Make<TEntity>(this IEntityFactory factory)
+        public static TEntity Make<TEntity>(this IEntityFactory factory, ISession session)
         {
-            return (TEntity)factory.Make(typeof(TEntity));
+            return (TEntity)factory.Make(typeof(TEntity), session);
         }
 
     }
