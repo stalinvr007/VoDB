@@ -89,6 +89,8 @@ namespace VODB.Sessions
             count = 0;
             Ended = true;
             _Transaction.Rollback();
+
+            _Transaction = null;
         }
 
         public void Commit()
@@ -113,6 +115,8 @@ namespace VODB.Sessions
             {
                 _Transaction.Commit();
             }
+
+            _Transaction = null;
         }
 
         private void SavePoint()
