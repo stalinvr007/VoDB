@@ -58,7 +58,7 @@ namespace VODB.Core.Loaders.FieldSetters
                     /* Have to search the entity for a field bindedTo this Key. Or with the same name. */
                     /* Use the name of that field to use on GetValueFromReader. */
 
-                    var origField = entity.FindField(key.FieldName);
+                    var origField = Engine.GetTable<TEntity>().FindField(key.FieldName);
                     if (origField != null)
                     {
                         foreignEntity.SetValue(session, key, getValueFromReader(origField), getValueFromReader);

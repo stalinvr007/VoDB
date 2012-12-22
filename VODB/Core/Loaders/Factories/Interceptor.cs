@@ -72,9 +72,9 @@ namespace VODB.Core.Loaders.Factories
             {
                 // Todo: this code is kind of strange... Aply some refectoring strategy here.
 
-                string fieldName = invocation.Method.Name.Remove(0, 4);
+                var fieldName = invocation.Method.Name.Remove(0, 4);
                 var callerTable = Engine.GetTable(invocation.Method.ReflectedType);
-                var field = callerTable.CollectionFields.FindField(fieldName);
+                var field = callerTable.FindField(fieldName);
                 var builder = new SqlQueryBuilder(field);
 
                 Type entityType = invocation.Method.ReturnType.GetGenericArguments()[0];

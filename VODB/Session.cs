@@ -1,14 +1,4 @@
-﻿using Ninject;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VODB.Core;
-using VODB.Core.Execution.Executers;
-using VODB.DbLayer;
+﻿using VODB.Core;
 using VODB.Core.Execution.Executers.DbResults;
 
 namespace VODB
@@ -69,11 +59,10 @@ namespace VODB
 
         public void Dispose()
         {
-            if (_InternalSession != null)
-            {
-                _InternalSession.Dispose();
-                _InternalSession = null;
-            }
+            if (_InternalSession == null) return;
+            
+            _InternalSession.Dispose();
+            _InternalSession = null;
         }
     }
 }

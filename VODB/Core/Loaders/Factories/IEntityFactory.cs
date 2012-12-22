@@ -1,25 +1,21 @@
-﻿using Castle.DynamicProxy;
+﻿using System.Diagnostics;
+using Castle.DynamicProxy;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace VODB.Core.Loaders.Factories
 {
     internal class EntityProxyFactory : IEntityFactory
     {
 
-        static ProxyGenerator proxyGenerator = new ProxyGenerator();
+        static readonly ProxyGenerator proxyGenerator = new ProxyGenerator();
 
         public Object Make(Type type, IInternalSession session)
         {
-            if (type.Namespace.Equals("Castle.Proxies"))
-            {
-                return Make(type.BaseType, session);
-            }
+            Debug.Assert(type.Namespace != null, "type.Namespace != null");
 
-            return proxyGenerator.CreateClassProxy(type, new Interceptor(session));
+            return type.Namespace.Equals("Castle.Proxies") ? 
+                Make(type.BaseType, session) : 
+                proxyGenerator.CreateClassProxy(type, new Interceptor(session));
         }
     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using VODB.Core;
 using VODB.Core.Infrastructure;
 using VODB.Extensions;
 
@@ -26,11 +27,9 @@ namespace VODB.ExpressionParser
         /// <returns></returns>
         public String Parse(Expression<Func<TEntity, TField>> expression)
         {
+            var field = ((MemberExpression)expression.Body).Member.Name;
 
-            var entity = new TEntity();
-            string field = ((MemberExpression)expression.Body).Member.Name;
-
-            Field = entity.FindField(field);
+            Field = Engine.GetTable<TEntity>().FindField(field);
 
             return Field.FieldName;
         }
