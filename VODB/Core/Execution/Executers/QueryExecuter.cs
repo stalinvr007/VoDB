@@ -1,12 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
-using System.Text;
 using VODB.Core.Execution.SqlPartialBuilders;
-using VODB.Core.Execution.Statements;
-using VODB.Core.Infrastructure;
 using VODB.Core.Loaders;
 using VODB.Core.Loaders.Factories;
 using VODB.ExpressionParser;
@@ -37,12 +33,14 @@ namespace VODB.Core.Execution.Executers
 
             try
             {
+                var list = new List<Object>();
                 while (reader.Read())
                 {
-                    Object newEntity = _Factory.Make(entityType, session);
+                    var newEntity = _Factory.Make(entityType, session);
                     _Loader.Load(newEntity, session, reader);
-                    yield return newEntity;
+                    list.Add(newEntity);
                 }
+                return list;
             }
             finally
             {
