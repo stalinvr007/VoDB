@@ -3,8 +3,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.DbLayer;
 using VODB.Core.Loaders;
 using VODB.Tests.Models.Northwind;
-using VODB.Core.Infrastructure;
-using VODB.Core;
 
 namespace VODB.Tests
 {
@@ -41,7 +39,7 @@ namespace VODB.Tests
         [TestMethod]
         public void FullEntityLoader_Employees()
         {
-            using (DbConnection con = new NameConventionDbConnectionCreator("System.Data.SqlClient").Create())
+            using (var con = new NameConventionDbConnectionCreator("System.Data.SqlClient").Create())
             {
                 con.Open();
 
