@@ -60,6 +60,7 @@
     <Compile Include="Core\Execution\Executers\QueryExecuter.cs" />
     <Compile Include="Core\Execution\Executers\SelectByIdExecuter.cs" />
     <Compile Include="Core\Execution\Executers\ScalarExecuters.cs" />
+    <Compile Include="Core\Execution\Executers\StatementExecuter.cs" />
     <Compile Include="Core\Execution\Executers\StatementExecuterBase.cs" />
     <Compile Include="Core\Execution\SqlQueryBuilders\ISqlQueryBuilder.cs" />
     <Compile Include="Core\Execution\SqlQueryBuilders\SqlQueryBuilder.cs" />

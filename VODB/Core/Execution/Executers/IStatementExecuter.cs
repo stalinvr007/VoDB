@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using VODB.Core.Execution.SqlPartialBuilders;
-using VODB.Core.Execution.Statements;
-using VODB.Core.Infrastructure;
-
-namespace VODB.Core.Execution.Executers
+﻿namespace VODB.Core.Execution.Executers
 {
     /// <summary>
     /// Represents a StatementExecuter.
     /// </summary>
     /// <typeparam name="TResult">The type of the result.</typeparam>
-    interface IStatementExecuter<TResult>
+    interface IStatementExecuter<out TResult>
     {
 
         /// <summary>
@@ -25,5 +16,18 @@ namespace VODB.Core.Execution.Executers
         /// <returns></returns>
         TResult Execute<TEntity>(TEntity entity, IInternalSession session);
 
+    }
+
+    /// <summary>
+    /// Represents a StatementExecuter
+    /// </summary>
+    interface IStatementExecuter
+    {
+        /// <summary>
+        /// Executes the specified statement.
+        /// </summary>
+        /// <param name="statement">The statement.</param>
+        /// <param name="session">The session.</param>
+        void Execute(string statement, IInternalSession session);
     }
 }

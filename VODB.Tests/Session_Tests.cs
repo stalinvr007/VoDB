@@ -1,8 +1,6 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.Tests.Models.Northwind;
 using System.Linq;
-using System.Threading;
 using VODB.Core.Execution.Executers.DbResults;
 
 namespace VODB.Tests
@@ -136,7 +134,7 @@ namespace VODB.Tests
                       .Where(m => m.EmployeeId == 1)
                       .Or(m => m.EmployeeId == 4)
                       .Or(m => m.EmployeeId == 2)
-                      .Or(m=> m.EmployeeId == 5)
+                      .Or(m => m.EmployeeId == 5)
                       .And(m => m.EmployeeId > 3);
 
             Assert.AreEqual(2, employees.Count());
@@ -231,7 +229,7 @@ namespace VODB.Tests
             ISession session = new Session();
 
             var employee = session.GetById(new Employee { EmployeeId = 5 });
-            
+
             var employees = session.GetAll<Employee>()
                 .Where(m => m.EmployeeId)
                 .In(session.GetAll<Employee>().Where(m => m.ReportsTo == employee));
@@ -335,8 +333,9 @@ namespace VODB.Tests
         [TestMethod]
         public void Session_Insert_Employee()
         {
-            Utils.EagerExecuteWithinTransaction(session =>
+            Utils.ExecuteWithinTransaction(session =>
             {
+                var count = session.GetAll<Employee>().Count();
                 var employee = session
                     .Insert(new Employee
                     {
@@ -345,6 +344,7 @@ namespace VODB.Tests
                     });
 
                 Assert.IsNotNull(employee);
+                Assert.AreEqual(count + 1, session.GetAll<Employee>().Count());
             });
 
         }
@@ -353,7 +353,7 @@ namespace VODB.Tests
         public void Session_Delete_Employee()
         {
 
-            Utils.EagerExecuteWithinTransaction(
+            Utils.ExecuteWithinTransaction(
                 session =>
                 {
                     var count = session.GetAll<Employee>().Count();
@@ -375,7 +375,7 @@ namespace VODB.Tests
         public void Session_Update_Employee()
         {
 
-            Utils.EagerExecuteWithinTransaction(
+            Utils.ExecuteWithinTransaction(
                 session =>
                 {
                     var sergio = session.Insert(new Employee

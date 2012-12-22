@@ -1,11 +1,7 @@
-using Castle.DynamicProxy;
+using System;
 using Ninject;
 using Ninject.Modules;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
 using VODB.Core.Execution.DbParameterSetters;
 using VODB.Core.Execution.Executers;
 using VODB.Core.Execution.Executers.DbResults;
@@ -36,7 +32,9 @@ namespace VODB.Core
         CountById,
 
         Select,
-        SelectById
+        SelectById,
+
+        Identity
     }
 
     class BindAttribute : NamedAttribute
@@ -75,6 +73,7 @@ namespace VODB.Core
     {
         public override void Load()
         {
+            Bind<IInternalSession>().To<InternalSession>();
             Bind<ISession>().To<InternalSession>();
             Bind<IInternalTransaction>().To<Transaction>();
             Bind<IDbConnectionCreator>().To<NameConventionDbConnectionCreator>().InSingletonScope()
@@ -86,6 +85,7 @@ namespace VODB.Core
             Bind<IStatementGetter>().To<CountGetter>().WhenInjectedInto<CountExecuter>().InSingletonScope();
             Bind<IStatementGetter>().To<CountByIdGetter>().WhenInjectedInto<CountByIdExecuter>().InSingletonScope();
             Bind<IStatementGetter>().To<SelectByIdGetter>().WhenInjectedInto<SelectByIdExecuter>().InSingletonScope();
+            Bind<IStatementGetter>().To<IdentityGetter>().WhenInjectedInto<IdentityExecuter>().InSingletonScope();
 
             Bind<IStatementExecuter<int>>().To<InsertExecuter>().InSingletonScope().Named(Commands.Insert.ToString());
             Bind<IStatementExecuter<int>>().To<UpdateExecuter>().InSingletonScope().Named(Commands.Update.ToString());
@@ -93,12 +93,14 @@ namespace VODB.Core
 
             Bind<IStatementExecuter<int>>().To<CountExecuter>().InSingletonScope().Named(Commands.Count.ToString());
             Bind<IStatementExecuter<int>>().To<CountByIdExecuter>().InSingletonScope().Named(Commands.CountById.ToString());
+            Bind<IStatementExecuter<Object>>().To<IdentityExecuter>().InSingletonScope().Named(Commands.Identity.ToString());
+            Bind<IStatementExecuter>().To<StatementExecuter>().InSingletonScope();
 
             Bind<IStatementExecuter<DbDataReader>>().To<SelectByIdExecuter>().InSingletonScope().Named(Commands.SelectById.ToString());
 
             Bind<IQueryResultGetter>().To<QueryResultGetter>().InSingletonScope();
             Bind<IEntityLoader>().To<FullEntityLoader>().InSingletonScope();
-            Bind<IEntityFactory>().To<EntityProxyFactory>().InSingletonScope();;
+            Bind<IEntityFactory>().To<EntityProxyFactory>().InSingletonScope();
 
             Bind<IQueryExecuter>().To<QueryExecuter>().InSingletonScope();
         }
