@@ -1,14 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using VODB.Core.Infrastructure;
 
 namespace VODB.ExpressionParser.TSqlBuilding
 {
 
     class ComplexTSqlBuilder : TSqlBuilderBase
     {
-        
+
         public override string Build(int paramCount)
         {
             return Build(paramCount, _Parser);
@@ -20,24 +18,27 @@ namespace VODB.ExpressionParser.TSqlBuilding
             {
                 if (!parser.IsComplex)
                 {
+                    var table = parser.Entity.GetTable();
+
+                    Field field;
+                    table.FieldsByName.TryGetValue(parser.Field.BindedTo, out field);
+
                     return String.Format("{0} In (Select {1} From {2}",
                         parser.Field.FieldName,
-                        parser.Field.BindedTo ?? parser.Field.FieldName,
-                        parser.Entity.GetTable().TableName);
+                        field != null ? parser.Field.BindedTo : parser.Field.FieldName,
+                        table.TableName);
                 }
-                else
+
+                var simple = new SimpleWhereTSqlBuilder();
+                simple.CanBuild(parser);
+
+                var result = String.Format(" Where {0} )", simple.Build(paramCount));
+
+                foreach (var param in simple.Parameters)
                 {
-                    var simple = new SimpleWhereTSqlBuilder();
-                    simple.CanBuild(parser);
-
-                    string result = String.Format(" Where {0} )", simple.Build(paramCount));
-
-                    foreach (var param in simple.Parameters)
-                    {
-                        _parameters.Add(param);
-                    }
-                    return Build(paramCount, parser.Next) + result;
+                    _parameters.Add(param);
                 }
+                return Build(paramCount, parser.Next) + result;
             }
 
             return "";

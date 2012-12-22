@@ -47,7 +47,7 @@ namespace VODB.Tests.Models.Northwind
         public virtual Employee ReportsTo { get; set; }
 
         public String PhotoPath { get; set; }
-        
+
         public virtual IEnumerable<EmployeeTerritories> Territories { get; set; }
 
         [DbIgnore]

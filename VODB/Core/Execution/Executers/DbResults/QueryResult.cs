@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using VODB.Core.Execution.Statements;
 using VODB.Core.Infrastructure;
 using VODB.Core.Loaders;
 using VODB.Core.Loaders.Factories;
@@ -143,12 +141,14 @@ namespace VODB.Core.Execution.Executers.DbResults
             var reader = cmd.ExecuteReader();
             try
             {
+                var list = new List<TEntity>();
                 while (reader.Read())
                 {
-                    TEntity newTEntity = _EntityFactory.Make<TEntity>(_Session);
+                    var newTEntity = _EntityFactory.Make<TEntity>(_Session);
                     _Loader.Load(newTEntity, _Session, reader);
-                    yield return newTEntity;
+                    list.Add(newTEntity);
                 }
+                return list.GetEnumerator();
             }
             finally
             {

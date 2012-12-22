@@ -80,7 +80,8 @@ namespace VODB.ExpressionParser
             var valueType = Value.GetType();
             if (valueType.IsEntity())
             {
-                Value = Engine.GetTable(valueType).FindField(Field.BindedTo).GetValue(Value);
+                Value = Engine.GetTable(valueType)
+                    .FindField(Field.BindedTo ?? Field.FieldName).GetValue(Value);
             }
         }
         private void Parse(ConstantExpression expression)
