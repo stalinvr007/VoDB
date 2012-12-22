@@ -74,7 +74,7 @@ namespace VODB
                 new GreaterWhereExpressionFormatter()
             };
 
-            TSqlBuilders = new List<ITSqlBuilder>()
+            TSqlBuilders = new List<ITSqlBuilder>
             {
                 new SimpleWhereTSqlBuilder(),
                 new ComplexTSqlBuilder()

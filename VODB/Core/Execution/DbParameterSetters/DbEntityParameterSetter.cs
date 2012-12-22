@@ -1,7 +1,6 @@
 using System;
 using System.Data.Common;
 using System.Linq;
-using VODB.Extensions;
 using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Execution.DbParameterSetters

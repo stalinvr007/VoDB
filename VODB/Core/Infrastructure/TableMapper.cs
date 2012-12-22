@@ -37,17 +37,21 @@ namespace VODB.Core.Infrastructure
 
             Parallel.Invoke(
                 () => table.TableName = GetTableName(type),
-                () => table.Fields = _FieldMapper.GetFields(type).Where(f => !f.IsCollection) .ToList(),
-                () => table.CollectionFields = _FieldMapper.GetFields(type).Where(f => f.IsCollection).ToList(),
-                () => table.KeyFields = _FieldMapper.GetFields(type).Where(f => f.IsKey).ToList(),
-                () =>
-                {
-                    table.CommandsHolder = _SqlCommands;
-                    table.CommandsHolder.Table = table;
-                }
+                () => table.Fields = _FieldMapper.GetFields(type).Where(f => !f.IsCollection).ToList()
+            );
+
+            Parallel.Invoke(
+                () => table.CollectionFields = table.Fields.Where(f => f.IsCollection).ToList(),
+                () => table.KeyFields = table.Fields.Where(f => f.IsKey).ToList(),
+                () => table.FieldsByName = table.Fields.ToDictionary(f => f.FieldName),
+                () => table.FieldsByBind = table.Fields.Where(f => !String.IsNullOrEmpty(f.BindedTo)).ToDictionary(f => f.BindedTo),
+                () => table.FieldsByPropertyName = table.Fields.ToDictionary(f => f.PropertyName)
             );
 
             Parallel.ForEach(table.Fields, f => f.Table = table);
+
+            table.CommandsHolder = _SqlCommands;
+            table.CommandsHolder.Table = table;
 
             return table;
         }

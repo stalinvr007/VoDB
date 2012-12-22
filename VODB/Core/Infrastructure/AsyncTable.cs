@@ -90,5 +90,41 @@ namespace VODB.Core.Infrastructure
                 InnerTable.TableName = value;
             }
         }
+
+        public override IDictionary<string, Field> FieldsByBind
+        {
+            get
+            {
+                return InnerTable.FieldsByBind;
+            }
+            set
+            {
+                InnerTable.FieldsByBind = value;
+            }
+        }
+
+        public override IDictionary<string, Field> FieldsByName
+        {
+            get
+            {
+                return InnerTable.FieldsByName;
+            }
+            set
+            {
+                InnerTable.FieldsByName = value;
+            }
+        }
+
+        public override IDictionary<string, Field> FieldsByPropertyName
+        {
+            get
+            {
+                return InnerTable.FieldsByPropertyName;
+            }
+            set
+            {
+                InnerTable.FieldsByPropertyName = value;
+            }
+        }
     }
 }

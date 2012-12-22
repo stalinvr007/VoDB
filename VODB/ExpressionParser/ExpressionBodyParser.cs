@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Linq.Expressions;
-using VODB.Exceptions;
-using VODB.Extensions;
 using VODB.Core.Infrastructure;
 using VODB.Core;
 
@@ -57,7 +54,7 @@ namespace VODB.ExpressionParser
         {
             if (_Expression is BinaryExpression)
             {
-                BinaryExpression body = (BinaryExpression)_Expression;
+                var body = (BinaryExpression)_Expression;
 
                 NodeType = body.NodeType;
 
@@ -80,6 +77,11 @@ namespace VODB.ExpressionParser
         private void Parse(LambdaExpression expression)
         {
             Value = expression.Compile().DynamicInvoke();
+            var valueType = Value.GetType();
+            if (valueType.IsEntity())
+            {
+                Value = Engine.GetTable(valueType).FindField(Field.BindedTo).GetValue(Value);
+            }
         }
         private void Parse(ConstantExpression expression)
         {
@@ -93,7 +95,7 @@ namespace VODB.ExpressionParser
             }
 
             FieldName = expression.Member.Name;
-            Field = Entity.FindField(FieldName);
+            Field = Engine.GetTable(Entity.GetType()).FindField(FieldName);
 
             if (!Engine.IsMapped(expression.Type))
             {
@@ -111,8 +113,8 @@ namespace VODB.ExpressionParser
             {
                 if (Previous != null && Previous.Field == null)
                 {
-                    Previous.Field = Activator.CreateInstance(Field.FieldType)
-                                              .FindField(Previous.FieldName);
+                    Previous.Field = Engine.GetTable(Field.FieldType)
+                        .FindField(Previous.FieldName);
                 }
             }
 

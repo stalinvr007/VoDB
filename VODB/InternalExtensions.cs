@@ -19,7 +19,7 @@ namespace VODB
 
         public static Table GetTable<TEntity>(this TEntity entity)
         {
-            Type entityType = entity.GetType();
+            var entityType = entity.GetType();
             if (entityType.Namespace.Equals("Castle.Proxies"))
             {
                 return Engine.GetTable(entityType.BaseType);
@@ -27,7 +27,7 @@ namespace VODB
 
             return Engine.GetTable(entityType);
         }
-
+    
         public static Boolean IsEntity(this Type entityType)
         {
             return Engine.IsMapped(entityType);
@@ -189,42 +189,11 @@ namespace VODB
 
     internal static class FieldHelpers
     {
-        static IConfiguration Configuration = Engine.Get<IConfiguration>();
-
-        public static Field FindField<TEntity>(this TEntity entity, String BindOrName)
-        {
-            return Engine.GetTable(entity.GetType()).FindField(BindOrName);
-        }
+        static readonly IConfiguration Configuration = Engine.Get<IConfiguration>();
 
         public static Field FindField(this Table table, String BindOrName)
         {
-            return table.Fields.FindField(BindOrName);
-        }
-
-        public static Field FindField(this IEnumerable<Field> fields, String BindOrName)
-        {
-            var _field = fields.FirstOrDefault(field =>
-                            {
-                                if (field.FieldName.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    return true;
-                                }
-
-                                if (!String.IsNullOrEmpty(field.BindedTo) && field.BindedTo.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    return true;
-                                }
-
-                                return false;
-                            });
-
-            if (_field != null)
-            {
-                return _field;
-            }
-
-            return fields
-                .FirstOrDefault(f => f.PropertyName.Equals(BindOrName, StringComparison.InvariantCultureIgnoreCase));
+            return table.FindField(BindOrName);
         }
 
         /// <summary>
