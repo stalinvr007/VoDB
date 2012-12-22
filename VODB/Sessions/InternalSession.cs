@@ -1,11 +1,6 @@
-using Ninject;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VODB.Core;
 using VODB.Core.Execution.Executers;
 using VODB.DbLayer;
@@ -26,6 +21,8 @@ namespace VODB.Sessions
         private readonly IStatementExecuter<int> _CountExecuter;
         private readonly IStatementExecuter<int> _CountByIdExecuter;
         private readonly IStatementExecuter<DbDataReader> _SelectByIdExecuter;
+        private readonly IStatementExecuter<object> _IdentityExecuter;
+        private readonly IStatementExecuter _StatementExecuter;
         private readonly IQueryResultGetter _QueryResultGetter;
         private readonly IEntityLoader _EntityLoader;
         private readonly IEntityFactory _EntityFactory;
@@ -39,6 +36,8 @@ namespace VODB.Sessions
             [Bind(Commands.Count)] IStatementExecuter<int> countExecuter,
             [Bind(Commands.CountById)] IStatementExecuter<int> countByIdExecuter,
             [Bind(Commands.SelectById)] IStatementExecuter<DbDataReader> selectByIdExecuter,
+            [Bind(Commands.Identity)] IStatementExecuter<Object> IdentityExecuter,
+            IStatementExecuter statementExecuter,
             IQueryResultGetter queryResultGetter,
             IEntityLoader entityLoader,
             IEntityFactory entityFactory)
@@ -47,6 +46,8 @@ namespace VODB.Sessions
             _EntityLoader = entityLoader;
             _QueryResultGetter = queryResultGetter;
             _SelectByIdExecuter = selectByIdExecuter;
+            _IdentityExecuter = IdentityExecuter;
+            _StatementExecuter = statementExecuter;
             _CountByIdExecuter = countByIdExecuter;
             _CountExecuter = countExecuter;
             _DeleteExecuter = deleteExecuter;
@@ -135,7 +136,7 @@ namespace VODB.Sessions
 
         public void ExecuteTSql(string SqlStatements)
         {
-            throw new NotImplementedException();
+            _StatementExecuter.Execute(SqlStatements, this);
         }
 
         public IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : class, new()
@@ -150,7 +151,7 @@ namespace VODB.Sessions
             {
                 if (reader.Read())
                 {
-                    TEntity newEntity = _EntityFactory.Make(entity.GetType(), this) as TEntity;
+                    var newEntity = _EntityFactory.Make(entity.GetType(), this) as TEntity;
                     _EntityLoader.Load(newEntity, this, reader);
                     return newEntity;
                 }
@@ -165,6 +166,13 @@ namespace VODB.Sessions
         public TEntity Insert<TEntity>(TEntity entity) where TEntity : class, new()
         {
             _InsertExecuter.Execute(entity, this);
+
+            var field = entity.GetTable().IdentityField;
+            if (field != null)
+            {
+                field.SetValue(entity, Convert.ChangeType(_IdentityExecuter.Execute(entity, this), field.FieldType));
+            }
+
             return entity;
         }
 
@@ -181,14 +189,15 @@ namespace VODB.Sessions
 
         public int Count<TEntity>() where TEntity : class, new()
         {
-            return _CountExecuter.Execute<TEntity>(new TEntity(), this);
+            return _CountExecuter.Execute(new TEntity(), this);
         }
 
         public bool Exists<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            return _CountByIdExecuter.Execute<TEntity>(entity, this) > 0;
+            return _CountByIdExecuter.Execute(entity, this) > 0;
         }
 
         #endregion
+    
     }
 }

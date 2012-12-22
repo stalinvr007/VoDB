@@ -1,7 +1,6 @@
 ﻿using VODB.Annotations;
 using System;
 using System.Collections.Generic;
-using VODB.Core.Execution.Executers.DbResults;
 
 namespace VODB.Tests.Models.Northwind
 {

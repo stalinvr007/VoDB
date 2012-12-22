@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
 using VODB.Core.Infrastructure;
 using VODB.Core.Execution.Statements;
 
@@ -26,6 +23,16 @@ namespace VODB.Core.Execution.Executers
         {
             cmd.SetParameters(table.KeyFields, entity);
             return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+    }
+
+    class IdentityExecuter : StatementExecuterBase<Object>
+    {
+        public IdentityExecuter(IStatementGetter getter) : base(getter) { }
+
+        protected override Object Execute<TEntity>(DbCommand cmd, Table table, TEntity entity)
+        {
+            return cmd.ExecuteScalar();
         }
     }
 }

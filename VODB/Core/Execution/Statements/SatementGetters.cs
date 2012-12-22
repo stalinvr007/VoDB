@@ -61,4 +61,12 @@ namespace VODB.Core.Execution.Statements
             return holder.Delete;
         }
     }
+
+    class IdentityGetter : IStatementGetter
+    {
+        public String GetStatement(ITSqlCommandHolder holder)
+        {
+            return "Select @@IDENTITY";
+        }
+    }
 }

@@ -20,17 +20,15 @@ namespace VODB.Tests
 
                 var employee = new Employee();
 
-                Table table = Engine.GetTable<Employee>();
-                DbCommand cmd = con.CreateCommand();
-                cmd.CommandText = table.CommandsHolder.Select;
+                var cmd = con.CreateCommand();
+                cmd.CommandText = Utils.EmployeeTable.CommandsHolder.Select;
 
-                DbDataReader reader = cmd.ExecuteReader();
+                var reader = cmd.ExecuteReader();
 
                 Assert.IsNotNull(reader);
                 Assert.IsTrue(reader.Read());
 
-                new EntityKeyLoader()
-                    .Load<Employee>(employee, null, reader);
+                new EntityKeyLoader().Load(employee, null, reader);
 
                 reader.Close();
 
@@ -49,17 +47,15 @@ namespace VODB.Tests
 
                 var employee = new Employee();
 
-                Table table = Engine.GetTable<Employee>();
-                DbCommand cmd = con.CreateCommand();
-                cmd.CommandText = table.CommandsHolder.Select;
+                var cmd = con.CreateCommand();
+                cmd.CommandText = Utils.EmployeeTable.CommandsHolder.Select;
 
-                DbDataReader reader = cmd.ExecuteReader();
+                var reader = cmd.ExecuteReader();
 
                 Assert.IsNotNull(reader);
                 Assert.IsTrue(reader.Read());
 
-                new FullEntityLoader()
-                    .Load<Employee>(employee, null, reader);
+                new FullEntityLoader().Load(employee, null, reader);
 
                 reader.Close();
 

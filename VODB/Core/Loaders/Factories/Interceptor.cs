@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Castle.DynamicProxy;
 using System;
 using System.Collections;
@@ -51,13 +52,7 @@ namespace VODB.Core.Loaders.Factories
         private static IEnumerable ProxyNonGenericIterator(
             object target, IEnumerable enumerable)
         {
-            try
-            {
-                foreach (var element in enumerable)
-                    yield return element;
-            }
-            finally
-            { }
+            return enumerable.Cast<object>();
         }
 
         private static readonly MethodInfo ProxyGenericIteratorMethod =
@@ -74,10 +69,13 @@ namespace VODB.Core.Loaders.Factories
 
                 var fieldName = invocation.Method.Name.Remove(0, 4);
                 var callerTable = Engine.GetTable(invocation.Method.ReflectedType);
-                var field = callerTable.FindField(fieldName);
+                var field = callerTable.FindCollectionField(fieldName);
+
+                Debug.Assert(field != null, "field != null");
+
                 var builder = new SqlQueryBuilder(field);
 
-                Type entityType = invocation.Method.ReturnType.GetGenericArguments()[0];
+                var entityType = invocation.Method.ReturnType.GetGenericArguments()[0];
 
                 var foreignTable = Engine.GetTable(entityType);
 
