@@ -1,21 +1,22 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using VODB.Annotations;
 
-namespace VODB.Tests.Models.Northwind {
+namespace VODB.Tests.Models.Northwind
+{
+    public class Territories
+    {
 
-    public class Territories : DbEntity {
+        [DbKey]
+        public String TerritoryId { get; set; }
 
-        [DbKey("TerritoryID")]
-        public String Id { get; set; }
-
-        [DbField("TerritoryDescription"), DbRequired]
-        public String Description { get; set; }
+        [DbRequired]
+        public String TerritoryDescription { get; set; }
 
         [DbField("RegionId")]
-        public Region Region {
-            get { return GetValue<Region>(); }
-            set { SetValue(value); }
-        }
+        public virtual Region Region { get; set; }
 
     }
 }

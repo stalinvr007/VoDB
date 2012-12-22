@@ -1,20 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using VODB.Annotations;
 
-namespace VODB.Tests.Models.Northwind {
-    
-    public class EmployeeTerritories : DbEntity {
-
+namespace VODB.Tests.Models.Northwind
+{
+    public class EmployeeTerritories
+    {
         [DbKey("EmployeeId")]
-        public Employee Employee {
-            get { return GetValue<Employee>(); }
-            set { SetValue(value); }
-        }
+        public virtual Employee Employee { get; set; }
 
         [DbKey("TerritoryID")]
-        public Territories Territory {
-            get { return GetValue<Territories>(); }
-            set { SetValue(value); }
-        }
+        public virtual Territories Territories { get; set; }
 
     }
 }

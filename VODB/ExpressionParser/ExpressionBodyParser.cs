@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Linq;
 using System.Linq.Expressions;
-using VODB.Exceptions;
-using VODB.Extensions;
-using VODB.VirtualDataBase;
+using VODB.Core.Infrastructure;
+using VODB.Core;
 
 namespace VODB.ExpressionParser
 {
 
     public interface IExpressionBodyParser
     {
-        Entity Entity { get; set; }
+        Object Entity { get; set; }
         String FieldName { get; }
         Field Field { get; }
         ExpressionBodyParser Next { get; }
@@ -30,7 +28,7 @@ namespace VODB.ExpressionParser
             _Expression = expression;
         }
 
-        public Entity Entity { get; set; }
+        public Object Entity { get; set; }
 
         public String FieldName { get; private set; }
 
@@ -44,8 +42,6 @@ namespace VODB.ExpressionParser
 
         public Object Value { get; private set; }
 
-
-
         public Boolean IsComplex
         {
             get
@@ -58,7 +54,7 @@ namespace VODB.ExpressionParser
         {
             if (_Expression is BinaryExpression)
             {
-                BinaryExpression body = (BinaryExpression)_Expression;
+                var body = (BinaryExpression)_Expression;
 
                 NodeType = body.NodeType;
 
@@ -81,6 +77,11 @@ namespace VODB.ExpressionParser
         private void Parse(LambdaExpression expression)
         {
             Value = expression.Compile().DynamicInvoke();
+            var valueType = Value.GetType();
+            if (valueType.IsEntity())
+            {
+                Value = Engine.GetTable(valueType).FindField(Field.BindedTo).GetValue(Value);
+            }
         }
         private void Parse(ConstantExpression expression)
         {
@@ -94,9 +95,9 @@ namespace VODB.ExpressionParser
             }
 
             FieldName = expression.Member.Name;
-            Field = Entity.FindField(FieldName);
+            Field = Engine.GetTable(Entity.GetType()).FindField(FieldName);
 
-            if (!typeof(Entity).IsAssignableFrom(expression.Type))
+            if (!Engine.IsMapped(expression.Type))
             {
                 if (expression.Expression.NodeType != ExpressionType.Parameter)
                 {
@@ -112,7 +113,8 @@ namespace VODB.ExpressionParser
             {
                 if (Previous != null && Previous.Field == null)
                 {
-                    Previous.Field = ((Entity)Activator.CreateInstance(Field.FieldType)).FindField(Previous.FieldName);
+                    Previous.Field = Engine.GetTable(Field.FieldType)
+                        .FindField(Previous.FieldName);
                 }
             }
 

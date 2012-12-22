@@ -1,9 +1,11 @@
 ﻿using System;
+using VODB.Core;
 
 namespace VODB.Extensions
 {
     internal static class ExceptionExtensions
     {
+        static IConfiguration Configuration = Engine.Get<IConfiguration>();
 
         /// <summary>
         /// Handles the exception.

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using VODB.VirtualDataBase;
+using VODB.Core.Infrastructure;
 
 namespace VODB.ExpressionParser.ExpressionHandlers
 {
@@ -16,7 +16,7 @@ namespace VODB.ExpressionParser.ExpressionHandlers
         /// <returns>
         ///   <c>true</c> if this instance can handle the specified expression; otherwise, <c>false</c>.
         /// </returns>
-        bool CanHandle<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : Entity, new();
+        bool CanHandle<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : class, new();
 
         /// <summary>
         /// Handles the specified expression.
@@ -24,7 +24,7 @@ namespace VODB.ExpressionParser.ExpressionHandlers
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="expression">The expression.</param>
         /// <returns>The fieldName and the value.</returns>
-        KeyValuePair<Field, object> Handle<TEntity>(Expression<Func<TEntity, Boolean>> expression) where TEntity : Entity, new();
+        KeyValuePair<Field, object> Handle<TEntity>(Expression<Func<TEntity, Boolean>> expression) where TEntity : class, new();
 
     }
 

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text;
+using VODB.Core;
 using VODB.Exceptions;
 using VODB.Extensions;
 
@@ -13,9 +14,9 @@ namespace VODB.EntityValidators
                 onCommand == On.Delete;
         }
 
-        public void Validate(Entity entity)
+        public void Validate<TEntity>(TEntity entity)
         {
-            var nonFilled = entity.Table.KeyFields
+            var nonFilled = Engine.GetTable(entity.GetType()).KeyFields
                 .Where(field => !entity.IsFilled(field))
                 .Select(field => field.FieldName);
 
@@ -29,8 +30,8 @@ namespace VODB.EntityValidators
 
             sb.Remove(sb.Length - 2, 2);
             throw new ValidationException(
-                string.Format("Key fields not set: {{ {0} }}", sb), 
-                entity.Table.KeyFields.Where(field => !entity.IsFilled(field)));
+                string.Format("Key fields not set: {{ {0} }}", sb),
+                Engine.GetTable(entity.GetType()).KeyFields.Where(field => !entity.IsFilled(field)));
         }
     }
 }

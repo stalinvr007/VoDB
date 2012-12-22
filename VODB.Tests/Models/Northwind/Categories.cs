@@ -4,7 +4,7 @@ using VODB.Annotations;
 namespace VODB.Tests.Models.Northwind
 {
     
-    public class Categories : DbEntity {
+    public class Categories {
 
         [DbIdentity]
         public int CategoryId { get; set; }

@@ -2,7 +2,7 @@
 using VODB.Annotations;
 
 namespace VODB.Tests.Models.Northwind {
-    public class CustomerDemographics : DbEntity{
+    public class CustomerDemographics {
 
         [DbKey]
         public String CustomerTypeId { get; set; }

@@ -1,19 +1,13 @@
 ﻿using VODB.Annotations;
 
 namespace VODB.Tests.Models.Northwind {
-    public class CustomerCustomerDemo : DbEntity {
+    public class CustomerCustomerDemo  {
 
         [DbKey("CustomerId")]
-        public Customers Customer { 
-            get { return GetValue<Customers>(); }
-            set { SetValue(value); }
-        }
+        public virtual Customers Customer { get; set; }
 
         [DbKey("CustomerTypeId")]
-        public CustomerDemographics Demographics {
-            get { return GetValue<CustomerDemographics>(); }
-            set { SetValue(value); }
-        }
+        public virtual CustomerDemographics Demographics { get; set; }
 
     }
 }

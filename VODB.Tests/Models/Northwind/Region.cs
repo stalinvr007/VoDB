@@ -3,7 +3,7 @@ using VODB.Annotations;
 
 namespace VODB.Tests.Models.Northwind {
 
-    public class Region : DbEntity {
+    public class Region {
 
         [DbKey("RegionID")]
         public int Id { get; set; }

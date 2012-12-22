@@ -2,7 +2,7 @@
 using System;
 
 namespace VODB.Tests.Models.Northwind {
-    public class Products : DbEntity {
+    public class Products {
 
         [DbIdentity]
         public int ProductId { get; set; }
@@ -11,16 +11,10 @@ namespace VODB.Tests.Models.Northwind {
         public String ProductName { get; set; }
 
         [DbField("SupplierId")]
-        public Suppliers Supplier {
-            get { return GetValue<Suppliers>(); }
-            set { SetValue(value); }
-        }
+        public virtual Suppliers Supplier { get; set; }
 
         [DbField("CategoryId")]
-        public Categories Category {
-            get { return GetValue<Categories>(); }
-            set { SetValue(value); }
-        }
+        public virtual Categories Category { get; set; }
 
         public String QuantityPerUnit { get; set; }
 

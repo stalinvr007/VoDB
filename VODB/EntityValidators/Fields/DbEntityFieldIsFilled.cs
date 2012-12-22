@@ -8,13 +8,12 @@ namespace VODB.EntityValidators.Fields
     {
         protected override Boolean IsFilled(object value)
         {
-            var entity = value as DbEntity;
-            return entity != null && entity.Table.KeyFields.All(entity.IsFilled);
+            return value.GetTable().KeyFields.Any();
         }
 
         protected override Boolean CanHandle(Type fieldType)
         {
-            return typeof(DbEntity).IsAssignableFrom(fieldType);
+            return fieldType.IsEntity();
         }
     }
 }

@@ -4,19 +4,13 @@ using System;
 namespace VODB.Tests.Models.Northwind {
 
     [DbTable("Order Details")]
-    public class OrderDetails : DbEntity {
+    public class OrderDetails  {
 
         [DbKey("OrderId")]
-        public Orders Order {
-            get { return GetValue<Orders>(); }
-            set { SetValue(value); }
-        }
+        public virtual Orders Order { get; set; }
 
         [DbKey("ProductId")]
-        public Products Product {
-            get { return GetValue<Products>(); }
-            set { SetValue(value); }
-        }
+        public virtual Products Product { get; set; }
 
         public Decimal UnitPrice { get; set; }
 

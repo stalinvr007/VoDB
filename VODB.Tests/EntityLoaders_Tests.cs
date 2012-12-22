@@ -1,9 +1,8 @@
 ﻿using System.Data.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VODB.DbLayer;
-using VODB.DbLayer.Loaders;
+using VODB.Core.Loaders;
 using VODB.Tests.Models.Northwind;
-using VODB.VirtualDataBase;
 
 namespace VODB.Tests
 {
@@ -19,17 +18,15 @@ namespace VODB.Tests
 
                 var employee = new Employee();
 
-                Table table = employee.Table;
-                DbCommand cmd = con.CreateCommand();
-                cmd.CommandText = table.CommandsHolder.Select;
+                var cmd = con.CreateCommand();
+                cmd.CommandText = Utils.EmployeeTable.CommandsHolder.Select;
 
-                DbDataReader reader = cmd.ExecuteReader();
+                var reader = cmd.ExecuteReader();
 
                 Assert.IsNotNull(reader);
                 Assert.IsTrue(reader.Read());
 
-                new EntityKeyLoader<Employee>()
-                    .Load(employee, reader);
+                new EntityKeyLoader().Load(employee, null, reader);
 
                 reader.Close();
 
@@ -42,23 +39,21 @@ namespace VODB.Tests
         [TestMethod]
         public void FullEntityLoader_Employees()
         {
-            using (DbConnection con = new NameConventionDbConnectionCreator("System.Data.SqlClient").Create())
+            using (var con = new NameConventionDbConnectionCreator("System.Data.SqlClient").Create())
             {
                 con.Open();
 
                 var employee = new Employee();
 
-                Table table = employee.Table;
-                DbCommand cmd = con.CreateCommand();
-                cmd.CommandText = table.CommandsHolder.Select;
+                var cmd = con.CreateCommand();
+                cmd.CommandText = Utils.EmployeeTable.CommandsHolder.Select;
 
-                DbDataReader reader = cmd.ExecuteReader();
+                var reader = cmd.ExecuteReader();
 
                 Assert.IsNotNull(reader);
                 Assert.IsTrue(reader.Read());
 
-                new FullEntityLoader<Employee>()
-                    .Load(employee, reader);
+                new FullEntityLoader().Load(employee, null, reader);
 
                 reader.Close();
 

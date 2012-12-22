@@ -1,5 +1,5 @@
 using System;
-using VODB.VirtualDataBase;
+using VODB.Core.Infrastructure;
 
 namespace VODB.EntityValidators.Fields
 {
@@ -10,7 +10,7 @@ namespace VODB.EntityValidators.Fields
             return CanHandle(field.FieldType);
         }
 
-        public Boolean Verify(Field field, Entity entity)
+        public Boolean Verify<TEntity>(Field field, TEntity entity)
         {
             return IsFilled(field.GetValue(entity));
         }

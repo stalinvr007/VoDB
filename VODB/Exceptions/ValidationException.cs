@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using VODB.VirtualDataBase;
+using VODB.Core.Infrastructure;
 
 namespace VODB.Exceptions
 {
