@@ -131,6 +131,7 @@ namespace VODB.Sessions
 
         public ITransaction BeginTransaction()
         {
+            Open();
             return _Transaction.BeginTransaction(_connection);
         }
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using VODB.Sessions;
 using VODB.Tests.Models.Northwind;
 
 namespace VODB.Tests
@@ -7,8 +6,7 @@ namespace VODB.Tests
     [TestClass]
     public class Transaction_Tests
     {
-        // TODO: uncomment this...
-        // [TestMethod]
+        [TestMethod]
         public void InnerTransactions()
         {
 
