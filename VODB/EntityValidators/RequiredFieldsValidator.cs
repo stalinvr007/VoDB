@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Text;
+using VODB.Core;
 using VODB.Exceptions;
 using VODB.Extensions;
 
@@ -13,9 +14,9 @@ namespace VODB.EntityValidators
         /// Validates the specified entity. Should throw exception with the validation result if failed.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        public void Validate(Entity entity)
+        public void Validate<TEntity>(TEntity entity)
         {
-            var nonFilled = entity.Table.Fields
+            var nonFilled = Engine.GetTable(entity.GetType()).Fields
                 .Where(field => field.IsRequired)
                 .Where(field => !entity.IsFilled(field))
                 .Select(field => field.FieldName);
@@ -30,8 +31,8 @@ namespace VODB.EntityValidators
             
             sb.Remove(sb.Length - 2, 2);
             throw new ValidationException(
-                string.Format("Required fields not set: {{ {0} }}", sb), 
-                entity.Table.Fields.Where(field => field.IsRequired).Where(field => !entity.IsFilled(field)));
+                string.Format("Required fields not set: {{ {0} }}", sb),
+                Engine.GetTable(entity.GetType()).Fields.Where(field => field.IsRequired).Where(field => !entity.IsFilled(field)));
         }
 
         #endregion

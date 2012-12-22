@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using VODB.DbLayer.DbCommands.DbParameterSetters;
-using VODB.DbLayer.Loaders.FieldSetters;
+using VODB.Core.Execution.DbParameterSetters;
+using VODB.Core.Loaders.Factories;
+using VODB.Core.Loaders.FieldSetters;
 using VODB.EntityValidators;
 using VODB.EntityValidators.Fields;
 using VODB.Exceptions.Handling;
@@ -13,10 +14,10 @@ namespace VODB
     /// <summary>
     /// Allows the end user to configure some aspects of the VODB Framework.
     /// </summary>
-    public static class Configuration
+    class Configuration : IConfiguration
     {
         
-        static Configuration()
+        public Configuration()
         {
 
             FieldIsFilledValidators = new List<IFieldValidator>
@@ -37,7 +38,7 @@ namespace VODB
             FieldSetters = new List<IFieldSetter>
             {
                 new BasicFieldSetter(),
-                new DbEntityFieldSetter()
+                new DbEntityFieldSetter(new EntityProxyFactory())
             };
 
             ParameterSetters = new List<IParameterSetter>
@@ -73,7 +74,7 @@ namespace VODB
                 new GreaterWhereExpressionFormatter()
             };
 
-            TSqlBuilders = new List<ITSqlBuilder>()
+            TSqlBuilders = new List<ITSqlBuilder>
             {
                 new SimpleWhereTSqlBuilder(),
                 new ComplexTSqlBuilder()
@@ -81,7 +82,7 @@ namespace VODB
 
         }
 
-        public static ICollection<ITSqlBuilder> TSqlBuilders { get; private set; }
+        public ICollection<ITSqlBuilder> TSqlBuilders { get; private set; }
 
         /// <summary>
         /// Gets the where expression handlers.
@@ -89,7 +90,7 @@ namespace VODB
         /// <value>
         /// The where expression handlers.
         /// </value>
-        public static ICollection<IWhereExpressionHandler> WhereExpressionHandlers { get; private set; }
+        public ICollection<IWhereExpressionHandler> WhereExpressionHandlers { get; private set; }
 
         /// <summary>
         /// Gets or sets the where expression formatters.
@@ -97,7 +98,7 @@ namespace VODB
         /// <value>
         /// The where expression formatters.
         /// </value>
-        public static ICollection<IWhereExpressionFormatter> WhereExpressionFormatters { get; private set; }
+        public ICollection<IWhereExpressionFormatter> WhereExpressionFormatters { get; private set; }
 
         /// <summary>
         /// Gets the entity validators.
@@ -105,7 +106,7 @@ namespace VODB
         /// <value>
         /// The entity validators.
         /// </value>
-        public static ICollection<IEntityValidator> EntityValidators { get; private set; }
+        public ICollection<IEntityValidator> EntityValidators { get; private set; }
 
         /// <summary>
         /// Gets the field setters.
@@ -113,7 +114,7 @@ namespace VODB
         /// <value>
         /// The field setters.
         /// </value>
-        public static ICollection<IFieldSetter> FieldSetters { get; private set; }
+        public ICollection<IFieldSetter> FieldSetters { get; private set; }
 
         /// <summary>
         /// Gets the parameter setters. Used to set data into DbParameters.
@@ -121,7 +122,7 @@ namespace VODB
         /// <value>
         /// The parameter setters.
         /// </value>
-        public static ICollection<IParameterSetter> ParameterSetters { get; private set; }
+        public ICollection<IParameterSetter> ParameterSetters { get; private set; }
 
         /// <summary>
         /// Gets the field is filled validators.
@@ -129,7 +130,7 @@ namespace VODB
         /// <value>
         /// The field is filled validators.
         /// </value>
-        public static ICollection<IFieldValidator> FieldIsFilledValidators { get; private set; }
+        public ICollection<IFieldValidator> FieldIsFilledValidators { get; private set; }
 
         /// <summary>
         /// Gets the exception handlers.
@@ -137,7 +138,7 @@ namespace VODB
         /// <value>
         /// The exception handlers.
         /// </value>
-        public static ICollection<IExceptionHandler> ExceptionHandlers { get; private set; }
+        public ICollection<IExceptionHandler> ExceptionHandlers { get; private set; }
 
     }
 }

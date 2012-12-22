@@ -1,5 +1,5 @@
 using System;
-using VODB.VirtualDataBase;
+using VODB.Core.Infrastructure;
 
 namespace VODB.ExpressionParser
 {

@@ -5,12 +5,14 @@ using System.Linq.Expressions;
 using VODB.Exceptions;
 using VODB.ExpressionParser;
 using VODB.ExpressionParser.TSqlBuilding;
-using VODB.VirtualDataBase;
+using VODB.Core.Infrastructure;
+using VODB.Core;
 
 namespace VODB.Extensions
 {
     static class ExpressionsExtensions
     {
+        static IConfiguration Configuration = Engine.Get<IConfiguration>();
 
         /// <summary>
         /// Gets the key value.
@@ -20,7 +22,7 @@ namespace VODB.Extensions
         /// <returns></returns>
         /// <exception cref="WhereExpressionHandlerNotFoundException"></exception>
         public static KeyValuePair<Field, object> GetKeyValue<TEntity>(this Expression<Func<TEntity, bool>> expression)
-             where TEntity : Entity, new()
+             where TEntity : class, new()
         {
             foreach (var handler in Configuration.WhereExpressionHandlers
                 .Where(handler => handler.CanHandle(expression)))

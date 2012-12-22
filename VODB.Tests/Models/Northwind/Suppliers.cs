@@ -2,7 +2,7 @@
 using System;
 
 namespace VODB.Tests.Models.Northwind {
-    public class Suppliers : DbEntity {
+    public class Suppliers {
 
         [DbIdentity]
         public int SupplierId { get; set; }

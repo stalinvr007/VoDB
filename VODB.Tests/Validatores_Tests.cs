@@ -25,15 +25,5 @@ namespace VODB.Tests
 
 
         }
-
-        [TestMethod, ExpectedException(typeof(TruncatedException))]
-        public void BigNamesThrowException()
-        {
-            Utils.EagerExecute(session => session.Insert(new Employee
-                  {
-                      FirstName = "adoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandleradoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandleradoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandleradoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandleradoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandleradoaskdpoaskdapsdkapsdokapsdokaspdTruncatedExceptionHandlerok",
-                      LastName = "adsads"
-                  }));
-        }
     }
 }

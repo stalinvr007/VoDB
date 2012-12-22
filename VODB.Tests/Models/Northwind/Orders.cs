@@ -3,24 +3,16 @@ using System;
 
 namespace VODB.Tests.Models.Northwind {
     
-    public sealed class Orders : DbEntity {
+    public class Orders {
 
         [DbIdentity]
         public int OrderId { get; set; }
 
         [DbField("CustomerId")]
-        public Customers Customer {
-            get { 
-                return GetValue<Customers>(); 
-            }
-            set { SetValue(value); }
-        }
+        public virtual Customers Customer { get; set; }
 
         [DbField("EmployeeId")]
-        public Employee Employee {
-            get { return GetValue<Employee>(); }
-            set { SetValue(value); }
-        }
+        public virtual Employee Employee { get; set; }
 
         public DateTime OrderDate { get; set; }
 
@@ -29,10 +21,7 @@ namespace VODB.Tests.Models.Northwind {
         public DateTime ShippedDate { get; set; }
 
         [DbField("ShipVia"), DbBind("ShipperId")]
-        public Shippers Shipper {
-            get { return GetValue<Shippers>(); }
-            set { SetValue(value); }
-        }
+        public virtual Shippers Shipper { get; set; }
         
         public Decimal Freight { get; set; }
 

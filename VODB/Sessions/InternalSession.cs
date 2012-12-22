@@ -1,156 +1,66 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Threading.Tasks;
+using VODB.Core;
+using VODB.Core.Execution.Executers;
 using VODB.DbLayer;
-using VODB.DbLayer.DbCommands;
-using VODB.DbLayer.DbExecuters;
-using VODB.DbLayer.DbResults;
-using VODB.Extensions;
+using VODB.Core.Execution.Executers.DbResults;
+using VODB.Core.Loaders;
+using VODB.Core.Loaders.Factories;
 
 namespace VODB.Sessions
 {
-    /// <summary>
-    /// Represents a connection Session.
-    /// </summary>
-    internal abstract class InternalSession : IInternalSession, ISession
+    class InternalSession : IInternalSession
     {
-        private IDbConnectionCreator _creator;
         private DbConnection _connection;
-        private Transaction _transaction;
-        private TasksCollection _tasks;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InternalSession" /> class.
-        /// </summary>
-        /// <param name="creator">The creator.</param>
-        internal InternalSession(IDbConnectionCreator creator = null)
+        private IInternalTransaction _Transaction;
+        private IDbConnectionCreator _Creator;
+        private readonly IStatementExecuter<int> _InsertExecuter;
+        private readonly IStatementExecuter<int> _UpdateExecuter;
+        private readonly IStatementExecuter<int> _DeleteExecuter;
+        private readonly IStatementExecuter<int> _CountExecuter;
+        private readonly IStatementExecuter<int> _CountByIdExecuter;
+        private readonly IStatementExecuter<DbDataReader> _SelectByIdExecuter;
+        private readonly IStatementExecuter<object> _IdentityExecuter;
+        private readonly IStatementExecuter _StatementExecuter;
+        private readonly IQueryResultGetter _QueryResultGetter;
+        private readonly IEntityLoader _EntityLoader;
+        private readonly IEntityFactory _EntityFactory;
+        
+        public InternalSession(
+            IDbConnectionCreator creator,
+            IInternalTransaction transaction,
+            [Bind(Commands.Insert)] IStatementExecuter<int> insertExecuter,
+            [Bind(Commands.Update)] IStatementExecuter<int> updateExecuter,
+            [Bind(Commands.Delete)] IStatementExecuter<int> deleteExecuter,
+            [Bind(Commands.Count)] IStatementExecuter<int> countExecuter,
+            [Bind(Commands.CountById)] IStatementExecuter<int> countByIdExecuter,
+            [Bind(Commands.SelectById)] IStatementExecuter<DbDataReader> selectByIdExecuter,
+            [Bind(Commands.Identity)] IStatementExecuter<Object> IdentityExecuter,
+            IStatementExecuter statementExecuter,
+            IQueryResultGetter queryResultGetter,
+            IEntityLoader entityLoader,
+            IEntityFactory entityFactory)
         {
-            _creator = creator ?? new SqlConnectionCreator();
-            _tasks = new TasksCollection();
+            _EntityFactory = entityFactory;
+            _EntityLoader = entityLoader;
+            _QueryResultGetter = queryResultGetter;
+            _SelectByIdExecuter = selectByIdExecuter;
+            _IdentityExecuter = IdentityExecuter;
+            _StatementExecuter = statementExecuter;
+            _CountByIdExecuter = countByIdExecuter;
+            _CountExecuter = countExecuter;
+            _DeleteExecuter = deleteExecuter;
+            _UpdateExecuter = updateExecuter;
+            _InsertExecuter = insertExecuter;
+            _Creator = creator;
+            _Transaction = transaction;
         }
 
         private bool InTransaction
         {
-            get { return _transaction != null && !_transaction.Ended; }
+            get { return !_Transaction.Ended; }
         }
-
-        #region ISession Members
-
-        public ITransaction BeginTransaction()
-        {
-
-            CreateConnection();
-            Open();
-
-            if (InTransaction)
-            {
-                _transaction.BeginNestedTransaction();
-            }
-            else
-            {
-                _transaction = new Transaction(_connection.BeginTransaction());
-            }
-
-            return _transaction;
-
-        }
-
-        public void ExecuteTSql(String SqlStatements)
-        {
-            new DbCommandNonQueryExecuter(
-                new TSQLDbCommandFactory(this, SqlStatements)
-            ).Execute();
-        }
-
-        public abstract IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : Entity, new();
-
-        public Task<IDbQueryResult<TEntity>> AsyncGetAll<TEntity>() where TEntity : Entity, new()
-        {
-            return _tasks.Add<IDbQueryResult<TEntity>>(
-                new Task<IDbQueryResult<TEntity>>(new InternalEagerSession(_creator).GetAll<TEntity>).RunAsync()
-            );
-        }
-
-        public abstract TEntity GetById<TEntity>(TEntity entity) where TEntity : Entity, new();
-
-        public Task<TEntity> AsyncGetById<TEntity>(TEntity entity) where TEntity : Entity, new()
-        {
-            return _tasks.Add<TEntity>(
-                new Task<TEntity>(() => new InternalEagerSession(_creator).GetById(entity)).RunAsync()
-            );
-        }
-
-        public TEntity Insert<TEntity>(TEntity entity) where TEntity : Entity, new()
-        {
-            var idField = entity.Table.KeyFields.FirstOrDefault(f => f.IsIdentity);
-
-            var id = Run(() =>
-            {
-                new DbCommandNonQueryExecuter(
-                    new DbEntityInsertCommandFactory<TEntity>(this, entity)
-                    ).Execute();
-
-                entity.Session = this;
-
-                return idField == null ? null : 
-                    new DbQueryScalarExecuter<Object>(
-                        new DbCommandBypass(this, "Select @@IDENTITY").Make()).Execute();
-            });
-
-            if (idField != null)
-            {
-                entity.SetValue(idField,
-                    Convert.ChangeType(id, idField.FieldType),
-                    field => Convert.ChangeType(id, idField.FieldType));
-            }
-
-            return entity;
-        }
-
-        public void Delete<TEntity>(TEntity entity) where TEntity : Entity, new()
-        {
-            Run(() =>
-                new DbCommandNonQueryExecuter(
-                    new DbEntityDeleteCommandFactory<TEntity>(this, entity)
-                ).Execute()
-            );
-        }
-
-        public TEntity Update<TEntity>(TEntity entity) where TEntity : Entity, new()
-        {
-            Run(() =>
-                new DbCommandNonQueryExecuter(
-                    new DbEntityUpdateCommandFactory<TEntity>(this, entity)
-                ).Execute()
-            );
-
-            entity.Session = this;
-            return entity;
-        }
-
-        public int Count<TEntity>() where TEntity : Entity, new()
-        {
-            return Run(() =>
-                new DbQueryScalarExecuter<int>(
-                    new DbEntityCountCommandFactory<TEntity>(this).Make()
-                ).Execute()
-            );
-        }
-
-        public bool Exists<TEntity>(TEntity entity) where TEntity : Entity, new()
-        {
-            entity.Session = this;
-
-            return Run(() =>
-                new DbQueryScalarExecuter<int>(
-                    new DbEntityCountByIdCommandFactory<TEntity>(this, entity).Make()
-                ).Execute() > 0
-            );
-        }
-
-        #endregion
 
         #region IInternalSession Members
 
@@ -160,11 +70,10 @@ namespace VODB.Sessions
             CreateConnection();
 
             return InTransaction
-                       ? _transaction.CreateCommand()
+                       ? _Transaction.CreateCommand()
                        : _connection.CreateCommand();
 
         }
-
 
         public void Open()
         {
@@ -181,9 +90,7 @@ namespace VODB.Sessions
 
         public void Close()
         {
-
-            if (_connection == null || _connection.State == ConnectionState.Closed ||
-                (InTransaction && !_transaction.Ended) || _tasks.Count > 0)
+            if (_connection == null || _connection.State == ConnectionState.Closed || InTransaction)
             {
                 return;
             }
@@ -193,51 +100,104 @@ namespace VODB.Sessions
 
         #endregion
 
-        protected TResult Run<TResult>(Func<TResult> action)
-        {
-            Open();
-            try
-            {
-                return action();
-            }
-            catch (Exception)
-            {
-                if (InTransaction)
-                {
-                    _transaction.RollBack();
-                }
-
-                throw;
-            }
-        }
-
         private void CreateConnection()
         {
             if (_connection == null)
             {
-                _connection = _creator.Create();
+                _connection = _Creator.Create();
             }
         }
 
         public void Dispose()
         {
             Close();
-            if (_transaction != null)
+            if (_Transaction != null)
             {
-                _transaction.Dispose();
-                _transaction = null;
+                _Transaction.Dispose();
+                _Transaction = null;
             }
 
             if (_connection == null)
             {
                 return;
             }
-            
+
             _connection.Dispose();
             _connection = null;
-            _creator = null;
-            _tasks = null;
+            _Creator = null;
         }
 
+        #region ISession Implementation
+
+        public ITransaction BeginTransaction()
+        {
+            return _Transaction.BeginTransaction(_connection);
+        }
+
+        public void ExecuteTSql(string SqlStatements)
+        {
+            _StatementExecuter.Execute(SqlStatements, this);
+        }
+
+        public IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : class, new()
+        {
+            return _QueryResultGetter.GetQueryResult<TEntity>(this, _EntityLoader, _EntityFactory);
+        }
+
+        public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
+        {
+            var reader = _SelectByIdExecuter.Execute(entity, this);
+            try
+            {
+                if (reader.Read())
+                {
+                    var newEntity = _EntityFactory.Make(entity.GetType(), this) as TEntity;
+                    _EntityLoader.Load(newEntity, this, reader);
+                    return newEntity;
+                }
+            }
+            finally
+            {
+                reader.Close();
+            }            
+            return null;
+        }
+
+        public TEntity Insert<TEntity>(TEntity entity) where TEntity : class, new()
+        {
+            _InsertExecuter.Execute(entity, this);
+
+            var field = entity.GetTable().IdentityField;
+            if (field != null)
+            {
+                field.SetValue(entity, Convert.ChangeType(_IdentityExecuter.Execute(entity, this), field.FieldType));
+            }
+
+            return entity;
+        }
+
+        public void Delete<TEntity>(TEntity entity) where TEntity : class, new()
+        {
+            _DeleteExecuter.Execute(entity, this);
+        }
+
+        public TEntity Update<TEntity>(TEntity entity) where TEntity : class, new()
+        {
+            _UpdateExecuter.Execute(entity, this);
+            return entity;
+        }
+
+        public int Count<TEntity>() where TEntity : class, new()
+        {
+            return _CountExecuter.Execute(new TEntity(), this);
+        }
+
+        public bool Exists<TEntity>(TEntity entity) where TEntity : class, new()
+        {
+            return _CountByIdExecuter.Execute(entity, this) > 0;
+        }
+
+        #endregion
+    
     }
 }
