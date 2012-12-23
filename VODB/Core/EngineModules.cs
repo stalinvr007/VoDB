@@ -102,6 +102,8 @@ namespace VODB.Core
             Bind<IEntityLoader>().To<FullEntityLoader>().InSingletonScope();
             Bind<IEntityFactory>().To<EntityProxyFactory>().InSingletonScope();
 
+            Bind<ICachedEntities>().To<CachedEntities>().InSingletonScope();
+
             Bind<IQueryExecuter>().To<QueryExecuter>().InSingletonScope();
         }
     }

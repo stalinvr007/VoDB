@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using System.Text;
 using VODB.Core;
 using VODB.Core.Infrastructure;
 using VODB.Core.Loaders;
@@ -19,15 +18,9 @@ namespace VODB
 
         public static Table GetTable<TEntity>(this TEntity entity)
         {
-            var entityType = entity.GetType();
-            if (entityType.Namespace.Equals("Castle.Proxies"))
-            {
-                return Engine.GetTable(entityType.BaseType);
-            }
-
-            return Engine.GetTable(entityType);
+            return Engine.GetTable(entity.GetType());
         }
-    
+
         public static Boolean IsEntity(this Type entityType)
         {
             return Engine.IsMapped(entityType);
@@ -88,14 +81,11 @@ namespace VODB
         /// <exception cref="ParameterSetterNotFoundException"></exception>
         public static void SetValue(this DbParameter param, Field field, Object entity)
         {
-            if (Engine.IsMapped(entity.GetType()))
-            {
-                param.SetParamValue(field, field.GetValue(entity));
-            }
-            else
-            {
-                param.SetParamValue(field, entity);
-            }
+            var value = Engine.IsMapped(entity.GetType())
+                            ? field.GetValue(entity)
+                            : entity;
+
+            param.SetParamValue(field, value);
         }
 
         /// <summary>
@@ -205,12 +195,9 @@ namespace VODB
         /// <exception cref="FieldValidatorNotFoundException"></exception>
         public static Boolean IsFilled<TEntity>(this TEntity entity, Field field)
         {
-            foreach (var validator in Configuration.FieldIsFilledValidators)
+            foreach (var validator in Configuration.FieldIsFilledValidators.Where(validator => validator.CanHandle(field)))
             {
-                if (validator.CanHandle(field))
-                {
-                    return validator.Verify(field, entity);
-                }
+                return validator.Verify(field, entity);
             }
 
             throw new FieldValidatorNotFoundException(field.FieldType);
@@ -238,7 +225,7 @@ namespace VODB
         /// <summary>
         /// Sets the parameter.
         /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="dbCommand">The db command.</param>
         /// <param name="field">The field.</param>
         /// <param name="entity">The entity.</param>
@@ -271,16 +258,15 @@ namespace VODB
         /// <summary>
         /// Sets the parameter.
         /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
         /// <param name="dbCommand">The db command.</param>
+        /// <param name="cache">The cache.</param>
         /// <param name="field">The field.</param>
-        /// <param name="entity">The entity.</param>
         /// <exception cref="ParameterSetterNotFoundException"></exception>
-        private static void SetOldParameter<TEntity>(this DbCommand dbCommand, Field field, TEntity entity)
+        private static void SetOldParameter(this DbCommand dbCommand, ICachedEntity cache, Field field)
         {
             var param = dbCommand.CreateParameter();
             param.ParameterName = string.Format("Old{0}", field.FieldName);
-            param.SetValue(field, entity);
+            param.SetValue(field, cache.GetKeyValue(field));
 
             dbCommand.Parameters.Add(param);
         }
@@ -289,14 +275,14 @@ namespace VODB
         /// <summary>
         /// Sets the parameters.
         /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="dbCommand">The db command.</param>
         /// <param name="fields">The fields.</param>
         /// <param name="entity">The entity.</param>
         /// <exception cref="ParameterSetterNotFoundException"></exception>
         public static void SetParameters<TEntity>(this DbCommand dbCommand, IEnumerable<Field> fields, TEntity entity)
         {
-            foreach (Field field in fields)
+            foreach (var field in fields)
             {
                 dbCommand.SetParameter(field, entity);
             }
@@ -305,15 +291,16 @@ namespace VODB
         /// <summary>
         /// Sets the old parameters.
         /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="dbCommand">The db command.</param>
+        /// <param name="table">The table.</param>
         /// <param name="entity">The entity.</param>
         /// <exception cref="ParameterSetterNotFoundException"></exception>
         public static void SetOldParameters<TEntity>(this DbCommand dbCommand, Table table, TEntity entity)
         {
             foreach (var field in table.KeyFields)
             {
-                dbCommand.SetOldParameter(field, entity);
+                dbCommand.SetOldParameter(Engine.Get<ICachedEntities>().Get(entity), field);
             }
         }
     }
