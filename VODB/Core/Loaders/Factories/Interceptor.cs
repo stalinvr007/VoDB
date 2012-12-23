@@ -28,11 +28,26 @@ namespace VODB.Core.Loaders.Factories
             invocation.Proceed();
 
             var method = invocation.Method;
-            if (!method.Name.StartsWith("get_"))
-            {
-                return;
-            }
+            var fieldName = invocation.Method.Name.Remove(0, 4);
 
+            if (method.Name.StartsWith("get_"))
+            {
+                GetValueHandler(invocation, method, fieldName);
+            }
+            else if (method.Name.StartsWith("set_"))
+            {
+                
+                if (method.ContainsGenericParameters)
+                {
+                    
+                }
+
+            }
+            
+        }
+
+        private void GetValueHandler(IInvocation invocation, MethodInfo method, string fieldName)
+        {
             Object result;
             if (lastResult.TryGetValue(method, out result))
             {
@@ -40,7 +55,7 @@ namespace VODB.Core.Loaders.Factories
                 return;
             }
 
-            invocation.ReturnValue = lastResult[method] = ResolveResult(invocation);
+            invocation.ReturnValue = lastResult[method] = ResolveResult(invocation, fieldName);
         }
 
         private static IEnumerable<T> ProxyGenericIterator<T>(
@@ -61,13 +76,13 @@ namespace VODB.Core.Loaders.Factories
                     "ProxyGenericIterator",
                     BindingFlags.NonPublic | BindingFlags.Static);
 
-        private object ResolveResult(IInvocation invocation)
+        private object ResolveResult(IInvocation invocation, string fieldName)
         {
             if (invocation.Method.ReturnType.IsGenericType)
             {
                 // Todo: this code is kind of strange... Aply some refectoring strategy here.
 
-                var fieldName = invocation.Method.Name.Remove(0, 4);
+                
                 var callerTable = Engine.GetTable(invocation.Method.ReflectedType);
                 var field = callerTable.FindCollectionField(fieldName);
 
