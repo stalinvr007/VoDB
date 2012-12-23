@@ -73,6 +73,8 @@
     <Compile Include="Core\Infrastructure\TSqlCommands\TCount.cs" />
     <Compile Include="Core\Loaders\Factories\IEntityFactory.cs" />
     <Compile Include="Core\Loaders\Factories\Interceptor.cs" />
+    <Compile Include="Core\Loaders\ICachedEntities.cs" />
+    <Compile Include="Core\Loaders\ICachedEntity.cs" />
     <Compile Include="Exceptions\EntityMapNotFoundException.cs" />
     <Compile Include="Core\EntityTables.cs" />
     <Compile Include="Core\Infrastructure\FieldMapper.cs" />

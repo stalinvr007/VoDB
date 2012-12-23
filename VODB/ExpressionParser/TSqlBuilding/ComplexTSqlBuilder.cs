@@ -20,8 +20,11 @@ namespace VODB.ExpressionParser.TSqlBuilding
                 {
                     var table = parser.Entity.GetTable();
 
-                    Field field;
-                    table.FieldsByName.TryGetValue(parser.Field.BindedTo, out field);
+                    Field field = null;
+                    if (parser.Field.BindedTo != null)
+                    {
+                        table.FieldsByName.TryGetValue(parser.Field.BindedTo, out field);
+                    }
 
                     return String.Format("{0} In (Select {1} From {2}",
                         parser.Field.FieldName,

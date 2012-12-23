@@ -26,7 +26,7 @@ namespace VODB.Tests
                 Assert.IsNotNull(reader);
                 Assert.IsTrue(reader.Read());
 
-                new EntityKeyLoader().Load(employee, null, reader);
+                new EntityKeyLoader(new CachedEntities()).Load(employee, null, reader);
 
                 reader.Close();
 
@@ -53,7 +53,7 @@ namespace VODB.Tests
                 Assert.IsNotNull(reader);
                 Assert.IsTrue(reader.Read());
 
-                new FullEntityLoader().Load(employee, null, reader);
+                new FullEntityLoader(new CachedEntities()).Load(employee, null, reader);
 
                 reader.Close();
 

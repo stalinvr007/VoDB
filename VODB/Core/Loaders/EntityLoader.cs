@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.Common;
-using VODB.Extensions;
 using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Loaders
@@ -8,9 +7,16 @@ namespace VODB.Core.Loaders
     /// <summary>
     /// Loads data into an entity from a DataReader.
     /// </summary>
-    /// <typeparam name="TModel">The type of the model.</typeparam>
     internal abstract class EntityLoader : IEntityLoader
     {
+        private readonly ICachedEntities _cache;
+        ICachedEntity cachedEntity;
+
+        protected EntityLoader(ICachedEntities cache)
+        {
+            _cache = cache;
+        }
+
         #region FIELD GETTER SETTER
 
         /// <summary>
@@ -20,7 +26,7 @@ namespace VODB.Core.Loaders
         /// <param name="fieldName">Name of the field.</param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        protected object GetValue(DbDataReader reader, String fieldName)
+        protected static object GetValue(DbDataReader reader, String fieldName)
         {
             return reader.GetValue(fieldName);
         }
@@ -28,16 +34,21 @@ namespace VODB.Core.Loaders
         /// <summary>
         /// Sets the field value.
         /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
+        /// <param name="session">The session.</param>
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
-        /// <param name="reader"> </param>
-        /// <returns></returns>
+        /// <param name="reader">The reader.</param>
         protected void SetValue<TEntity>(TEntity entity, IInternalSession session, Field field, object value, DbDataReader reader)
         {
             if (field.IsKey)
             {
-                // inEntity.AddKeyOriginalValue(field, value);
+                if (!entity.Equals(cachedEntity.Entity))
+                {
+                    cachedEntity = _cache.Get(entity);
+                }
+                cachedEntity.Add(field, value);
             }
             entity.SetValue(session, field, value, reader);
         }
@@ -51,6 +62,19 @@ namespace VODB.Core.Loaders
         /// <param name="session"></param>
         /// <param name="reader">The reader.</param>
         /// <returns></returns>
-        public abstract void Load<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader);
+        public void Load<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader)
+        {
+            cachedEntity = _cache.Add(entity);
+            LoadEntity(entity, session, reader);
+        }
+
+        /// <summary>
+        /// Loads the entity.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="entity">The entity.</param>
+        /// <param name="session">The session.</param>
+        /// <param name="reader">The reader.</param>
+        protected abstract void LoadEntity<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader);
     }
 }

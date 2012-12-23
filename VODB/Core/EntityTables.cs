@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
 using VODB.Core.Infrastructure;
-using VODB.Exceptions;
 using System.Threading.Tasks;
 
 namespace VODB.Core
@@ -40,12 +38,14 @@ namespace VODB.Core
         
         public Table GetTable(Type type)
         {
+            Debug.Assert(type.Namespace != null, "type.Namespace != null");
             if (type.Namespace.Equals("Castle.Proxies"))
             {
                 type = type.BaseType;
             }
 
             Table table;
+            Debug.Assert(type != null, "type != null");
             if (_tables.TryGetValue(type, out table))
             {
                 return table;
@@ -64,14 +64,12 @@ namespace VODB.Core
             }
 
             _tables[type] = new AsyncTable(
-                new Task<Table>(() =>
-                {
-                    return Engine.Get<ITableMapper>().GetTable(type);
-                }));
+                new Task<Table>(() => Engine.Get<ITableMapper>().GetTable(type)));
         }
         
         public bool IsMapped(Type type)
         {
+            Debug.Assert(type.BaseType != null, "type.BaseType != null");
             return _tables.ContainsKey(type) || _tables.ContainsKey(type.BaseType);
         }
     }
