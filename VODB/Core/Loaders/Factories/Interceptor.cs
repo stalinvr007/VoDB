@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using VODB.Core.Execution.Executers;
 using VODB.Core.Execution.SqlPartialBuilders;
 
@@ -36,14 +35,20 @@ namespace VODB.Core.Loaders.Factories
             }
             else if (method.Name.StartsWith("set_"))
             {
-                
-                if (method.ContainsGenericParameters)
-                {
-                    
-                }
-
+                SetValueHandler(invocation, fieldName);
             }
-            
+
+        }
+
+        private void SetValueHandler(IInvocation invocation, string fieldName)
+        {
+            var methodInfo = invocation.TargetType.GetMethod("get_" + fieldName);
+
+            var value = invocation.GetArgumentValue(0);
+            if (!value.GetType().Namespace.Equals("Castle.Proxies"))
+            {
+                lastResult[methodInfo] = invocation.GetArgumentValue(0);
+            }
         }
 
         private void GetValueHandler(IInvocation invocation, MethodInfo method, string fieldName)
@@ -82,7 +87,7 @@ namespace VODB.Core.Loaders.Factories
             {
                 // Todo: this code is kind of strange... Aply some refectoring strategy here.
 
-                
+
                 var callerTable = Engine.GetTable(invocation.Method.ReflectedType);
                 var field = callerTable.FindCollectionField(fieldName);
 
