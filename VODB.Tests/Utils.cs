@@ -9,12 +9,6 @@ namespace VODB.Tests
     public static class Utils
     {
 
-        static Utils()
-        {
-            Config.Map<ExpressionParser_Tests.Model>();
-            Config.Map("VODB.Tests.Models.Northwind");            
-        }
-
         internal static Table EmployeeTable
         {
             get
