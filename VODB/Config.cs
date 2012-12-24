@@ -34,5 +34,16 @@ namespace VODB
             }
         }
 
+        internal static void MapNameSpace(Type type)
+        {
+            foreach (var _type in Assembly.GetAssembly(type).GetTypes()
+                .Where(t => !String.IsNullOrEmpty(t.Namespace))
+                .Where(t => t.IsClass)
+                .Where(t => t.Namespace.Equals(type.Namespace)))
+            {
+                Engine.Map(_type);
+            }
+        }
+
     }
 }
