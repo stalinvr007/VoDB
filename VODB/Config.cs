@@ -27,6 +27,7 @@ namespace VODB
         {
             foreach (var type in Assembly.GetCallingAssembly().GetTypes()
                 .Where(t => !String.IsNullOrEmpty(t.Namespace))
+                .Where(t => t.IsClass)
                 .Where(t => t.Namespace.Equals(nameSpace)))
             {
                 Engine.Map(type);
