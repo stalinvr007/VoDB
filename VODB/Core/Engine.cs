@@ -1,4 +1,5 @@
 ﻿using Ninject;
+using Ninject.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,11 @@ namespace VODB.Core
         public static TClass Get<TClass>(Commands cmd)
         {
             return kernel.Get<TClass>(cmd.ToString());
+        }
+
+        public static TClass Get<TClass>(String argName, Object value)
+        {
+            return kernel.Get<TClass>(new ConstructorArgument(argName, value));
         }
         
         #endregion
