@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using VODB.Core;
 using VODB.Core.Infrastructure;
 using VODB.Tests.Models.Northwind;
@@ -7,7 +8,20 @@ namespace VODB.Tests
 {
     public static class Utils
     {
-        internal static readonly Table EmployeeTable = Engine.GetTable<Employee>();
+
+        static Utils()
+        {
+            Config.Map<ExpressionParser_Tests.Model>();
+            Config.Map("VODB.Tests.Models.Northwind");            
+        }
+
+        internal static Table EmployeeTable
+        {
+            get
+            {
+                return Engine.GetTable<Employee>();
+            }
+        }
 
         public static void Execute(Action<ISession> action)
         {
