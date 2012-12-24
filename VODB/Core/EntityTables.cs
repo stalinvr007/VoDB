@@ -55,7 +55,7 @@ namespace VODB.Core
         
         public void Map(Type type)
         {
-            if (IsMapped(type))
+            if (!type.IsClass || IsMapped(type))
             {
                 return;
             }
