@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Annotations\Attributes.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Core\Engine.cs" />
     <Compile Include="Core\EngineModules.cs" />
