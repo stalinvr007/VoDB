@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using VODB.Core.Execution.Executers;
 using VODB.Core.Execution.SqlPartialBuilders;
+using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Loaders.Factories
 {
@@ -103,7 +104,7 @@ namespace VODB.Core.Loaders.Factories
                 {
                     builder.AddCondition(
                         foreignTable.FindField(keyField.FieldName),
-                        keyField.GetValue(invocation.InvocationTarget));
+                        GetValue(keyField, invocation.InvocationTarget, keyField.FieldName));
                 }
 
 
@@ -121,6 +122,22 @@ namespace VODB.Core.Loaders.Factories
             {
                 return _Session.GetById(invocation.ReturnValue);
             }
+        }
+
+        private static Object GetValue(Field field, Object entity, String fieldName)
+        {
+
+            var value = field.GetValue(entity);
+
+            Type valueType = value.GetType();
+
+            if (Engine.IsMapped(valueType)) // Is a Mapped Entity
+            {
+                var table = Engine.GetTable(valueType);
+                return GetValue(table.FindField(fieldName), value, fieldName);
+            }
+
+            return value;
         }
 
     }
