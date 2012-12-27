@@ -15,6 +15,19 @@ namespace VODB
 
     internal static class InternalExtensions
     {
+        public static void Handle(this Exception ex)
+        {
+            var handler = Engine.Configuration.ExceptionHandlers.FirstOrDefault(eh => eh.CanHandle(ex));
+
+            if (handler != null)
+            {
+                handler.Handle(ex);
+            }
+            else
+            {
+                throw ex;
+            }
+        }
 
         public static Table GetTable<TEntity>(this TEntity entity)
         {
