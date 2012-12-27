@@ -6,7 +6,7 @@ namespace VODB.Sessions
 {
     interface IInternalTransaction : ITransaction
     {
-        ITransaction BeginTransaction(DbConnection connection);
+        ITransaction BeginTransaction(IInternalSession session, DbConnection connection);
         DbCommand CreateCommand();
         Boolean Ended { get; }
     }
@@ -21,7 +21,8 @@ namespace VODB.Sessions
         public Boolean RolledBack { get; private set; }
 
         private readonly LinkedList<String> _Savepoints = new LinkedList<String>();
-
+        private IInternalSession _Session;
+        
         #region IDisposable Members
 
         public void Dispose()
@@ -89,7 +90,7 @@ namespace VODB.Sessions
             count = 0;
             Ended = true;
             _Transaction.Rollback();
-
+            _Session.Close();
             _Transaction = null;
         }
 
@@ -114,6 +115,7 @@ namespace VODB.Sessions
             if (!RolledBack)
             {
                 _Transaction.Commit();
+                _Session.Close();
             }
 
             _Transaction = null;
@@ -136,8 +138,9 @@ namespace VODB.Sessions
             }
         }
 
-        public ITransaction BeginTransaction(DbConnection connection)
+        public ITransaction BeginTransaction(IInternalSession session, DbConnection connection)
         {
+            _Session = session;
             if (_Transaction == null)
             {
                 Ended = false;
@@ -170,4 +173,5 @@ namespace VODB.Sessions
         }
 
     }
+
 }
