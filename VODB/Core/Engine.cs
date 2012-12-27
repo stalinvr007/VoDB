@@ -19,6 +19,8 @@ namespace VODB.Core
         );
 
         static IEntityTables _tables = Get<IEntityTables>();
+
+        public static IConfiguration Configuration = Get<IConfiguration>();
         
         #region Kernel Wrapper
 

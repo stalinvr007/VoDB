@@ -19,16 +19,25 @@ namespace VODB.Core.Execution.Executers
 
         public TResult Execute<TEntity>(TEntity entity, IInternalSession session)
         {
-            var cmd = session.CreateCommand();
+            try
+            {
+                var cmd = session.CreateCommand();
 
-            session.Open();
-            var table = Engine.GetTable(entity.GetType());
-            cmd.CommandText = _Getter.GetStatement(table.CommandsHolder);
-            
-            return Execute(cmd, table, entity);
+                session.Open();
+                var table = Engine.GetTable(entity.GetType());
+                cmd.CommandText = _Getter.GetStatement(table.CommandsHolder);
+
+                return Execute(cmd, table, entity);
+            }
+            catch (Exception ex)
+            {
+                ex.Handle();
+            }
+            return default(TResult);
         }
 
         protected abstract TResult Execute<TEntity>(DbCommand cmd, Table table, TEntity entity);
-
     }
+
+
 }
