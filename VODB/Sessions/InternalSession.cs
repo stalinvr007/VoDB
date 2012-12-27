@@ -132,7 +132,7 @@ namespace VODB.Sessions
         public ITransaction BeginTransaction()
         {
             Open();
-            return _Transaction.BeginTransaction(_connection);
+            return _Transaction.BeginTransaction(this, _connection);
         }
 
         public void ExecuteTSql(string SqlStatements)
@@ -160,7 +160,8 @@ namespace VODB.Sessions
             finally
             {
                 reader.Close();
-            }            
+                Close();
+            }
             return null;
         }
 

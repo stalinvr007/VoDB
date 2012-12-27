@@ -21,6 +21,7 @@ namespace VODB.Core.Execution.Executers
         {
             try
             {
+                session.Open();
                 var cmd = session.CreateCommand();
 
                 session.Open();

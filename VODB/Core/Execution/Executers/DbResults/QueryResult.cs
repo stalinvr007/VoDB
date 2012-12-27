@@ -131,8 +131,8 @@ namespace VODB.Core.Execution.Executers.DbResults
 
         public IEnumerator<TEntity> GetEnumerator()
         {
-            var cmd = _Session.CreateCommand();
             _Session.Open();
+            var cmd = _Session.CreateCommand();
             cmd.CommandText = _Table.CommandsHolder.Select + WhereCondition;
 
             cmd.SetParameters(_ExpressionParser.ConditionData);
@@ -153,6 +153,7 @@ namespace VODB.Core.Execution.Executers.DbResults
             finally
             {
                 reader.Close();
+                _Session.Close();
             }
 
         }
