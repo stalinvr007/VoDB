@@ -289,9 +289,12 @@ namespace VODB.Tests
         [TestMethod]
         public void Session_GetById()
         {
-            var employee = new Session().GetById(new Employee { EmployeeId = 1 });
+            using (var session = new Session())
+            {
+                var employee = session.GetById(new Employee { EmployeeId = 1 });
 
-            EntitiesAsserts.Assert_Employee_1(employee);
+                EntitiesAsserts.Assert_Employee_1(employee);    
+            }
         }
 
         [TestMethod]
