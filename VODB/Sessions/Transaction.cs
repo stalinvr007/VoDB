@@ -14,7 +14,6 @@ namespace VODB.Sessions
     internal sealed class Transaction : IInternalTransaction
     {
         private DbTransaction _Transaction;
-        private int count = 1;
 
         public Boolean Ended { get; private set; }
 
@@ -22,7 +21,7 @@ namespace VODB.Sessions
 
         private readonly LinkedList<String> _Savepoints = new LinkedList<String>();
         private IInternalSession _Session;
-        
+
         #region IDisposable Members
 
         public void Dispose()
@@ -34,16 +33,14 @@ namespace VODB.Sessions
 
             if (!RolledBack)
             {
-                Commit();    
+                Commit();
             }
-
-            if (count != 0) return;
 
             _Transaction.Dispose();
             _Transaction = null;
         }
 
-        #endregion        
+        #endregion
 
         public Transaction()
         {
@@ -57,7 +54,7 @@ namespace VODB.Sessions
                 throw new MissingFieldException("Transaction", "transaction");
             }
         }
-        
+
         public void RollBack()
         {
             if (Ended)
@@ -71,7 +68,6 @@ namespace VODB.Sessions
 
                 if (_Savepoints.Count > 0)
                 {
-                    --count;
                     var savepoint = _Savepoints.Last.Value;
                     _Savepoints.RemoveLast();
 
@@ -87,7 +83,6 @@ namespace VODB.Sessions
 
             CheckTransactionAlive();
 
-            count = 0;
             Ended = true;
             _Transaction.Rollback();
             _Session.Close();
@@ -104,13 +99,11 @@ namespace VODB.Sessions
             if (_Savepoints.Count > 0)
             {
                 _Savepoints.RemoveLast();
+                return;
             }
 
             CheckTransactionAlive();
 
-            --count;
-            if (count != 0) return;
-            
             Ended = true;
             if (!RolledBack)
             {
@@ -152,7 +145,7 @@ namespace VODB.Sessions
             }
             return this;
         }
-        
+
         public DbCommand CreateCommand()
         {
             if (_Transaction.Connection == null)
@@ -169,7 +162,6 @@ namespace VODB.Sessions
         {
             CheckTransactionAlive();
             SavePoint();
-            ++count;
         }
 
     }
