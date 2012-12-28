@@ -4,7 +4,8 @@ using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Execution.Executers
 {
-    internal class InsertExecuter : StatementExecuterBase<int>
+
+    internal class InsertExecuter : StatementNonQueryExecuterBase<int>
     {
         public InsertExecuter(IStatementGetter getter) : base(getter) { }
 
@@ -15,7 +16,7 @@ namespace VODB.Core.Execution.Executers
         }
     }
 
-    internal class DeleteExecuter : StatementExecuterBase<int>
+    internal class DeleteExecuter : StatementNonQueryExecuterBase<int>
     {
         public DeleteExecuter(IStatementGetter getter) : base(getter) { }
 
@@ -26,7 +27,7 @@ namespace VODB.Core.Execution.Executers
         }
     }
 
-    internal class UpdateExecuter : StatementExecuterBase<int>
+    internal class UpdateExecuter : StatementNonQueryExecuterBase<int>
     {
         public UpdateExecuter(IStatementGetter getter) : base(getter) { }
 
