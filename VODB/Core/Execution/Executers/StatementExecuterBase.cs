@@ -38,38 +38,4 @@ namespace VODB.Core.Execution.Executers
         protected abstract TResult Execute<TEntity>(DbCommand cmd, Table table, TEntity entity);
     }
 
-    internal abstract class StatementNonQueryExecuterBase<TResult> : IStatementExecuter<TResult>
-    {
-        private readonly IStatementGetter _Getter;
-
-        public StatementNonQueryExecuterBase(IStatementGetter getter)
-        {
-            _Getter = getter;
-        }
-
-        public TResult Execute<TEntity>(TEntity entity, IInternalSession session)
-        {
-            try
-            {
-                session.Open();
-                var cmd = session.CreateCommand();
-                var table = Engine.GetTable(entity.GetType());
-                cmd.CommandText = _Getter.GetStatement(table.CommandsHolder);
-
-                return Execute(cmd, table, entity);
-            }
-            catch (Exception ex)
-            {
-                ex.Handle();
-            }
-            finally
-            {
-                session.Close();
-            }
-            return default(TResult);
-        }
-
-        protected abstract TResult Execute<TEntity>(DbCommand cmd, Table table, TEntity entity);
-    }
-
 }
