@@ -12,8 +12,4 @@
 5. Create a ConnectionString entry in the app.config/web.config file with the name of your machine.
  * set the providerName to System.Data.SqlClient or other...
 
-### See the examples [here] (http://alienengineer.github.com/VoDB/)
-
-
-### Support or Contact
-If you have any suggestions for this project or something is not working right please contact me at Alien.Software.Engineer@gmail.com or @AlienEngineer
+### For more info click [here] (http://alienengineer.github.com/VoDB/)
