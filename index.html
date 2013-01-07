@@ -1,87 +1,104 @@
 <!doctype html>
-<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
-<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Vodb by AlienEngineer</title>
 
-  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
-  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script type="text/javascript" src="javascripts/script.js"></script>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Vodb</h1>
+        <p>Virtual Object DataBase</p>
 
-  <title>Vodb</title>
-  <meta name="description" content="Virtual Object DataBase">
+        <p class="view"><a href="https://github.com/AlienEngineer/VoDB">View the Project on GitHub <small>AlienEngineer/VoDB</small></a></p>
 
-  <meta name="viewport" content="width=device-width,initial-scale=1">
 
-</head>
+        <ul>
+          <li><a href="https://github.com/AlienEngineer/VoDB/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/AlienEngineer/VoDB/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/AlienEngineer/VoDB">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>Getting Started</h3>
 
-<body>
+<ol>
+<li>Create a class to represent a database table/model.</li>
+<li>Derive it from DbEntity.</li>
+<li>Create properties to represents the fields for that model.</li>
+<li>Decorate the properties with [DbField, DbKey, DbIdentity, DbRequired, DbBind, DbIgnore] See <a href="https://github.com/AlienEngineer/VoDB/blob/master/VODB.Tests/Models/Northwind/Employee.cs">Employee.cs</a>
+</li>
+<li>[DbField]      -&gt; Allows users to specify the physical name of the field;</li>
+<li>[DbKey]        -&gt; Well... its a key...</li>
+<li>[DbIdentity] -&gt; The field is the Identity field increasing automatically;</li>
+<li>[DbRequired] -&gt; Allows the framework to check for the required fields before executing SQL commands.</li>
+<li>[DbBind] -&gt; Lets the framework know whats the key field in the associated table/entity. Use only when field names don't match.</li>
+<li>[DbIgnore] -&gt; Tells the framework to ignore a field from mapping.</li>
+<li>Create a ConnectionString entry in the app.config/web.config file with the name of your machine.</li>
+<li>set the providerName to System.Data.SqlClient or other...</li>
+</ol><h3>Example</h3>
 
-  <div class="wrapper">
-    <header>
-      <h1 class="title">Vodb</h1>
-    </header>
-    <div id="container">
-      <p class="tagline">Virtual Object DataBase</p>
-      <div id="main" role="main">
-        <div class="download-bar">
-        <div class="inner">
-          <a href="https://github.com/AlienEngineer/VoDB/tarball/master" class="download-button tar"><span>Download</span></a>
-          <a href="https://github.com/AlienEngineer/VoDB/zipball/master" class="download-button zip"><span>Download</span></a>
-          <a href="https://github.com/AlienEngineer/VoDB" class="code">View Vodb on GitHub</a>
-        </div>
-        <span class="blc"></span><span class="trc"></span>
-        </div>
-        <article class="markdown-body">
-          <h3>Welcome to GitHub Pages.</h3>
+<pre><code>// Basic example for CRUD Operations.
+using (var session = new EagerSession()) {
+   // Get Employee data.
+   Employee employee1 = session.GetById(new Employee() { EmployeeId = 1 });
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+   // Get All Employees.
+   IEnumerable&lt;Employee&gt; employees = session.GetAll&lt;Employee&gt;();
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+   // Get All Employees with the EmployeeId greater than 5. 
+   // Makes a conditional sql statement, doesn't uses the Linq library. 
+   // Therefore doesn't load all the employees.
+   IEnumerable&lt;Employee&gt; employees1 = session.GetAll&lt;Employee&gt;().Where(e =&gt; e.EmployeeId &gt; 5);
+
+   // Order matters
+   // Select * From Employees Order By City
+   IEnumerable&lt;Employee&gt; employees2 = session.GetAll&lt;Employee&gt;().OrderBy(e =&gt; e.City);
+
+   // Select * From Employees Order By City Desc
+   IEnumerable&lt;Employee&gt; employees3 = session.GetAll&lt;Employee&gt;().OrderBy(e =&gt; e.City).Descending();
+
+   var collection = session
+      .GetAll&lt;Employee&gt;().Where(m =&gt; m.EmployeeId &lt;= 5);
+
+   /* Select * from Employees where EmployeeId In (Select EmployeeId From Employees where EmployeeId &lt;= 5) */
+   var employees4 = session
+     .GetAll&lt;Employee&gt;().Where(m =&gt; m.EmployeeId).In(collection);
+
+   // Insert a new Employee
+   Employee Sergio = session.Insert(new Employee() {
+                    FirstName = "Sérgio",
+                    LastName = "Ferreira",
+                    BirthDate = new DateTime(1983, 4, 16)
+   });
+
+   // Change a field.
+   sergio.LastName = "test";
+   // Update the employee.
+   session.Update(sergio);
+   // Deletes the employee.
+   session.Delete(sergio);
+}
 </code></pre>
-
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
 
 <h3>Support or Contact</h3>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-        </article>
-      </div>
+<p>If you have any suggestions for this project or something is not working right please contact me at <a href="mailto:Alien.Software.Engineer@gmail.com">Alien.Software.Engineer@gmail.com</a> or <a href="https://github.com/AlienEngineer" class="user-mention">@AlienEngineer</a></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/AlienEngineer">AlienEngineer</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
     </div>
-    <footer>
-      <div class="owner">
-      <p><a href="https://github.com/AlienEngineer" class="avatar"><img src="https://secure.gravatar.com/avatar/5c719602b72f76d4efda0bb6a1da0df4?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" height="48"/></a> <a href="https://github.com/AlienEngineer">AlienEngineer</a> maintains <a href="https://github.com/AlienEngineer/VoDB">Vodb</a></p>
-
-
-      </div>
-      <div class="creds">
-        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
-      </div>
-    </footer>
-  </div>
-  <div class="current-section">
-    <a href="#top">Scroll to top</a>
-    <a href="https://github.com/AlienEngineer/VoDB/tarball/master" class="tar">tar</a><a href="https://github.com/AlienEngineer/VoDB/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
-    <p class="name"></p>
-  </div>
-
-  
-</body>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
 </html>
