@@ -11,7 +11,7 @@ namespace VODB.Core.Execution.Executers
 
         protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
-            return Convert.ToInt32(cmd.ExecuteScalar());
+            return Convert.ToInt32(session.RefreshCommand(cmd).ExecuteScalar());
         }
     }
 
@@ -22,8 +22,7 @@ namespace VODB.Core.Execution.Executers
         protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
             cmd.SetParameters(table.KeyFields, entity);
-            session.Open();
-            return Convert.ToInt32(cmd.ExecuteScalar());
+            return Convert.ToInt32(session.RefreshCommand(cmd).ExecuteScalar());
         }
     }
 
@@ -33,7 +32,7 @@ namespace VODB.Core.Execution.Executers
 
         protected override Object Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
-            return cmd.ExecuteScalar();
+            return session.RefreshCommand(cmd).ExecuteScalar();
         }
     }
 }

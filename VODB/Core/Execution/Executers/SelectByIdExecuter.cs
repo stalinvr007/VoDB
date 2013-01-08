@@ -11,8 +11,7 @@ namespace VODB.Core.Execution.Executers
         protected override DbDataReader Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
             cmd.SetParameters(table.KeyFields, entity);
-            session.Open();
-            return cmd.ExecuteReader();
+            return session.RefreshCommand(cmd).ExecuteReader();
         }
     }
 

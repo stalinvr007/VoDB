@@ -64,6 +64,13 @@ namespace VODB.Sessions
 
         #region IInternalSession Members
 
+        public DbCommand RefreshCommand(DbCommand command)
+        {
+            Open();
+            command.Connection = _connection;
+            return command;
+        }
+
         public DbCommand CreateCommand()
         {
 
@@ -220,5 +227,6 @@ namespace VODB.Sessions
 
         #endregion
 
+        
     }
 }
