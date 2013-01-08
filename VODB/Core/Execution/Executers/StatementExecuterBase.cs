@@ -26,7 +26,7 @@ namespace VODB.Core.Execution.Executers
                 var table = Engine.GetTable(entity.GetType());
                 cmd.CommandText = _Getter.GetStatement(table.CommandsHolder);
 
-                return Execute(cmd, table, entity);
+                return Execute(cmd, table, entity, session);
             }
             catch (Exception ex)
             {
@@ -35,7 +35,7 @@ namespace VODB.Core.Execution.Executers
             return default(TResult);
         }
 
-        protected abstract TResult Execute<TEntity>(DbCommand cmd, Table table, TEntity entity);
+        protected abstract TResult Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session);
     }
 
 }
