@@ -87,9 +87,7 @@ namespace VODB.Core.Infrastructure
 
         public Field FindFieldByBind(String bind)
         {
-            Field fieldFound;
-            FieldsByBind.TryGetValue(bind.ToLower(), out fieldFound);
-            return fieldFound;
+            return FieldsByBind.FirstOrDefault(kv => kv.Key.EndsWith(bind.ToLower())).Value;            
         }
 
         public Field FindField(String BindOrName)
