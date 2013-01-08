@@ -9,7 +9,7 @@ namespace VODB.Core.Execution.Executers
     {
         public CountExecuter(IStatementGetter getter) : base(getter) { }
 
-        protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity)
+        protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
@@ -19,9 +19,10 @@ namespace VODB.Core.Execution.Executers
     {
         public CountByIdExecuter(IStatementGetter getter) : base(getter) { }
 
-        protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity)
+        protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
             cmd.SetParameters(table.KeyFields, entity);
+            session.Open();
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
     }
@@ -30,7 +31,7 @@ namespace VODB.Core.Execution.Executers
     {
         public IdentityExecuter(IStatementGetter getter) : base(getter) { }
 
-        protected override Object Execute<TEntity>(DbCommand cmd, Table table, TEntity entity)
+        protected override Object Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
             return cmd.ExecuteScalar();
         }

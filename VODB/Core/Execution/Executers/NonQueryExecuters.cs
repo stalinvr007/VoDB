@@ -9,9 +9,10 @@ namespace VODB.Core.Execution.Executers
     {
         public InsertExecuter(IStatementGetter getter) : base(getter) { }
 
-        protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity)
+        protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
             cmd.SetParameters(table.Fields, entity);
+            session.Open();
             return cmd.ExecuteNonQuery();
         }
     }
@@ -20,9 +21,10 @@ namespace VODB.Core.Execution.Executers
     {
         public DeleteExecuter(IStatementGetter getter) : base(getter) { }
 
-        protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity)
+        protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
             cmd.SetParameters(table.KeyFields, entity);
+            session.Open();
             return cmd.ExecuteNonQuery();
         }
     }
@@ -31,10 +33,11 @@ namespace VODB.Core.Execution.Executers
     {
         public UpdateExecuter(IStatementGetter getter) : base(getter) { }
 
-        protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity)
+        protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
             cmd.SetParameters(table.Fields, entity);
             cmd.SetOldParameters(table, entity);
+            session.Open();
             return cmd.ExecuteNonQuery();
         }
     }

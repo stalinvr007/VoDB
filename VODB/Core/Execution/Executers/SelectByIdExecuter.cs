@@ -8,9 +8,10 @@ namespace VODB.Core.Execution.Executers
     {
         public SelectByIdExecuter(IStatementGetter getter) : base(getter) { }
 
-        protected override DbDataReader Execute<TEntity>(DbCommand cmd, Table table, TEntity entity)
+        protected override DbDataReader Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
             cmd.SetParameters(table.KeyFields, entity);
+            session.Open();
             return cmd.ExecuteReader();
         }
     }
