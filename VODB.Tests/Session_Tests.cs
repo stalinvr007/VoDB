@@ -82,6 +82,8 @@ namespace VODB.Tests
             var employees1 = new Session()
                 .GetAll<Employee>().Where(e => e.ReportsTo.FirstName == "Andrew");
 
+            Assert.AreEqual(5, employees1.Count());
+
             EntitiesAsserts.Assert_Employee_1(employees1.First());
 
             /* 
@@ -102,7 +104,6 @@ namespace VODB.Tests
                 .First();
 
             EntitiesAsserts.Assert_Employee_2(employee);
-
         }
 
         [TestMethod]
@@ -122,7 +123,6 @@ namespace VODB.Tests
                 .First();
 
             EntitiesAsserts.Assert_Employee_3(employee3);
-
         }
 
 

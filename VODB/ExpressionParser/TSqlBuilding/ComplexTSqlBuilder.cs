@@ -23,7 +23,7 @@ namespace VODB.ExpressionParser.TSqlBuilding
                     Field field = null;
                     if (parser.Field.BindedTo != null)
                     {
-                        table.FieldsByName.TryGetValue(parser.Field.BindedTo, out field);
+                        field = table.FindFieldByBind(parser.Field.BindedTo);
                     }
 
                     return String.Format("{0} In (Select {1} From {2}",
