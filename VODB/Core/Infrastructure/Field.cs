@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using VODB.Exceptions;
 
 namespace VODB.Core.Infrastructure
 {
@@ -110,7 +111,19 @@ namespace VODB.Core.Infrastructure
         /// </value>
         public Object GetValue(Object entity)
         {
-            return _Prop.GetValue(entity, null);
+            try
+            {
+                return _Prop.GetValue(entity, null);
+            }
+            catch (TargetException)
+            {
+                var field = Engine.GetTable(entity.GetType()).FindField(FieldName);
+                if (field != null)
+                {
+                    return field.GetValue(entity);
+                }
+            }
+            throw new UnableToGetTheValue("Cannot get the value of field [{0}] of the entity [{1}].", FieldName, entity.GetType());
         }
 
         /// <summary>
