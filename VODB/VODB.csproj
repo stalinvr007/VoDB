@@ -74,6 +74,7 @@
     <Compile Include="Core\Infrastructure\TableMapper.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommandHolderLazy.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TCount.cs" />
+    <Compile Include="Exceptions\UnableToGetTheValue.cs" />
     <Compile Include="Core\Loaders\Factories\IEntityFactory.cs" />
     <Compile Include="Core\Loaders\Factories\Interceptor.cs" />
     <Compile Include="Core\Loaders\ICachedEntities.cs" />

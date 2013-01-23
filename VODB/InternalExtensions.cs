@@ -324,9 +324,10 @@ namespace VODB
         /// <exception cref="ParameterSetterNotFoundException"></exception>
         public static void SetOldParameters<TEntity>(this DbCommand dbCommand, Table table, TEntity entity)
         {
+            var cache = Engine.Get<ICachedEntities>().Get(entity);
             foreach (var field in table.KeyFields)
             {
-                dbCommand.SetOldParameter(Engine.Get<ICachedEntities>().Get(entity), field);
+                dbCommand.SetOldParameter(cache, field);
             }
         }
     }
