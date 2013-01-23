@@ -94,11 +94,21 @@ namespace VODB
         /// <exception cref="ParameterSetterNotFoundException"></exception>
         public static void SetValue(this DbParameter param, Field field, Object entity)
         {
-            var value = Engine.IsMapped(entity.GetType())
+            try
+            {
+                var value = Engine.IsMapped(entity.GetType())
                             ? field.GetValue(entity)
                             : entity;
 
-            param.SetParamValue(field, value);
+                param.SetParamValue(field, value);
+            }
+            catch (Exception ex)
+            {
+                throw new UnableToSetParameterValueException(ex, field.Table.TableName, field, entity);
+            }
+            
+
+            
         }
 
         /// <summary>
@@ -227,7 +237,10 @@ namespace VODB
         {
             try
             {
-                return reader[fieldName];
+                lock (reader)
+                {
+                    return reader[fieldName];    
+                }
             }
             catch (Exception ex)
             {
