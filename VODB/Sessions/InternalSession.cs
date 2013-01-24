@@ -155,6 +155,11 @@ namespace VODB.Sessions
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
         {
+            if (entity == null)
+            {
+                return null;
+            }
+
             var reader = _SelectByIdExecuter.Execute(entity, this);
             try
             {
