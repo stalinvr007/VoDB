@@ -82,7 +82,7 @@ namespace VODB.Core.Infrastructure
 
         public Field FindCollectionField(String Name)
         {
-            return CollectionFields.FirstOrDefault(f => f.FieldName.Equals(Name));
+            return CollectionFields.FirstOrDefault(f => f.FieldName.Equals(Name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public Field FindFieldByBind(String bind)
