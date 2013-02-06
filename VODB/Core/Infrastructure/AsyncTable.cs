@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,11 +15,13 @@ namespace VODB.Core.Infrastructure
             mappingTask.Start();
             mappingTask.ContinueWith(task =>
             {
+                // Maps a table for the type used in the collection.
                 foreach (var field in InnerTable.CollectionFields)
                 {
                     Engine.Map(field.FieldType.GetGenericArguments()[0]);
                 }
 
+                // Maps a table for the virtual property types.
                 foreach (var field in InnerTable.Fields.Where(f => f.Property.GetGetMethod().IsVirtual))
                 {
                     Engine.Map(field.FieldType);
