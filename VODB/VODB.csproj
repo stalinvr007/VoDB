@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core">
@@ -75,6 +77,7 @@
     <Compile Include="Core\Loaders\Factories\Interceptor.cs" />
     <Compile Include="Core\Loaders\ICachedEntities.cs" />
     <Compile Include="Core\Loaders\ICachedEntity.cs" />
+    <Compile Include="Core\Loaders\IDbReaderMapper.cs" />
     <Compile Include="Exceptions\EntityMapNotFoundException.cs" />
     <Compile Include="Core\EntityTables.cs" />
     <Compile Include="Core\Infrastructure\FieldMapper.cs" />

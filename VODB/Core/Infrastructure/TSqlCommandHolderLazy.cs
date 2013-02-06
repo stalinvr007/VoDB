@@ -24,11 +24,7 @@ namespace VODB.Core.Infrastructure
 
         private static string FillCommand(ref String holder, ITSqlCommand builder)
         {
-            if (holder == null)
-            {
-                holder = builder.BuildCmdStr();
-            }
-            return holder;
+            return holder ?? (holder = builder.BuildCmdStr());
         }
 
         string _count;
