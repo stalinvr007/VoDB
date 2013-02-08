@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Data.Common;
 using System.Threading;
 using VODB.Core;
 using VODB.Core.Infrastructure;
+using VODB.DbLayer;
 using VODB.Tests.Models.Northwind;
 
 namespace VODB.Tests
@@ -40,6 +42,22 @@ namespace VODB.Tests
                     trans.RollBack();
                 }
             });
+        }
+
+        public static void ExecuteWith(Action<DbConnection> action)
+        {
+            using (var con = new NameConventionDbConnectionCreator("System.Data.SqlClient").Create())
+            {
+                con.Open();
+                try
+                {
+                    action(con);
+                }
+                finally
+                {
+                    con.Close();    
+                }
+            }
         }
 
 

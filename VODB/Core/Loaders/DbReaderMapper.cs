@@ -25,7 +25,7 @@ namespace VODB.Core.Loaders
         {
             var table = Engine.GetTable<TEntity>();
 
-            var taskRows = FetchRowsData(reader);
+            var taskRows = FetchRowsData(reader, table);
 
             return Task<IEnumerable<TEntity>>.Factory.StartNew(() =>
             {
@@ -54,7 +54,7 @@ namespace VODB.Core.Loaders
                     // Map the Diccionary<String, Object> to an TEntity.
                     Map(data, table, entity);
 
-                } while (!taskRows.IsCompleted);
+                } while (!taskRows.IsCompleted || fullData.Count > current);
 
                 // Wait until all instances of Entity are loaded.
                 while (status > 0)
@@ -77,12 +77,7 @@ namespace VODB.Core.Loaders
 
         }
 
-        /// <summary>
-        /// Fetches the data from the data reader.
-        /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <returns></returns>
-        private Task FetchRowsData(IDataReader reader)
+        private Task FetchRowsData(IDataReader reader, Table table)
         {
             return Task.Factory.StartNew(() =>
             {
@@ -93,11 +88,11 @@ namespace VODB.Core.Loaders
                     {
                         var data = new Dictionary<String, Object>();
 
-                        for (int i = 0; i < reader.FieldCount; i++)
+                        foreach (var field in table.Fields)
                         {
-                            data[reader.GetName(i)] = reader[i];
+                            data[field.FieldName] = reader[field.FieldName];
                         }
-
+                        
                         fullData[++rowI] = data;
                     }
                 }
