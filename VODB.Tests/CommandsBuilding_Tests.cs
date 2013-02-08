@@ -1,15 +1,15 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using VODB.Core.Infrastructure;
 using VODB.Core.Infrastructure.TSqlCommands;
 
 namespace VODB.Tests
 {
 
-    [TestClass]
+    [TestFixture]
     public class CommandsBuilding_Tests
     {
 
-        [TestMethod]
+        [Test]
         public void BuildInsert()
         {
             var cmd = new TInsert(Utils.EmployeeTable);
@@ -18,7 +18,7 @@ namespace VODB.Tests
             Assert.AreEqual("Insert into [Employees]( [LastName], [FirstName], [Title], [TitleOfCourtesy], [BirthDate], [HireDate], [Address], [City], [Region], [PostalCode], [Country], [HomePhone], [Extension], [Notes], [Photo], [ReportsTo], [PhotoPath]) values (@LastName,@FirstName,@Title,@TitleOfCourtesy,@BirthDate,@HireDate,@Address,@City,@Region,@PostalCode,@Country,@HomePhone,@Extension,@Notes,@Photo,@ReportsTo,@PhotoPath)", result);
         }
 
-        [TestMethod]
+        [Test]
         public void BuildUpdate()
         {
             var cmd = new TUpdate(Utils.EmployeeTable);
@@ -27,7 +27,7 @@ namespace VODB.Tests
             Assert.AreEqual("Update [Employees] Set [LastName] = @LastName,  [FirstName] = @FirstName,  [Title] = @Title,  [TitleOfCourtesy] = @TitleOfCourtesy,  [BirthDate] = @BirthDate,  [HireDate] = @HireDate,  [Address] = @Address,  [City] = @City,  [Region] = @Region,  [PostalCode] = @PostalCode,  [Country] = @Country,  [HomePhone] = @HomePhone,  [Extension] = @Extension,  [Notes] = @Notes,  [Photo] = @Photo,  [ReportsTo] = @ReportsTo,  [PhotoPath] = @PhotoPath Where  [EmployeeId] = @OldEmployeeId", result);
         }
 
-        [TestMethod]
+        [Test]
         public void BuildSelect()
         {
             var select = new TSelect(Utils.EmployeeTable);
@@ -36,7 +36,7 @@ namespace VODB.Tests
             Assert.AreEqual("Select *  From [Employees]", result);
         }
 
-        [TestMethod]
+        [Test]
         public void BuildSelectById()
         {
             var select = new TSelectById(Utils.EmployeeTable);
@@ -45,7 +45,7 @@ namespace VODB.Tests
             Assert.AreEqual("Select *  From [Employees] Where  [EmployeeId] = @EmployeeId", result);
         }
 
-        [TestMethod]
+        [Test]
         public void CommandsHolder_Test()
         {
             var holder = new TSqlCommandHolderLazy { Table = Utils.EmployeeTable };

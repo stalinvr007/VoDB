@@ -74,6 +74,7 @@ namespace VODB
     internal interface IInternalSession : ISession
     {
         DbCommand CreateCommand();
+        DbCommand RefreshCommand(DbCommand command);
         void Open();
         void Close();
 

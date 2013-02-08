@@ -1,86 +1,86 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using VODB.ExpressionParser;
 
 namespace VODB.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ExpressionParser_Tests
     {
-        sealed class Model
+        public sealed class Model
         {
             public String Name { get; private set; }
 
             public int Age { get; private set; }
         }
 
-        [TestMethod]
+        [Test]
         public void EqualParser()
         {
             var Name = "Sérgio";
             var parser = new ComparatorExpressionParser<Model>();
 
-            StringAssert.Contains(parser.Parse(m => m.Name == Name), "Name = @Name");
+            StringAssert.Contains(parser.Parse(m => m.Name == Name), "Name = @Name0");
             Assert.AreEqual(1, parser.ConditionData.Count());
 
         }
 
-        [TestMethod]
+        [Test]
         public void EqualParser_ConstVar()
         {
             var parser = new ComparatorExpressionParser<Model>();
 
-            StringAssert.Contains(parser.Parse(m => m.Name == "Sérgio"), "Name = @Name");
+            StringAssert.Contains(parser.Parse(m => m.Name == "Sérgio"), "Name = @Name0");
             Assert.AreEqual(1, parser.ConditionData.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void NotEqualParser_ConstVar()
         {
             var parser = new ComparatorExpressionParser<Model>();
 
-            StringAssert.Contains(parser.Parse(m => m.Name != "Sérgio"), "Name != @Name");
+            StringAssert.Contains(parser.Parse(m => m.Name != "Sérgio"), "Name != @Name0");
             Assert.AreEqual(1, parser.ConditionData.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void GreaterThanParser_ConstVar()
         {
             var parser = new ComparatorExpressionParser<Model>();
 
-            StringAssert.Contains(parser.Parse(m => m.Age > 10), "Age > @Age");
+            StringAssert.Contains(parser.Parse(m => m.Age > 10), "Age > @Age0");
             Assert.AreEqual(1, parser.ConditionData.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void GreaterThanOrEqualParser_ConstVar()
         {
             var parser = new ComparatorExpressionParser<Model>();
 
-            StringAssert.Contains(parser.Parse(m => m.Age >= 10), "Age >= @Age");
+            StringAssert.Contains(parser.Parse(m => m.Age >= 10), "Age >= @Age0");
             Assert.AreEqual(1, parser.ConditionData.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void SmallerThanOrEqualParser_ConstVar()
         {
             var parser = new ComparatorExpressionParser<Model>();
 
-            StringAssert.Contains(parser.Parse(m => m.Age <= 10), "Age <= @Age");
+            StringAssert.Contains(parser.Parse(m => m.Age <= 10), "Age <= @Age0");
             Assert.AreEqual(1, parser.ConditionData.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void SmallerThanParser_ConstVar()
         {
             var parser = new ComparatorExpressionParser<Model>();
 
-            StringAssert.Contains(parser.Parse(m => m.Age < 10), "Age < @Age");
+            StringAssert.Contains(parser.Parse(m => m.Age < 10), "Age < @Age0");
             Assert.AreEqual(1, parser.ConditionData.Count());
         }
         
-        [TestMethod]
+        [Test]
         public void FieldParser()
         {
             var parser = new FieldGetterExpressionParser<Model, String>();

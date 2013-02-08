@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VODB</RootNamespace>
     <AssemblyName>VODB</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Annotations\Attributes.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Core\Engine.cs" />
     <Compile Include="Core\EngineModules.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Core\Infrastructure\TSqlCommandHolderLazy.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TCount.cs" />
     <Compile Include="Core\Loaders\DbReaderMapper.cs" />
+    <Compile Include="Exceptions\UnableToGetTheValue.cs" />
     <Compile Include="Core\Loaders\Factories\IEntityFactory.cs" />
     <Compile Include="Core\Loaders\Factories\Interceptor.cs" />
     <Compile Include="Core\Loaders\ICachedEntities.cs" />

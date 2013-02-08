@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using VODB.Annotations;
 using VODB.Tests.Models.Northwind;
 using VODB.Core.Infrastructure;
@@ -38,11 +38,11 @@ namespace VODB.Tests
         public int Age { get; set; }
     }
 
-    [TestClass]
+    [TestFixture]
     public class TablesCreator_Tests
     {
 
-        [TestMethod]
+        [Test]
         public void CreateTable_Employee_Test()
         {
             var entity = new Employee();
@@ -72,7 +72,7 @@ namespace VODB.Tests
             Assert.IsNotNull(table.CommandsHolder.Select);
         }
 
-        [TestMethod]
+        [Test]
         public void FieldMapping_Test()
         {
             var fieldMapping = new FieldMapper<Employee>(new FieldMapper());
@@ -82,7 +82,7 @@ namespace VODB.Tests
 
         }
 
-        [TestMethod]
+        [Test]
         public void TableMapper_Test()
         {
             Engine.Map<Employee>();

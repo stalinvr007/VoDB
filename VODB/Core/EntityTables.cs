@@ -33,32 +33,36 @@ namespace VODB.Core
 
     internal class EntityTables : IEntityTables
     {
-
         readonly IDictionary<Type, Table> _tables = new Dictionary<Type, Table>();
         
         public Table GetTable(Type type)
         {
-            Debug.Assert(type.Namespace != null, "type.Namespace != null");
             if (type.Namespace.Equals("Castle.Proxies"))
             {
                 type = type.BaseType;
             }
 
             Table table;
-            Debug.Assert(type != null, "type != null");
             if (_tables.TryGetValue(type, out table))
             {
                 return table;
             }
 
-            Map(type);
+            if (!type.Namespace.StartsWith("System"))
+            {
+                Config.MapNameSpace(type);
+                if (_tables.TryGetValue(type, out table))
+                {
+                    return table;
+                }
+            }
 
-            return GetTable(type);
+            throw new Exceptions.EntityMapNotFoundException(type);
         }
         
         public void Map(Type type)
         {
-            if (IsMapped(type))
+            if (!type.IsClass || type.Namespace.StartsWith("System") || IsMapped(type))
             {
                 return;
             }
@@ -69,8 +73,12 @@ namespace VODB.Core
         
         public bool IsMapped(Type type)
         {
-            Debug.Assert(type.BaseType != null, "type.BaseType != null");
-            return _tables.ContainsKey(type) || _tables.ContainsKey(type.BaseType);
+            if (type.Namespace.Equals("Castle.Proxies"))
+            {
+                type = type.BaseType;
+            }
+
+            return _tables.ContainsKey(type);
         }
     }
 }

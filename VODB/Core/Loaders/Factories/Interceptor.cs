@@ -7,15 +7,24 @@ using System.Linq;
 using System.Reflection;
 using VODB.Core.Execution.Executers;
 using VODB.Core.Execution.SqlPartialBuilders;
+using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Loaders.Factories
 {
+
+    class ObjWrapper
+    {
+        public Object Value { get; set; }
+
+        public Boolean IsLoaded { get; set; }
+    }
+
     class Interceptor : IInterceptor
     {
         private readonly IInternalSession _Session;
 
 
-        IDictionary<MethodInfo, Object> lastResult = new Dictionary<MethodInfo, Object>();
+        IDictionary<MethodInfo, ObjWrapper> lastResult = new Dictionary<MethodInfo, ObjWrapper>();
 
         public Interceptor(IInternalSession session)
         {
@@ -45,22 +54,20 @@ namespace VODB.Core.Loaders.Factories
             var methodInfo = invocation.TargetType.GetMethod("get_" + fieldName);
 
             var value = invocation.GetArgumentValue(0);
-            if (!value.GetType().Namespace.Equals("Castle.Proxies"))
-            {
-                lastResult[methodInfo] = invocation.GetArgumentValue(0);
-            }
+            lastResult[methodInfo] = new ObjWrapper { Value = invocation.GetArgumentValue(0) };
         }
 
         private void GetValueHandler(IInvocation invocation, MethodInfo method, string fieldName)
         {
-            Object result;
-            if (lastResult.TryGetValue(method, out result))
+            ObjWrapper result;
+            if (lastResult.TryGetValue(method, out result) && result.IsLoaded)
             {
-                invocation.ReturnValue = result;
+                invocation.ReturnValue = result.Value;
                 return;
             }
 
-            invocation.ReturnValue = lastResult[method] = ResolveResult(invocation, fieldName);
+            result = lastResult[method] = ResolveResult(invocation, fieldName);
+            invocation.ReturnValue = result.Value;
         }
 
         private static IEnumerable<T> ProxyGenericIterator<T>(
@@ -81,7 +88,7 @@ namespace VODB.Core.Loaders.Factories
                     "ProxyGenericIterator",
                     BindingFlags.NonPublic | BindingFlags.Static);
 
-        private object ResolveResult(IInvocation invocation, string fieldName)
+        private ObjWrapper ResolveResult(IInvocation invocation, string fieldName)
         {
             if (invocation.Method.ReturnType.IsGenericType)
             {
@@ -103,24 +110,43 @@ namespace VODB.Core.Loaders.Factories
                 {
                     builder.AddCondition(
                         foreignTable.FindField(keyField.FieldName),
-                        keyField.GetValue(invocation.InvocationTarget));
+                        GetValue(keyField, invocation.InvocationTarget, keyField.FieldName));
                 }
 
 
                 var method = ProxyGenericIteratorMethod.MakeGenericMethod(entityType);
 
-                return method.Invoke(null, new[] { invocation.InvocationTarget,
-                    Engine.Get<IQueryExecuter>().RunQuery(
-                        entityType,
-                        _Session,
-                        builder.Query,
-                        builder.Parameters) 
-                });
+                return new ObjWrapper
+                {
+                    Value = method.Invoke(null, new[] { invocation.InvocationTarget,
+                        Engine.Get<IQueryExecuter>().RunQuery(
+                            entityType,
+                            _Session,
+                            builder.Query,
+                            builder.Parameters),
+                    }), IsLoaded = true
+                };
             }
             else
             {
-                return _Session.GetById(invocation.ReturnValue);
+                return new ObjWrapper { Value = _Session.GetById(invocation.ReturnValue), IsLoaded = true };
             }
+        }
+
+        private static Object GetValue(Field field, Object entity, String fieldName)
+        {
+
+            var value = field.GetValue(entity);
+
+            Type valueType = value.GetType();
+
+            if (Engine.IsMapped(valueType)) // Is a Mapped Entity
+            {
+                var table = Engine.GetTable(valueType);
+                return GetValue(table.FindField(fieldName), value, fieldName);
+            }
+
+            return value;
         }
 
     }

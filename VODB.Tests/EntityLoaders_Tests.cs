@@ -1,15 +1,15 @@
 ﻿using System.Data.Common;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using VODB.DbLayer;
 using VODB.Core.Loaders;
 using VODB.Tests.Models.Northwind;
 
 namespace VODB.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class EntityLoaders_Tests
     {
-        [TestMethod]
+        [Test]
         public void EntityKeyLoader_Employees()
         {
             using (DbConnection con = new NameConventionDbConnectionCreator("System.Data.SqlClient").Create())
@@ -36,7 +36,7 @@ namespace VODB.Tests
         }
 
 
-        [TestMethod]
+        [Test]
         public void FullEntityLoader_Employees()
         {
             using (var con = new NameConventionDbConnectionCreator("System.Data.SqlClient").Create())
@@ -61,6 +61,21 @@ namespace VODB.Tests
             }
         }
 
+        [Test]
+        public void ForeignKey_Setter()
+        {
+
+            Utils.Execute(session =>
+            {
+                var entity1 = session.GetById(new Employee { EmployeeId = 1 });
+                var entity2 = session.GetById(new Employee { EmployeeId = 2 });
+
+                entity1.ReportsTo = entity2.ReportsTo;
+
+                Assert.AreEqual(entity1.ReportsTo.EmployeeId, entity2.ReportsTo.EmployeeId);
+            });
+
+        }
 
     }
 }

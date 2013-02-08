@@ -40,9 +40,9 @@ namespace VODB.Core.Infrastructure
             Parallel.Invoke(
                 () => table.CollectionFields = _FieldMapper.GetFields(type).Where(f => f.IsCollection).ToList(),
                 () => table.KeyFields = table.Fields.Where(f => f.IsKey).ToList(),
-                () => table.FieldsByName = table.Fields.ToDictionary(f => f.FieldName),
-                () => table.FieldsByBind = table.Fields.Where(f => !String.IsNullOrEmpty(f.BindedTo)).ToDictionary(f => f.BindedTo),
-                () => table.FieldsByPropertyName = table.Fields.ToDictionary(f => f.PropertyName)
+                () => table.FieldsByName = table.Fields.ToDictionary(f => f.FieldName.ToLower()),
+                () => table.FieldsByBind = table.Fields.Where(f => !String.IsNullOrEmpty(f.BindedTo)).ToDictionary(f => f.FieldName + f.BindedTo.ToLower()),
+                () => table.FieldsByPropertyName = table.Fields.ToDictionary(f => f.PropertyName.ToLower())
             );
 
             Parallel.ForEach(table.Fields, f => f.Table = table);

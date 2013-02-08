@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using VODB.Tests.Models.Northwind;
 using System.Diagnostics;
 using Castle.Components.DictionaryAdapter;
@@ -24,10 +24,10 @@ namespace VODB.Tests
         public virtual string Message { get; set; }
     }
 
-    [TestClass]
+    [TestFixture]
     public class DynamicProxy_Tests
     {
-        [TestMethod]
+        [Test]
         public void SimpleInterceptor_ResultChanger()
         {
             var proxyGenerator = new ProxyGenerator();

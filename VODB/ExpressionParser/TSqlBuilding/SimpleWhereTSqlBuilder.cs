@@ -19,7 +19,7 @@ namespace VODB.ExpressionParser.TSqlBuilding
         
         public override String Build(int paramCount)
         {
-            // Todo: this is using the wrong value... Should be the Id not the ReportsTo field. See Session_GetAll_In_using_collection_SameNames test
+            
             var paramName = String.Format("{0}{1}", _Parser.Field.FieldName, paramCount);
             _parameters.Add(new KeyValuePair<Key, object>(new Key(_Parser.Field, paramName), _Parser.Value));
 

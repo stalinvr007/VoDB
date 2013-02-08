@@ -1,14 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using VODB.Tests.Models.Northwind;
 using VODB.EntityValidators;
 using VODB.Exceptions;
 
 namespace VODB.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class EntityValidators_Tests
     {
-        [TestMethod, ExpectedException(typeof(ValidationException))]
+        [Test, ExpectedException(typeof(ValidationException))]
         public void RequiredFields_Test()
         {
             try
@@ -28,7 +28,7 @@ namespace VODB.Tests
 
         }
 
-        [TestMethod, ExpectedException(typeof(ValidationException))]
+        [Test, ExpectedException(typeof(ValidationException))]
         public void KeysFilled_Test()
         {
             try
@@ -48,14 +48,14 @@ namespace VODB.Tests
 
         }
 
-        [TestMethod]
+        [Test]
         public void KeysFilled_Ok_Test()
         {
             new KeyFilledValidator()
                 .Validate(new Employee { EmployeeId = 1 });
         }
 
-        [TestMethod]
+        [Test]
         public void RequiredFields_Ok_Test()
         {
             new RequiredFieldsValidator()
