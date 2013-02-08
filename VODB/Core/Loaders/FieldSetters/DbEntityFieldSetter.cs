@@ -1,9 +1,5 @@
 using System;
-using VODB.Exceptions;
 using VODB.Core.Infrastructure;
-using VODB.Extensions;
-using VODB.Core;
-using Castle.DynamicProxy;
 using VODB.Core.Loaders.Factories;
 
 namespace VODB.Core.Loaders.FieldSetters
@@ -11,15 +7,16 @@ namespace VODB.Core.Loaders.FieldSetters
     /// <summary>
     /// Sets the value for a DbEntity type field.
     /// </summary>
-    sealed class DbEntityFieldSetter : IFieldSetter
+    internal sealed class DbEntityFieldSetter : IFieldSetter
     {
-
         private readonly IEntityFactory _Factory;
 
         public DbEntityFieldSetter(IEntityFactory factory)
         {
             _Factory = factory;
         }
+
+        #region IFieldSetter Members
 
         /// <summary>
         /// Determines whether this instance can handle the specified type.
@@ -30,7 +27,7 @@ namespace VODB.Core.Loaders.FieldSetters
         {
             return Engine.IsMapped(type);
         }
-        
+
         /// <summary>
         /// Sets the value.
         /// </summary>
@@ -39,17 +36,17 @@ namespace VODB.Core.Loaders.FieldSetters
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="getValueFromReader">The get value from reader.</param>
-        public void SetValue<TEntity>(TEntity entity, IInternalSession session, Field field, Object value, Func<Field, Object> getValueFromReader)
+        public void SetValue<TEntity>(TEntity entity, IInternalSession session, Field field, Object value,
+                                      Func<Field, Object> getValueFromReader)
         {
+            object foreignEntity = _Factory.Make(field.FieldType, session);
 
-            var foreignEntity = _Factory.Make(field.FieldType, session);
-
-            var table = Engine.GetTable(field.FieldType);
+            Table table = Engine.GetTable(field.FieldType);
 
             /* Attempts to fill the key fields for this foreignEntity. */
-            foreach (var key in table.KeyFields)
+            foreach (Field key in table.KeyFields)
             {
-                if (key.FieldName.Equals(field.BindedTo, StringComparison.InvariantCultureIgnoreCase) || 
+                if (key.FieldName.Equals(field.BindedTo, StringComparison.InvariantCultureIgnoreCase) ||
                     key.FieldName.Equals(field.FieldName, StringComparison.InvariantCultureIgnoreCase))
                 {
                     foreignEntity.SetValue(session, key, value, getValueFromReader);
@@ -59,7 +56,7 @@ namespace VODB.Core.Loaders.FieldSetters
                     /* Have to search the entity for a field bindedTo this Key. Or with the same name. */
                     /* Use the name of that field to use on GetValueFromReader. */
 
-                    var origField = Engine.GetTable(entity.GetType()).FindField(key.FieldName);
+                    Field origField = Engine.GetTable(entity.GetType()).FindField(key.FieldName);
                     if (origField != null)
                     {
                         foreignEntity.SetValue(session, key, getValueFromReader(origField), getValueFromReader);
@@ -68,10 +65,8 @@ namespace VODB.Core.Loaders.FieldSetters
             }
 
             field.SetValue(entity, foreignEntity);
-
         }
 
+        #endregion
     }
-
-    
 }

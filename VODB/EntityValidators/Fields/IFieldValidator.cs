@@ -8,10 +8,8 @@ namespace VODB.EntityValidators.Fields
     /// </summary>
     public interface IFieldValidator
     {
-
         Boolean CanHandle(Field field);
 
         Boolean Verify<TEntity>(Field field, TEntity entity);
-
     }
 }

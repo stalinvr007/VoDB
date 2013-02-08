@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using VODB.Core.Infrastructure;
-using VODB.ExpressionParser;
 
 namespace VODB.Core.Execution.SqlPartialBuilders
 {
     internal class SqlQueryBuilder : ISqlQueryBuilder
     {
-        ICollection<Parameter> _Parameters;
         private readonly Field _Field;
-        private Table _Table;
+        private readonly ICollection<Parameter> _Parameters;
+        private readonly Table _Table;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlQueryBuilder" /> class.
@@ -27,6 +26,8 @@ namespace VODB.Core.Execution.SqlPartialBuilders
             _Table = Engine.GetTable(ienumType);
         }
 
+        #region ISqlQueryBuilder Members
+
         /// <summary>
         /// Adds the condition.
         /// </summary>
@@ -41,17 +42,18 @@ namespace VODB.Core.Execution.SqlPartialBuilders
 
         public string Query
         {
-            get {
+            get
+            {
                 var sb = new StringBuilder();
 
                 sb.Append(_Table.CommandsHolder.Select)
                     .Append(" Where ");
 
-                foreach (var param in _Parameters)
+                foreach (Parameter param in _Parameters)
                 {
                     sb.AppendFormat("{0} = @{1}", param.Field.FieldName, param.ParamName);
                 }
-                
+
                 return sb.ToString();
             }
         }
@@ -61,5 +63,7 @@ namespace VODB.Core.Execution.SqlPartialBuilders
         {
             get { return _Parameters; }
         }
+
+        #endregion
     }
 }

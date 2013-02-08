@@ -6,7 +6,7 @@ namespace VODB
 {
     public class Session : ISession
     {
-        ISession _InternalSession;
+        private ISession _InternalSession;
 
         public Session()
         {
@@ -17,6 +17,8 @@ namespace VODB
         {
             _InternalSession = Engine.Get<ISession>("creator", connectionCreator);
         }
+
+        #region ISession Members
 
         public ITransaction BeginTransaction()
         {
@@ -66,9 +68,11 @@ namespace VODB
         public void Dispose()
         {
             if (_InternalSession == null) return;
-            
+
             _InternalSession.Dispose();
             _InternalSession = null;
         }
+
+        #endregion
     }
 }

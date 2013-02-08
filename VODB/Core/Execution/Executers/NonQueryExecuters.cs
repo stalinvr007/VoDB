@@ -4,10 +4,11 @@ using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Execution.Executers
 {
-
     internal class InsertExecuter : StatementExecuterBase<int>
     {
-        public InsertExecuter(IStatementGetter getter) : base(getter) { }
+        public InsertExecuter(IStatementGetter getter) : base(getter)
+        {
+        }
 
         protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
@@ -18,7 +19,9 @@ namespace VODB.Core.Execution.Executers
 
     internal class DeleteExecuter : StatementExecuterBase<int>
     {
-        public DeleteExecuter(IStatementGetter getter) : base(getter) { }
+        public DeleteExecuter(IStatementGetter getter) : base(getter)
+        {
+        }
 
         protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
@@ -29,7 +32,9 @@ namespace VODB.Core.Execution.Executers
 
     internal class UpdateExecuter : StatementExecuterBase<int>
     {
-        public UpdateExecuter(IStatementGetter getter) : base(getter) { }
+        public UpdateExecuter(IStatementGetter getter) : base(getter)
+        {
+        }
 
         protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
@@ -38,5 +43,4 @@ namespace VODB.Core.Execution.Executers
             return session.RefreshCommand(cmd).ExecuteNonQuery();
         }
     }
-
 }

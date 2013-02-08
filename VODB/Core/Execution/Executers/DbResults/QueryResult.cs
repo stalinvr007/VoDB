@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -11,33 +12,39 @@ using VODB.ExpressionParser;
 
 namespace VODB.Core.Execution.Executers.DbResults
 {
-
-    interface IQueryResultGetter
+    internal interface IQueryResultGetter
     {
-        IDbQueryResult<TEntity> GetQueryResult<TEntity>(IInternalSession session, IEntityLoader loader, IEntityFactory entityFactory)
+        IDbQueryResult<TEntity> GetQueryResult<TEntity>(IInternalSession session, IEntityLoader loader,
+                                                        IEntityFactory entityFactory)
             where TEntity : class, new();
-
     }
 
-    class QueryResultGetter : IQueryResultGetter
+    internal class QueryResultGetter : IQueryResultGetter
     {
-        public IDbQueryResult<TEntity> GetQueryResult<TEntity>(IInternalSession session, IEntityLoader loader, IEntityFactory entityFactory)
+        #region IQueryResultGetter Members
+
+        public IDbQueryResult<TEntity> GetQueryResult<TEntity>(IInternalSession session, IEntityLoader loader,
+                                                               IEntityFactory entityFactory)
             where TEntity : class, new()
         {
             return new QueryResult<TEntity>(session, loader, entityFactory);
         }
+
+        #endregion
     }
 
-    class QueryResult<TEntity> : IDbQueryResult<TEntity>, IDbAndQueryResult<TEntity>, IDbFieldFilterResult<TEntity>, IDbOrderedResult<TEntity>, IDbOrderedDescResult<TEntity>
+    internal class QueryResult<TEntity> : IDbQueryResult<TEntity>, IDbAndQueryResult<TEntity>,
+                                          IDbFieldFilterResult<TEntity>, IDbOrderedResult<TEntity>,
+                                          IDbOrderedDescResult<TEntity>
         where TEntity : class, new()
     {
-        private readonly IInternalSession _Session;
-        private readonly IEntityLoader _Loader;
-        private readonly Table _Table;
         private readonly IEntityFactory _EntityFactory;
-        private readonly LinkedList<ConditionPart> _Parts;
         private readonly IWhereExpressionParser<TEntity> _ExpressionParser;
+        private readonly IEntityLoader _Loader;
         private readonly ICollection<KeyValuePair<Key, Object>> _Parameters;
+        private readonly LinkedList<ConditionPart> _Parts;
+        private readonly IInternalSession _Session;
+        private readonly Table _Table;
         private Field _FilterField;
 
         public QueryResult(IInternalSession session, IEntityLoader loader, IEntityFactory entityFactory)
@@ -50,16 +57,16 @@ namespace VODB.Core.Execution.Executers.DbResults
             _Parameters = new List<KeyValuePair<Key, Object>>();
             _Parts = new LinkedList<ConditionPart>();
         }
-        
+
         #region Auxiliary Methods
 
         private QueryResult<TEntity> AddCondition(Operation operation, String condition)
         {
             _Parts.AddLast(new ConditionPart
-            {
-                Operation = operation,
-                Condition = condition
-            });
+                               {
+                                   Operation = operation,
+                                   Condition = condition
+                               });
             return this;
         }
 
@@ -67,9 +74,9 @@ namespace VODB.Core.Execution.Executers.DbResults
         {
             var sql = new StringBuilder();
 
-            foreach (var current in parts)
+            foreach (ConditionPart current in parts)
             {
-                var operation = current.Operation.GetString();
+                string operation = current.Operation.GetString();
 
                 if (operation != null)
                 {
@@ -97,7 +104,7 @@ namespace VODB.Core.Execution.Executers.DbResults
 
         private String AddParameter(Field field, Object value)
         {
-            var paramName = String.Format("@{0}db{1}", field.FieldName, _Parameters.Count);
+            string paramName = String.Format("@{0}db{1}", field.FieldName, _Parameters.Count);
             _Parameters.Add(new KeyValuePair<Key, Object>(new Key(field, paramName), value));
             return paramName;
         }
@@ -126,19 +133,20 @@ namespace VODB.Core.Execution.Executers.DbResults
 
         public IDbOrderedResult<TEntity> OrderBy<TField>(Expression<Func<TEntity, TField>> orderByField)
         {
-            return AddCondition(Operation.OrderBy, new FieldGetterExpressionParser<TEntity, TField>().Parse(orderByField));
+            return AddCondition(Operation.OrderBy,
+                                new FieldGetterExpressionParser<TEntity, TField>().Parse(orderByField));
         }
 
         public IEnumerator<TEntity> GetEnumerator()
         {
             _Session.Open();
-            var cmd = _Session.CreateCommand();
+            DbCommand cmd = _Session.CreateCommand();
             cmd.CommandText = _Table.CommandsHolder.Select + WhereCondition;
 
             cmd.SetParameters(_ExpressionParser.ConditionData);
             cmd.SetParameters(_Parameters);
 
-            var reader = cmd.ExecuteReader();
+            DbDataReader reader = cmd.ExecuteReader();
             try
             {
                 var list = new List<TEntity>();
@@ -155,7 +163,6 @@ namespace VODB.Core.Execution.Executers.DbResults
                 reader.Close();
                 _Session.Close();
             }
-
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -165,10 +172,7 @@ namespace VODB.Core.Execution.Executers.DbResults
 
         public IEnumerable<KeyValuePair<Key, Object>> Parameters
         {
-            get
-            {
-                return _ExpressionParser.ConditionData.Union(_Parameters);
-            }
+            get { return _ExpressionParser.ConditionData.Union(_Parameters); }
             set
             {
                 foreach (var item in value)
@@ -183,7 +187,10 @@ namespace VODB.Core.Execution.Executers.DbResults
             get { return _Table.TableName; }
         }
 
-        public String WhereCondition { get { return BuildWhereCondition(_Parts); } }
+        public String WhereCondition
+        {
+            get { return BuildWhereCondition(_Parts); }
+        }
 
         #endregion
 
@@ -230,10 +237,9 @@ namespace VODB.Core.Execution.Executers.DbResults
 
         public IDbAndQueryResult<TEntity> In<TField>(IEnumerable<TField> args)
         {
-
             if (args is IDbResult)
             {
-                return InResult((IDbResult)args);
+                return InResult((IDbResult) args);
             }
             var _whereCondition = new StringBuilder();
 
@@ -241,7 +247,7 @@ namespace VODB.Core.Execution.Executers.DbResults
                 .Append(_FilterField.FieldName)
                 .Append(" In (");
 
-            foreach (var arg in args)
+            foreach (TField arg in args)
             {
                 _whereCondition
                     .Append(AddParameter(_FilterField, arg))
@@ -256,23 +262,6 @@ namespace VODB.Core.Execution.Executers.DbResults
             return this;
         }
 
-        private IDbAndQueryResult<TEntity> InResult(IDbResult collection)
-        {
-            var _whereCondition = new StringBuilder();
-
-            Parameters = collection.Parameters;
-            _whereCondition
-                .AppendFormat("{0} In (Select {1} from {2}",
-                    _FilterField.FieldName,
-                    _FilterField.BindedTo ?? _FilterField.FieldName,
-                    collection.TableName)
-                .Append(collection.WhereCondition)
-                .Append(")");
-
-            AppendToConditions(_whereCondition);
-            return this;
-        }
-
         public IDbAndQueryResult<TEntity> Between<TField>(TField firstValue, TField secondValue)
         {
             var _whereCondition = new StringBuilder();
@@ -280,8 +269,8 @@ namespace VODB.Core.Execution.Executers.DbResults
             _whereCondition
                 .Append(_FilterField.FieldName)
                 .AppendFormat(" Between {0} And {1}",
-                    AddParameter(_FilterField, firstValue),
-                    AddParameter(_FilterField, secondValue));
+                              AddParameter(_FilterField, firstValue),
+                              AddParameter(_FilterField, secondValue));
 
             AppendToConditions(_whereCondition);
             return this;
@@ -312,6 +301,22 @@ namespace VODB.Core.Execution.Executers.DbResults
             return this;
         }
 
+        private IDbAndQueryResult<TEntity> InResult(IDbResult collection)
+        {
+            var _whereCondition = new StringBuilder();
+
+            Parameters = collection.Parameters;
+            _whereCondition
+                .AppendFormat("{0} In (Select {1} from {2}",
+                              _FilterField.FieldName,
+                              _FilterField.BindedTo ?? _FilterField.FieldName,
+                              collection.TableName)
+                .Append(collection.WhereCondition)
+                .Append(")");
+
+            AppendToConditions(_whereCondition);
+            return this;
+        }
 
         #endregion
 
@@ -324,5 +329,4 @@ namespace VODB.Core.Execution.Executers.DbResults
 
         #endregion
     }
-
 }

@@ -2,17 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using VODB.Core;
+using VODB.Core.Infrastructure;
 using VODB.Exceptions;
 using VODB.ExpressionParser;
+using VODB.ExpressionParser.ExpressionHandlers;
 using VODB.ExpressionParser.TSqlBuilding;
-using VODB.Core.Infrastructure;
-using VODB.Core;
 
 namespace VODB.Extensions
 {
-    static class ExpressionsExtensions
+    internal static class ExpressionsExtensions
     {
-        static IConfiguration Configuration = Engine.Get<IConfiguration>();
+        private static readonly IConfiguration Configuration = Engine.Get<IConfiguration>();
 
         /// <summary>
         /// Gets the key value.
@@ -22,9 +23,9 @@ namespace VODB.Extensions
         /// <returns></returns>
         /// <exception cref="WhereExpressionHandlerNotFoundException"></exception>
         public static KeyValuePair<Field, object> GetKeyValue<TEntity>(this Expression<Func<TEntity, bool>> expression)
-             where TEntity : class, new()
+            where TEntity : class, new()
         {
-            foreach (var handler in Configuration.WhereExpressionHandlers
+            foreach (IWhereExpressionHandler handler in Configuration.WhereExpressionHandlers
                 .Where(handler => handler.CanHandle(expression)))
             {
                 return handler.Handle(expression);
@@ -41,7 +42,7 @@ namespace VODB.Extensions
         /// <returns></returns>
         public static ITSqlBuilder BuildSql(this IExpressionBodyParser parser)
         {
-            var builder = Configuration.TSqlBuilders.Where(b => b.CanBuild(parser)).FirstOrDefault();
+            ITSqlBuilder builder = Configuration.TSqlBuilders.Where(b => b.CanBuild(parser)).FirstOrDefault();
 
             if (builder == null)
             {
@@ -60,9 +61,10 @@ namespace VODB.Extensions
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns></returns>
         /// <exception cref="VODB.Exceptions.WhereExpressionFormatterNotFoundException"></exception>
-        public static String GetWherePiece<TModel>(this Expression<Func<TModel, bool>> expression, String fieldName, String parameterName)
+        public static String GetWherePiece<TModel>(this Expression<Func<TModel, bool>> expression, String fieldName,
+                                                   String parameterName)
         {
-            foreach (var formatter in Configuration.WhereExpressionFormatters
+            foreach (IWhereExpressionFormatter formatter in Configuration.WhereExpressionFormatters
                 .Where(f => f.CanFormat(expression.Body.NodeType)))
             {
                 return formatter.Format(fieldName, parameterName);
@@ -70,7 +72,5 @@ namespace VODB.Extensions
 
             throw new WhereExpressionFormatterNotFoundException();
         }
-
-
     }
 }

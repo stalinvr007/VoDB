@@ -1,7 +1,7 @@
 using System;
+using System.Data.Common;
 using Ninject;
 using Ninject.Modules;
-using System.Data.Common;
 using VODB.Core.Execution.DbParameterSetters;
 using VODB.Core.Execution.Executers;
 using VODB.Core.Execution.Executers.DbResults;
@@ -21,8 +21,7 @@ using VODB.Sessions;
 
 namespace VODB.Core
 {
-
-    enum Commands
+    internal enum Commands
     {
         Insert,
         Delete,
@@ -37,24 +36,23 @@ namespace VODB.Core
         Identity
     }
 
-    class BindAttribute : NamedAttribute
+    internal class BindAttribute : NamedAttribute
     {
         public BindAttribute(Commands cmd)
             : base(cmd.ToString())
-        { }
-
+        {
+        }
     }
 
     internal class InfrastructureModule : NinjectModule
     {
-
         public override void Load()
         {
-            Bind(typeof(IFieldMapper<>)).To(typeof(FieldMapper<>)).InSingletonScope();
-            Bind(typeof(ITableMapper<>)).To(typeof(TableMapper<>)).InSingletonScope();
+            Bind(typeof (IFieldMapper<>)).To(typeof (FieldMapper<>)).InSingletonScope();
+            Bind(typeof (ITableMapper<>)).To(typeof (TableMapper<>)).InSingletonScope();
             Bind<ITableMapper>().To<TableMapper>();
             Bind<IFieldMapper>().To<FieldMapper>();
-            
+
             Bind<ITSqlCommandHolder>().To<TSqlCommandHolderLazy>();
 
             Bind<IEntityTables>().To<EntityTables>().InSingletonScope();
@@ -92,11 +90,14 @@ namespace VODB.Core
             Bind<IStatementExecuter<int>>().To<DeleteExecuter>().InSingletonScope().Named(Commands.Delete.ToString());
 
             Bind<IStatementExecuter<int>>().To<CountExecuter>().InSingletonScope().Named(Commands.Count.ToString());
-            Bind<IStatementExecuter<int>>().To<CountByIdExecuter>().InSingletonScope().Named(Commands.CountById.ToString());
-            Bind<IStatementExecuter<Object>>().To<IdentityExecuter>().InSingletonScope().Named(Commands.Identity.ToString());
+            Bind<IStatementExecuter<int>>().To<CountByIdExecuter>().InSingletonScope().Named(
+                Commands.CountById.ToString());
+            Bind<IStatementExecuter<Object>>().To<IdentityExecuter>().InSingletonScope().Named(
+                Commands.Identity.ToString());
             Bind<IStatementExecuter>().To<StatementExecuter>().InSingletonScope();
 
-            Bind<IStatementExecuter<DbDataReader>>().To<SelectByIdExecuter>().InSingletonScope().Named(Commands.SelectById.ToString());
+            Bind<IStatementExecuter<DbDataReader>>().To<SelectByIdExecuter>().InSingletonScope().Named(
+                Commands.SelectById.ToString());
 
             Bind<IQueryResultGetter>().To<QueryResultGetter>().InSingletonScope();
             Bind<IEntityLoader>().To<FullEntityLoader>().InSingletonScope();
@@ -156,5 +157,4 @@ namespace VODB.Core
             Bind<ITSqlBuilder>().To<ComplexTSqlBuilder>();
         }
     }
-
 }

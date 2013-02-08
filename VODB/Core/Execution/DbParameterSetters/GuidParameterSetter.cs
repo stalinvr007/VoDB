@@ -6,6 +6,7 @@ namespace VODB.Core.Execution.DbParameterSetters
 {
     public class GuidParameterSetter : IParameterSetter
     {
+        #region IParameterSetter Members
 
         public void SetValue(DbParameter param, Field field, Object value)
         {
@@ -14,8 +15,9 @@ namespace VODB.Core.Execution.DbParameterSetters
 
         public bool CanHandle(Type type)
         {
-            return typeof(Guid).IsAssignableFrom(type);
+            return typeof (Guid).IsAssignableFrom(type);
         }
 
+        #endregion
     }
 }

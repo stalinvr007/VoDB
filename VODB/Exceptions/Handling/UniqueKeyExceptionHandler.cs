@@ -5,6 +5,7 @@ namespace VODB.Exceptions.Handling
 {
     public class UniqueKeyExceptionHandler : IExceptionHandler
     {
+        #region IExceptionHandler Members
 
         /// <summary>
         /// Determines whether this instance can handle the specified exception.
@@ -14,8 +15,9 @@ namespace VODB.Exceptions.Handling
         public Boolean CanHandle(Exception exception)
         {
             return exception is SqlException &&
-                exception.Message.Contains("Violation of UNIQUE KEY");
+                   exception.Message.Contains("Violation of UNIQUE KEY");
         }
+
         /// <summary>
         /// Handles the specified exception.
         /// </summary>
@@ -24,5 +26,7 @@ namespace VODB.Exceptions.Handling
         {
             throw new UniqueKeyViolationException(exception);
         }
+
+        #endregion
     }
 }

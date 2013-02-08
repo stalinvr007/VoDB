@@ -9,8 +9,8 @@ namespace VODB.Core.Infrastructure
     /// </summary>
     public sealed class Field
     {
-
         private readonly PropertyInfo _Prop;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Field" /> class.
         /// </summary>
@@ -37,7 +37,10 @@ namespace VODB.Core.Infrastructure
         /// <value>
         /// The property.
         /// </value>
-        public PropertyInfo Property { get { return _Prop; } }
+        public PropertyInfo Property
+        {
+            get { return _Prop; }
+        }
 
         /// <summary>
         /// Gets or sets the table.
@@ -117,13 +120,14 @@ namespace VODB.Core.Infrastructure
             }
             catch (TargetException)
             {
-                var field = Engine.GetTable(entity.GetType()).FindField(FieldName);
+                Field field = Engine.GetTable(entity.GetType()).FindField(FieldName);
                 if (field != null)
                 {
                     return field.GetValue(entity);
                 }
             }
-            throw new UnableToGetTheValue("Cannot get the value of field [{0}] of the entity [{1}].", FieldName, entity.GetType());
+            throw new UnableToGetTheValue("Cannot get the value of field [{0}] of the entity [{1}].", FieldName,
+                                          entity.GetType());
         }
 
         /// <summary>
@@ -135,6 +139,5 @@ namespace VODB.Core.Infrastructure
         {
             _Prop.SetValue(entity, value, null);
         }
-
     }
 }

@@ -1,28 +1,33 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.SqlClient;
 
 namespace VODB.Sessions
 {
-    interface IInternalTransaction : ITransaction
+    internal interface IInternalTransaction : ITransaction
     {
+        Boolean Ended { get; }
         ITransaction BeginTransaction(IInternalSession session, DbConnection connection);
         DbCommand CreateCommand();
-        Boolean Ended { get; }
     }
 
     internal sealed class Transaction : IInternalTransaction
     {
+        private readonly LinkedList<String> _Savepoints = new LinkedList<String>();
+        private IInternalSession _Session;
         private DbTransaction _Transaction;
+
+        public Transaction()
+        {
+            Ended = true;
+        }
+
+        #region IInternalTransaction Members
 
         public Boolean Ended { get; private set; }
 
         public Boolean RolledBack { get; private set; }
-
-        private readonly LinkedList<String> _Savepoints = new LinkedList<String>();
-        private IInternalSession _Session;
-
-        #region IDisposable Members
 
         public void Dispose()
         {
@@ -40,21 +45,6 @@ namespace VODB.Sessions
             _Transaction = null;
         }
 
-        #endregion
-
-        public Transaction()
-        {
-            Ended = true;
-        }
-
-        private void CheckTransactionAlive()
-        {
-            if (_Transaction == null)
-            {
-                throw new MissingFieldException("Transaction", "transaction");
-            }
-        }
-
         public void RollBack()
         {
             if (Ended)
@@ -68,10 +58,10 @@ namespace VODB.Sessions
 
                 if (_Savepoints.Count > 0)
                 {
-                    var savepoint = _Savepoints.Last.Value;
+                    string savepoint = _Savepoints.Last.Value;
                     _Savepoints.RemoveLast();
 
-                    var trans = _Transaction as System.Data.SqlClient.SqlTransaction;
+                    var trans = _Transaction as SqlTransaction;
                     if (trans != null)
                     {
                         trans.Rollback(savepoint);
@@ -114,23 +104,6 @@ namespace VODB.Sessions
             _Transaction = null;
         }
 
-        private void SavePoint()
-        {
-            if (typeof(System.Data.SqlClient.SqlTransaction) != _Transaction.GetType())
-            {
-                throw new NotSupportedException("Save points are available on MsSql connections.");
-            }
-
-            var trans = _Transaction as System.Data.SqlClient.SqlTransaction;
-
-            var savepoint = String.Format("savepoint{0}", _Savepoints.Count);
-            _Savepoints.AddLast(new LinkedListNode<String>(savepoint));
-            if (trans != null)
-            {
-                trans.Save(savepoint);
-            }
-        }
-
         public ITransaction BeginTransaction(IInternalSession session, DbConnection connection)
         {
             _Session = session;
@@ -153,9 +126,36 @@ namespace VODB.Sessions
                 throw new InvalidOperationException("Trying to create a Command withought a connection.");
             }
 
-            var cmd = _Transaction.Connection.CreateCommand();
+            DbCommand cmd = _Transaction.Connection.CreateCommand();
             cmd.Transaction = _Transaction;
             return cmd;
+        }
+
+        #endregion
+
+        private void CheckTransactionAlive()
+        {
+            if (_Transaction == null)
+            {
+                throw new MissingFieldException("Transaction", "transaction");
+            }
+        }
+
+        private void SavePoint()
+        {
+            if (typeof (SqlTransaction) != _Transaction.GetType())
+            {
+                throw new NotSupportedException("Save points are available on MsSql connections.");
+            }
+
+            var trans = _Transaction as SqlTransaction;
+
+            string savepoint = String.Format("savepoint{0}", _Savepoints.Count);
+            _Savepoints.AddLast(new LinkedListNode<String>(savepoint));
+            if (trans != null)
+            {
+                trans.Save(savepoint);
+            }
         }
 
         internal void BeginNestedTransaction()
@@ -163,7 +163,5 @@ namespace VODB.Sessions
             CheckTransactionAlive();
             SavePoint();
         }
-
     }
-
 }

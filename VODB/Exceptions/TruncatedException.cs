@@ -6,6 +6,7 @@ namespace VODB.Exceptions
     {
         public TruncatedException(Exception ex)
             : base(ex, "There are fields that don't respect the field size limit.")
-        { }
+        {
+        }
     }
 }

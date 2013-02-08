@@ -7,7 +7,6 @@ namespace VODB.Core.Infrastructure.TSqlCommands
     /// </summary>
     internal class TCount : TSqlCmdBase
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TSelectById"/> class.
         /// </summary>
@@ -15,7 +14,6 @@ namespace VODB.Core.Infrastructure.TSqlCommands
         public TCount(Table entity)
             : base(entity)
         {
-
         }
 
         /// <summary>
@@ -25,9 +23,9 @@ namespace VODB.Core.Infrastructure.TSqlCommands
         protected override void BuildCmdStr(StringBuilder sb)
         {
             sb.Append("Select Count(*) ")
-                    .Append(" From [")
-                    .Append(Table.TableName)
-                    .Append("]");
+                .Append(" From [")
+                .Append(Table.TableName)
+                .Append("]");
         }
     }
 }

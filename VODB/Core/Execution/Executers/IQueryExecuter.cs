@@ -5,7 +5,7 @@ using VODB.Core.Execution.SqlPartialBuilders;
 
 namespace VODB.Core.Execution.Executers
 {
-    interface IQueryExecuter
+    internal interface IQueryExecuter
     {
         IEnumerable RunQuery(Type entityType, IInternalSession session, String query, IEnumerable<Parameter> parameters);
     }

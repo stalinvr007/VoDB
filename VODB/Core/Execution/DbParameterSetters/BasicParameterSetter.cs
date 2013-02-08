@@ -6,6 +6,7 @@ namespace VODB.Core.Execution.DbParameterSetters
 {
     public class BasicParameterSetter : IParameterSetter
     {
+        #region IParameterSetter Members
 
         public void SetValue(DbParameter param, Field field, Object value)
         {
@@ -14,9 +15,10 @@ namespace VODB.Core.Execution.DbParameterSetters
 
         public bool CanHandle(Type type)
         {
-            return type.IsPrimitive || 
-                typeof(String).IsAssignableFrom(type);
+            return type.IsPrimitive ||
+                   typeof (String).IsAssignableFrom(type);
         }
 
+        #endregion
     }
 }

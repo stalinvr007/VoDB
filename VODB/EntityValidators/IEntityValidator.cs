@@ -1,6 +1,5 @@
 ﻿namespace VODB.EntityValidators
 {
-
     public enum On
     {
         Insert,
@@ -13,7 +12,6 @@
 
     public interface IEntityValidator
     {
-
         /// <summary>
         /// Verifies if this validator should run on what commands.
         /// </summary>
@@ -26,7 +24,5 @@
         /// </summary>
         /// <param name="entity">The entity.</param>
         void Validate<TEntity>(TEntity entity);
-
-
     }
 }

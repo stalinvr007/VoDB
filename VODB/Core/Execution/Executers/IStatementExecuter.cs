@@ -4,9 +4,8 @@
     /// Represents a StatementExecuter.
     /// </summary>
     /// <typeparam name="TResult">The type of the result.</typeparam>
-    interface IStatementExecuter<out TResult>
+    internal interface IStatementExecuter<out TResult>
     {
-
         /// <summary>
         /// Executes a command using the specified entity.
         /// </summary>
@@ -15,13 +14,12 @@
         /// <param name="session">The session.</param>
         /// <returns></returns>
         TResult Execute<TEntity>(TEntity entity, IInternalSession session);
-
     }
 
     /// <summary>
     /// Represents a StatementExecuter
     /// </summary>
-    interface IStatementExecuter
+    internal interface IStatementExecuter
     {
         /// <summary>
         /// Executes the specified statement.

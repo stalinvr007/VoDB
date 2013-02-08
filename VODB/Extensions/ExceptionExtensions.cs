@@ -1,11 +1,12 @@
 ﻿using System;
 using VODB.Core;
+using VODB.Exceptions.Handling;
 
 namespace VODB.Extensions
 {
     internal static class ExceptionExtensions
     {
-        static IConfiguration Configuration = Engine.Get<IConfiguration>();
+        private static readonly IConfiguration Configuration = Engine.Get<IConfiguration>();
 
         /// <summary>
         /// Handles the exception.
@@ -13,7 +14,7 @@ namespace VODB.Extensions
         /// <param name="exception">The exception.</param>
         public static void HandleException(this Exception exception)
         {
-            foreach (var handler in Configuration.ExceptionHandlers)
+            foreach (IExceptionHandler handler in Configuration.ExceptionHandlers)
             {
                 if (handler.CanHandle(exception))
                 {
@@ -24,6 +25,5 @@ namespace VODB.Extensions
 
             throw exception;
         }
-
     }
 }

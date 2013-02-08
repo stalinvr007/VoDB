@@ -1,23 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using VODB.Core.Infrastructure;
-using VODB.ExpressionParser;
 
 namespace VODB.Core.Execution.SqlPartialBuilders
 {
-    interface ISqlQueryBuilder
+    internal interface ISqlQueryBuilder
     {
-
-        /// <summary>
-        /// Adds the condition.
-        /// </summary>
-        /// <param name="field">The field.</param>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        ISqlQueryBuilder AddCondition(Field field, Object entity);
-
         /// <summary>
         /// Gets the query.
         /// </summary>
@@ -33,5 +21,13 @@ namespace VODB.Core.Execution.SqlPartialBuilders
         /// The parameters.
         /// </value>
         IEnumerable<Parameter> Parameters { get; }
+
+        /// <summary>
+        /// Adds the condition.
+        /// </summary>
+        /// <param name="field">The field.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns></returns>
+        ISqlQueryBuilder AddCondition(Field field, Object entity);
     }
 }

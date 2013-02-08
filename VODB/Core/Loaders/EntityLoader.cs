@@ -10,7 +10,7 @@ namespace VODB.Core.Loaders
     internal abstract class EntityLoader : IEntityLoader
     {
         private readonly ICachedEntities _cache;
-        ICachedEntity cachedEntity;
+        private ICachedEntity cachedEntity;
 
         protected EntityLoader(ICachedEntities cache)
         {
@@ -40,7 +40,8 @@ namespace VODB.Core.Loaders
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="reader">The reader.</param>
-        protected void SetValue<TEntity>(TEntity entity, IInternalSession session, Field field, object value, DbDataReader reader)
+        protected void SetValue<TEntity>(TEntity entity, IInternalSession session, Field field, object value,
+                                         DbDataReader reader)
         {
             if (field.IsKey)
             {
@@ -55,6 +56,8 @@ namespace VODB.Core.Loaders
 
         #endregion
 
+        #region IEntityLoader Members
+
         /// <summary>
         /// Loads the specified entity.
         /// </summary>
@@ -67,6 +70,8 @@ namespace VODB.Core.Loaders
             cachedEntity = _cache.Add(entity);
             LoadEntity(entity, session, reader);
         }
+
+        #endregion
 
         /// <summary>
         /// Loads the entity.

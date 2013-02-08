@@ -1,4 +1,3 @@
-
 namespace VODB.Exceptions
 {
     public class EntityKeysNotFoundException : VodbException

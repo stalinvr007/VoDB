@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace VODB.ExpressionParser.TSqlBuilding
 {
-    abstract class TSqlBuilderBase : ITSqlBuilder
+    internal abstract class TSqlBuilderBase : ITSqlBuilder
     {
-        protected ICollection<KeyValuePair<Key, Object>> _parameters = new List<KeyValuePair<Key, Object>>();
         protected IExpressionBodyParser _Parser;
+        protected ICollection<KeyValuePair<Key, Object>> _parameters = new List<KeyValuePair<Key, Object>>();
+
+        #region ITSqlBuilder Members
 
         public bool CanBuild(IExpressionBodyParser parser)
         {
@@ -27,6 +27,8 @@ namespace VODB.ExpressionParser.TSqlBuilding
         }
 
         public abstract string Build(int paramCount);
+
+        #endregion
 
         protected abstract bool CanBuildSql(IExpressionBodyParser parser);
     }

@@ -1,16 +1,15 @@
-﻿using System.Diagnostics;
-using Castle.DynamicProxy;
-using System;
+﻿using System;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
+using Castle.DynamicProxy;
 
 namespace VODB.Core.Loaders.Factories
 {
     internal class EntityProxyFactory : IEntityFactory
     {
-        static readonly ProxyGenerator proxyGenerator = new ProxyGenerator();
-        
+        private static readonly ProxyGenerator proxyGenerator = new ProxyGenerator();
+
+        #region IEntityFactory Members
+
         public Object Make(Type type, IInternalSession session)
         {
             return AsyncMake(type, session).Result;
@@ -19,15 +18,19 @@ namespace VODB.Core.Loaders.Factories
         public Task<object> AsyncMake(Type type, IInternalSession session)
         {
             return Task<Object>.Factory.StartNew(() =>
-            {
-                return type.Namespace.Equals("Castle.Proxies") ?
-                    Make(type.BaseType, session) :
-                    proxyGenerator.CreateClassProxy(type, new Interceptor(session));    
-            });
+                                                     {
+                                                         return type.Namespace.Equals("Castle.Proxies")
+                                                                    ? Make(type.BaseType, session)
+                                                                    : proxyGenerator.CreateClassProxy(type,
+                                                                                                      new Interceptor(
+                                                                                                          session));
+                                                     });
         }
+
+        #endregion
     }
 
-    interface IEntityFactory
+    internal interface IEntityFactory
     {
         Object Make(Type type, IInternalSession session);
 

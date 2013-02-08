@@ -8,7 +8,6 @@ namespace VODB.ExpressionParser
     /// </summary>
     public interface IWhereExpressionFormatter
     {
-
         /// <summary>
         /// Gives a piece of the expression using the fieldname and the parametername.
         /// </summary>
@@ -23,6 +22,5 @@ namespace VODB.ExpressionParser
         /// <param name="type">The type.</param>
         /// <returns></returns>
         Boolean CanFormat(ExpressionType type);
-
     }
 }

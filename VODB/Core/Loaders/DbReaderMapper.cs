@@ -8,11 +8,14 @@ using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Loaders
 {
-    class DbReaderMapper : IDbReaderMapper
+    internal class DbReaderMapper : IDbReaderMapper
     {
         private readonly IDictionaryMapper _dictionaryMapper;
-        readonly ConcurrentDictionary<int, IDictionary<string, object>> fullData = new ConcurrentDictionary<int, IDictionary<string, object>>();
-        private volatile int status = 0;
+
+        private readonly ConcurrentDictionary<int, IDictionary<string, object>> fullData =
+            new ConcurrentDictionary<int, IDictionary<string, object>>();
+
+        private volatile int status;
 
         public DbReaderMapper(IDictionaryMapper dictionaryMapper)
         {
@@ -23,47 +26,48 @@ namespace VODB.Core.Loaders
 
         public Task<IEnumerable<TEntity>> Map<TEntity>(IDataReader reader) where TEntity : new()
         {
-            var table = Engine.GetTable<TEntity>();
+            Table table = Engine.GetTable<TEntity>();
 
-            var taskRows = FetchRowsData(reader, table);
+            Task taskRows = FetchRowsData(reader, table);
 
             return Task<IEnumerable<TEntity>>.Factory.StartNew(() =>
-            {
-                var entities = new List<TEntity>();
-                var current = 0;
-                do
-                {
-                    while (fullData.Count == current)
-                    {
-                        if (taskRows.IsCompleted)
-                        {
-                            return entities;
-                        }
+                                                                   {
+                                                                       var entities = new List<TEntity>();
+                                                                       int current = 0;
+                                                                       do
+                                                                       {
+                                                                           while (fullData.Count == current)
+                                                                           {
+                                                                               if (taskRows.IsCompleted)
+                                                                               {
+                                                                                   return entities;
+                                                                               }
 
-                        // Enable data to be loaded.
-                        Thread.Sleep(0);
-                    }
+                                                                               // Enable data to be loaded.
+                                                                               Thread.Sleep(0);
+                                                                           }
 
-                    // fetch a row data
-                    var data = fullData[++current];
+                                                                           // fetch a row data
+                                                                           IDictionary<string, object> data =
+                                                                               fullData[++current];
 
-                    // Creates a new TEntity instance to hold it in place.
-                    var entity = new TEntity();
-                    entities.Add(entity);
+                                                                           // Creates a new TEntity instance to hold it in place.
+                                                                           var entity = new TEntity();
+                                                                           entities.Add(entity);
 
-                    // Map the Diccionary<String, Object> to an TEntity.
-                    Map(data, table, entity);
+                                                                           // Map the Diccionary<String, Object> to an TEntity.
+                                                                           Map(data, table, entity);
+                                                                       } while (!taskRows.IsCompleted ||
+                                                                                fullData.Count > current);
 
-                } while (!taskRows.IsCompleted || fullData.Count > current);
+                                                                       // Wait until all instances of Entity are loaded.
+                                                                       while (status > 0)
+                                                                       {
+                                                                           Thread.Sleep(0);
+                                                                       }
 
-                // Wait until all instances of Entity are loaded.
-                while (status > 0)
-                {
-                    Thread.Sleep(0);
-                }
-
-                return entities;
-            });
+                                                                       return entities;
+                                                                   });
         }
 
         #endregion
@@ -72,36 +76,37 @@ namespace VODB.Core.Loaders
         {
             Interlocked.Increment(ref status);
 
-            Task.Factory.StartNew(() => _dictionaryMapper.Map(data, entityTable, entity))
-                .ContinueWith(_ => Interlocked.Decrement(ref status));
-
+            Task.Factory.StartNew(() =>
+                                      {
+                                          _dictionaryMapper.Map(data, entityTable, entity);
+                                          Interlocked.Decrement(ref status);
+                                      });
         }
 
         private Task FetchRowsData(IDataReader reader, Table table)
         {
             return Task.Factory.StartNew(() =>
-            {
-                try
-                {
-                    var rowI = 0;
-                    while (reader.Read())
-                    {
-                        var data = new Dictionary<String, Object>();
+                                             {
+                                                 try
+                                                 {
+                                                     int rowI = 0;
+                                                     while (reader.Read())
+                                                     {
+                                                         var data = new Dictionary<String, Object>();
 
-                        foreach (var field in table.Fields)
-                        {
-                            data[field.FieldName] = reader[field.FieldName];
-                        }
-                        
-                        fullData[++rowI] = data;
-                    }
-                }
-                finally
-                {
-                    reader.Close();
-                }
-            });
+                                                         foreach (Field field in table.Fields)
+                                                         {
+                                                             data[field.FieldName] = reader[field.FieldName];
+                                                         }
+
+                                                         fullData[++rowI] = data;
+                                                     }
+                                                 }
+                                                 finally
+                                                 {
+                                                     reader.Close();
+                                                 }
+                                             });
         }
-
     }
 }
