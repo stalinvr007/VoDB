@@ -1,15 +1,15 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using VODB.EntityValidators;
 using VODB.Tests.Models.Northwind;
 using VODB.Exceptions;
 
 namespace VODB.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class Validatores_Tests
     {
-        [TestMethod, ExpectedException(typeof(ValidationException))]
+        [Test, ExpectedException(typeof(ValidationException))]
         public void RequiredFields_Employee()
         {
             try

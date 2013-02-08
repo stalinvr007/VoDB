@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 
 namespace VODB.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class IOC_Tests
     {
-        [TestMethod]
+        [Test]
         public void Session_IOC_Test()
         {
             var session = new Session();

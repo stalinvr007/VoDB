@@ -6,7 +6,7 @@ namespace VODB.Sessions
 {
     interface IInternalTransaction : ITransaction
     {
-        ITransaction BeginTransaction(DbConnection connection);
+        ITransaction BeginTransaction(IInternalSession session, DbConnection connection);
         DbCommand CreateCommand();
         Boolean Ended { get; }
     }
@@ -14,13 +14,13 @@ namespace VODB.Sessions
     internal sealed class Transaction : IInternalTransaction
     {
         private DbTransaction _Transaction;
-        private int count = 1;
 
         public Boolean Ended { get; private set; }
 
         public Boolean RolledBack { get; private set; }
 
         private readonly LinkedList<String> _Savepoints = new LinkedList<String>();
+        private IInternalSession _Session;
 
         #region IDisposable Members
 
@@ -33,16 +33,14 @@ namespace VODB.Sessions
 
             if (!RolledBack)
             {
-                Commit();    
+                Commit();
             }
-
-            if (count != 0) return;
 
             _Transaction.Dispose();
             _Transaction = null;
         }
 
-        #endregion        
+        #endregion
 
         public Transaction()
         {
@@ -56,7 +54,7 @@ namespace VODB.Sessions
                 throw new MissingFieldException("Transaction", "transaction");
             }
         }
-        
+
         public void RollBack()
         {
             if (Ended)
@@ -70,7 +68,6 @@ namespace VODB.Sessions
 
                 if (_Savepoints.Count > 0)
                 {
-                    --count;
                     var savepoint = _Savepoints.Last.Value;
                     _Savepoints.RemoveLast();
 
@@ -86,10 +83,9 @@ namespace VODB.Sessions
 
             CheckTransactionAlive();
 
-            count = 0;
             Ended = true;
             _Transaction.Rollback();
-
+            _Session.Close();
             _Transaction = null;
         }
 
@@ -103,17 +99,16 @@ namespace VODB.Sessions
             if (_Savepoints.Count > 0)
             {
                 _Savepoints.RemoveLast();
+                return;
             }
 
             CheckTransactionAlive();
 
-            --count;
-            if (count != 0) return;
-            
             Ended = true;
             if (!RolledBack)
             {
                 _Transaction.Commit();
+                _Session.Close();
             }
 
             _Transaction = null;
@@ -136,8 +131,9 @@ namespace VODB.Sessions
             }
         }
 
-        public ITransaction BeginTransaction(DbConnection connection)
+        public ITransaction BeginTransaction(IInternalSession session, DbConnection connection)
         {
+            _Session = session;
             if (_Transaction == null)
             {
                 Ended = false;
@@ -149,7 +145,7 @@ namespace VODB.Sessions
             }
             return this;
         }
-        
+
         public DbCommand CreateCommand()
         {
             if (_Transaction.Connection == null)
@@ -166,8 +162,8 @@ namespace VODB.Sessions
         {
             CheckTransactionAlive();
             SavePoint();
-            ++count;
         }
 
     }
+
 }

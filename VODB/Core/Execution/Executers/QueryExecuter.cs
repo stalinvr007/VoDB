@@ -22,7 +22,7 @@ namespace VODB.Core.Execution.Executers
 
         public IEnumerable RunQuery(Type entityType, IInternalSession session, String query, IEnumerable<Parameter> parameters)
         {
-
+            session.Open();
             var cmd = session.CreateCommand();
 
             cmd.CommandText = query;
@@ -45,6 +45,7 @@ namespace VODB.Core.Execution.Executers
             finally
             {
                 reader.Close();
+                session.Close();
             }
         }
     }

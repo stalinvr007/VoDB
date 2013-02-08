@@ -1,5 +1,6 @@
 ﻿using VODB.Core;
 using VODB.Core.Execution.Executers.DbResults;
+using VODB.DbLayer;
 
 namespace VODB
 {
@@ -10,6 +11,11 @@ namespace VODB
         public Session()
         {
             _InternalSession = Engine.Get<ISession>();
+        }
+
+        public Session(IDbConnectionCreator connectionCreator)
+        {
+            _InternalSession = Engine.Get<ISession>("creator", connectionCreator);
         }
 
         public ITransaction BeginTransaction()

@@ -26,7 +26,7 @@ namespace VODB.Sessions
         private readonly IQueryResultGetter _QueryResultGetter;
         private readonly IEntityLoader _EntityLoader;
         private readonly IEntityFactory _EntityFactory;
-        
+
         public InternalSession(
             IDbConnectionCreator creator,
             IInternalTransaction transaction,
@@ -63,6 +63,13 @@ namespace VODB.Sessions
         }
 
         #region IInternalSession Members
+
+        public DbCommand RefreshCommand(DbCommand command)
+        {
+            Open();
+            command.Connection = _connection;
+            return command;
+        }
 
         public DbCommand CreateCommand()
         {
@@ -132,12 +139,13 @@ namespace VODB.Sessions
         public ITransaction BeginTransaction()
         {
             Open();
-            return _Transaction.BeginTransaction(_connection);
+            return _Transaction.BeginTransaction(this, _connection);
         }
 
         public void ExecuteTSql(string SqlStatements)
         {
             _StatementExecuter.Execute(SqlStatements, this);
+            Close();
         }
 
         public IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : class, new()
@@ -147,6 +155,11 @@ namespace VODB.Sessions
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
         {
+            if (entity == null)
+            {
+                return null;
+            }
+
             var reader = _SelectByIdExecuter.Execute(entity, this);
             try
             {
@@ -160,7 +173,8 @@ namespace VODB.Sessions
             finally
             {
                 reader.Close();
-            }            
+                Close();
+            }
             return null;
         }
 
@@ -174,31 +188,50 @@ namespace VODB.Sessions
                 field.SetValue(entity, Convert.ChangeType(_IdentityExecuter.Execute(entity, this), field.FieldType));
             }
 
+            Close();
             return entity;
         }
 
         public void Delete<TEntity>(TEntity entity) where TEntity : class, new()
         {
             _DeleteExecuter.Execute(entity, this);
+            Close();
         }
 
         public TEntity Update<TEntity>(TEntity entity) where TEntity : class, new()
         {
             _UpdateExecuter.Execute(entity, this);
+            Close();
             return entity;
         }
 
         public int Count<TEntity>() where TEntity : class, new()
         {
-            return _CountExecuter.Execute(new TEntity(), this);
+            try
+            {
+                return _CountExecuter.Execute(new TEntity(), this);
+            }
+            finally
+            {
+                Close();
+            }
+
         }
 
         public bool Exists<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            return _CountByIdExecuter.Execute(entity, this) > 0;
+            try
+            {
+                return _CountByIdExecuter.Execute(entity, this) > 0;
+            }
+            finally
+            {
+                Close();
+            }
         }
 
         #endregion
-    
+
+        
     }
 }

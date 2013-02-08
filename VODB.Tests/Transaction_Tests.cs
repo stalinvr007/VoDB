@@ -1,12 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using VODB.Tests.Models.Northwind;
 
 namespace VODB.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class Transaction_Tests
     {
-        [TestMethod]
+        [Test]
         public void InnerTransactions()
         {
 

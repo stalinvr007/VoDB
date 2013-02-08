@@ -1,14 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using VODB.Tests.Models.Northwind;
 using System.Linq;
 using VODB.Core.Execution.Executers.DbResults;
 
 namespace VODB.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class Session_Tests
     {
-        [TestMethod]
+        [Test]
         public void Session_GetAll()
         {
             var employees = new Session().GetAll<Employee>();
@@ -16,7 +16,7 @@ namespace VODB.Tests
             Assert.AreEqual(9, employees.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_WhereCondition_ShouldBeKept_ByResult()
         {
             var session = new Session();
@@ -41,7 +41,7 @@ namespace VODB.Tests
 
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetAll_LikeCondition()
         {
             var employees = new Session()
@@ -51,7 +51,7 @@ namespace VODB.Tests
             Assert.AreEqual(2, employees.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetAll_LikeCondition_Left()
         {
             var employees = new Session()
@@ -61,7 +61,7 @@ namespace VODB.Tests
             Assert.AreEqual(1, employees.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetAll_OrderedByFirstName()
         {
             var employee = new Session()
@@ -72,7 +72,7 @@ namespace VODB.Tests
 
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetEmployeeList_ReportsToFilter()
         {
             /* 
@@ -81,6 +81,8 @@ namespace VODB.Tests
              */
             var employees1 = new Session()
                 .GetAll<Employee>().Where(e => e.ReportsTo.FirstName == "Andrew");
+
+            Assert.AreEqual(5, employees1.Count());
 
             EntitiesAsserts.Assert_Employee_1(employees1.First());
 
@@ -94,7 +96,7 @@ namespace VODB.Tests
             EntitiesAsserts.Assert_Employee_2(employees2.First());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetAll_OrderedByFirstName_TSql()
         {
             var employee = new Session()
@@ -102,10 +104,9 @@ namespace VODB.Tests
                 .First();
 
             EntitiesAsserts.Assert_Employee_2(employee);
-
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetAll_OrderedByCity_Descending()
         {
             var employee2 = new Session()
@@ -122,11 +123,10 @@ namespace VODB.Tests
                 .First();
 
             EntitiesAsserts.Assert_Employee_3(employee3);
-
         }
 
 
-        [TestMethod]
+        [Test]
         public void QueryWith_OrCondition()
         {
             var employees = new Session()
@@ -140,7 +140,7 @@ namespace VODB.Tests
             Assert.AreEqual(2, employees.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void MoreComplexQuery2()
         {
             var employees = new Session()
@@ -153,7 +153,7 @@ namespace VODB.Tests
             Assert.AreEqual(8, employees.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void MoreComplexQuery()
         {
             var employees = new Session()
@@ -166,7 +166,7 @@ namespace VODB.Tests
             Assert.AreEqual(9, employees.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetAll_withConditionExpression()
         {
             var id = 1;
@@ -176,7 +176,7 @@ namespace VODB.Tests
             Assert.AreEqual(1, employees.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetAll_withInConditionExpression()
         {
             var employees = new Session()
@@ -187,7 +187,7 @@ namespace VODB.Tests
             Assert.AreEqual(3, employees.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetAll_withInConditionExpression_Complex()
         {
             var employees = new Session()
@@ -198,7 +198,7 @@ namespace VODB.Tests
             Assert.AreEqual(6, employees.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetAll_Between()
         {
             var employees = new Session()
@@ -209,7 +209,7 @@ namespace VODB.Tests
             Assert.AreEqual(5, employees.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetAll_In_using_collection()
         {
             ISession session = new Session();
@@ -223,7 +223,7 @@ namespace VODB.Tests
             Assert.AreEqual(5, employees.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetAll_In_using_collection_SameNames()
         {
             ISession session = new Session();
@@ -237,7 +237,7 @@ namespace VODB.Tests
             Assert.AreEqual(3, employees.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetAll_In_using_collection_diffNames()
         {
             ISession session = new Session();
@@ -250,7 +250,7 @@ namespace VODB.Tests
             Assert.AreEqual(70, orders.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetAll_withConditionExpression_IdConst()
         {
             var employees = new Session()
@@ -259,13 +259,13 @@ namespace VODB.Tests
             Assert.AreEqual(1, employees.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_Count()
         {
             Assert.AreEqual(9, new Session().Count<Employee>());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetAll_withWhereCond()
         {
             var employees = new Session()
@@ -275,7 +275,7 @@ namespace VODB.Tests
             Assert.AreEqual(1, employees.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetAll_withWhereCond_AndMoreConditions()
         {
             var employees = new Session()
@@ -286,15 +286,18 @@ namespace VODB.Tests
             Assert.AreEqual(1, employees.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetById()
         {
-            var employee = new Session().GetById(new Employee { EmployeeId = 1 });
+            using (var session = new Session())
+            {
+                var employee = session.GetById(new Employee { EmployeeId = 1 });
 
-            EntitiesAsserts.Assert_Employee_1(employee);
+                EntitiesAsserts.Assert_Employee_1(employee);    
+            }
         }
 
-        [TestMethod]
+        [Test]
         public void Session_Exists()
         {
             using (var session = new Session())
@@ -307,7 +310,7 @@ namespace VODB.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetById_Territories()
         {
             var employee = new Session().GetById(
@@ -318,7 +321,7 @@ namespace VODB.Tests
             EntitiesAsserts.Assert_Employee_1(employee);
         }
 
-        [TestMethod]
+        [Test]
         public void Session_GetById_ReportsTo()
         {
             var employee = new Session().GetById(
@@ -330,7 +333,7 @@ namespace VODB.Tests
             EntitiesAsserts.Assert_Employee_1(employee);
         }
 
-        [TestMethod]
+        [Test]
         public void Session_Insert_Employee()
         {
             Utils.ExecuteWithinTransaction(session =>
@@ -349,7 +352,7 @@ namespace VODB.Tests
 
         }
 
-        [TestMethod]
+        [Test]
         public void Session_Delete_Employee()
         {
 
@@ -371,7 +374,7 @@ namespace VODB.Tests
 
         }
 
-        [TestMethod]
+        [Test]
         public void Session_Update_Employee()
         {
 

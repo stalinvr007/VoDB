@@ -30,7 +30,7 @@ namespace VODB.Core.Loaders.FieldSetters
         {
             return Engine.IsMapped(type);
         }
-
+        
         /// <summary>
         /// Sets the value.
         /// </summary>
@@ -41,6 +41,7 @@ namespace VODB.Core.Loaders.FieldSetters
         /// <param name="getValueFromReader">The get value from reader.</param>
         public void SetValue<TEntity>(TEntity entity, IInternalSession session, Field field, Object value, Func<Field, Object> getValueFromReader)
         {
+
             var foreignEntity = _Factory.Make(field.FieldType, session);
 
             var table = Engine.GetTable(field.FieldType);
@@ -58,7 +59,7 @@ namespace VODB.Core.Loaders.FieldSetters
                     /* Have to search the entity for a field bindedTo this Key. Or with the same name. */
                     /* Use the name of that field to use on GetValueFromReader. */
 
-                    var origField = Engine.GetTable<TEntity>().FindField(key.FieldName);
+                    var origField = Engine.GetTable(entity.GetType()).FindField(key.FieldName);
                     if (origField != null)
                     {
                         foreignEntity.SetValue(session, key, getValueFromReader(origField), getValueFromReader);
