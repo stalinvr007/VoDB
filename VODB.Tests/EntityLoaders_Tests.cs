@@ -1,4 +1,6 @@
 ﻿using System.Data.Common;
+using System.Linq;
+using System.Threading;
 using NUnit.Framework;
 using VODB.DbLayer;
 using VODB.Core.Loaders;
@@ -12,7 +14,7 @@ namespace VODB.Tests
         [Test]
         public void EntityKeyLoader_Employees()
         {
-            using (DbConnection con = new NameConventionDbConnectionCreator("System.Data.SqlClient").Create())
+            using (var con = new NameConventionDbConnectionCreator("System.Data.SqlClient").Create())
             {
                 con.Open();
 
@@ -74,6 +76,31 @@ namespace VODB.Tests
 
                 Assert.AreEqual(entity1.ReportsTo.EmployeeId, entity2.ReportsTo.EmployeeId);
             });
+
+        }
+
+        [Test]
+        public void DbReaderMapper()
+        {
+            Utils.ExecuteWith(con =>
+            {
+                var cmd = con.CreateCommand();
+                cmd.CommandText = Utils.EmployeeTable.CommandsHolder.Select;
+
+                var reader = cmd.ExecuteReader();
+
+                var employees = new DbReaderMapper(new DictionaryMapper())
+                     .Map<Employee>(reader);
+
+                while (!employees.IsCompleted)
+                {
+                    Thread.Sleep(0);
+                }
+
+                Assert.AreEqual(9, employees.Result.Count());
+
+            });
+
 
         }
 
