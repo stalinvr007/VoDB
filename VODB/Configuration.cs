@@ -14,73 +14,72 @@ namespace VODB
     /// <summary>
     /// Allows the end user to configure some aspects of the VODB Framework.
     /// </summary>
-    class Configuration : IConfiguration
+    internal class Configuration : IConfiguration
     {
-        
         public Configuration()
         {
-
             FieldIsFilledValidators = new List<IFieldValidator>
-            {
-                new StringFieldIsFilled(),
-                new NumberFieldIsFilled(),
-                new DateTimeFieldIsFilled(),
-                new DbEntityFieldIsFilled(),
-                new RefTypeFieldIsFilled()
-            };
+                                          {
+                                              new StringFieldIsFilled(),
+                                              new NumberFieldIsFilled(),
+                                              new DateTimeFieldIsFilled(),
+                                              new DbEntityFieldIsFilled(),
+                                              new RefTypeFieldIsFilled()
+                                          };
 
             EntityValidators = new List<IEntityValidator>
-            {
-                new RequiredFieldsValidator(),
-                new KeyFilledValidator()
-            };
+                                   {
+                                       new RequiredFieldsValidator(),
+                                       new KeyFilledValidator()
+                                   };
 
             FieldSetters = new List<IFieldSetter>
-            {
-                new BasicFieldSetter(),
-                new DbEntityFieldSetter(new EntityProxyFactory())
-            };
+                               {
+                                   new BasicFieldSetter(),
+                                   new DbEntityFieldSetter(new EntityProxyFactory())
+                               };
 
             ParameterSetters = new List<IParameterSetter>
-            {
-                new BasicParameterSetter(),
-                new DbEntityParameterSetter(),
-                new DateTimeParameterSetter(),
-                new DecimalParameterSetter(),
-                new ByteArrayParameterSetter(),
-                new GuidParameterSetter()
-            };
+                                   {
+                                       new BasicParameterSetter(),
+                                       new DbEntityParameterSetter(),
+                                       new DateTimeParameterSetter(),
+                                       new DecimalParameterSetter(),
+                                       new ByteArrayParameterSetter(),
+                                       new GuidParameterSetter()
+                                   };
 
             ExceptionHandlers = new List<IExceptionHandler>
-            {
-                new PrimaryKeyExceptionHandler(),
-                new UniqueKeyExceptionHandler(),
-                new TruncatedExceptionHandler()
-            };
+                                    {
+                                        new PrimaryKeyExceptionHandler(),
+                                        new UniqueKeyExceptionHandler(),
+                                        new TruncatedExceptionHandler()
+                                    };
 
 
             WhereExpressionHandlers = new List<IWhereExpressionHandler>
-            {
-                new SimpleWhereExpressionHandler()
-            };
+                                          {
+                                              new SimpleWhereExpressionHandler()
+                                          };
 
             WhereExpressionFormatters = new List<IWhereExpressionFormatter>
-            {
-                new EqualityWhereExpressionFormatter(),
-                new NonEqualityWhereExpressionFormatter(),
-                new GreaterOrEqualWhereExpressionFormatter(),
-                new SmallerOrEqualWhereExpressionFormatter(),
-                new SmallerWhereExpressionFormatter(),
-                new GreaterWhereExpressionFormatter()
-            };
+                                            {
+                                                new EqualityWhereExpressionFormatter(),
+                                                new NonEqualityWhereExpressionFormatter(),
+                                                new GreaterOrEqualWhereExpressionFormatter(),
+                                                new SmallerOrEqualWhereExpressionFormatter(),
+                                                new SmallerWhereExpressionFormatter(),
+                                                new GreaterWhereExpressionFormatter()
+                                            };
 
             TSqlBuilders = new List<ITSqlBuilder>
-            {
-                new SimpleWhereTSqlBuilder(),
-                new ComplexTSqlBuilder()
-            };
-
+                               {
+                                   new SimpleWhereTSqlBuilder(),
+                                   new ComplexTSqlBuilder()
+                               };
         }
+
+        #region IConfiguration Members
 
         public ICollection<ITSqlBuilder> TSqlBuilders { get; private set; }
 
@@ -140,5 +139,6 @@ namespace VODB
         /// </value>
         public ICollection<IExceptionHandler> ExceptionHandlers { get; private set; }
 
+        #endregion
     }
 }

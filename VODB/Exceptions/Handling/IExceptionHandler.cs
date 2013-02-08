@@ -16,6 +16,5 @@ namespace VODB.Exceptions.Handling
         /// </summary>
         /// <param name="exception">The exception.</param>
         void Handle(Exception exception);
-
     }
 }

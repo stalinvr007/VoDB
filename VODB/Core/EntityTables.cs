@@ -1,40 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using VODB.Core.Infrastructure;
 using System.Threading.Tasks;
+using VODB.Core.Infrastructure;
+using VODB.Exceptions;
 
 namespace VODB.Core
 {
-    interface IEntityTables
+    internal interface IEntityTables
     {
-        Table GetTable(Type type);        
+        Table GetTable(Type type);
         void Map(Type type);
         Boolean IsMapped(Type type);
     }
 
-    static class IEntityTablesExtensions
+    internal static class IEntityTablesExtensions
     {
         public static Table GetTable<TEntity>(this IEntityTables entityTables)
         {
-            return entityTables.GetTable(typeof(TEntity));
+            return entityTables.GetTable(typeof (TEntity));
         }
 
         public static void Map<TEntity>(this IEntityTables entityTables)
         {
-            entityTables.Map(typeof(TEntity));
+            entityTables.Map(typeof (TEntity));
         }
 
         public static Boolean IsMapped<TEntity>(this IEntityTables entityTables)
         {
-            return entityTables.IsMapped(typeof(TEntity));
+            return entityTables.IsMapped(typeof (TEntity));
         }
     }
 
     internal class EntityTables : IEntityTables
     {
-        readonly IDictionary<Type, Table> _tables = new Dictionary<Type, Table>();
-        
+        private readonly IDictionary<Type, Table> _tables = new Dictionary<Type, Table>();
+
+        #region IEntityTables Members
+
         public Table GetTable(Type type)
         {
             if (type.Namespace.Equals("Castle.Proxies"))
@@ -57,9 +59,9 @@ namespace VODB.Core
                 }
             }
 
-            throw new Exceptions.EntityMapNotFoundException(type);
+            throw new EntityMapNotFoundException(type);
         }
-        
+
         public void Map(Type type)
         {
             if (!type.IsClass || type.Namespace.StartsWith("System") || IsMapped(type))
@@ -70,7 +72,7 @@ namespace VODB.Core
             _tables[type] = new AsyncTable(
                 new Task<Table>(() => Engine.Get<ITableMapper>().GetTable(type)));
         }
-        
+
         public bool IsMapped(Type type)
         {
             if (type.Namespace.Equals("Castle.Proxies"))
@@ -80,5 +82,7 @@ namespace VODB.Core
 
             return _tables.ContainsKey(type);
         }
+
+        #endregion
     }
 }

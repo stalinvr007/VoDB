@@ -4,13 +4,11 @@ using System.Linq;
 
 namespace VODB.Core.Infrastructure
 {
-
     /// <summary>
     /// Represents a DataBase Table.
     /// </summary>
     internal class Table
     {
-
         /// <summary>
         /// Gets or sets the name of the table.
         /// </summary>
@@ -74,21 +72,20 @@ namespace VODB.Core.Infrastructure
         /// </value>
         public virtual Field IdentityField
         {
-            get
-            {
-                return KeyFields.FirstOrDefault(f => f.IsIdentity);
-            }
+            get { return KeyFields.FirstOrDefault(f => f.IsIdentity); }
         }
 
         public Field FindCollectionField(String Name)
         {
-            return CollectionFields.FirstOrDefault(f => f.FieldName.Equals(Name, StringComparison.InvariantCultureIgnoreCase));
+            return
+                CollectionFields.FirstOrDefault(
+                    f => f.FieldName.Equals(Name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public Field FindFieldByBind(String bind)
         {
             bind = bind.ToLower();
-            return FieldsByBind.FirstOrDefault(kv => kv.Key.EndsWith(bind)).Value;            
+            return FieldsByBind.FirstOrDefault(kv => kv.Key.EndsWith(bind)).Value;
         }
 
         public Field FindField(String BindOrName)
@@ -118,6 +115,5 @@ namespace VODB.Core.Infrastructure
 
             return null;
         }
-
     }
 }

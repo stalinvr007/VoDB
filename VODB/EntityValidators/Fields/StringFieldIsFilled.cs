@@ -4,7 +4,6 @@ namespace VODB.EntityValidators.Fields
 {
     internal class StringFieldIsFilled : FieldIsFilled
     {
-
         protected override Boolean IsFilled(object value)
         {
             return value != null && !String.IsNullOrEmpty(value.ToString());
@@ -12,7 +11,7 @@ namespace VODB.EntityValidators.Fields
 
         protected override Boolean CanHandle(Type fieldType)
         {
-            return fieldType == typeof(String);
+            return fieldType == typeof (String);
         }
     }
 }

@@ -7,7 +7,6 @@ namespace VODB.Core.Infrastructure.TSqlCommands
     /// </summary>
     internal sealed class TCountById : TCount
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TSelectById"/> class.
         /// </summary>
@@ -15,7 +14,6 @@ namespace VODB.Core.Infrastructure.TSqlCommands
         public TCountById(Table entity)
             : base(entity)
         {
-
         }
 
         /// <summary>
@@ -27,7 +25,7 @@ namespace VODB.Core.Infrastructure.TSqlCommands
             base.BuildCmdStr(sb);
 
             sb.Append(" Where ")
-              .Append(new TWhere(Table).BuildCmdStr());
+                .Append(new TWhere(Table).BuildCmdStr());
         }
     }
 }

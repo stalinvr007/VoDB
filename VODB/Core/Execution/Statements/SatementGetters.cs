@@ -1,72 +1,101 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Execution.Statements
 {
-    class SelectByIdGetter : IStatementGetter
+    internal class SelectByIdGetter : IStatementGetter
     {
+        #region IStatementGetter Members
+
         public String GetStatement(ITSqlCommandHolder holder)
         {
             return holder.SelectById;
         }
+
+        #endregion
     }
 
-    class SelectGetter : IStatementGetter
+    internal class SelectGetter : IStatementGetter
     {
+        #region IStatementGetter Members
+
         public String GetStatement(ITSqlCommandHolder holder)
         {
             return holder.Select;
         }
+
+        #endregion
     }
 
-    class CountGetter : IStatementGetter
+    internal class CountGetter : IStatementGetter
     {
+        #region IStatementGetter Members
+
         public String GetStatement(ITSqlCommandHolder holder)
         {
             return holder.Count;
         }
+
+        #endregion
     }
 
-    class CountByIdGetter : IStatementGetter
+    internal class CountByIdGetter : IStatementGetter
     {
+        #region IStatementGetter Members
+
         public String GetStatement(ITSqlCommandHolder holder)
         {
             return holder.CountById;
         }
+
+        #endregion
     }
 
-    class UpdateGetter : IStatementGetter
+    internal class UpdateGetter : IStatementGetter
     {
+        #region IStatementGetter Members
+
         public String GetStatement(ITSqlCommandHolder holder)
         {
             return holder.Update;
         }
+
+        #endregion
     }
 
-    class InsertGetter : IStatementGetter
+    internal class InsertGetter : IStatementGetter
     {
+        #region IStatementGetter Members
+
         public String GetStatement(ITSqlCommandHolder holder)
         {
             return holder.Insert;
         }
+
+        #endregion
     }
 
-    class DeleteGetter : IStatementGetter
+    internal class DeleteGetter : IStatementGetter
     {
+        #region IStatementGetter Members
+
         public String GetStatement(ITSqlCommandHolder holder)
         {
             return holder.Delete;
         }
+
+        #endregion
     }
 
-    class IdentityGetter : IStatementGetter
+    internal class IdentityGetter : IStatementGetter
     {
+        #region IStatementGetter Members
+
         public String GetStatement(ITSqlCommandHolder holder)
         {
             return "Select @@IDENTITY";
         }
+
+        #endregion
     }
 }

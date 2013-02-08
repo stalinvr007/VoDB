@@ -6,6 +6,7 @@ namespace VODB.Exceptions
     {
         public UnableToExecuteNonQueryException(Exception exception)
             : base(exception, "")
-        { }
+        {
+        }
     }
 }

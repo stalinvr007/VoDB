@@ -7,7 +7,7 @@ namespace VODB.Core.Loaders
     /// <summary>
     /// Maps a data reader into an Entity.
     /// </summary>
-    interface IDbReaderMapper
+    internal interface IDbReaderMapper
     {
         /// <summary>
         /// Maps the specified reader.

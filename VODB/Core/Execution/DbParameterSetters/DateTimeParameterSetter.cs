@@ -19,7 +19,7 @@ namespace VODB.Core.Execution.DbParameterSetters
 
             param.Value = (date == null || date.Value.Year == 1)
                               ? DBNull.Value
-                              : (Object)date.Value;
+                              : (Object) date.Value;
         }
 
         #endregion

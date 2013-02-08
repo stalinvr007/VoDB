@@ -92,11 +92,6 @@ namespace VODB.Tests
                 var employees = new DbReaderMapper(new DictionaryMapper())
                      .Map<Employee>(reader);
 
-                while (!employees.IsCompleted)
-                {
-                    Thread.Sleep(0);
-                }
-
                 Assert.AreEqual(9, employees.Result.Count());
 
             });

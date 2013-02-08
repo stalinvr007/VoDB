@@ -7,7 +7,7 @@ namespace VODB.Core.Loaders
     /// <summary>
     /// Maps a IDictionary into an Entity
     /// </summary>
-    interface IDictionaryMapper
+    internal interface IDictionaryMapper
     {
         /// <summary>
         /// Maps the specified data.
@@ -20,7 +20,7 @@ namespace VODB.Core.Loaders
         Task<TEntity> Map<TEntity>(IDictionary<string, object> data, Table entityTable, TEntity entity);
     }
 
-    class DictionaryMapper : IDictionaryMapper
+    internal class DictionaryMapper : IDictionaryMapper
     {
         #region Implementation of IDictionaryMapper
 

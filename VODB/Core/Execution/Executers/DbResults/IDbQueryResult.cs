@@ -5,7 +5,6 @@ using VODB.ExpressionParser;
 
 namespace VODB.Core.Execution.Executers.DbResults
 {
-
     public interface IDbResult
     {
         IEnumerable<KeyValuePair<Key, Object>> Parameters { get; }
@@ -13,7 +12,6 @@ namespace VODB.Core.Execution.Executers.DbResults
         String TableName { get; }
 
         String WhereCondition { get; }
-
     }
 
     /// <summary>
@@ -23,7 +21,6 @@ namespace VODB.Core.Execution.Executers.DbResults
     public interface IDbQueryResult<TEntity> : IEnumerable<TEntity>, IDbResult
         where TEntity : class, new()
     {
-
         /// <summary>
         /// Appends a where condition.
         /// </summary>
@@ -54,7 +51,6 @@ namespace VODB.Core.Execution.Executers.DbResults
         /// <param name="orderByField">The order by field.</param>
         /// <returns></returns>
         IDbOrderedResult<TEntity> OrderBy<TField>(Expression<Func<TEntity, TField>> orderByField);
-
     }
 
     /// <summary>
@@ -112,14 +108,11 @@ namespace VODB.Core.Execution.Executers.DbResults
 
     public interface IDbOrderedDescResult<TEntity> : IEnumerable<TEntity>, IDbResult
     {
-
     }
 
     public interface IDbOrderedResult<TEntity> : IEnumerable<TEntity>, IDbResult
     {
-
         IDbOrderedDescResult<TEntity> Descending();
-
     }
 
 
@@ -133,7 +126,6 @@ namespace VODB.Core.Execution.Executers.DbResults
 
     public interface IDbFieldFilterResult<TEntity> : IDbResult
     {
-
         /// <summary>
         /// Likes the specified value.
         /// </summary>
@@ -158,6 +150,5 @@ namespace VODB.Core.Execution.Executers.DbResults
         /// <param name="secondValue">The second value.</param>
         /// <returns></returns>
         IDbAndQueryResult<TEntity> Between<TField>(TField firstValue, TField secondValue);
-
     }
 }

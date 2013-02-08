@@ -16,7 +16,7 @@ namespace VODB.Core.Execution.DbParameterSetters
 
         public void SetValue(DbParameter param, Field field, Object value)
         {
-            var foreignEntity = value;
+            object foreignEntity = value;
 
             if (foreignEntity == null)
             {
@@ -24,10 +24,10 @@ namespace VODB.Core.Execution.DbParameterSetters
             }
             else
             {
-                var foreignKey = foreignEntity.GetTable().KeyFields
-                    .FirstOrDefault(key => 
-                        key.FieldName.Equals(field.BindedTo, StringComparison.InvariantCultureIgnoreCase) ||
-                        key.FieldName.Equals(field.FieldName, StringComparison.InvariantCultureIgnoreCase));
+                Field foreignKey = foreignEntity.GetTable().KeyFields
+                    .FirstOrDefault(key =>
+                                    key.FieldName.Equals(field.BindedTo, StringComparison.InvariantCultureIgnoreCase) ||
+                                    key.FieldName.Equals(field.FieldName, StringComparison.InvariantCultureIgnoreCase));
 
                 param.SetValue(foreignKey, foreignEntity);
             }

@@ -4,15 +4,17 @@ using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Execution.Executers
 {
-    class SelectByIdExecuter : StatementExecuterBase<DbDataReader>
+    internal class SelectByIdExecuter : StatementExecuterBase<DbDataReader>
     {
-        public SelectByIdExecuter(IStatementGetter getter) : base(getter) { }
+        public SelectByIdExecuter(IStatementGetter getter) : base(getter)
+        {
+        }
 
-        protected override DbDataReader Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
+        protected override DbDataReader Execute<TEntity>(DbCommand cmd, Table table, TEntity entity,
+                                                         IInternalSession session)
         {
             cmd.SetParameters(table.KeyFields, entity);
             return session.RefreshCommand(cmd).ExecuteReader();
         }
     }
-
 }

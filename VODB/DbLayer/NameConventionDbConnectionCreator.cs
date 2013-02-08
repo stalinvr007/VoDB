@@ -11,8 +11,6 @@ namespace VODB.DbLayer
         public NameConventionDbConnectionCreator(String providerName)
             : base(providerName, Environment.MachineName)
         {
-
         }
-        
     }
 }

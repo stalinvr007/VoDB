@@ -3,29 +3,30 @@ using System.Data;
 using System.Data.Common;
 using VODB.Core;
 using VODB.Core.Execution.Executers;
-using VODB.DbLayer;
 using VODB.Core.Execution.Executers.DbResults;
+using VODB.Core.Infrastructure;
 using VODB.Core.Loaders;
 using VODB.Core.Loaders.Factories;
+using VODB.DbLayer;
 
 namespace VODB.Sessions
 {
-    class InternalSession : IInternalSession
+    internal class InternalSession : IInternalSession
     {
-        private DbConnection _connection;
-        private IInternalTransaction _Transaction;
-        private IDbConnectionCreator _Creator;
-        private readonly IStatementExecuter<int> _InsertExecuter;
-        private readonly IStatementExecuter<int> _UpdateExecuter;
-        private readonly IStatementExecuter<int> _DeleteExecuter;
-        private readonly IStatementExecuter<int> _CountExecuter;
         private readonly IStatementExecuter<int> _CountByIdExecuter;
-        private readonly IStatementExecuter<DbDataReader> _SelectByIdExecuter;
-        private readonly IStatementExecuter<object> _IdentityExecuter;
-        private readonly IStatementExecuter _StatementExecuter;
-        private readonly IQueryResultGetter _QueryResultGetter;
-        private readonly IEntityLoader _EntityLoader;
+        private readonly IStatementExecuter<int> _CountExecuter;
+        private readonly IStatementExecuter<int> _DeleteExecuter;
         private readonly IEntityFactory _EntityFactory;
+        private readonly IEntityLoader _EntityLoader;
+        private readonly IStatementExecuter<object> _IdentityExecuter;
+        private readonly IStatementExecuter<int> _InsertExecuter;
+        private readonly IQueryResultGetter _QueryResultGetter;
+        private readonly IStatementExecuter<DbDataReader> _SelectByIdExecuter;
+        private readonly IStatementExecuter _StatementExecuter;
+        private readonly IStatementExecuter<int> _UpdateExecuter;
+        private IDbConnectionCreator _Creator;
+        private IInternalTransaction _Transaction;
+        private DbConnection _connection;
 
         public InternalSession(
             IDbConnectionCreator creator,
@@ -73,18 +74,15 @@ namespace VODB.Sessions
 
         public DbCommand CreateCommand()
         {
-
             CreateConnection();
 
             return InTransaction
                        ? _Transaction.CreateCommand()
                        : _connection.CreateCommand();
-
         }
 
         public void Open()
         {
-
             CreateConnection();
 
             if (_connection.State == ConnectionState.Open)
@@ -92,7 +90,6 @@ namespace VODB.Sessions
                 return;
             }
             _connection.Open();
-
         }
 
         public void Close()
@@ -103,16 +100,6 @@ namespace VODB.Sessions
             }
             _connection.Close();
             _connection = null;
-        }
-
-        #endregion
-
-        private void CreateConnection()
-        {
-            if (_connection == null)
-            {
-                _connection = _Creator.Create();
-            }
         }
 
         public void Dispose()
@@ -133,6 +120,8 @@ namespace VODB.Sessions
             _connection = null;
             _Creator = null;
         }
+
+        #endregion
 
         #region ISession Implementation
 
@@ -160,7 +149,7 @@ namespace VODB.Sessions
                 return null;
             }
 
-            var reader = _SelectByIdExecuter.Execute(entity, this);
+            DbDataReader reader = _SelectByIdExecuter.Execute(entity, this);
             try
             {
                 if (reader.Read())
@@ -182,7 +171,7 @@ namespace VODB.Sessions
         {
             _InsertExecuter.Execute(entity, this);
 
-            var field = entity.GetTable().IdentityField;
+            Field field = entity.GetTable().IdentityField;
             if (field != null)
             {
                 field.SetValue(entity, Convert.ChangeType(_IdentityExecuter.Execute(entity, this), field.FieldType));
@@ -215,7 +204,6 @@ namespace VODB.Sessions
             {
                 Close();
             }
-
         }
 
         public bool Exists<TEntity>(TEntity entity) where TEntity : class, new()
@@ -232,6 +220,12 @@ namespace VODB.Sessions
 
         #endregion
 
-        
+        private void CreateConnection()
+        {
+            if (_connection == null)
+            {
+                _connection = _Creator.Create();
+            }
+        }
     }
 }

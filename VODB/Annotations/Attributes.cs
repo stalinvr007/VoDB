@@ -2,22 +2,12 @@
 
 namespace VODB.Annotations
 {
-
     /// <summary>
     /// Indicates that this is a DataBase Table.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public sealed class DbTableAttribute : Attribute
     {
-
-        /// <summary>
-        /// Gets the name of the table.
-        /// </summary>
-        /// <value>
-        /// The name of the table.
-        /// </value>
-        internal String TableName { get; private set; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DbTableAttribute" /> class.
         /// </summary>
@@ -27,23 +17,21 @@ namespace VODB.Annotations
             TableName = tableName;
         }
 
+        /// <summary>
+        /// Gets the name of the table.
+        /// </summary>
+        /// <value>
+        /// The name of the table.
+        /// </value>
+        internal String TableName { get; private set; }
     }
 
     /// <summary>
     /// Indicates that this is a DataBase Field.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple=false)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public sealed class DbFieldAttribute : Attribute
     {
-
-        /// <summary>
-        /// Gets the name of the field.
-        /// </summary>
-        /// <value>
-        /// The name of the field.
-        /// </value>
-        internal String FieldName { get; private set; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DbFieldAttribute" /> class.
         /// </summary>
@@ -53,6 +41,13 @@ namespace VODB.Annotations
             FieldName = fieldName;
         }
 
+        /// <summary>
+        /// Gets the name of the field.
+        /// </summary>
+        /// <value>
+        /// The name of the field.
+        /// </value>
+        internal String FieldName { get; private set; }
     }
 
     /// <summary>
@@ -62,14 +57,6 @@ namespace VODB.Annotations
     public sealed class DbKeyAttribute : Attribute
     {
         /// <summary>
-        /// Gets the name of the field.
-        /// </summary>
-        /// <value>
-        /// The name of the field.
-        /// </value>
-        internal String FieldName { get; private set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DbKeyAttribute" /> class.
         /// </summary>
         /// <param name="fieldName">Name of the field.</param>
@@ -77,6 +64,14 @@ namespace VODB.Annotations
         {
             FieldName = fieldName;
         }
+
+        /// <summary>
+        /// Gets the name of the field.
+        /// </summary>
+        /// <value>
+        /// The name of the field.
+        /// </value>
+        internal String FieldName { get; private set; }
     }
 
     /// <summary>
@@ -85,16 +80,6 @@ namespace VODB.Annotations
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public sealed class DbIdentityAttribute : Attribute
     {
-
-        /// <summary>
-        /// Gets the name of the field.
-        /// </summary>
-        /// <value>
-        /// The name of the field.
-        /// </value>
-        internal String FieldName { get; private set; }
-
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DbIdentityAttribute" /> class.
         /// </summary>
@@ -104,6 +89,13 @@ namespace VODB.Annotations
             FieldName = fieldName;
         }
 
+        /// <summary>
+        /// Gets the name of the field.
+        /// </summary>
+        /// <value>
+        /// The name of the field.
+        /// </value>
+        internal String FieldName { get; private set; }
     }
 
     /// <summary>
@@ -129,15 +121,6 @@ namespace VODB.Annotations
     public sealed class DbBindAttribute : Attribute
     {
         /// <summary>
-        /// Gets the name of the field.
-        /// </summary>
-        /// <value>
-        /// The name of the field.
-        /// </value>
-        internal String FieldName { get; private set; }
-
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DbBindAttribute" /> class.
         /// </summary>
         /// <param name="fieldName">Name of the field.</param>
@@ -145,6 +128,13 @@ namespace VODB.Annotations
         {
             FieldName = fieldName;
         }
-    }
 
+        /// <summary>
+        /// Gets the name of the field.
+        /// </summary>
+        /// <value>
+        /// The name of the field.
+        /// </value>
+        internal String FieldName { get; private set; }
+    }
 }

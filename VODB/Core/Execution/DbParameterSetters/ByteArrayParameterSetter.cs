@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Data.Common;
 using VODB.Core.Infrastructure;
 
@@ -18,11 +19,11 @@ namespace VODB.Core.Execution.DbParameterSetters
             var bytes = value as Byte[];
 
             param.Value = bytes;
-            
+
             if (bytes != null) return;
-            
+
             param.Value = new Byte[] {};
-            var type = param.DbType;
+            DbType type = param.DbType;
             param.Value = DBNull.Value;
             param.DbType = type;
         }

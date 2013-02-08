@@ -3,13 +3,11 @@ using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Execution.Statements
 {
-
     /// <summary>
     /// Represents a Statement Getter
     /// </summary>
-    interface IStatementGetter
+    internal interface IStatementGetter
     {
-
         /// <summary>
         /// Gets the statement.
         /// </summary>

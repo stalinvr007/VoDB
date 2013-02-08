@@ -6,8 +6,10 @@ namespace VODB.Core.Loaders.FieldSetters
     /// <summary>
     /// Sets the field value. 
     /// </summary>
-    sealed class BasicFieldSetter : IFieldSetter
+    internal sealed class BasicFieldSetter : IFieldSetter
     {
+        #region IFieldSetter Members
+
         /// <summary>
         /// Determines whether this instance can handle the specified type.
         /// </summary>
@@ -15,12 +17,12 @@ namespace VODB.Core.Loaders.FieldSetters
         /// <returns></returns>
         public Boolean CanHandle(Type type)
         {
-            return type.IsPrimitive || 
-                typeof(String).IsAssignableFrom(type) ||
-                typeof(DateTime).IsAssignableFrom(type) ||
-                typeof(Decimal).IsAssignableFrom(type) ||
-                typeof(Byte[]).IsAssignableFrom(type) ||
-                typeof(Guid).IsAssignableFrom(type);
+            return type.IsPrimitive ||
+                   typeof (String).IsAssignableFrom(type) ||
+                   typeof (DateTime).IsAssignableFrom(type) ||
+                   typeof (Decimal).IsAssignableFrom(type) ||
+                   typeof (Byte[]).IsAssignableFrom(type) ||
+                   typeof (Guid).IsAssignableFrom(type);
         }
 
         /// <summary>
@@ -31,12 +33,15 @@ namespace VODB.Core.Loaders.FieldSetters
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="getValueFromReader">The get value from reader.</param>
-        public void SetValue<TEntity>(TEntity entity, IInternalSession session, Field field, Object value, Func<Field, Object> getValueFromReader)
+        public void SetValue<TEntity>(TEntity entity, IInternalSession session, Field field, Object value,
+                                      Func<Field, Object> getValueFromReader)
         {
             if (value != DBNull.Value)
             {
                 field.SetValue(entity, value);
             }
         }
+
+        #endregion
     }
 }

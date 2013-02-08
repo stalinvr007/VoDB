@@ -14,6 +14,5 @@ namespace VODB.ExpressionParser
         public Field Field { get; private set; }
 
         public String ParamName { get; private set; }
-
     }
 }

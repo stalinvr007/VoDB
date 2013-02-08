@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Data.Common;
-using VODB.Core.Infrastructure;
 using VODB.Core.Execution.Statements;
+using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Execution.Executers
 {
-    class CountExecuter : StatementExecuterBase<int>
+    internal class CountExecuter : StatementExecuterBase<int>
     {
-        public CountExecuter(IStatementGetter getter) : base(getter) { }
+        public CountExecuter(IStatementGetter getter) : base(getter)
+        {
+        }
 
         protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
@@ -15,9 +17,11 @@ namespace VODB.Core.Execution.Executers
         }
     }
 
-    class CountByIdExecuter : StatementExecuterBase<int>
+    internal class CountByIdExecuter : StatementExecuterBase<int>
     {
-        public CountByIdExecuter(IStatementGetter getter) : base(getter) { }
+        public CountByIdExecuter(IStatementGetter getter) : base(getter)
+        {
+        }
 
         protected override int Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {
@@ -26,9 +30,11 @@ namespace VODB.Core.Execution.Executers
         }
     }
 
-    class IdentityExecuter : StatementExecuterBase<Object>
+    internal class IdentityExecuter : StatementExecuterBase<Object>
     {
-        public IdentityExecuter(IStatementGetter getter) : base(getter) { }
+        public IdentityExecuter(IStatementGetter getter) : base(getter)
+        {
+        }
 
         protected override Object Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session)
         {

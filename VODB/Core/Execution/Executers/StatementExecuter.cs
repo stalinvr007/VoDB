@@ -1,12 +1,14 @@
+using System.Data.Common;
+
 namespace VODB.Core.Execution.Executers
 {
-    class StatementExecuter : IStatementExecuter
+    internal class StatementExecuter : IStatementExecuter
     {
         #region Implementation of IStatementExecuter
 
         public void Execute(string statement, IInternalSession session)
         {
-            var command = session.CreateCommand();
+            DbCommand command = session.CreateCommand();
             command.CommandText = statement;
 
             command.ExecuteNonQuery();

@@ -6,6 +6,7 @@ namespace VODB.Exceptions
     {
         public PrimaryKeyViolationException(Exception ex)
             : base(ex, "The execution of a command has resulted in a Primary Key Violation.")
-        { }
+        {
+        }
     }
 }

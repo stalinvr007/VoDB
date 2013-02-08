@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.Common;
-using System.Threading.Tasks;
 using VODB.Core.Execution.Executers.DbResults;
 
 namespace VODB
@@ -77,6 +76,5 @@ namespace VODB
         DbCommand RefreshCommand(DbCommand command);
         void Open();
         void Close();
-
     }
 }

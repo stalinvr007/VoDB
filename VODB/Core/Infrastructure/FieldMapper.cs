@@ -1,27 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using VODB.Annotations;
-using VODB.Core.Infrastructure;
-using VODB.Extensions;
 using System.Reflection;
-using System.Collections;
+using VODB.Annotations;
+using VODB.Extensions;
 
 namespace VODB.Core.Infrastructure
 {
-
-    interface IFieldMapper
+    internal interface IFieldMapper
     {
         IEnumerable<Field> GetFields(Type entityType);
     }
 
-    interface IFieldMapper<TEntity>
+    internal interface IFieldMapper<TEntity>
     {
         IEnumerable<Field> GetFields();
     }
 
-    class FieldMapper : IFieldMapper
+    internal class FieldMapper : IFieldMapper
     {
         #region Static Auxiliary Functions
 
@@ -43,7 +39,7 @@ namespace VODB.Core.Infrastructure
         private static Boolean IsKeyField(PropertyInfo info)
         {
             return info.GetAttribute<DbKeyAttribute>() != null ||
-                info.GetAttribute<DbIdentityAttribute>() != null;
+                   info.GetAttribute<DbIdentityAttribute>() != null;
         }
 
         private static String GetBindedTo(PropertyInfo info)
@@ -54,7 +50,6 @@ namespace VODB.Core.Infrastructure
 
         private static String GetKeyFieldName(PropertyInfo info)
         {
-
             var dbKey = info.GetAttribute<DbKeyAttribute>();
 
             if (dbKey != null && !String.IsNullOrEmpty(dbKey.FieldName))
@@ -82,43 +77,42 @@ namespace VODB.Core.Infrastructure
 
         private static Field GetField(PropertyInfo info)
         {
-
             if (!info.GetCustomAttributes(true).Any())
             {
                 return new Field(info)
-                {
-                    FieldName = info.Name,
-                    FieldType = info.PropertyType,
-                    IsKey = false,
-                    IsIdentity = false
-                };
+                           {
+                               FieldName = info.Name,
+                               FieldType = info.PropertyType,
+                               IsKey = false,
+                               IsIdentity = false
+                           };
             }
 
             var dbField = info.GetAttribute<DbFieldAttribute>();
             if (dbField != null)
             {
                 return new Field(info)
-                {
-                    FieldName = GetFieldName(dbField, info),
-                    FieldType = info.PropertyType,
-                    IsKey = false,
-                    IsIdentity = false
-                };
+                           {
+                               FieldName = GetFieldName(dbField, info),
+                               FieldType = info.PropertyType,
+                               IsKey = false,
+                               IsIdentity = false
+                           };
             }
 
             return new Field(info)
-            {
-                FieldName = GetKeyFieldName(info),
-                FieldType = info.PropertyType,
-                IsKey = IsKeyField(info),
-                IsIdentity = IsIdentityField(info)
-            };
+                       {
+                           FieldName = GetKeyFieldName(info),
+                           FieldType = info.PropertyType,
+                           IsKey = IsKeyField(info),
+                           IsIdentity = IsIdentityField(info)
+                       };
         }
 
         #endregion
 
         #region IFieldMapping<TEntity> Implementation
-        
+
         public IEnumerable<Field> GetFields(Type entityType)
         {
             return entityType.GetProperties()
@@ -129,9 +123,8 @@ namespace VODB.Core.Infrastructure
         #endregion
     }
 
-    class FieldMapper<TEntity> : IFieldMapper<TEntity>
+    internal class FieldMapper<TEntity> : IFieldMapper<TEntity>
     {
-
         private readonly IFieldMapper _FieldMapper;
 
         public FieldMapper(IFieldMapper fieldMapper)
@@ -143,10 +136,9 @@ namespace VODB.Core.Infrastructure
 
         public virtual IEnumerable<Field> GetFields()
         {
-            return _FieldMapper.GetFields(typeof(TEntity));
-        } 
+            return _FieldMapper.GetFields(typeof (TEntity));
+        }
 
         #endregion
     }
-
 }

@@ -1,4 +1,5 @@
 using System;
+
 namespace VODB
 {
     public interface ITransaction : IDisposable
@@ -6,6 +7,5 @@ namespace VODB
         Boolean RolledBack { get; }
         void RollBack();
         void Commit();
-
     }
 }

@@ -4,8 +4,6 @@ namespace VODB.DbLayer
 {
     public interface IDbConnectionCreator
     {
-
         DbConnection Create();
-
     }
 }

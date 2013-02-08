@@ -1,27 +1,23 @@
-﻿using Ninject;
+﻿using System;
+using Ninject;
 using Ninject.Parameters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using VODB.Core.Infrastructure;
 
 namespace VODB.Core
 {
     internal static class Engine
     {
-
-        static IKernel kernel = new StandardKernel(
-            new InfrastructureModule(), 
+        private static readonly IKernel kernel = new StandardKernel(
+            new InfrastructureModule(),
             new SessionModule(),
             new EngineModules(),
             new ConfigurationModule()
-        );
+            );
 
-        static IEntityTables _tables = Get<IEntityTables>();
+        private static readonly IEntityTables _tables = Get<IEntityTables>();
 
         public static IConfiguration Configuration = Get<IConfiguration>();
-        
+
         #region Kernel Wrapper
 
         public static TClass Get<TClass>()
@@ -38,7 +34,7 @@ namespace VODB.Core
         {
             return kernel.Get<TClass>(new ConstructorArgument(argName, value));
         }
-        
+
         #endregion
 
         #region IEntityTablesWrapper

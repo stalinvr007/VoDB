@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace VODB.Core.Loaders
 {
-    interface ICachedEntities
+    internal interface ICachedEntities
     {
         ICachedEntity Add(Object entity);
 
         ICachedEntity Get(Object entity);
     }
 
-    class CachedEntities : ICachedEntities
+    internal class CachedEntities : ICachedEntities
     {
-        readonly IDictionary<Object, ICachedEntity> entities = new Dictionary<Object, ICachedEntity>();
+        private readonly IDictionary<Object, ICachedEntity> entities = new Dictionary<Object, ICachedEntity>();
 
         #region Implementation of ICachedEntities
 
@@ -24,8 +24,9 @@ namespace VODB.Core.Loaders
         public ICachedEntity Get(object entity)
         {
             ICachedEntity cached;
-            return entities.TryGetValue(entity, out cached) 
-                ? cached : new CachedEntity(entity);
+            return entities.TryGetValue(entity, out cached)
+                       ? cached
+                       : new CachedEntity(entity);
         }
 
         #endregion

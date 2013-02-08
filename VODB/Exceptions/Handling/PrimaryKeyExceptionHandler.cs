@@ -3,13 +3,14 @@ using System.Data.SqlClient;
 
 namespace VODB.Exceptions.Handling
 {
-    class PrimaryKeyExceptionHandler : IExceptionHandler
+    internal class PrimaryKeyExceptionHandler : IExceptionHandler
     {
+        #region IExceptionHandler Members
 
         public bool CanHandle(Exception exception)
         {
-            return exception is SqlException && 
-                exception.Message.Contains("Violation of PRIMARY KEY");
+            return exception is SqlException &&
+                   exception.Message.Contains("Violation of PRIMARY KEY");
         }
 
         public void Handle(Exception exception)
@@ -17,5 +18,6 @@ namespace VODB.Exceptions.Handling
             throw new PrimaryKeyViolationException(exception);
         }
 
+        #endregion
     }
 }

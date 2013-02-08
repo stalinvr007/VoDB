@@ -1,17 +1,13 @@
 using System;
-using System.Linq;
 using System.Linq.Expressions;
 using VODB.Core;
 using VODB.Core.Infrastructure;
-using VODB.Extensions;
-
 
 namespace VODB.ExpressionParser
 {
     public class FieldGetterExpressionParser<TEntity, TField> : IExpressionParser<Func<TEntity, TField>>
-         where TEntity : new()
+        where TEntity : new()
     {
-
         /// <summary>
         /// Gets the field that was found by the parser.
         /// </summary>
@@ -20,6 +16,8 @@ namespace VODB.ExpressionParser
         /// </value>
         public Field Field { get; private set; }
 
+        #region IExpressionParser<Func<TEntity,TField>> Members
+
         /// <summary>
         /// Parses the specified expression.
         /// </summary>
@@ -27,11 +25,13 @@ namespace VODB.ExpressionParser
         /// <returns></returns>
         public String Parse(Expression<Func<TEntity, TField>> expression)
         {
-            var field = ((MemberExpression)expression.Body).Member.Name;
+            string field = ((MemberExpression) expression.Body).Member.Name;
 
             Field = Engine.GetTable<TEntity>().FindField(field);
 
             return Field.FieldName;
         }
+
+        #endregion
     }
 }

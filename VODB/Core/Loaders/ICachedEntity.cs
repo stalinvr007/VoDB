@@ -4,7 +4,7 @@ using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Loaders
 {
-    interface ICachedEntity
+    internal interface ICachedEntity
     {
         Object Entity { get; }
 
@@ -13,7 +13,7 @@ namespace VODB.Core.Loaders
         void Add(Field key, Object value);
     }
 
-    class CachedEntity : ICachedEntity
+    internal class CachedEntity : ICachedEntity
     {
         private readonly IDictionary<Field, Object> originalKeyValues = new Dictionary<Field, object>();
 
@@ -29,8 +29,9 @@ namespace VODB.Core.Loaders
         public object GetKeyValue(Field key)
         {
             Object value;
-            return originalKeyValues.TryGetValue(key, out value) 
-                ? value : key.GetValue(Entity);
+            return originalKeyValues.TryGetValue(key, out value)
+                       ? value
+                       : key.GetValue(Entity);
         }
 
         public void Add(Field key, object value)

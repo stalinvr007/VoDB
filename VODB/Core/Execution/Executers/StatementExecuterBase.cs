@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
 using VODB.Core.Execution.Statements;
 using VODB.Core.Infrastructure;
 
@@ -17,13 +14,15 @@ namespace VODB.Core.Execution.Executers
             _Getter = getter;
         }
 
+        #region IStatementExecuter<TResult> Members
+
         public TResult Execute<TEntity>(TEntity entity, IInternalSession session)
         {
             try
             {
                 session.Open();
-                var cmd = session.CreateCommand();
-                var table = Engine.GetTable(entity.GetType());
+                DbCommand cmd = session.CreateCommand();
+                Table table = Engine.GetTable(entity.GetType());
                 cmd.CommandText = _Getter.GetStatement(table.CommandsHolder);
 
                 return Execute(cmd, table, entity, session);
@@ -35,7 +34,8 @@ namespace VODB.Core.Execution.Executers
             return default(TResult);
         }
 
+        #endregion
+
         protected abstract TResult Execute<TEntity>(DbCommand cmd, Table table, TEntity entity, IInternalSession session);
     }
-
 }

@@ -13,6 +13,7 @@ namespace VODB
     internal interface IConfiguration
     {
         ICollection<ITSqlBuilder> TSqlBuilders { get; }
+
         /// <summary>
         /// Gets the where expression handlers.
         /// </summary>
@@ -20,6 +21,7 @@ namespace VODB
         /// The where expression handlers.
         /// </value>
         ICollection<IWhereExpressionHandler> WhereExpressionHandlers { get; }
+
         /// <summary>
         /// Gets or sets the where expression formatters.
         /// </summary>
@@ -27,6 +29,7 @@ namespace VODB
         /// The where expression formatters.
         /// </value>
         ICollection<IWhereExpressionFormatter> WhereExpressionFormatters { get; }
+
         /// <summary>
         /// Gets the entity validators.
         /// </summary>
@@ -34,6 +37,7 @@ namespace VODB
         /// The entity validators.
         /// </value>
         ICollection<IEntityValidator> EntityValidators { get; }
+
         /// <summary>
         /// Gets the field setters.
         /// </summary>
@@ -41,6 +45,7 @@ namespace VODB
         /// The field setters.
         /// </value>
         ICollection<IFieldSetter> FieldSetters { get; }
+
         /// <summary>
         /// Gets the parameter setters. Used to set data into DbParameters.
         /// </summary>
@@ -48,6 +53,7 @@ namespace VODB
         /// The parameter setters.
         /// </value>
         ICollection<IParameterSetter> ParameterSetters { get; }
+
         /// <summary>
         /// Gets the field is filled validators.
         /// </summary>
@@ -55,6 +61,7 @@ namespace VODB
         /// The field is filled validators.
         /// </value>
         ICollection<IFieldValidator> FieldIsFilledValidators { get; }
+
         /// <summary>
         /// Gets the exception handlers.
         /// </summary>

@@ -8,6 +8,7 @@ namespace VODB.EntityValidators.Fields
         {
             return value != null;
         }
+
         protected override Boolean CanHandle(Type fieldType)
         {
             return fieldType.IsClass;

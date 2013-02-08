@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using VODB.Core;
 
 namespace VODB
 {
     public static class Config
     {
-
         /// <summary>
         /// Maps TEntity as a VODB entity.
         /// </summary>
@@ -25,7 +22,7 @@ namespace VODB
         /// <param name="nameSpace">The name space.</param>
         public static void Map(String nameSpace)
         {
-            foreach (var type in Assembly.GetCallingAssembly().GetTypes()
+            foreach (Type type in Assembly.GetCallingAssembly().GetTypes()
                 .Where(t => !String.IsNullOrEmpty(t.Namespace))
                 .Where(t => t.IsClass)
                 .Where(t => t.Namespace.Equals(nameSpace)))
@@ -36,7 +33,7 @@ namespace VODB
 
         internal static void MapNameSpace(Type type)
         {
-            foreach (var _type in Assembly.GetAssembly(type).GetTypes()
+            foreach (Type _type in Assembly.GetAssembly(type).GetTypes()
                 .Where(t => !String.IsNullOrEmpty(t.Namespace))
                 .Where(t => t.IsClass)
                 .Where(t => t.Namespace.Equals(type.Namespace)))
@@ -44,6 +41,5 @@ namespace VODB
                 Engine.Map(_type);
             }
         }
-
     }
 }

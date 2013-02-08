@@ -22,6 +22,29 @@ namespace VODB.DbLayer
             _ProviderName = providerName;
         }
 
+        #region IDbConnectionCreator Members
+
+        public DbConnection Create()
+        {
+            DbConnection connection = InternalCreate();
+            if (connection != null)
+            {
+                return connection;
+            }
+
+            _ConnectionStringName = null;
+            connection = InternalCreate();
+
+            if (connection != null)
+            {
+                return connection;
+            }
+
+            throw new ConnectionStringNotFoundException(_ProviderName, _ConnectionStringName);
+        }
+
+        #endregion
+
         private DbConnection InternalCreate()
         {
             String connectionString = GetConnectionStringByProvider(_ProviderName, _ConnectionStringName);
@@ -30,8 +53,8 @@ namespace VODB.DbLayer
             {
                 try
                 {
-                    var factory = DbProviderFactories.GetFactory(_ProviderName);
-                    var connection = factory.CreateConnection();
+                    DbProviderFactory factory = DbProviderFactories.GetFactory(_ProviderName);
+                    DbConnection connection = factory.CreateConnection();
 
                     connection.ConnectionString = connectionString;
                     return connection;
@@ -43,24 +66,6 @@ namespace VODB.DbLayer
             }
 
             return null;
-        }
-        public DbConnection Create()
-        {
-            var connection = InternalCreate();
-            if (connection != null)
-            {
-                return connection;
-            }
-            
-            _ConnectionStringName = null;            
-            connection = InternalCreate();
-
-            if (connection != null)
-            {
-                return connection;
-            }
-            
-            throw new ConnectionStringNotFoundException(_ProviderName, _ConnectionStringName);
         }
 
         private string GetConnectionStringByProvider(string providerName, String connectionStringName = null)
@@ -77,7 +82,5 @@ namespace VODB.DbLayer
             }
             return null;
         }
-
-
     }
 }
