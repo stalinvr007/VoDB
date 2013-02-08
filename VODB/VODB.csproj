@@ -73,11 +73,13 @@
     <Compile Include="Core\Infrastructure\TableMapper.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommandHolderLazy.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TCount.cs" />
+    <Compile Include="Core\Loaders\DbReaderMapper.cs" />
     <Compile Include="Core\Loaders\Factories\IEntityFactory.cs" />
     <Compile Include="Core\Loaders\Factories\Interceptor.cs" />
     <Compile Include="Core\Loaders\ICachedEntities.cs" />
     <Compile Include="Core\Loaders\ICachedEntity.cs" />
     <Compile Include="Core\Loaders\IDbReaderMapper.cs" />
+    <Compile Include="Core\Loaders\IDictionaryMapper.cs" />
     <Compile Include="Exceptions\EntityMapNotFoundException.cs" />
     <Compile Include="Core\EntityTables.cs" />
     <Compile Include="Core\Infrastructure\FieldMapper.cs" />
