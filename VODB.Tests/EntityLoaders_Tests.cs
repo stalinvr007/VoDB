@@ -5,6 +5,9 @@ using NUnit.Framework;
 using VODB.DbLayer;
 using VODB.Core.Loaders;
 using VODB.Tests.Models.Northwind;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System;
 
 namespace VODB.Tests
 {
@@ -98,6 +101,50 @@ namespace VODB.Tests
 
 
         }
+        
+        [Test]
+        public void DbReaderMapper_FullEntityLoader_Comparation()
+        {
+            Utils.ExecuteWith(con =>
+            {
+                var cmd = con.CreateCommand();
+                cmd.CommandText = Utils.EmployeeTable.CommandsHolder.Select;
 
+                
+                var reader = cmd.ExecuteReader();
+
+                var whatch = new Stopwatch();
+                whatch.Start();
+                var employees = new DbReaderMapper(new DictionaryMapper())
+                     .Map<Employee>(reader);
+                
+                employees.Wait();
+                whatch.Stop();
+
+
+                reader = cmd.ExecuteReader();
+                var whatch1 = new Stopwatch();
+                whatch1.Start();
+                var fullEntityLoader = new FullEntityLoader(new CachedEntities());
+
+                var result = new List<Employee>();
+                while (reader.Read())
+                {
+                    var employee = new Employee();
+                    fullEntityLoader.Load(employee, null, reader);
+                    result.Add(employee);
+                }
+                reader.Close();
+
+                whatch1.Stop();
+
+                Assert.Less(whatch.ElapsedTicks, whatch1.ElapsedTicks);
+
+                Console.WriteLine("DbReaderMapper     : {0}", whatch.ElapsedTicks);
+                Console.WriteLine("FullEntityLoader   : {0}", whatch1.ElapsedTicks);
+            });
+
+
+        }
     }
 }

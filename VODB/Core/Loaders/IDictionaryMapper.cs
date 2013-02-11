@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using VODB.Core.Infrastructure;
 
@@ -26,7 +27,11 @@ namespace VODB.Core.Loaders
 
         public Task<TEntity> Map<TEntity>(IDictionary<string, object> data, Table entityTable, TEntity entity)
         {
-            return Task<TEntity>.Factory.StartNew(() => entity);
+            return Task<TEntity>.Factory.StartNew(() => {
+                // For performance test only...
+                Thread.SpinWait(5000);
+                return entity;
+            });
         }
 
         #endregion
