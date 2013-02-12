@@ -8,6 +8,8 @@ using VODB.Tests.Models.Northwind;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System;
+using VODB.Core.Loaders.Factories;
+using VODB.Core;
 
 namespace VODB.Tests
 {
@@ -93,7 +95,8 @@ namespace VODB.Tests
                 var reader = cmd.ExecuteReader();
                 try
                 {
-                    var task = new DbReaderMapper(new DictionaryMapper(new Session() as IInternalSession))
+                    var session = Engine.Get<ISession>() as IInternalSession;
+                    var task = new DbReaderMapper(session, new DictionaryMapper(session), new EntityProxyFactory())
                      .Map<Employee>(reader);
 
                     Assert.AreEqual(9, task.Result.Count());
@@ -119,18 +122,21 @@ namespace VODB.Tests
                 var cmd = con.CreateCommand();
                 cmd.CommandText = Utils.EmployeeTable.CommandsHolder.Select;
 
-                
                 var reader = cmd.ExecuteReader();
+                var entityFactory = new EntityProxyFactory();
+
+                var session = Engine.Get<ISession>() as IInternalSession;
+                entityFactory.Make<Employee>(session);
 
                 var whatch = new Stopwatch();
                 whatch.Start();
-                var employees = new DbReaderMapper(new DictionaryMapper(new Session() as IInternalSession))
-                     .Map<Employee>(reader);
                 
-                employees.Wait();
+                var task = new DbReaderMapper(session, new DictionaryMapper(session), entityFactory)
+                     .Map<Employee>(reader);
+
+                task.Wait();
                 whatch.Stop();
-
-
+                
                 reader = cmd.ExecuteReader();
                 var whatch1 = new Stopwatch();
                 whatch1.Start();
@@ -139,18 +145,20 @@ namespace VODB.Tests
                 var result = new List<Employee>();
                 while (reader.Read())
                 {
-                    var employee = new Employee();
-                    fullEntityLoader.Load(employee, null, reader);
+                    var employee = entityFactory.Make<Employee>(session);
+                    fullEntityLoader.Load(employee, session, reader);
                     result.Add(employee);
                 }
                 reader.Close();
 
                 whatch1.Stop();
 
+                Assert.AreEqual(9, result.Count);
+                Assert.AreEqual(9, task.Result.Count());
                 Assert.Less(whatch.ElapsedTicks, whatch1.ElapsedTicks);
 
-                Console.WriteLine("DbReaderMapper     : {0,5} millis", whatch.ElapsedMilliseconds);
-                Console.WriteLine("FullEntityLoader   : {0,5} millis", whatch1.ElapsedMilliseconds);
+                Console.WriteLine("DbReaderMapper     : {0,5} ticks", whatch.ElapsedTicks);
+                Console.WriteLine("FullEntityLoader   : {0,5} ticks", whatch1.ElapsedTicks);
             });
 
 

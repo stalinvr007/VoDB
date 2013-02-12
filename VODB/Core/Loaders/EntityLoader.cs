@@ -4,6 +4,7 @@ using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Loaders
 {
+
     /// <summary>
     /// Loads data into an entity from a DataReader.
     /// </summary>
@@ -65,7 +66,7 @@ namespace VODB.Core.Loaders
         /// <param name="session"></param>
         /// <param name="reader">The reader.</param>
         /// <returns></returns>
-        public void Load<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader)
+        public void Load<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader) where TEntity: class, new()
         {
             cachedEntity = _cache.Add(entity);
             LoadEntity(entity, session, reader);
@@ -80,6 +81,7 @@ namespace VODB.Core.Loaders
         /// <param name="entity">The entity.</param>
         /// <param name="session">The session.</param>
         /// <param name="reader">The reader.</param>
-        protected abstract void LoadEntity<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader);
+        protected abstract void LoadEntity<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader) where TEntity: class, new(); 
+
     }
 }
