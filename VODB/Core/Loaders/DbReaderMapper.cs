@@ -5,6 +5,7 @@ using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using VODB.Core.Infrastructure;
+using VODB.Core.Loaders.Factories;
 
 namespace VODB.Core.Loaders
 {
@@ -12,21 +13,29 @@ namespace VODB.Core.Loaders
     {
         private readonly IDictionaryMapper _dictionaryMapper;
 
+        private readonly IEntityFactory _EntityFactory;
         private readonly ConcurrentDictionary<int, IDictionary<string, object>> fullData =
             new ConcurrentDictionary<int, IDictionary<string, object>>();
 
+        private readonly IInternalSession _Session;
         private volatile int status;
 
-        public DbReaderMapper(IDictionaryMapper dictionaryMapper)
+        public DbReaderMapper(
+            IInternalSession session,
+            IDictionaryMapper dictionaryMapper, 
+            IEntityFactory entityFactory)
         {
+            _Session = session;
+            _EntityFactory = entityFactory;
             _dictionaryMapper = dictionaryMapper;
         }
 
         #region Implementation of IDbReaderMapper
 
-        public Task<IEnumerable<TEntity>> Map<TEntity>(IDataReader reader) where TEntity : new()
+        public Task<IEnumerable<TEntity>> Map<TEntity>(IDataReader reader) where TEntity : class, new()
         {
             Table table = Engine.GetTable<TEntity>();
+            Type entityType = typeof(TEntity);
 
             Task taskRows = FetchRowsData(reader, table);
 
@@ -52,7 +61,7 @@ namespace VODB.Core.Loaders
                         fullData[++current];
 
                     // Creates a new TEntity instance to hold it in place.
-                    var entity = new TEntity();
+                    var entity = _EntityFactory.Make(entityType, _Session) as TEntity;
                     entities.Add(entity);
 
                     // Map the Diccionary<String, Object> to an TEntity.

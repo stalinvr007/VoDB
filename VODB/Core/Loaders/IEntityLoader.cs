@@ -11,6 +11,6 @@ namespace VODB.Core.Loaders
         /// <param name="entity">The entity.</param>
         /// <param name="session"></param>
         /// <param name="reader">The reader.</param>
-        void Load<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader);
+        void Load<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader) where TEntity : class, new();
     }
 }

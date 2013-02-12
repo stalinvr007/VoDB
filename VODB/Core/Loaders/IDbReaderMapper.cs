@@ -15,6 +15,6 @@ namespace VODB.Core.Loaders
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="reader">The reader.</param>
         /// <returns></returns>
-        Task<IEnumerable<TEntity>> Map<TEntity>(IDataReader reader) where TEntity : new();
+        Task<IEnumerable<TEntity>> Map<TEntity>(IDataReader reader) where TEntity : class, new();
     }
 }
