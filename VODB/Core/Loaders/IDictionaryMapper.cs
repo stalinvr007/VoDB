@@ -20,20 +20,4 @@ namespace VODB.Core.Loaders
         /// <returns></returns>
         Task<TEntity> Map<TEntity>(IDictionary<string, object> data, Table entityTable, TEntity entity);
     }
-
-    internal class DictionaryMapper : IDictionaryMapper
-    {
-        #region Implementation of IDictionaryMapper
-
-        public Task<TEntity> Map<TEntity>(IDictionary<string, object> data, Table entityTable, TEntity entity)
-        {
-            return Task<TEntity>.Factory.StartNew(() => {
-                // For performance test only...
-                Thread.SpinWait(5000);
-                return entity;
-            });
-        }
-
-        #endregion
-    }
 }

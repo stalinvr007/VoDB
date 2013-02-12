@@ -91,12 +91,21 @@ namespace VODB.Tests
                 cmd.CommandText = Utils.EmployeeTable.CommandsHolder.Select;
 
                 var reader = cmd.ExecuteReader();
-
-                var employees = new DbReaderMapper(new DictionaryMapper())
+                try
+                {
+                    var task = new DbReaderMapper(new DictionaryMapper(new Session() as IInternalSession))
                      .Map<Employee>(reader);
 
-                Assert.AreEqual(9, employees.Result.Count());
+                    Assert.AreEqual(9, task.Result.Count());
 
+                    var employees = task.Result;
+
+                    EntitiesAsserts.Assert_Employee_1(employees.First());
+                }
+                catch (AggregateException)
+                {
+                    throw;
+                }
             });
 
 
@@ -115,7 +124,7 @@ namespace VODB.Tests
 
                 var whatch = new Stopwatch();
                 whatch.Start();
-                var employees = new DbReaderMapper(new DictionaryMapper())
+                var employees = new DbReaderMapper(new DictionaryMapper(new Session() as IInternalSession))
                      .Map<Employee>(reader);
                 
                 employees.Wait();
@@ -140,8 +149,8 @@ namespace VODB.Tests
 
                 Assert.Less(whatch.ElapsedTicks, whatch1.ElapsedTicks);
 
-                Console.WriteLine("DbReaderMapper     : {0}", whatch.ElapsedTicks);
-                Console.WriteLine("FullEntityLoader   : {0}", whatch1.ElapsedTicks);
+                Console.WriteLine("DbReaderMapper     : {0,5} millis", whatch.ElapsedMilliseconds);
+                Console.WriteLine("FullEntityLoader   : {0,5} millis", whatch1.ElapsedMilliseconds);
             });
 
 
