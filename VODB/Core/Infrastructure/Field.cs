@@ -1,4 +1,6 @@
+using Fasterflect;
 using System;
+using System.Linq.Expressions;
 using System.Reflection;
 using VODB.Exceptions;
 
@@ -10,14 +12,18 @@ namespace VODB.Core.Infrastructure
     public sealed class Field
     {
         private readonly PropertyInfo _Prop;
-
+        MemberSetter setter;
+        MemberGetter getter;
         /// <summary>
-        /// Initializes a new instance of the <see cref="Field" /> class.
+        /// Initializes a new instance of the <see cref="Field"/> class.
         /// </summary>
         /// <param name="prop">The prop.</param>
-        public Field(PropertyInfo prop)
+        /// <param name="entityType"></param>
+        public Field(PropertyInfo prop, Type entityType)
         {
             _Prop = prop;
+            setter = prop.DelegateForSetPropertyValue();
+            getter = prop.DelegateForGetPropertyValue();
         }
 
         /// <summary>
@@ -116,7 +122,7 @@ namespace VODB.Core.Infrastructure
         {
             try
             {
-                return _Prop.GetValue(entity, null);
+                return getter(entity);
             }
             catch (TargetException)
             {
@@ -137,7 +143,10 @@ namespace VODB.Core.Infrastructure
         /// <param name="value">The value.</param>
         public void SetValue(Object entity, Object value)
         {
-            _Prop.SetValue(entity, value, null);
+
+            setter(entity, value);
+            //_Prop.SetValue(entity, value, null);
         }
+
     }
 }
