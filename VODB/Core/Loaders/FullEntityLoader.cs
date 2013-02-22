@@ -1,4 +1,4 @@
-using System.Data.Common;
+using System.Data;
 using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Loaders
@@ -12,11 +12,11 @@ namespace VODB.Core.Loaders
         {
         }
 
-        protected override void LoadEntity<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader)
+        protected override void LoadEntity<TEntity>(TEntity entity, IInternalSession session, IDataReader reader)
         {
             foreach (Field field in entity.GetTable().Fields)
             {
-                SetValue(entity, session, field, reader.GetValue(field.FieldName), reader);
+                SetValue(entity, session, field, reader[field.FieldName], reader);
             }
         }
     }

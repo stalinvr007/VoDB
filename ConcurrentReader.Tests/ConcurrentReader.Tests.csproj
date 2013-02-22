@@ -3,12 +3,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{272824AE-554E-4F1B-972B-1DB34EECBDFD}</ProjectGuid>
+    <ProjectGuid>{D3D7212C-EDE4-4B12-ABA6-503F36532092}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VODB.Tests</RootNamespace>
-    <AssemblyName>VODB.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>ConcurrentReader.Tests</RootNamespace>
+    <AssemblyName>ConcurrentReader.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -16,7 +16,6 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
-    <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -28,7 +27,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,16 +35,13 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core">
-      <HintPath>..\packages\Castle.Core.3.1.0\lib\net40-client\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
+    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -61,43 +56,20 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="CommandsBuilding_Tests.cs" />
-    <Compile Include="DbReaderMapper.cs" />
-    <Compile Include="EntitiesAsserts.cs" />
-    <Compile Include="ExpressionParser_Tests.cs" />
-    <Compile Include="Models\Northwind\Categories.cs" />
-    <Compile Include="Models\Northwind\CustomerCustomerDemo.cs" />
-    <Compile Include="Models\Northwind\CustomerDemographics.cs" />
-    <Compile Include="Models\Northwind\Customers.cs" />
-    <Compile Include="Models\Northwind\Employee.cs" />
-    <Compile Include="Models\Northwind\EmployeeTerritories.cs" />
-    <Compile Include="Models\Northwind\OrderDetails.cs" />
-    <Compile Include="Models\Northwind\Orders.cs" />
-    <Compile Include="Models\Northwind\Products.cs" />
-    <Compile Include="Models\Northwind\Region.cs" />
-    <Compile Include="Models\Northwind\Shippers.cs" />
-    <Compile Include="Models\Northwind\Suppliers.cs" />
-    <Compile Include="Models\Northwind\Territories.cs" />
+    <Compile Include="Benchmark.cs" />
+    <Compile Include="Connection.cs" />
+    <Compile Include="Loading_Tests.cs" />
+    <Compile Include="Order.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TablesCreator_Tests.cs" />
-    <Compile Include="DbConnectionCreator_Tests.cs" />
-    <Compile Include="EntityLoaders_Tests.cs" />
-    <Compile Include="EntityValidators_Tests.cs" />
-    <Compile Include="Transaction_Tests.cs" />
-    <Compile Include="DynamicProxy_Tests.cs" />
-    <Compile Include="IOC_Tests.cs" />
-    <Compile Include="Session_Tests.cs" />
-    <Compile Include="Validatores_Tests.cs" />
-    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VODB\VODB.csproj">
-      <Project>{128b3899-745d-4329-9c13-4e6cbf4889df}</Project>
-      <Name>VODB</Name>
+    <ProjectReference Include="..\ConcurrentReader\ConcurrentReader.csproj">
+      <Project>{e35bb3c7-7a52-49ce-851e-2381765b51bf}</Project>
+      <Name>ConcurrentReader</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.Config" />
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Choose>

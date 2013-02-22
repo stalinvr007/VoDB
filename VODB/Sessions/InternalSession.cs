@@ -21,7 +21,7 @@ namespace VODB.Sessions
         private readonly IStatementExecuter<object> _IdentityExecuter;
         private readonly IStatementExecuter<int> _InsertExecuter;
         private readonly IQueryResultGetter _QueryResultGetter;
-        private readonly IStatementExecuter<DbDataReader> _SelectByIdExecuter;
+        private readonly IStatementExecuter<IDataReader> _SelectByIdExecuter;
         private readonly IStatementExecuter _StatementExecuter;
         private readonly IStatementExecuter<int> _UpdateExecuter;
         private IDbConnectionCreator _Creator;
@@ -36,7 +36,7 @@ namespace VODB.Sessions
             [Bind(Commands.Delete)] IStatementExecuter<int> deleteExecuter,
             [Bind(Commands.Count)] IStatementExecuter<int> countExecuter,
             [Bind(Commands.CountById)] IStatementExecuter<int> countByIdExecuter,
-            [Bind(Commands.SelectById)] IStatementExecuter<DbDataReader> selectByIdExecuter,
+            [Bind(Commands.SelectById)] IStatementExecuter<IDataReader> selectByIdExecuter,
             [Bind(Commands.Identity)] IStatementExecuter<Object> IdentityExecuter,
             IStatementExecuter statementExecuter,
             IQueryResultGetter queryResultGetter,
@@ -149,7 +149,7 @@ namespace VODB.Sessions
                 return null;
             }
 
-            DbDataReader reader = _SelectByIdExecuter.Execute(entity, this);
+            IDataReader reader = _SelectByIdExecuter.Execute(entity, this);
             try
             {
                 if (reader.Read())

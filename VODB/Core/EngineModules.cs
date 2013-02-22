@@ -1,5 +1,5 @@
 using System;
-using System.Data.Common;
+using System.Data;
 using Ninject;
 using Ninject.Modules;
 using VODB.Core.Execution.DbParameterSetters;
@@ -96,7 +96,7 @@ namespace VODB.Core
                 Commands.Identity.ToString());
             Bind<IStatementExecuter>().To<StatementExecuter>().InSingletonScope();
 
-            Bind<IStatementExecuter<DbDataReader>>().To<SelectByIdExecuter>().InSingletonScope().Named(
+            Bind<IStatementExecuter<IDataReader>>().To<SelectByIdExecuter>().InSingletonScope().Named(
                 Commands.SelectById.ToString());
 
             Bind<IQueryResultGetter>().To<QueryResultGetter>().InSingletonScope();

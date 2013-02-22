@@ -70,15 +70,11 @@
     <Compile Include="Core\Infrastructure\TableMapper.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommandHolderLazy.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TCount.cs" />
-    <Compile Include="Core\Loaders\DbReaderMapper.cs" />
-    <Compile Include="Core\Loaders\DictionaryMapper.cs" />
     <Compile Include="Exceptions\UnableToGetTheValue.cs" />
     <Compile Include="Core\Loaders\Factories\IEntityFactory.cs" />
     <Compile Include="Core\Loaders\Factories\Interceptor.cs" />
     <Compile Include="Core\Loaders\ICachedEntities.cs" />
     <Compile Include="Core\Loaders\ICachedEntity.cs" />
-    <Compile Include="Core\Loaders\IDbReaderMapper.cs" />
-    <Compile Include="Core\Loaders\IDictionaryMapper.cs" />
     <Compile Include="Exceptions\EntityMapNotFoundException.cs" />
     <Compile Include="Core\EntityTables.cs" />
     <Compile Include="Core\Infrastructure\FieldMapper.cs" />
@@ -180,7 +176,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ConcurrentReader\ConcurrentReader.csproj">
+      <Project>{e35bb3c7-7a52-49ce-851e-2381765b51bf}</Project>
+      <Name>ConcurrentReader</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

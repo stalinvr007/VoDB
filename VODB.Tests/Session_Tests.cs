@@ -17,6 +17,14 @@ namespace VODB.Tests
         }
 
         [Test]
+        public void Session_GetAllOrders()
+        {
+            var employees = new Session().GetAll<Orders>();
+
+            Assert.AreEqual(830, employees.Count());
+        }
+
+        [Test]
         public void Session_WhereCondition_ShouldBeKept_ByResult()
         {
             var session = new Session();
