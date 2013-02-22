@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 using VODB.Core.Execution.SqlPartialBuilders;
 using VODB.Core.Loaders;
 using VODB.Core.Loaders.Factories;
 using VODB.ExpressionParser;
+using ConcurrentReader;
 
 namespace VODB.Core.Execution.Executers
 {
@@ -34,18 +36,16 @@ namespace VODB.Core.Execution.Executers
             cmd.SetParameters(
                 parameters.Select(p => new KeyValuePair<Key, Object>(new Key(p.Field, p.ParamName), p.Value)));
 
-            DbDataReader reader = cmd.ExecuteReader();
+            IDataReader reader = cmd.ExecuteReader();
 
             try
             {
-                var list = new List<Object>();
-                while (reader.Read())
+                return reader.AsParallel().Transform<Object>(t =>
                 {
                     object newEntity = _Factory.Make(entityType, session);
                     _Loader.Load(newEntity, session, reader);
-                    list.Add(newEntity);
-                }
-                return list;
+                    return newEntity;
+                });
             }
             finally
             {

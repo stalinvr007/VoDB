@@ -1,4 +1,4 @@
-using System.Data.Common;
+using System.Data;
 
 namespace VODB.Core.Loaders
 {
@@ -11,6 +11,6 @@ namespace VODB.Core.Loaders
         /// <param name="entity">The entity.</param>
         /// <param name="session"></param>
         /// <param name="reader">The reader.</param>
-        void Load<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader) where TEntity : class, new();
+        void Load<TEntity>(TEntity entity, IInternalSession session, IDataReader reader) where TEntity : class, new();
     }
 }

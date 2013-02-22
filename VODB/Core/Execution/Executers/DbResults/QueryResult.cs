@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
@@ -146,7 +147,7 @@ namespace VODB.Core.Execution.Executers.DbResults
             cmd.SetParameters(_ExpressionParser.ConditionData);
             cmd.SetParameters(_Parameters);
 
-            DbDataReader reader = cmd.ExecuteReader();
+            IDataReader reader = cmd.ExecuteReader();
             try
             {
                 var list = new List<TEntity>();

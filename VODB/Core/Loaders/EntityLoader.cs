@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.Common;
+using System.Data;
 using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Loaders
@@ -27,9 +27,9 @@ namespace VODB.Core.Loaders
         /// <param name="fieldName">Name of the field.</param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        protected static object GetValue(DbDataReader reader, String fieldName)
+        protected static object GetValue(IDataReader reader, String fieldName)
         {
-            return reader.GetValue(fieldName);
+            return reader[fieldName];
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace VODB.Core.Loaders
         /// <param name="value">The value.</param>
         /// <param name="reader">The reader.</param>
         protected void SetValue<TEntity>(TEntity entity, IInternalSession session, Field field, object value,
-                                         DbDataReader reader)
+                                         IDataReader reader)
         {
             if (field.IsKey)
             {
@@ -66,7 +66,7 @@ namespace VODB.Core.Loaders
         /// <param name="session"></param>
         /// <param name="reader">The reader.</param>
         /// <returns></returns>
-        public void Load<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader) where TEntity: class, new()
+        public void Load<TEntity>(TEntity entity, IInternalSession session, IDataReader reader) where TEntity: class, new()
         {
             cachedEntity = _cache.Add(entity);
             LoadEntity(entity, session, reader);
@@ -81,7 +81,7 @@ namespace VODB.Core.Loaders
         /// <param name="entity">The entity.</param>
         /// <param name="session">The session.</param>
         /// <param name="reader">The reader.</param>
-        protected abstract void LoadEntity<TEntity>(TEntity entity, IInternalSession session, DbDataReader reader) where TEntity: class, new(); 
+        protected abstract void LoadEntity<TEntity>(TEntity entity, IInternalSession session, IDataReader reader) where TEntity: class, new(); 
 
     }
 }

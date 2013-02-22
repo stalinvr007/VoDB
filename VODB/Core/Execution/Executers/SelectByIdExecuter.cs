@@ -1,16 +1,17 @@
-﻿using System.Data.Common;
+﻿using System.Data;
+using System.Data.Common;
 using VODB.Core.Execution.Statements;
 using VODB.Core.Infrastructure;
 
 namespace VODB.Core.Execution.Executers
 {
-    internal class SelectByIdExecuter : StatementExecuterBase<DbDataReader>
+    internal class SelectByIdExecuter : StatementExecuterBase<IDataReader>
     {
         public SelectByIdExecuter(IStatementGetter getter) : base(getter)
         {
         }
 
-        protected override DbDataReader Execute<TEntity>(DbCommand cmd, Table table, TEntity entity,
+        protected override IDataReader Execute<TEntity>(DbCommand cmd, Table table, TEntity entity,
                                                          IInternalSession session)
         {
             cmd.SetParameters(table.KeyFields, entity);

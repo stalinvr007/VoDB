@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 using VODB.Core;
@@ -150,7 +151,7 @@ namespace VODB
         /// <exception cref="FieldSetterNotFoundException"></exception>
         /// <exception cref="FieldNotFoundException"></exception>
         public static Field SetValue<TModel>(this TModel entity, IInternalSession session, Field field, object value,
-                                             DbDataReader reader)
+                                             IDataReader reader)
         {
             if (value == null || value == DBNull.Value)
             {
@@ -232,7 +233,7 @@ namespace VODB
         /// <param name="fieldName">Name of the field.</param>
         /// <returns></returns>
         /// <exception cref="FieldNotFoundException"></exception>
-        public static object GetValue(this DbDataReader reader, String fieldName)
+        public static object GetValue(this IDataReader reader, String fieldName)
         {
             try
             {
