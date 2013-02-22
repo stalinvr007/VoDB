@@ -75,11 +75,11 @@ namespace VODB.Core.Infrastructure
             return field;
         }
 
-        private static Field GetField(PropertyInfo info)
+        private static Field GetField(PropertyInfo info, Type entityType)
         {
             if (!info.GetCustomAttributes(true).Any())
             {
-                return new Field(info)
+                return new Field(info, entityType)
                            {
                                FieldName = info.Name,
                                FieldType = info.PropertyType,
@@ -91,7 +91,7 @@ namespace VODB.Core.Infrastructure
             var dbField = info.GetAttribute<DbFieldAttribute>();
             if (dbField != null)
             {
-                return new Field(info)
+                return new Field(info, entityType)
                            {
                                FieldName = GetFieldName(dbField, info),
                                FieldType = info.PropertyType,
@@ -100,7 +100,7 @@ namespace VODB.Core.Infrastructure
                            };
             }
 
-            return new Field(info)
+            return new Field(info, entityType)
                        {
                            FieldName = GetKeyFieldName(info),
                            FieldType = info.PropertyType,
@@ -117,7 +117,7 @@ namespace VODB.Core.Infrastructure
         {
             return entityType.GetProperties()
                 .Where(info => info.GetAttribute<DbIgnoreAttribute>() == null)
-                .Select(info => SetCommunSettings(GetField(info), info));
+                .Select(info => SetCommunSettings(GetField(info, entityType), info));
         }
 
         #endregion
