@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 ### Getting Started
 1. Create a class to represent a database table/model.
 2. Create properties to represents the fields for that model.
@@ -13,16 +13,3 @@
  * set the providerName to System.Data.SqlClient or other...
 
 ### For more info click [here] (http://alienengineer.github.com/VoDB/)
-=======
-ConcurrentReader
-================
-
-Wrapper that enables concurrent reading from a database or any other IDataReader implementations.
-
-```C#
-// Returns some IDataReader implementation...
-IDataReader reader = GetReader();
-// Wraps the IDataReader making it Thread-Safe
-var cReader = reader.AsParallel(); 
-```
->>>>>>> 9a396c32582dc7790f9de47ca95aae9a90c7db55
