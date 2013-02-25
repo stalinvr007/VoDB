@@ -145,7 +145,6 @@ namespace VODB.Core.Infrastructure
         {
 
             setter(entity, value);
-            //_Prop.SetValue(entity, value, null);
         }
 
     }
