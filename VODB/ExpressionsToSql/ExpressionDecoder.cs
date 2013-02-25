@@ -16,7 +16,6 @@ namespace VODB.ExpressionsToSql
         public Field Field { get; set; }
         public Type EntityType { get; set; }
         public Table EntityTable { get; set; }
-        public Object Value { get; set; }
     }
 
     class ExpressionDecoder<TEntity>
@@ -45,7 +44,20 @@ namespace VODB.ExpressionsToSql
 
                 current = current.Expression as MemberExpression;
             }
+        }
 
+        public Object DecodeRight()
+        {
+            var exp = _Expression.Body as BinaryExpression;
+
+            if (exp.Right is ConstantExpression)
+            {
+                return ((ConstantExpression)exp.Right).Value;
+            }
+            else
+            {
+                return Expression.Lambda(exp.Right).Compile().DynamicInvoke();
+            }
         }
 
     }

@@ -5,6 +5,7 @@ using VODB.Tests.Models.Northwind;
 using VODB.ExpressionsToSql;
 using System.Linq;
 using VODB.Core;
+using System.Diagnostics;
 
 namespace VODB.Tests
 {
@@ -14,16 +15,17 @@ namespace VODB.Tests
         [Test]
         public void ExpressionToSql_Decoder()
         {
-            var exp = new ExpressionDecoder<Orders>(o => o.Employee.ReportsTo.EmployeeId == 3);
-
-            var decoded = exp.DecodeLeft().ToArray();
-            Assert.AreEqual(3, decoded.Length);
-
             var parts = new ExpressionPart[] {
                 new ExpressionPart { PropertyName = "EmployeeId", EntityType = typeof(Employee), EntityTable = Engine.GetTable<Employee>() },
                 new ExpressionPart { PropertyName = "ReportsTo", EntityType = typeof(Employee), EntityTable = Engine.GetTable<Employee>() },
                 new ExpressionPart { PropertyName = "Employee", EntityType = typeof(Orders), EntityTable = Engine.GetTable<Orders>() }
             };
+
+            var exp = new ExpressionDecoder<Orders>(o => o.Employee.ReportsTo.EmployeeId == 3);
+            var decoded = exp.DecodeLeft().ToList();
+
+            Assert.AreEqual(3, exp.DecodeRight());
+            Assert.AreEqual(3, decoded.Count);
 
             for (int i = 0; i < 3; i++)
             {
