@@ -33,6 +33,11 @@ namespace VODB.Tests
                 Assert.AreEqual(parts[i].EntityTable.TableName, decoded[i].EntityTable.TableName);
                 Assert.AreEqual(parts[i].EntityType, decoded[i].EntityType);
             }
+
+            decoded.Reduce();
+
+            Assert.AreEqual(2, decoded.Count);
+
         }
 
         [Test]
@@ -40,7 +45,7 @@ namespace VODB.Tests
         {
             var query = new Query<Orders>(o => o.OrderId == 3);
 
-            Assert.AreEqual("Select * From Orders Where OrderId = 3", query.Compile());
+            Assert.AreEqual("Select * From Orders Where OrderId = 3", query.Compile(0));
         }
 
         [Test]
@@ -48,7 +53,7 @@ namespace VODB.Tests
         {
             var query = new Query<Orders>(o => o.Employee.ReportsTo.EmployeeId == 3);
 
-            Assert.AreEqual("", query.Compile());
+            Assert.AreEqual("", query.Compile(0));
         }
     }
 }

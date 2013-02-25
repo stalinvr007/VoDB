@@ -10,15 +10,7 @@ using VODB.Core.Infrastructure;
 namespace VODB.ExpressionsToSql
 {
 
-    class ExpressionPart
-    {
-        public String PropertyName { get; set; }
-        public Field Field { get; set; }
-        public Type EntityType { get; set; }
-        public Table EntityTable { get; set; }
-    }
-
-    class ExpressionDecoder<TEntity>
+    class ExpressionDecoder<TEntity> : IExpressionDecoder
     {
         private Expression<Func<TEntity, Boolean>> _Expression;
 
@@ -35,16 +27,22 @@ namespace VODB.ExpressionsToSql
 
             while (current != null)
             {
-                yield return new ExpressionPart 
+                var part = new ExpressionPart 
                 { 
                     PropertyName = current.Member.Name,
-                    EntityType = current.Member.DeclaringType,
-                    EntityTable = Engine.GetTable(current.Member.DeclaringType)
+                    EntityType = current.Member.DeclaringType
                 };
+
+                part.EntityTable = Engine.GetTable(part.EntityType);
+                part.Field = part.EntityTable.FindField(part.PropertyName);
+
+                yield return part;
 
                 current = current.Expression as MemberExpression;
             }
         }
+
+        
 
         public Object DecodeRight()
         {
