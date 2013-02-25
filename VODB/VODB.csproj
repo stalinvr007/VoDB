@@ -135,6 +135,8 @@
     <Compile Include="ExpressionParser\IWhereExpressionFormatter.cs" />
     <Compile Include="ExpressionParser\IWhereExpressionParser.cs" />
     <Compile Include="ExpressionParser\Key.cs" />
+    <Compile Include="ExpressionsToSql\ExpressionDecoder.cs" />
+    <Compile Include="ExpressionsToSql\Query.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\ExpressionsExtensions.cs" />
     <Compile Include="Exceptions\VodbException.cs" />
