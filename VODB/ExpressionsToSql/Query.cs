@@ -10,6 +10,28 @@ using VODB.ExpressionParser;
 namespace VODB.ExpressionsToSql
 {
 
+    static class QueryExtensions
+    {
+
+        public static String ListToString(this IEnumerable<String> lines)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var item in lines)
+            {
+                sb.Append(item);
+            }
+
+            return sb.ToString();
+        }
+
+        public static void Append(this LinkedList<String> lines, String mask, params Object[] values)
+        {
+            lines.AddFirst(String.Format(mask, values));
+        }
+
+    }
+
     class Query<TEntity>
     {
 
@@ -22,23 +44,33 @@ namespace VODB.ExpressionsToSql
 
         public String Compile(int level)
         {
-            var sb = new StringBuilder();
-
             var parts = _Expression.DecodeLeft().ToList();
-            
-            sb.AppendFormat("{0} = {1}{2}", parts[0].Field.FieldName, "@p", level);
-
-
-            return sb.ToString();
+            //parts.Reduce();
+                        
+            return Build(parts, 0, level);
         }
 
-        
 
-        private void Append(StringBuilder sb, IList<ExpressionPart> parts, int index)
+        private static String Build(IList<ExpressionPart> parts, int index, int level)
         {
-            
 
+            if (index == parts.Count - 1)
+            {
+                return String.Format("{0} = @p{1}",
+                    parts[index].Field.FieldName,
+                    level);
+            }
+
+            var current = parts[index].Field;
+            var next = parts[index + 1].Field;
+
+            return String.Format("{0} in (Select {1} From {2} Where {3})",
+                current.FieldName,
+                next.BindedTo ?? next.FieldName,
+                current.Table.TableName,
+                Build(parts, index + 1, level));
         }
+
 
     }
 

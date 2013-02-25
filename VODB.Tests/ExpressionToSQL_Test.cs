@@ -45,7 +45,7 @@ namespace VODB.Tests
         {
             var query = new Query<Orders>(o => o.OrderId == 3);
 
-            Assert.AreEqual("Select * From Orders Where OrderId = 3", query.Compile(0));
+            Assert.AreEqual("OrderId = @p0", query.Compile(0));
         }
 
         [Test]
@@ -53,7 +53,18 @@ namespace VODB.Tests
         {
             var query = new Query<Orders>(o => o.Employee.ReportsTo.EmployeeId == 3);
 
-            Assert.AreEqual("", query.Compile(0));
+            Assert.AreEqual("EmployeeId in (Select EmployeeId From Employees Where ReportsTo in (Select EmployeeId From Employees Where EmployeeId = @p0))", query.Compile(0));
         }
+
+        [Test]
+        public void ExpressionToSQL_Multiple_Levels2()
+        {
+            var query = new Query<Orders>(o => o.Employee.ReportsTo.ReportsTo.EmployeeId == 3);
+
+            string queryCompile = query.Compile(0);
+            Assert.AreEqual("EmployeeId in (Select EmployeeId From Employees Where ReportsTo in (Select EmployeeId From Employees Where ReportsTo in (Select EmployeeId From Employees Where EmployeeId = @p0)))", queryCompile);
+        }
+
+
     }
 }
