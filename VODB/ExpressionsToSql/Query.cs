@@ -46,29 +46,33 @@ namespace VODB.ExpressionsToSql
         {
             var parts = _Expression.DecodeLeft().ToList();
             //parts.Reduce();
-                        
-            return Build(parts, 0, level);
+
+            var sb = new StringBuilder();
+            Build(sb, parts, 0, level);
+            return sb.ToString();
         }
 
 
-        private static String Build(IList<ExpressionPart> parts, int index, int level)
+        private static void Build(StringBuilder sb, IList<ExpressionPart> parts, int index, int level)
         {
 
             if (index == parts.Count - 1)
             {
-                return String.Format("{0} = @p{1}",
-                    parts[index].Field.FieldName,
-                    level);
+                sb.Append(parts[index].Field.FieldName).Append(" = @p").Append(level);
+                return;
             }
 
             var current = parts[index].Field;
             var next = parts[index + 1].Field;
 
-            return String.Format("{0} in (Select {1} From {2} Where {3})",
-                current.FieldName,
-                next.BindedTo ?? next.FieldName,
-                current.Table.TableName,
-                Build(parts, index + 1, level));
+            sb.Append(current.FieldName)
+                .Append(" in (Select ").Append(next.BindedTo ?? next.FieldName)
+                .Append(" From ")
+                .Append(current.Table.TableName)
+                .Append(" Where ");
+
+            Build(sb, parts, index + 1, level);
+            sb.Append(")");
         }
 
 
