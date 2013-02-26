@@ -22,7 +22,7 @@ namespace ConcurrentReader.Tests
 
         public IDataReader GetConcurrentReader()
         {
-            return GetReader().AsParallel();
+            return GetReader().AsParallel(); 
         }
 
         public double SimulateWork()
