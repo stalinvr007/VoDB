@@ -10,15 +10,16 @@ using VODB.ExpressionParser;
 
 namespace VODB.ExpressionsToSql
 {
-
-    class Query<TEntity>: IQuery
+    class QueryCondition<TEntity> : IQueryCondition
     {
 
         private readonly IExpressionDecoder _Expression;
+        private ICollection<IQueryParameter> _Parameters;
 
-        public Query(Expression<Func<TEntity, Boolean>> expression)
+        public QueryCondition(Expression<Func<TEntity, Boolean>> expression)
         {
             _Expression = new ExpressionDecoder<TEntity>(expression);
+            _Parameters = new List<IQueryParameter>();
         }
 
         public String Compile(int level)
@@ -30,13 +31,21 @@ namespace VODB.ExpressionsToSql
             return sb.ToString();
         }
 
-
-        private static void Build(StringBuilder sb, IList<ExpressionPart> parts, int index, int level)
+        private void Build(StringBuilder sb, IList<ExpressionPart> parts, int index, int level)
         {
 
             if (index == parts.Count - 1)
             {
+                // Finalize the Condition
                 sb.Append(parts[index].Field.FieldName).Append(" = @p").Append(level);
+
+                // Add the parameter to the parameters collection.
+                _Parameters.Add(new QueryParameter
+                {
+                    Name = "@p" + level,
+                    Value = _Expression.DecodeRight()
+                });
+
                 return;
             }
 
@@ -51,6 +60,11 @@ namespace VODB.ExpressionsToSql
 
             Build(sb, parts, index + 1, level);
             sb.Append(")");
+        }
+
+        public IEnumerable<IQueryParameter> Parameters
+        {
+            get { return _Parameters; }
         }
 
 

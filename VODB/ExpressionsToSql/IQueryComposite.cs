@@ -5,10 +5,10 @@ using System.Text;
 
 namespace VODB.ExpressionsToSql
 {
-    public interface IQueryComposite
+    public interface IQueryConditionComposite : IQueryCondition
     {
 
-        void Add(IQuery query);
+        void Add(IQueryCondition query);
 
     }
 }
