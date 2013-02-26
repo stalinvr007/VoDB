@@ -4,29 +4,40 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Vodb by AlienEngineer</title>
-
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
     <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
   <body>
-    <div class="wrapper">
+
       <header>
         <h1>Vodb</h1>
         <p>Virtual Object DataBase</p>
-
-        <p class="view"><a href="https://github.com/AlienEngineer/VoDB">View the Project on GitHub <small>AlienEngineer/VoDB</small></a></p>
-
-
-        <ul>
-          <li><a href="https://github.com/AlienEngineer/VoDB/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/AlienEngineer/VoDB/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/AlienEngineer/VoDB">View On <strong>GitHub</strong></a></li>
-        </ul>
       </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/AlienEngineer/VoDB" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/AlienEngineer/VoDB/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/AlienEngineer/VoDB/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
       <section>
         <h3>Getting Started</h3>
 
@@ -53,83 +64,91 @@
 </li>
 </ol><h3>Example</h3>
 
-<pre><code>// Basic example for CRUD Operations.
-using (var session = new EagerSession()) {
-   // Get Employee data.
-   Employee employee1 = session.GetById(new Employee() { EmployeeId = 1 });
+<div class="highlight"><pre><span class="c1">// Basic example for CRUD Operations.</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EagerSession</span><span class="p">())</span> <span class="p">{</span>
+   <span class="c1">// Get Employee data.</span>
+   <span class="n">Employee</span> <span class="n">employee1</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">GetById</span><span class="p">(</span>
+        <span class="k">new</span> <span class="nf">Employee</span><span class="p">()</span> <span class="p">{</span> <span class="n">EmployeeId</span> <span class="p">=</span> <span class="m">1</span> <span class="p">}</span>
+   <span class="p">);</span>
 
-   // Get All Employees.
-   IEnumerable&lt;Employee&gt; employees = session.GetAll&lt;Employee&gt;();
+   <span class="c1">// Get All Employees.</span>
+   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;();</span>
 
-   // Get All Employees with the EmployeeId greater than 5. 
-   // Makes a conditional sql statement, doesn't uses the Linq library. 
-   // Therefore doesn't load all the employees.
-   IEnumerable&lt;Employee&gt; employees1 = session.GetAll&lt;Employee&gt;().Where(e =&gt; e.EmployeeId &gt; 5);
+   <span class="c1">// Get All Employees with the EmployeeId greater than 5. </span>
+   <span class="c1">// Makes a conditional sql statement, doesn't use the Linq library. </span>
+   <span class="c1">// Therefore doesn't load all the employees.</span>
+   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees1</span> <span class="p">=</span> 
+   <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">Where</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">EmployeeId</span> <span class="p">&gt;</span> <span class="m">5</span><span class="p">);</span>
 
-   // Order matters
-   // Select * From Employees Order By City
-   IEnumerable&lt;Employee&gt; employees2 = session.GetAll&lt;Employee&gt;().OrderBy(e =&gt; e.City);
+   <span class="c1">// Order matters</span>
+   <span class="c1">// Select * From Employees Order By City</span>
+   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees2</span> <span class="p">=</span> 
+   <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">OrderBy</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">City</span><span class="p">);</span>
 
-   // Select * From Employees Order By City Desc
-   IEnumerable&lt;Employee&gt; employees3 = session.GetAll&lt;Employee&gt;().OrderBy(e =&gt; e.City).Descending();
+   <span class="c1">// Select * From Employees Order By City Desc</span>
+   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees3</span> <span class="p">=</span> 
+   <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">OrderBy</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">City</span><span class="p">).</span><span class="n">Descending</span><span class="p">();</span>
 
-   var collection = session
-      .GetAll&lt;Employee&gt;().Where(m =&gt; m.EmployeeId &lt;= 5);
+   <span class="kt">var</span> <span class="n">collection</span> <span class="p">=</span> <span class="n">session</span>
+      <span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">Where</span><span class="p">(</span><span class="n">m</span> <span class="p">=&gt;</span> <span class="n">m</span><span class="p">.</span><span class="n">EmployeeId</span> <span class="p">&lt;=</span> <span class="m">5</span><span class="p">);</span>
 
-   /* Select * from Employees where EmployeeId In (Select EmployeeId From Employees where EmployeeId &lt;= 5) */
-   var employees4 = session
-     .GetAll&lt;Employee&gt;().Where(m =&gt; m.EmployeeId).In(collection);
+   <span class="cm">/* Select * from Employees </span>
+<span class="cm">      where EmployeeId In (</span>
+<span class="cm">        Select EmployeeId From Employees where EmployeeId &lt;= 5) </span>
+<span class="cm">   */</span>
+   <span class="kt">var</span> <span class="n">employees4</span> <span class="p">=</span> <span class="n">session</span>
+     <span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">Where</span><span class="p">(</span><span class="n">m</span> <span class="p">=&gt;</span> <span class="n">m</span><span class="p">.</span><span class="n">EmployeeId</span><span class="p">).</span><span class="n">In</span><span class="p">(</span><span class="n">collection</span><span class="p">);</span>
 
-   // Insert a new Employee
-   Employee Sergio = session.Insert(new Employee() {
-                    FirstName = "Sérgio",
-                    LastName = "Ferreira",
-                    BirthDate = new DateTime(1983, 4, 16)
-   });
+   <span class="c1">// Insert a new Employee</span>
+   <span class="n">Employee</span> <span class="n">Sergio</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">Insert</span><span class="p">(</span><span class="k">new</span> <span class="n">Employee</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="n">FirstName</span> <span class="p">=</span> <span class="s">"Sérgio"</span><span class="p">,</span>
+                    <span class="n">LastName</span> <span class="p">=</span> <span class="s">"Ferreira"</span><span class="p">,</span>
+                    <span class="n">BirthDate</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DateTime</span><span class="p">(</span><span class="m">1983</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">16</span><span class="p">)</span>
+   <span class="p">});</span>
 
-   // Change a field.
-   sergio.LastName = "test";
-   // Update the employee.
-   session.Update(sergio);
-   // Deletes the employee.
-   session.Delete(sergio);
-}
-</code></pre>
+   <span class="c1">// Change a field.</span>
+   <span class="n">sergio</span><span class="p">.</span><span class="n">LastName</span> <span class="p">=</span> <span class="s">"test"</span><span class="p">;</span>
+   <span class="c1">// Update the employee.</span>
+   <span class="n">session</span><span class="p">.</span><span class="n">Update</span><span class="p">(</span><span class="n">sergio</span><span class="p">);</span>
+   <span class="c1">// Deletes the employee.</span>
+   <span class="n">session</span><span class="p">.</span><span class="n">Delete</span><span class="p">(</span><span class="n">sergio</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
-<pre><code>// Executing operations within a transaction.
-   using (var session = new EagerSession()) {
-      using (var transaction = session.BeginTransaction()) {
+<div class="highlight"><pre><span class="c1">// Executing operations within a transaction.</span>
+   <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EagerSession</span><span class="p">())</span> <span class="p">{</span>
+      <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">transaction</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">BeginTransaction</span><span class="p">())</span> <span class="p">{</span>
 
-         // Make changes.
+         <span class="c1">// Make changes.</span>
 
-         // Rolls back any change to the database.
-         transaction.RollBack();
-         // Commits the changes within this transaction scope.
-         transaction.Commit();
+         <span class="c1">// Rolls back any change to the database.</span>
+         <span class="n">transaction</span><span class="p">.</span><span class="n">RollBack</span><span class="p">();</span>
+         <span class="c1">// Commits the changes within this transaction scope.</span>
+         <span class="n">transaction</span><span class="p">.</span><span class="n">Commit</span><span class="p">();</span>
 
-      }
-   }
+      <span class="p">}</span>
+   <span class="p">}</span>
 
-   // Or
-   using (var session = new EagerSession()) {
-      session.WithinTransaction( () =&gt; {
+   <span class="c1">// Or</span>
+   <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EagerSession</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">session</span><span class="p">.</span><span class="n">WithinTransaction</span><span class="p">(</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
 
-          // Do something here
+          <span class="c1">// Do something here</span>
 
-      }); // Commits the changes
-   }
-</code></pre>
+      <span class="p">});</span> <span class="c1">// Commits the changes</span>
+   <span class="p">}</span>
+</pre></div>
 
 <h3>Support or Contact</h3>
 
 <p>If you have any suggestions for this project or something is not working right please contact me at <a href="mailto:Alien.Software.Engineer@gmail.com">Alien.Software.Engineer@gmail.com</a> or <a href="https://github.com/AlienEngineer" class="user-mention">@AlienEngineer</a></p>
       </section>
       <footer>
-        <p>This project is maintained by <a href="https://github.com/AlienEngineer">AlienEngineer</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+        <p>Project maintained by <a href="https://github.com/AlienEngineer">AlienEngineer</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
       </footer>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
   </body>
 </html>
