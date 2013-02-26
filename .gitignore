@@ -111,3 +111,4 @@ UpgradeLog*.XML
 # Don't push the ConcurrentReader Projecto to the VODB repository
 ConcurrentReader/
 ConcurrentReader.Tests/
+ConcurrentReader.sln
