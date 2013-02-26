@@ -5,7 +5,7 @@ using System.Text;
 
 namespace VODB.ExpressionsToSql
 {
-    public interface IQuery
+    public interface IQueryCondition
     {
         /// <summary>
         /// Compiles the query given a spefic depth level.
@@ -13,5 +13,13 @@ namespace VODB.ExpressionsToSql
         /// <param name="level">The level.</param>
         /// <returns></returns>
         String Compile(int level);
+
+        /// <summary>
+        /// Gets the parameter values.
+        /// </summary>
+        /// <value>
+        /// The parameter values.
+        /// </value>
+        IEnumerable<IQueryParameter> Parameters { get; }
     }
 }

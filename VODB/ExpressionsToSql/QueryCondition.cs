@@ -10,12 +10,12 @@ using VODB.ExpressionParser;
 
 namespace VODB.ExpressionsToSql
 {
-    class Query : IQuery, IQueryComposite
+    class QueryCondition : IQueryConditionComposite
     {
 
-        private readonly IList<IQuery> queries = new List<IQuery>();
+        private readonly IList<IQueryCondition> queries = new List<IQueryCondition>();
 
-        public void Add(IQuery query)
+        public void Add(IQueryCondition query)
         {
             queries.Add(query);
         }
@@ -40,5 +40,9 @@ namespace VODB.ExpressionsToSql
             }
         }
 
+        public IEnumerable<IQueryParameter> Parameters
+        {
+            get { return queries.SelectMany(q => q.Parameters); }
+        }
     }
 }

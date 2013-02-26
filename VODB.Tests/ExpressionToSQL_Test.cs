@@ -43,43 +43,58 @@ namespace VODB.Tests
         [Test]
         public void ExpressionToSQL_Simple_Query()
         {
-            var query = new Query<Orders>(o => o.OrderId == 3);
+            var query = new QueryCondition<Orders>(o => o.OrderId == 3);
 
             Assert.AreEqual("OrderId = @p0", query.Compile(0));
+            Assert.That(query.Parameters.Count(), Is.EqualTo(1));
+            Assert.That(query.Parameters.First().Value, Is.EqualTo(3));
+            Assert.That(query.Parameters.First().Name, Is.EqualTo("@p0"));
         }
 
         [Test]
         public void ExpressionToSQL_Multiple_Levels()
         {
-            var query = new Query<Orders>(o => o.Employee.ReportsTo.EmployeeId == 3);
+            var query = new QueryCondition<Orders>(o => o.Employee.ReportsTo.EmployeeId == 3);
 
             Assert.AreEqual("EmployeeId in (Select EmployeeId From Employees Where ReportsTo in (Select EmployeeId From Employees Where EmployeeId = @p0))", query.Compile(0));
+            Assert.That(query.Parameters.Count(), Is.EqualTo(1));
+            Assert.That(query.Parameters.First().Value, Is.EqualTo(3));
+            Assert.That(query.Parameters.First().Name, Is.EqualTo("@p0"));
         }
 
         [Test]
         public void ExpressionToSQL_Multiple_Levels2()
         {
-            var query = new Query<Orders>(o => o.Employee.ReportsTo.ReportsTo.EmployeeId == 3);
+            var query = new QueryCondition<Orders>(o => o.Employee.ReportsTo.ReportsTo.EmployeeId == 3);
 
             string queryCompile = query.Compile(0);
             Assert.AreEqual("EmployeeId in (Select EmployeeId From Employees Where ReportsTo in (Select EmployeeId From Employees Where ReportsTo in (Select EmployeeId From Employees Where EmployeeId = @p0)))", queryCompile);
+            Assert.That(query.Parameters.Count(), Is.EqualTo(1));
+            Assert.That(query.Parameters.First().Value, Is.EqualTo(3));
+            Assert.That(query.Parameters.First().Name, Is.EqualTo("@p0"));
         }
 
 
         [Test]
         public void ExpressionToSQL_Composite_Multiple_Levels()
         {
-
-            var query = new Query();
+            var query = new QueryCondition();
 
             for (int i = 0; i < 1000; i++)
             {
-                query.Add(new Query<Orders>(o => o.Employee.ReportsTo.EmployeeId == 3));
+                query.Add(new QueryCondition<Orders>(o => o.Employee.ReportsTo.EmployeeId == 3));
             }
-
+            
             var compiledQuery = query.Compile(0);
 
             Assert.AreEqual(128893, compiledQuery.Count());
+            Assert.That(query.Parameters.Count(), Is.EqualTo(1000));
+
+            foreach (var parameter in query.Parameters)
+            {
+                Assert.That(parameter.Name, Is.StringStarting("@p"));
+                Assert.That(parameter.Value, Is.EqualTo(3));
+            }
         }
 
     }

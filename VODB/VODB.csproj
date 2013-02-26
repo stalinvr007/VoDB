@@ -139,10 +139,12 @@
     <Compile Include="ExpressionsToSql\ExpressionDecoderExtensions.cs" />
     <Compile Include="ExpressionsToSql\ExpressionPart.cs" />
     <Compile Include="ExpressionsToSql\IExpressionDecoder.cs" />
-    <Compile Include="ExpressionsToSql\IQuery.cs" />
+    <Compile Include="ExpressionsToSql\IQueryCondition.cs" />
     <Compile Include="ExpressionsToSql\IQueryComposite.cs" />
-    <Compile Include="ExpressionsToSql\Query.cs" />
-    <Compile Include="ExpressionsToSql\Query´.cs" />
+    <Compile Include="ExpressionsToSql\IQueryParameter.cs" />
+    <Compile Include="ExpressionsToSql\QueryCondition.cs" />
+    <Compile Include="ExpressionsToSql\QueryCondition´.cs" />
+    <Compile Include="ExpressionsToSql\QueryParameter.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\ExpressionsExtensions.cs" />
     <Compile Include="Exceptions\VodbException.cs" />
