@@ -10,18 +10,36 @@ using VODB.ExpressionParser;
 
 namespace VODB.ExpressionsToSql
 {
+    class QueryLeft<TEntity, TFieldValue> : IQueryCondition
+    {
+        private readonly IExpressionDecoder _Expression;
+        public QueryLeft(Expression<Func<TEntity, TFieldValue>> expression)
+        {
+
+        }
+
+        public string Compile(int level)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IQueryParameter> Parameters
+        {
+            get { throw new NotImplementedException(); }
+        }
+    }
+
     class QueryCondition<TEntity> : IQueryCondition
     {
 
         private readonly IExpressionDecoder _Expression;
-        private ICollection<IQueryParameter> _Parameters;
+        private ICollection<IQueryParameter> _Parameters = new List<IQueryParameter>();
 
         public QueryCondition(Expression<Func<TEntity, Boolean>> expression)
         {
             _Expression = new ExpressionDecoder<TEntity>(expression);
-            _Parameters = new List<IQueryParameter>();
         }
-
+        
         public String Compile(int level)
         {
             var parts = _Expression.DecodeLeft().ToList();

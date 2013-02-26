@@ -51,6 +51,11 @@ namespace VODB.Tests
             Assert.That(query.Parameters.First().Name, Is.EqualTo("@p0"));
         }
 
+        public void ExpressionToSql_Simple_NoCompare()
+        {
+            var query = new QueryLeft<Orders, int>(o => o.OrderId);
+        }
+
         [Test]
         public void ExpressionToSQL_Multiple_Levels()
         {
