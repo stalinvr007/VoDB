@@ -66,5 +66,21 @@ namespace VODB.Tests
         }
 
 
+        [Test]
+        public void ExpressionToSQL_Composite_Multiple_Levels()
+        {
+
+            var query = new Query();
+
+            for (int i = 0; i < 1000; i++)
+            {
+                query.Add(new Query<Orders>(o => o.Employee.ReportsTo.EmployeeId == 3));
+            }
+
+            var compiledQuery = query.Compile(0);
+
+            Assert.AreEqual(128893, compiledQuery.Count());
+        }
+
     }
 }
