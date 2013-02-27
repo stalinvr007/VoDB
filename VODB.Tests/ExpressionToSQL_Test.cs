@@ -6,6 +6,7 @@ using VODB.ExpressionsToSql;
 using System.Linq;
 using VODB.Core;
 using System.Diagnostics;
+using VODB.Expressions;
 
 namespace VODB.Tests
 {
@@ -13,7 +14,7 @@ namespace VODB.Tests
     public class ExpressionToSQL_Test
     {
         [Test]
-        public void ExpressionToSql_Decoder()
+        public void Expression_Decoder()
         {
             var parts = new ExpressionPart[] {
                 new ExpressionPart { PropertyName = "EmployeeId", EntityType = typeof(Employee), EntityTable = Engine.GetTable<Employee>() },
@@ -21,7 +22,7 @@ namespace VODB.Tests
                 new ExpressionPart { PropertyName = "Employee", EntityType = typeof(Orders), EntityTable = Engine.GetTable<Orders>() }
             };
 
-            var exp = new ExpressionDecoder<Orders>(o => o.Employee.ReportsTo.EmployeeId == 3);
+            var exp = new ExpressionDecoder<Orders, Boolean>(o => o.Employee.ReportsTo.EmployeeId == 3);
             var decoded = exp.DecodeLeft().ToList();
 
             Assert.AreEqual(3, exp.DecodeRight());
@@ -38,6 +39,27 @@ namespace VODB.Tests
 
             Assert.AreEqual(2, decoded.Count);
 
+        }
+
+        [Test]
+        public void Expression_ReturnsObject_Decoder()
+        {
+            var parts = new ExpressionPart[] {
+                new ExpressionPart { PropertyName = "ReportsTo", EntityType = typeof(Employee), EntityTable = Engine.GetTable<Employee>() },
+                new ExpressionPart { PropertyName = "Employee", EntityType = typeof(Orders), EntityTable = Engine.GetTable<Orders>() }
+            };
+
+            var exp = new ExpressionDecoder<Orders, Object>(o => o.Employee.ReportsTo);
+            var decoded = exp.DecodeLeft().ToList();
+            Assert.AreEqual(2, decoded.Count);
+
+            for (int i = 0; i < 2; i++)
+            {
+                Assert.AreEqual(parts[i].PropertyName, decoded[i].PropertyName);
+                Assert.AreEqual(parts[i].EntityTable.TableName, decoded[i].EntityTable.TableName);
+                Assert.AreEqual(parts[i].EntityType, decoded[i].EntityType);
+            }
+            
         }
 
         [Test]
