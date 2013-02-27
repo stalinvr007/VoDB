@@ -65,7 +65,7 @@
 </ol><h3>Example</h3>
 
 <div class="highlight"><pre><span class="c1">// Basic example for CRUD Operations.</span>
-<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EagerSession</span><span class="p">())</span> <span class="p">{</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
    <span class="c1">// Get Employee data.</span>
    <span class="n">Employee</span> <span class="n">employee1</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">GetById</span><span class="p">(</span>
         <span class="k">new</span> <span class="nf">Employee</span><span class="p">()</span> <span class="p">{</span> <span class="n">EmployeeId</span> <span class="p">=</span> <span class="m">1</span> <span class="p">}</span>
@@ -116,7 +116,7 @@
 </pre></div>
 
 <div class="highlight"><pre><span class="c1">// Executing operations within a transaction.</span>
-   <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EagerSession</span><span class="p">())</span> <span class="p">{</span>
+   <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
       <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">transaction</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">BeginTransaction</span><span class="p">())</span> <span class="p">{</span>
 
          <span class="c1">// Make changes.</span>
@@ -130,7 +130,7 @@
    <span class="p">}</span>
 
    <span class="c1">// Or</span>
-   <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EagerSession</span><span class="p">())</span> <span class="p">{</span>
+   <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
       <span class="n">session</span><span class="p">.</span><span class="n">WithinTransaction</span><span class="p">(</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
 
           <span class="c1">// Do something here</span>
