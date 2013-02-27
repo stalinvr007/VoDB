@@ -78,7 +78,8 @@ namespace VODB.Tests
         [Test]
         public void ExpressionToSql_Simple_NoCompare()
         {
-            var query = new QueryLeft<Orders, Object>(o => o.OrderId);
+            var query = new QueryCondition<Orders>(o => o.OrderId,
+                new QueryCondition<Orders>(o => o.OrderId == 3));
 
 
         }

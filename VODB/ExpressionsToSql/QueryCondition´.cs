@@ -11,37 +11,26 @@ using VODB.Expressions;
 
 namespace VODB.ExpressionsToSql
 {
-    class QueryLeft<TEntity, TFieldValue> : IQueryCondition
-    {
-        private readonly IExpressionDecoder _Expression;
-
-        public QueryLeft(Expression<Func<TEntity, TFieldValue>> expression)
-        {
-
-        }
-
-        public string Compile(int level)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<IQueryParameter> Parameters
-        {
-            get { throw new NotImplementedException(); }
-        }
-    }
 
     class QueryCondition<TEntity> : IQueryCondition
     {
 
         private readonly IExpressionDecoder _Expression;
         private ICollection<IQueryParameter> _Parameters = new List<IQueryParameter>();
+        private readonly IQueryCondition _Follows;
 
         public QueryCondition(Expression<Func<TEntity, Boolean>> expression)
         {
             _Expression = new ExpressionDecoder<TEntity, Boolean>(expression);
+            _Follows = new ConstantCondition(" = @p");
         }
-        
+
+        public QueryCondition(Expression<Func<TEntity, Object>> expression, IQueryCondition follows)
+        {
+            _Follows = follows;
+            _Expression = new ExpressionDecoder<TEntity, Object>(expression);
+        }
+
         public String Compile(int level)
         {
             var parts = _Expression.DecodeLeft().ToList();
@@ -56,10 +45,11 @@ namespace VODB.ExpressionsToSql
 
             if (index == parts.Count - 1)
             {
-                
                 // Finalize the Condition
-                sb.Append(parts[index].Field.FieldName).Append(" = @p").Append(level);
+                sb.Append(parts[index].Field.FieldName)
+                  .Append(_Follows.Compile(level));
 
+                // TODO: Not all expressions will have the right side. Fix it!
                 // Add the parameter to the parameters collection.
                 _Parameters.Add(new QueryParameter
                 {

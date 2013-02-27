@@ -21,5 +21,6 @@ namespace VODB.ExpressionsToSql
         /// The parameter values.
         /// </value>
         IEnumerable<IQueryParameter> Parameters { get; }
+
     }
 }
