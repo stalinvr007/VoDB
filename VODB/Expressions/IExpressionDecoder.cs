@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using VODB.Core;
 using VODB.Core.Infrastructure;
 
-namespace VODB.ExpressionsToSql
+namespace VODB.Expressions
 {
     internal interface IExpressionDecoder
     {

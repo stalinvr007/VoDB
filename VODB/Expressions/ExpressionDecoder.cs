@@ -6,24 +6,23 @@ using System.Text;
 using System.Threading.Tasks;
 using VODB.Core;
 using VODB.Core.Infrastructure;
+using VODB.Exceptions;
 
-namespace VODB.ExpressionsToSql
+namespace VODB.Expressions
 {
 
-    class ExpressionDecoder<TEntity> : IExpressionDecoder
+    class ExpressionDecoder<TEntity, TReturnValue> : IExpressionDecoder
     {
-        private Expression<Func<TEntity, Boolean>> _Expression;
+        private LambdaExpression _Expression;
 
-        public ExpressionDecoder(Expression<Func<TEntity, Boolean>> expression)
+        public ExpressionDecoder(Expression<Func<TEntity, TReturnValue>> expression)
         {
             _Expression = expression;
         }
 
         public IEnumerable<ExpressionPart> DecodeLeft()
         {
-            var exp = _Expression.Body as BinaryExpression;
-
-            var current = exp.Left as MemberExpression;
+            var current = GetFirstMember(_Expression);
 
             while (current != null)
             {
@@ -42,7 +41,15 @@ namespace VODB.ExpressionsToSql
             }
         }
 
-        
+        private MemberExpression GetFirstMember(LambdaExpression expression)
+        {
+            if (expression.Body is BinaryExpression)
+                return ((BinaryExpression)expression.Body).Left as MemberExpression;
+            else if (expression.Body is MemberExpression)
+                return expression.Body as MemberExpression;
+
+            throw new UnableToGetTheFirstMember(expression.ToString());
+        }
 
         public Object DecodeRight()
         {

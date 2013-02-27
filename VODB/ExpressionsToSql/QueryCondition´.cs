@@ -7,12 +7,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using VODB.Core.Infrastructure;
 using VODB.ExpressionParser;
+using VODB.Expressions;
 
 namespace VODB.ExpressionsToSql
 {
     class QueryLeft<TEntity, TFieldValue> : IQueryCondition
     {
         private readonly IExpressionDecoder _Expression;
+
         public QueryLeft(Expression<Func<TEntity, TFieldValue>> expression)
         {
 
@@ -37,7 +39,7 @@ namespace VODB.ExpressionsToSql
 
         public QueryCondition(Expression<Func<TEntity, Boolean>> expression)
         {
-            _Expression = new ExpressionDecoder<TEntity>(expression);
+            _Expression = new ExpressionDecoder<TEntity, Boolean>(expression);
         }
         
         public String Compile(int level)
