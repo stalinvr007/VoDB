@@ -15,5 +15,6 @@ namespace VODB.Expressions
         public Field Field { get; set; }
         public Type EntityType { get; set; }
         public Table EntityTable { get; set; }
+        public ExpressionType NodeType { get; set; }
     }
 }

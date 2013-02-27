@@ -13,6 +13,8 @@ namespace VODB.Tests
     [TestFixture]
     public class ExpressionToSQL_Test
     {
+        int argumentValue = 3;
+
         [Test]
         public void Expression_Decoder()
         {
@@ -59,13 +61,13 @@ namespace VODB.Tests
                 Assert.AreEqual(parts[i].EntityTable.TableName, decoded[i].EntityTable.TableName);
                 Assert.AreEqual(parts[i].EntityType, decoded[i].EntityType);
             }
-            
         }
 
+        
         [Test]
         public void ExpressionToSQL_Simple_Query()
         {
-            var query = new QueryCondition<Orders>(o => o.OrderId == 3);
+            var query = new QueryCondition<Orders>(o => o.OrderId == argumentValue);
 
             Assert.AreEqual("OrderId = @p0", query.Compile(0));
             Assert.That(query.Parameters.Count(), Is.EqualTo(1));
@@ -73,9 +75,12 @@ namespace VODB.Tests
             Assert.That(query.Parameters.First().Name, Is.EqualTo("@p0"));
         }
 
+        [Test]
         public void ExpressionToSql_Simple_NoCompare()
         {
-            var query = new QueryLeft<Orders, int>(o => o.OrderId);
+            var query = new QueryLeft<Orders, Object>(o => o.OrderId);
+
+
         }
 
         [Test]

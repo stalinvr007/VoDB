@@ -32,6 +32,7 @@ namespace VODB.Expressions
                     EntityType = current.Member.DeclaringType
                 };
 
+                part.NodeType = _Expression.Body.NodeType;
                 part.EntityTable = Engine.GetTable(part.EntityType);
                 part.Field = part.EntityTable.FindField(part.PropertyName);
 

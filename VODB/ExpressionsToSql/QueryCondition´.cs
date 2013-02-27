@@ -56,6 +56,7 @@ namespace VODB.ExpressionsToSql
 
             if (index == parts.Count - 1)
             {
+                
                 // Finalize the Condition
                 sb.Append(parts[index].Field.FieldName).Append(" = @p").Append(level);
 
