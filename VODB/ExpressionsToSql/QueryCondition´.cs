@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using VODB.Core.Infrastructure;
-using VODB.ExpressionParser;
 using VODB.Expressions;
 
 namespace VODB.ExpressionsToSql
@@ -16,7 +12,7 @@ namespace VODB.ExpressionsToSql
     {
 
         private readonly IExpressionDecoder _Expression;
-        private ICollection<IQueryParameter> _Parameters = new List<IQueryParameter>();
+        private readonly ICollection<IQueryParameter> _Parameters = new List<IQueryParameter>();
         private readonly IQueryCondition _Follows;
 
         public QueryCondition(Expression<Func<TEntity, Boolean>> expression)

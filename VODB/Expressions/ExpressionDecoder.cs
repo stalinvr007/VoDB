@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using VODB.Core;
-using VODB.Core.Infrastructure;
 using VODB.Exceptions;
 
 namespace VODB.Expressions
@@ -46,7 +42,8 @@ namespace VODB.Expressions
         {
             if (expression.Body is BinaryExpression)
                 return ((BinaryExpression)expression.Body).Left as MemberExpression;
-            else if (expression.Body is MemberExpression)
+            
+            if (expression.Body is MemberExpression)
                 return expression.Body as MemberExpression;
 
             throw new UnableToGetTheFirstMember(expression.ToString());
@@ -56,14 +53,13 @@ namespace VODB.Expressions
         {
             var exp = _Expression.Body as BinaryExpression;
 
-            if (exp.Right is ConstantExpression)
+            var constantExpression = exp.Right as ConstantExpression;
+            if (constantExpression != null)
             {
-                return ((ConstantExpression)exp.Right).Value;
+                return constantExpression.Value;
             }
-            else
-            {
-                return Expression.Lambda(exp.Right).Compile().DynamicInvoke();
-            }
+            
+            return Expression.Lambda(exp.Right).Compile().DynamicInvoke();
         }
 
     }

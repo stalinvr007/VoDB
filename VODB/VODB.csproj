@@ -137,7 +137,6 @@
     <Compile Include="ExpressionParser\Key.cs" />
     <Compile Include="ExpressionsToSql\ConstantCondition.cs" />
     <Compile Include="Expressions\ExpressionDecoder.cs" />
-    <Compile Include="Expressions\ExpressionDecoderExtensions.cs" />
     <Compile Include="Expressions\ExpressionPart.cs" />
     <Compile Include="Expressions\IExpressionDecoder.cs" />
     <Compile Include="ExpressionsToSql\IQueryCondition.cs" />
