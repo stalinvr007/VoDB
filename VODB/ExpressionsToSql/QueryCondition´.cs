@@ -27,6 +27,11 @@ namespace VODB.ExpressionsToSql
             _Expression = new ExpressionDecoder<TEntity, Object>(expression);
         }
 
+        private static IQueryCondition CreateFollowCondition(IExpressionDecoder decoder)
+        {
+            
+        }
+
         public String Compile(int level)
         {
             var parts = _Expression.DecodeLeft().ToList();

@@ -21,6 +21,11 @@ namespace VODB.Expressions
             get { return _Expression.Body is BinaryExpression; }
         }
 
+        public ExpressionType NodeType
+        {
+            get { return _Expression.Body.NodeType; }
+        }
+
         public IEnumerable<ExpressionPart> DecodeLeft()
         {
             var current = GetFirstMember(_Expression);
@@ -33,7 +38,7 @@ namespace VODB.Expressions
                     EntityType = current.Member.DeclaringType
                 };
 
-                part.NodeType = _Expression.Body.NodeType;
+
                 part.EntityTable = Engine.GetTable(part.EntityType);
                 part.Field = part.EntityTable.FindField(part.PropertyName);
 
