@@ -9,11 +9,16 @@ namespace VODB.Expressions
 
     class ExpressionDecoder<TEntity, TReturnValue> : IExpressionDecoder
     {
-        private LambdaExpression _Expression;
+        private readonly LambdaExpression _Expression;
 
         public ExpressionDecoder(Expression<Func<TEntity, TReturnValue>> expression)
         {
             _Expression = expression;
+        }
+
+        public Boolean HasParameters
+        {
+            get { return _Expression.Body is BinaryExpression; }
         }
 
         public IEnumerable<ExpressionPart> DecodeLeft()
@@ -22,8 +27,8 @@ namespace VODB.Expressions
 
             while (current != null)
             {
-                var part = new ExpressionPart 
-                { 
+                var part = new ExpressionPart
+                {
                     PropertyName = current.Member.Name,
                     EntityType = current.Member.DeclaringType
                 };
@@ -42,24 +47,29 @@ namespace VODB.Expressions
         {
             if (expression.Body is BinaryExpression)
                 return ((BinaryExpression)expression.Body).Left as MemberExpression;
-            
+
             if (expression.Body is MemberExpression)
                 return expression.Body as MemberExpression;
 
             throw new UnableToGetTheFirstMember(expression.ToString());
         }
 
-        public Object DecodeRight()
+        public IEnumerable<Object> DecodeRight()
         {
             var exp = _Expression.Body as BinaryExpression;
+
+            if (exp == null)
+            {
+                throw new InvalidProgramException("Can't get the right part of expression.");
+            }
 
             var constantExpression = exp.Right as ConstantExpression;
             if (constantExpression != null)
             {
-                return constantExpression.Value;
+                return new[] { constantExpression.Value };
             }
-            
-            return Expression.Lambda(exp.Right).Compile().DynamicInvoke();
+
+            return new[] { Expression.Lambda(exp.Right).Compile().DynamicInvoke() };
         }
 
     }

@@ -45,14 +45,16 @@ namespace VODB.ExpressionsToSql
                 sb.Append(parts[index].Field.FieldName)
                   .Append(_Follows.Compile(level));
 
-                // TODO: Not all expressions will have the right side. Fix it!
-                // Add the parameter to the parameters collection.
-                _Parameters.Add(new QueryParameter
+                // Add the values as a parameter to the parameters collection.
+                foreach (var value in _Expression.DecodeRight())
                 {
-                    Name = "@p" + level,
-                    Value = _Expression.DecodeRight()
-                });
-
+                    _Parameters.Add(new QueryParameter
+                    {
+                        Name = "@p" + level,
+                        Value = value
+                    });    
+                }
+                
                 return;
             }
 

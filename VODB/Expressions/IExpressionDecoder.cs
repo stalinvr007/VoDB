@@ -6,6 +6,6 @@ namespace VODB.Expressions
     internal interface IExpressionDecoder
     {
         IEnumerable<ExpressionPart> DecodeLeft();
-        Object DecodeRight();
+        IEnumerable<Object> DecodeRight();
     }
 }
