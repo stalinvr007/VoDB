@@ -4,6 +4,7 @@ using System.Text;
 
 namespace VODB.ExpressionsToSql
 {
+
     class InCondition : IQueryCondition
     {
 
@@ -21,13 +22,7 @@ namespace VODB.ExpressionsToSql
 
             foreach (var val in _Values)
             {
-                sb.Append("@p").Append(++level).Append(", ");
-
-                _Parameters.Add(new QueryParameter
-                {
-                    Name = "@p" + level,
-                    Value = val
-                });
+                sb.Append(_Parameters.Add(++level, val)).Append(", ");
             }
 
             sb.Remove(sb.Length - 2, 2).Append(")");

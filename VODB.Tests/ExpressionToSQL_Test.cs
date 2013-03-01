@@ -91,14 +91,14 @@ namespace VODB.Tests
         {
             var level = 0;
             AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId == argumentValue), "OrderId = @p1", "@p1");
-            AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId < argumentValue),  "OrderId < @p2", "@p2");
+            AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId < argumentValue), "OrderId < @p2", "@p2");
             AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId <= argumentValue), "OrderId <= @p3", "@p3");
-            AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId > argumentValue),  "OrderId > @p4", "@p4");
+            AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId > argumentValue), "OrderId > @p4", "@p4");
             AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId >= argumentValue), "OrderId >= @p5", "@p5");
         }
 
         [Test]
-        public void ExpressionToSql_Simple_NoCompare()
+        public void ExpressionToSql_InCondition()
         {
             var level = 0;
             var query = new QueryCondition<Orders>(o => o.OrderId,
@@ -106,6 +106,29 @@ namespace VODB.Tests
 
             Assert.That(query.Compile(ref level), Is.EqualTo("OrderId In (@p1, @p2, @p3, @p4)"));
             Assert.That(query.Parameters.Count(), Is.EqualTo(4));
+
+            var i = 0;
+            foreach (var parameter in query.Parameters)
+            {
+                Assert.That(parameter.Name, Is.EqualTo("@p" + ++i));
+            }
+        }
+
+        [Test]
+        public void ExpressionToSql_Between()
+        {
+            var level = 0;
+            var query = new QueryCondition<Orders>(o => o.OrderId, new BetweenCondition(1, 3));
+
+            Assert.That(query.Compile(ref level), Is.EqualTo("OrderId Between @p1 and @p2"));
+            Assert.That(query.Parameters.Count(), Is.EqualTo(2));
+
+            var i = 0;
+            foreach (var parameter in query.Parameters)
+            {
+                Assert.That(parameter.Name, Is.EqualTo("@p" + ++i));
+            }
+
         }
 
         [Test]
