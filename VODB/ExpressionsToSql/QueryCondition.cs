@@ -28,15 +28,7 @@ namespace VODB.ExpressionsToSql
 
             return sb.ToString();
         }
-
-        private void SafeAppendLine(StringBuilder sb, String text)
-        {
-            lock (sb)
-            {
-                sb.AppendLine(text);
-            }
-        }
-
+        
         public IEnumerable<IQueryParameter> Parameters
         {
             get { return queries.SelectMany(q => q.Parameters); }

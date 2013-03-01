@@ -172,7 +172,6 @@ namespace VODB.Tests
             Assert.That(query.Parameters.First().Name, Is.EqualTo("@p1"));
         }
 
-
         [Test]
         public void ExpressionToSQL_Composite_Multiple_Levels()
         {
