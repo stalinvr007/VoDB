@@ -39,7 +39,7 @@
         <ul></ul>
       </nav>
       <section>
-        <h3>Getting Started</h3>
+        <h2>Getting Started</h2>
 
 <ol>
 <li>Create a class to represent a database table/model.</li>
@@ -62,7 +62,12 @@
 <li>set the providerName to System.Data.SqlClient or other...</li>
 </ul>
 </li>
-</ol><h3>Example</h3>
+</ol><h2>Get one entity by its Id</h2>
+
+<div class="highlight"><pre>   <span class="n">Employee</span> <span class="n">employee</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">GetById</span><span class="p">(</span><span class="n">Employee</span> <span class="p">{</span> <span class="n">EmployeeId</span> <span class="p">=</span> <span class="m">1</span> <span class="p">});</span>
+</pre></div>
+
+<h2>Example</h2>
 
 <div class="highlight"><pre><span class="c1">// Basic example for CRUD Operations.</span>
 <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
