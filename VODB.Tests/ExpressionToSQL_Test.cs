@@ -78,25 +78,23 @@ namespace VODB.Tests
             }
         }
 
-
-        private static void AssertQuery(QueryCondition<Orders> query, String expected)
+        private static void AssertQuery(ref int level, QueryCondition<Orders> query, String expected, String parameter)
         {
-            var level = 0;
             Assert.AreEqual(expected, query.Compile(ref level));
             Assert.That(query.Parameters.Count(), Is.EqualTo(1));
             Assert.That(query.Parameters.First().Value, Is.EqualTo(3));
-            Assert.That(query.Parameters.First().Name, Is.EqualTo("@p1"));
+            Assert.That(query.Parameters.First().Name, Is.EqualTo(parameter));
         }
 
         [Test]
         public void ExpressionToSQL_Simple_Query()
         {
             var level = 0;
-            AssertQuery(new QueryCondition<Orders>(o => o.OrderId == argumentValue), "OrderId = @p1");
-            Assert.That(new QueryCondition<Orders>(o => o.OrderId < argumentValue).Compile(ref level), Is.EqualTo("OrderId < @p1"));
-            Assert.That(new QueryCondition<Orders>(o => o.OrderId <= argumentValue).Compile(ref level), Is.EqualTo("OrderId <= @p3"));
-            Assert.That(new QueryCondition<Orders>(o => o.OrderId > argumentValue).Compile(ref level), Is.EqualTo("OrderId > @p5"));
-            Assert.That(new QueryCondition<Orders>(o => o.OrderId >= argumentValue).Compile(ref level), Is.EqualTo("OrderId >= @p7"));
+            AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId == argumentValue), "OrderId = @p1", "@p1");
+            AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId < argumentValue),  "OrderId < @p2", "@p2");
+            AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId <= argumentValue), "OrderId <= @p3", "@p3");
+            AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId > argumentValue),  "OrderId > @p4", "@p4");
+            AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId >= argumentValue), "OrderId >= @p5", "@p5");
         }
 
         [Test]
@@ -149,7 +147,7 @@ namespace VODB.Tests
 
             var compiledQuery = query.Compile(ref level);
 
-            Assert.AreEqual(127445, compiledQuery.Count());
+            Assert.AreEqual(126893, compiledQuery.Count());
             Assert.That(query.Parameters.Count(), Is.EqualTo(1000));
 
             foreach (var parameter in query.Parameters)

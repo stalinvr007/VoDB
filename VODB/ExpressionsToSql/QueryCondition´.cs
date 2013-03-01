@@ -63,7 +63,7 @@ namespace VODB.ExpressionsToSql
                 {
                     _Parameters.Add(new QueryParameter
                     {
-                        Name = "@p" + level++,
+                        Name = "@p" + level,
                         Value = value
                     });
                 }
