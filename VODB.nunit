@@ -1,0 +1,6 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Release" processModel="Default" domainUsage="Default" />
+  <Config name="Release" binpathtype="Auto" runtimeFramework="v4.0.21006" configfile="App.Config">
+    <assembly path="VODB.Tests\bin\Release\VODB.Tests.dll" />
+  </Config>
+</NUnitProject>

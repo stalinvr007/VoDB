@@ -139,6 +139,7 @@
     <Compile Include="ExpressionsToSql\ConstantCondition.cs" />
     <Compile Include="ExpressionsToSql\InCondition.cs" />
     <Compile Include="ExpressionsToSql\IQueryParameterHelper.cs" />
+    <Compile Include="ExpressionsToSql\OrderByCondition.cs" />
     <Compile Include="Expressions\ExpressionDecoder.cs" />
     <Compile Include="Expressions\ExpressionPart.cs" />
     <Compile Include="Expressions\IExpressionDecoder.cs" />

@@ -106,6 +106,14 @@ namespace VODB.Tests
         }
 
         [Test]
+        public void ExpressionToSQL_OrderByCondition()
+        {
+            var query = new OrderByCondition<Orders>(o => o.OrderId);
+            var level = 0;
+            Assert.That(query.Compile(ref level), Is.EqualTo(" Order By OrderId"));
+        }
+
+        [Test]
         public void ExpressionToSql_InCondition()
         {
             var level = 0;
