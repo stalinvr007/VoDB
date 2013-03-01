@@ -98,6 +98,14 @@ namespace VODB.Tests
         }
 
         [Test]
+        public void ExpressionToSQL_StubCondition()
+        {
+            var query = new QueryCondition<Orders>(o => o.OrderId, new StubCondition());
+            var level = 0;
+            Assert.That(query.Compile(ref level), Is.EqualTo("OrderId"));
+        }
+
+        [Test]
         public void ExpressionToSql_InCondition()
         {
             var level = 0;
