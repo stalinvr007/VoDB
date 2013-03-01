@@ -36,11 +36,6 @@ namespace VODB.Tests
                 Assert.AreEqual(parts[i].EntityTable.TableName, decoded[i].EntityTable.TableName);
                 Assert.AreEqual(parts[i].EntityType, decoded[i].EntityType);
             }
-
-            decoded.Reduce();
-
-            Assert.AreEqual(2, decoded.Count);
-
         }
 
         [Test]
