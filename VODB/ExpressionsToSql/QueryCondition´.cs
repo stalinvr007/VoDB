@@ -18,7 +18,7 @@ namespace VODB.ExpressionsToSql
         public QueryCondition(Expression<Func<TEntity, Boolean>> expression)
         {
             _Expression = new ExpressionDecoder<TEntity, Boolean>(expression);
-            _Follows = new ConstantCondition(" = @p");
+            _Follows = CreateFollowCondition(_Expression);
         }
 
         public QueryCondition(Expression<Func<TEntity, Object>> expression, IQueryCondition follows)
@@ -29,7 +29,12 @@ namespace VODB.ExpressionsToSql
 
         private static IQueryCondition CreateFollowCondition(IExpressionDecoder decoder)
         {
-            
+            switch (decoder.NodeType)
+            {
+                case ExpressionType.Equal: return new ConstantCondition(" = @p");
+                case ExpressionType.GreaterThan: return new ConstantCondition(" > @p");
+                default: throw new InvalidOperationException("Unable to decode this node type. " + decoder.NodeType.ToString());
+            }
         }
 
         public String Compile(int level)
