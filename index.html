@@ -76,7 +76,7 @@
 <span class="p">}</span>
 </pre></div>
 
-<h2>Filtering data</h2>
+<h2>Filtering employees</h2>
 
 <div class="highlight"><pre><span class="c1">// simple query</span>
 <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
@@ -94,7 +94,7 @@
 <span class="p">}</span>
 </pre></div>
 
-<h2>Sort data</h2>
+<h2>Sort employees</h2>
 
 <div class="highlight"><pre><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
    <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> 
@@ -107,7 +107,7 @@
 <span class="p">}</span>
 </pre></div>
 
-<h2>Inserting data</h2>
+<h2>Inserting employee</h2>
 
 <div class="highlight"><pre><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
    <span class="n">Employee</span> <span class="n">Sergio</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">Insert</span><span class="p">(</span><span class="k">new</span> <span class="n">Employee</span> 
@@ -119,7 +119,7 @@
 <span class="p">}</span>
 </pre></div>
 
-<h2>Updating data</h2>
+<h2>Updating employee</h2>
 
 <div class="highlight"><pre><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
    <span class="n">Employee</span> <span class="n">employee</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">GetById</span><span class="p">(</span><span class="n">Employee</span> <span class="p">{</span> <span class="n">EmployeeId</span> <span class="p">=</span> <span class="m">1</span> <span class="p">});</span>
@@ -129,7 +129,7 @@
 <span class="p">}</span>
 </pre></div>
 
-<h2>Deleting data</h2>
+<h2>Deleting employee</h2>
 
 <div class="highlight"><pre><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
    <span class="n">session</span><span class="p">.</span><span class="n">Delete</span><span class="p">(</span><span class="k">new</span> <span class="n">Employee</span> <span class="p">{</span> <span class="n">EmployeeId</span> <span class="p">=</span> <span class="m">1</span> <span class="p">});</span>
