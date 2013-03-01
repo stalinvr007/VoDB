@@ -62,63 +62,81 @@
 <li>set the providerName to System.Data.SqlClient or other...</li>
 </ul>
 </li>
-</ol><h2>Get one entity by its Id</h2>
+</ol><h2>Get one employee</h2>
 
-<div class="highlight"><pre>   <span class="n">Employee</span> <span class="n">employee</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">GetById</span><span class="p">(</span><span class="n">Employee</span> <span class="p">{</span> <span class="n">EmployeeId</span> <span class="p">=</span> <span class="m">1</span> <span class="p">});</span>
-</pre></div>
-
-<h2>Example</h2>
-
-<div class="highlight"><pre><span class="c1">// Basic example for CRUD Operations.</span>
-<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
-   <span class="c1">// Get Employee data.</span>
-   <span class="n">Employee</span> <span class="n">employee1</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">GetById</span><span class="p">(</span>
-        <span class="k">new</span> <span class="nf">Employee</span><span class="p">()</span> <span class="p">{</span> <span class="n">EmployeeId</span> <span class="p">=</span> <span class="m">1</span> <span class="p">}</span>
-   <span class="p">);</span>
-
-   <span class="c1">// Get All Employees.</span>
-   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;();</span>
-
-   <span class="c1">// Get All Employees with the EmployeeId greater than 5. </span>
-   <span class="c1">// Makes a conditional sql statement, doesn't use the Linq library. </span>
-   <span class="c1">// Therefore doesn't load all the employees.</span>
-   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees1</span> <span class="p">=</span> 
-   <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">Where</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">EmployeeId</span> <span class="p">&gt;</span> <span class="m">5</span><span class="p">);</span>
-
-   <span class="c1">// Order matters</span>
-   <span class="c1">// Select * From Employees Order By City</span>
-   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees2</span> <span class="p">=</span> 
-   <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">OrderBy</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">City</span><span class="p">);</span>
-
-   <span class="c1">// Select * From Employees Order By City Desc</span>
-   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees3</span> <span class="p">=</span> 
-   <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">OrderBy</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">City</span><span class="p">).</span><span class="n">Descending</span><span class="p">();</span>
-
-   <span class="kt">var</span> <span class="n">collection</span> <span class="p">=</span> <span class="n">session</span>
-      <span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">Where</span><span class="p">(</span><span class="n">m</span> <span class="p">=&gt;</span> <span class="n">m</span><span class="p">.</span><span class="n">EmployeeId</span> <span class="p">&lt;=</span> <span class="m">5</span><span class="p">);</span>
-
-   <span class="cm">/* Select * from Employees </span>
-<span class="cm">      where EmployeeId In (</span>
-<span class="cm">        Select EmployeeId From Employees where EmployeeId &lt;= 5) </span>
-<span class="cm">   */</span>
-   <span class="kt">var</span> <span class="n">employees4</span> <span class="p">=</span> <span class="n">session</span>
-     <span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">Where</span><span class="p">(</span><span class="n">m</span> <span class="p">=&gt;</span> <span class="n">m</span><span class="p">.</span><span class="n">EmployeeId</span><span class="p">).</span><span class="n">In</span><span class="p">(</span><span class="n">collection</span><span class="p">);</span>
-
-   <span class="c1">// Insert a new Employee</span>
-   <span class="n">Employee</span> <span class="n">Sergio</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">Insert</span><span class="p">(</span><span class="k">new</span> <span class="n">Employee</span><span class="p">()</span> <span class="p">{</span>
-                    <span class="n">FirstName</span> <span class="p">=</span> <span class="s">"Sérgio"</span><span class="p">,</span>
-                    <span class="n">LastName</span> <span class="p">=</span> <span class="s">"Ferreira"</span><span class="p">,</span>
-                    <span class="n">BirthDate</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DateTime</span><span class="p">(</span><span class="m">1983</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">16</span><span class="p">)</span>
-   <span class="p">});</span>
-
-   <span class="c1">// Change a field.</span>
-   <span class="n">sergio</span><span class="p">.</span><span class="n">LastName</span> <span class="p">=</span> <span class="s">"test"</span><span class="p">;</span>
-   <span class="c1">// Update the employee.</span>
-   <span class="n">session</span><span class="p">.</span><span class="n">Update</span><span class="p">(</span><span class="n">sergio</span><span class="p">);</span>
-   <span class="c1">// Deletes the employee.</span>
-   <span class="n">session</span><span class="p">.</span><span class="n">Delete</span><span class="p">(</span><span class="n">sergio</span><span class="p">);</span>
+<div class="highlight"><pre><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
+   <span class="n">Employee</span> <span class="n">employee</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">GetById</span><span class="p">(</span><span class="n">Employee</span> <span class="p">{</span> <span class="n">EmployeeId</span> <span class="p">=</span> <span class="m">1</span> <span class="p">});</span>
 <span class="p">}</span>
 </pre></div>
+
+<h2>Get all employees</h2>
+
+<div class="highlight"><pre><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
+   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;();</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>Filtering data</h2>
+
+<div class="highlight"><pre><span class="c1">// simple query</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
+   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> 
+       <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">Where</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">EmployeeId</span> <span class="p">&gt;</span> <span class="m">5</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// more complex query</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
+   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> 
+       <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;()</span>
+       <span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">EmployeeId</span><span class="p">).</span><span class="n">In</span><span class="p">(</span>
+           <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">Where</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">EmployeeId</span> <span class="p">&gt;</span> <span class="m">5</span><span class="p">)</span>
+       <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>Sort data</h2>
+
+<div class="highlight"><pre><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
+   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> 
+       <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">OrderBy</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">City</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// or ...</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
+   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> 
+       <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">OrderBy</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">City</span><span class="p">).</span><span class="n">Descending</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>Inserting data</h2>
+
+<div class="highlight"><pre><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
+   <span class="n">Employee</span> <span class="n">Sergio</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">Insert</span><span class="p">(</span><span class="k">new</span> <span class="n">Employee</span> 
+   <span class="p">{</span>
+      <span class="n">FirstName</span> <span class="p">=</span> <span class="s">"Sérgio"</span><span class="p">,</span>
+      <span class="n">LastName</span> <span class="p">=</span> <span class="s">"Ferreira"</span><span class="p">,</span>
+      <span class="n">BirthDate</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DateTime</span><span class="p">(</span><span class="m">1983</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">16</span><span class="p">)</span>
+   <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>Updating data</h2>
+
+<div class="highlight"><pre><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
+   <span class="n">Employee</span> <span class="n">employee</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">GetById</span><span class="p">(</span><span class="n">Employee</span> <span class="p">{</span> <span class="n">EmployeeId</span> <span class="p">=</span> <span class="m">1</span> <span class="p">});</span>
+   <span class="n">employee</span><span class="p">.</span><span class="n">BirthDate</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DateTime</span><span class="p">(</span><span class="m">1983</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">16</span><span class="p">);</span>
+
+   <span class="n">session</span><span class="p">.</span><span class="n">Update</span><span class="p">(</span><span class="n">employee</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>Deleting data</h2>
+
+<div class="highlight"><pre><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
+   <span class="n">session</span><span class="p">.</span><span class="n">Delete</span><span class="p">(</span><span class="k">new</span> <span class="n">Employee</span> <span class="p">{</span> <span class="n">EmployeeId</span> <span class="p">=</span> <span class="m">1</span> <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>Executing within a transaction</h2>
 
 <div class="highlight"><pre><span class="c1">// Executing operations within a transaction.</span>
    <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
