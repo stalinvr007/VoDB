@@ -17,14 +17,14 @@ namespace VODB.ExpressionsToSql
             queries.Add(query);
         }
 
-        public String Compile(int level)
+        public String Compile(ref int level)
         {
             var sb = new StringBuilder();
 
-            Parallel.ForEach(queries, q =>
+            foreach (var query in queries)
             {
-                SafeAppendLine(sb, q.Compile(Interlocked.Increment(ref level)));
-            });
+                 sb.Append(query.Compile(ref level));
+            }
 
             return sb.ToString();
         }

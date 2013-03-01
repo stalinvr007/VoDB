@@ -56,6 +56,9 @@ namespace VODB.Expressions
             if (expression.Body is MemberExpression)
                 return expression.Body as MemberExpression;
 
+            if (expression.Body is UnaryExpression && expression.Body.NodeType == ExpressionType.Convert)
+                return ((UnaryExpression)expression.Body).Operand as MemberExpression;
+
             throw new UnableToGetTheFirstMember(expression.ToString());
         }
 
@@ -65,7 +68,7 @@ namespace VODB.Expressions
 
             if (exp == null)
             {
-                throw new InvalidProgramException("Can't get the right part of expression.");
+                return new Object[] { };
             }
 
             var constantExpression = exp.Right as ConstantExpression;

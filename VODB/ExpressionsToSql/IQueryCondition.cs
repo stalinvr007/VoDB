@@ -10,7 +10,7 @@ namespace VODB.ExpressionsToSql
         /// </summary>
         /// <param name="level">The level.</param>
         /// <returns></returns>
-        String Compile(int level);
+        String Compile(ref int level);
 
         /// <summary>
         /// Gets the parameter values.

@@ -33,38 +33,46 @@ namespace VODB.ExpressionsToSql
             {
                 case ExpressionType.Equal: return new ConstantCondition(" = @p");
                 case ExpressionType.GreaterThan: return new ConstantCondition(" > @p");
+                case ExpressionType.GreaterThanOrEqual: return new ConstantCondition(" >= @p");
+                case ExpressionType.LessThan: return new ConstantCondition(" < @p");
+                case ExpressionType.LessThanOrEqual: return new ConstantCondition(" <= @p");
                 default: throw new InvalidOperationException("Unable to decode this node type. " + decoder.NodeType.ToString());
             }
         }
 
-        public String Compile(int level)
+        public String Compile(ref int level)
         {
             var parts = _Expression.DecodeLeft().ToList();
 
             var sb = new StringBuilder();
-            Build(sb, parts, 0, level);
+            Build(sb, parts, 0, ref level);
             return sb.ToString();
         }
 
-        private void Build(StringBuilder sb, IList<ExpressionPart> parts, int index, int level)
+        private void Build(StringBuilder sb, IList<ExpressionPart> parts, int index, ref int level)
         {
 
             if (index == parts.Count - 1)
             {
                 // Finalize the Condition
                 sb.Append(parts[index].Field.FieldName)
-                  .Append(_Follows.Compile(level));
+                  .Append(_Follows.Compile(ref level));
 
                 // Add the values as a parameter to the parameters collection.
                 foreach (var value in _Expression.DecodeRight())
                 {
                     _Parameters.Add(new QueryParameter
                     {
-                        Name = "@p" + level,
+                        Name = "@p" + level++,
                         Value = value
-                    });    
+                    });
                 }
-                
+
+                foreach (var parameter in _Follows.Parameters)
+                {
+                    _Parameters.Add(parameter);
+                }
+
                 return;
             }
 
@@ -77,7 +85,7 @@ namespace VODB.ExpressionsToSql
                 .Append(current.Table.TableName)
                 .Append(" Where ");
 
-            Build(sb, parts, index + 1, level);
+            Build(sb, parts, index + 1, ref level);
             sb.Append(")");
         }
 
