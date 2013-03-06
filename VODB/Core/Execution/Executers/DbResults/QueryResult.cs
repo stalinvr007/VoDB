@@ -15,17 +15,14 @@ namespace VODB.Core.Execution.Executers.DbResults
 {
     internal interface IQueryResultGetter
     {
-        IDbQueryResult<TEntity> GetQueryResult<TEntity>(IInternalSession session, IEntityLoader loader,
-                                                        IEntityFactory entityFactory)
-            where TEntity : class, new();
+        IDbQueryResult<TEntity> GetQueryResult<TEntity>(IInternalSession session, IEntityLoader loader, IEntityFactory entityFactory) where TEntity : class, new();
     }
 
     internal class QueryResultGetter : IQueryResultGetter
     {
         #region IQueryResultGetter Members
 
-        public IDbQueryResult<TEntity> GetQueryResult<TEntity>(IInternalSession session, IEntityLoader loader,
-                                                               IEntityFactory entityFactory)
+        public IDbQueryResult<TEntity> GetQueryResult<TEntity>(IInternalSession session, IEntityLoader loader, IEntityFactory entityFactory)
             where TEntity : class, new()
         {
             return new QueryResult<TEntity>(session, loader, entityFactory);
