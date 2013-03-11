@@ -14,11 +14,38 @@ using VODB.EntityValidators.Fields;
 using VODB.Exceptions;
 using VODB.Exceptions.Handling;
 using VODB.ExpressionParser;
+using VODB.Sessions;
 
 namespace VODB
 {
     internal static class InternalExtensions
     {
+
+        public static void RollbackOnError(this IInternalTransaction trans, Action action)
+        {
+            trans.RollbackOnError<Object>(() =>
+            {
+                action(); 
+                return null;
+            });
+        }
+
+        public static T RollbackOnError<T>(this IInternalTransaction trans, Func<T> action)
+        {
+            try
+            {
+                return action();
+            }
+            catch (Exception)
+            {
+                if (trans != null)
+                {
+                    trans.RollBack();
+                }
+                throw;
+            }
+        }
+
         public static void Handle(this Exception ex)
         {
             IExceptionHandler handler = Engine.Configuration.ExceptionHandlers.FirstOrDefault(eh => eh.CanHandle(ex));
@@ -45,7 +72,7 @@ namespace VODB
 
         public static TEntity Make<TEntity>(this IEntityFactory factory, IInternalSession session)
         {
-            return (TEntity) factory.Make(typeof (TEntity), session);
+            return (TEntity)factory.Make(typeof(TEntity), session);
         }
 
         public static void SetParameters(this DbCommand cmd, IEnumerable<KeyValuePair<Key, Object>> collection)

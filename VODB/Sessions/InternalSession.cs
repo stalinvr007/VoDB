@@ -169,29 +169,38 @@ namespace VODB.Sessions
 
         public TEntity Insert<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            _InsertExecuter.Execute(entity, this);
-
-            Field field = entity.GetTable().IdentityField;
-            if (field != null)
+            return _Transaction.RollbackOnError(() =>
             {
-                field.SetValue(entity, Convert.ChangeType(_IdentityExecuter.Execute(entity, this), field.FieldType));
-            }
+                _InsertExecuter.Execute(entity, this);
 
-            Close();
-            return entity;
+                Field field = entity.GetTable().IdentityField;
+                if (field != null)
+                {
+                    field.SetValue(entity, Convert.ChangeType(_IdentityExecuter.Execute(entity, this), field.FieldType));
+                }
+
+                Close();
+                return entity;
+            });
         }
 
         public void Delete<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            _DeleteExecuter.Execute(entity, this);
-            Close();
+            _Transaction.RollbackOnError(() =>
+            {
+                _DeleteExecuter.Execute(entity, this);
+                Close();
+            });
         }
 
         public TEntity Update<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            _UpdateExecuter.Execute(entity, this);
-            Close();
-            return entity;
+            return _Transaction.RollbackOnError(() =>
+            {
+                _UpdateExecuter.Execute(entity, this);
+                Close();
+                return entity;
+            });
         }
 
         public int Count<TEntity>() where TEntity : class, new()

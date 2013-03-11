@@ -108,7 +108,7 @@ namespace VODB.Sessions
         public ITransaction BeginTransaction(IInternalSession session, DbConnection connection)
         {
             _Session = session;
-            if (_Transaction == null)
+            if (_Transaction == null || Ended)
             {
                 Ended = false;
                 _Transaction = connection.BeginTransaction();
