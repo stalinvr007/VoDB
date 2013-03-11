@@ -62,7 +62,10 @@ namespace VODB.Core.Loaders.Factories
             MethodInfo methodInfo = invocation.TargetType.GetMethod("get_" + fieldName);
 
             object value = invocation.GetArgumentValue(0);
-            lastResult[methodInfo] = new ObjWrapper {Value = invocation.GetArgumentValue(0)};
+            lastResult[methodInfo] = new ObjWrapper {
+                Value = invocation.GetArgumentValue(0),
+                IsLoaded = value != null && value.GetType().IsGenericType
+            };
         }
 
         private void GetValueHandler(IInvocation invocation, MethodInfo method, string fieldName)
