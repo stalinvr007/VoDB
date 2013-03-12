@@ -73,6 +73,7 @@
     <Compile Include="Core\Infrastructure\TableMapper.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommandHolderLazy.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TCount.cs" />
+    <Compile Include="EntityTranslation\EntityTranslator.cs" />
     <Compile Include="EntityTranslation\IEntityTranslator.cs" />
     <Compile Include="Exceptions\UnableToGetTheValue.cs" />
     <Compile Include="Core\Loaders\Factories\IEntityFactory.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="IConfiguration.cs" />
     <Compile Include="Infrastructure\IField.cs" />
     <Compile Include="Infrastructure\ITable.cs" />
+    <Compile Include="Infrastructure\Table.cs" />
     <Compile Include="InternalExtensions.cs" />
     <Compile Include="ISessionExtensions.cs" />
     <Compile Include="Exceptions\SessionNotFoundException.cs" />

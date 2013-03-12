@@ -68,6 +68,7 @@
     <Compile Include="CommandsBuilding_Tests.cs" />
     <Compile Include="DbReaderMapper.cs" />
     <Compile Include="EntitiesAsserts.cs" />
+    <Compile Include="EntityTranslator_Tests.cs" />
     <Compile Include="ExpressionParser_Tests.cs" />
     <Compile Include="Models\Northwind\Categories.cs" />
     <Compile Include="Models\Northwind\CustomerCustomerDemo.cs" />
