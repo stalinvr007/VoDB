@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using VODB.EntityTranslation;
 using VODB.Tests.Models.Northwind;
 using System.Linq;
+using System.Diagnostics;
 
 namespace VODB.Tests
 {
@@ -50,10 +51,11 @@ namespace VODB.Tests
             var translator = new EntityTranslator();
             foreach (var pair in EntityTables.AsParallel())
             {
-                Assert.That(translator.Translate(pair.Key).Name, Is.EqualTo(pair.Value));
+                var table = translator.Translate(pair.Key);
+                Assert.That(table.Name, Is.EqualTo(pair.Value));
+                Assert.That(table.Fields.Count, Is.GreaterThan(1));
             }
-
         }
-
+        
     }
 }

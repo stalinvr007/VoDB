@@ -13,13 +13,20 @@ namespace VODB.Infrastructure
     {
 
         /// <summary>
-        /// Gets the name of the table.
+        /// Gets the table name.
         /// </summary>
         /// <value>
         /// The name.
         /// </value>
         String Name { get; }
 
+        /// <summary>
+        /// Gets the table fields.
+        /// </summary>
+        /// <value>
+        /// The fields.
+        /// </value>
+        IList<IField> Fields { get; }
     }
 
 }
