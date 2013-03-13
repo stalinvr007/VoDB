@@ -20,17 +20,16 @@ namespace VODB.EntityTranslation
             typeof(DbIdentityAttribute)
         };
 
-        /// <summary>
-        /// Translates the specified entity type.
-        /// </summary>
-        /// <param name="entityType">Type of entity.</param>
-        /// <returns></returns>
         public ITable Translate(Type entityType)
         {
             var dbTable = entityType.Attribute<DbTableAttribute>();
+            var fields = GetFields(entityType);
+
             return new Table(
                 dbTable != null ? dbTable.TableName : entityType.Name,
-                GetFields(entityType));
+                fields, 
+                fields.Where(f => f.IsKey).ToList()
+            );
         }
 
         private IList<IField> GetFields(Type entityType)
@@ -51,13 +50,12 @@ namespace VODB.EntityTranslation
 
                 );
 
-                fields.Add(new Field(
-                    fieldName,
-                    entityType,
-                    MakeValueSetter(fieldName, setter),
-                    MakeValueGetter(fieldName, getter))
-                );
+                var field = new Field(fieldName, entityType, MakeValueSetter(fieldName, setter), MakeValueGetter(fieldName, getter));
 
+                field.IsIdentity = item.HasAttribute<DbIdentityAttribute>();
+                field.IsKey = field.IsIdentity || item.HasAttribute<DbKeyAttribute>();
+
+                fields.Add(field);
             }
 
             return fields;

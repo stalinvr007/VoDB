@@ -27,6 +27,14 @@ namespace VODB.Infrastructure
         /// The fields.
         /// </value>
         IList<IField> Fields { get; }
+
+        /// <summary>
+        /// Gets the table keys.
+        /// </summary>
+        /// <value>
+        /// The keys.
+        /// </value>
+        IList<IField> Keys { get; }
     }
 
 }

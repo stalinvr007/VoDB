@@ -18,6 +18,10 @@ namespace VODB.Infrastructure
         public String Name { get; private set; }
 
         public Type EntityType { get; private set; }
+        
+        public bool IsKey { get; internal set; }
+
+        public bool IsIdentity { get; internal set; }
 
         public void SetValue(Object entity, Object value)
         {

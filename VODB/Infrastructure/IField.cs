@@ -29,6 +29,22 @@ namespace VODB.Infrastructure
         Type EntityType { get; }
 
         /// <summary>
+        /// Indicates the field is a key.
+        /// </summary>
+        /// <value>
+        /// The is key.
+        /// </value>
+        Boolean IsKey { get; }
+
+        /// <summary>
+        /// Indicates the field is a identity field.
+        /// </summary>
+        /// <value>
+        /// The is key.
+        /// </value>
+        Boolean IsIdentity { get; }
+
+        /// <summary>
         /// Sets the value of the field.
         /// </summary>
         /// <param name="entity">The entity.</param>
@@ -41,6 +57,5 @@ namespace VODB.Infrastructure
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
         Object GetValue(Object entity);
-
     }
 }

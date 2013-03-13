@@ -108,6 +108,7 @@ namespace VODB.Tests
 
         [TestCase("1")]
         [TestCase(true)]
+        [TestCase(null)]
         [ExpectedException(typeof(UnableToSetTheFieldValueException))]
         public void Translate_Assert_Setter_WrongType(Object value)
         {
