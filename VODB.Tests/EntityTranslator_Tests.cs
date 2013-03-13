@@ -73,6 +73,22 @@ namespace VODB.Tests
         }
 
         [Test]
+        [ExpectedException(typeof(UnableToGetTheFieldValueException))]
+        public void Translate_Assert_Getter_WrongEntity()
+        {
+            var table = translator.Translate(typeof(Employee));
+
+            var employee = new Orders
+            {
+                OrderId = 1
+            };
+
+            var employeeIdField = table.Fields.First(f => f.Name.Equals("EmployeeId"));
+
+            Assert.That(employeeIdField.GetValue(employee), Is.EqualTo(1));
+        }
+
+        [Test]
         public void Translate_Assert_Setter()
         {
             var table = translator.Translate(typeof(Employee));

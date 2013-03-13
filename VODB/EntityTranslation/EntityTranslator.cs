@@ -55,12 +55,27 @@ namespace VODB.EntityTranslation
                     fieldName,
                     entityType,
                     MakeValueSetter(fieldName, setter),
-                    (entity) => getter(entity))
+                    MakeValueGetter(fieldName, getter))
                 );
 
             }
 
             return fields;
+        }
+
+        private static Func<Object, Object> MakeValueGetter(String fieldName, MemberGetter getter)
+        {
+            return (entity) =>
+            {
+                try
+                {
+                    return getter(entity);
+                }
+                catch (Exception ex)
+                {   
+                    throw new UnableToGetTheFieldValueException(ex, fieldName);
+                }
+            };
         }
 
         private static Action<Object, Object> MakeValueSetter(String fieldName, MemberSetter setter)
@@ -74,7 +89,7 @@ namespace VODB.EntityTranslation
                 catch (Exception ex)
                 {
                     throw new UnableToSetTheFieldValueException(ex, fieldName, value);
-                }                
+                }
             };
         }
 
@@ -88,7 +103,7 @@ namespace VODB.EntityTranslation
                     return attr.FieldName ?? property.Name;
                 }
             }
-            
+
             return property.Name;
         }
 
