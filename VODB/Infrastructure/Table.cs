@@ -18,8 +18,8 @@ namespace VODB.Infrastructure
 
         public String Name { get; private set; }
 
-        public IList<IField> Fields { get; private set; }
+        public IEnumerable<IField> Fields { get; private set; }
 
-        public IList<IField> Keys { get; private set; }
+        public IEnumerable<IField> Keys { get; private set; }
     }
 }

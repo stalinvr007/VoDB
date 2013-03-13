@@ -25,7 +25,7 @@ namespace VODB.Tests
 
     }
 
-    [TestFixture]
+    [TestFixture] 
     public class EntityTranslator_Tests
     {
         IEntityTranslator translator = new EntityTranslator();
@@ -53,6 +53,27 @@ namespace VODB.Tests
             {
                 var table = translator.Translate(pair.Key);
                 Assert.That(table.Name, Is.EqualTo(pair.Value));
+            }
+        }
+
+        [Test]
+        public void Translate_Assert_Fields()
+        {
+            foreach (var pair in EntityTables.AsParallel())
+            {
+                var table = translator.Translate(pair.Key);
+
+                Assert.That(table.Fields.Any());
+                Assert.That(table.Keys.Any());
+
+                CollectionAssert.AllItemsAreNotNull(table.Fields);
+                CollectionAssert.AllItemsAreNotNull(table.Keys);
+
+                CollectionAssert.AllItemsAreUnique(table.Fields);
+                CollectionAssert.AllItemsAreUnique(table.Keys);
+
+                CollectionAssert.AllItemsAreNotNull(table.Fields.Select(i => i.Name));
+                CollectionAssert.AllItemsAreNotNull(table.Keys.Select(i => i.Name));
             }
         }
 

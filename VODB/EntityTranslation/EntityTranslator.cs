@@ -36,7 +36,7 @@ namespace VODB.EntityTranslation
         {
             IList<IField> fields = new List<IField>();
 
-            foreach (var item in entityType.GetProperties().AsParallel())
+            foreach (var item in entityType.GetProperties().AsParallel().Where(pi => !pi.HasAttribute<DbIgnoreAttribute>()))
             {
                 String fieldName = null;
                 MemberSetter setter = null;
