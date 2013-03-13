@@ -6,11 +6,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Reflection;
+using VODB.Exceptions;
 
 namespace VODB.EntityTranslation
 {
     class EntityTranslator : IEntityTranslator
     {
+
+        static IList<Type> fieldAttributes = new List<Type>()
+        {
+            typeof(DbFieldAttribute),
+            typeof(DbKeyAttribute),
+            typeof(DbIdentityAttribute)
+        };
 
         /// <summary>
         /// Translates the specified entity type.
@@ -46,7 +54,7 @@ namespace VODB.EntityTranslation
                 fields.Add(new Field(
                     fieldName,
                     entityType,
-                    (entity, value) => setter(entity, value),
+                    MakeValueSetter(fieldName, setter),
                     (entity) => getter(entity))
                 );
 
@@ -55,26 +63,33 @@ namespace VODB.EntityTranslation
             return fields;
         }
 
+        private static Action<Object, Object> MakeValueSetter(String fieldName, MemberSetter setter)
+        {
+            return (entity, value) =>
+            {
+                try
+                {
+                    setter(entity, value);
+                }
+                catch (Exception ex)
+                {
+                    throw new UnableToSetTheFieldValueException(ex, fieldName, value);
+                }                
+            };
+        }
+
         private String GetFieldName(PropertyInfo property)
         {
+            foreach (var item in fieldAttributes)
+            {
+                var attr = property.Attribute(item) as DbFieldBase;
+                if (attr != null)
+                {
+                    return attr.FieldName ?? property.Name;
+                }
+            }
+            
             return property.Name;
-
-        }
-
-        private Task<MemberSetter> GetFieldValueSetter(PropertyInfo property)
-        {
-            return Task<MemberSetter>.Factory.StartNew(() =>
-            {
-                return property.DelegateForSetPropertyValue();
-            });
-        }
-
-        private Task<MemberGetter> GetFieldValueGetter(PropertyInfo property)
-        {
-            return Task<MemberGetter>.Factory.StartNew(() =>
-            {
-                return property.DelegateForGetPropertyValue();
-            });
         }
 
     }

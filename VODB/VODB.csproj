@@ -120,6 +120,7 @@
     <Compile Include="Exceptions\TruncatedException.cs" />
     <Compile Include="Exceptions\TSqlBuilderNotFoundException.cs" />
     <Compile Include="Exceptions\UnableToSetParameterValueException.cs" />
+    <Compile Include="Exceptions\UnableToSetTheFieldValueException.cs" />
     <Compile Include="Exceptions\UniqueKeyViolationException.cs" />
     <Compile Include="Exceptions\WhereExpressionFormatterNotFoundException.cs" />
     <Compile Include="Exceptions\WhereExpressionHandlerNotFoundException.cs" />

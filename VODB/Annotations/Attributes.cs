@@ -2,6 +2,18 @@
 
 namespace VODB.Annotations
 {
+
+    public class DbFieldBase : Attribute
+    {
+
+        public DbFieldBase(String fieldName)
+        {
+            FieldName = fieldName;
+        }
+
+        internal String FieldName { get; private set; }
+    }
+
     /// <summary>
     /// Indicates that this is a DataBase Table.
     /// </summary>
@@ -30,72 +42,45 @@ namespace VODB.Annotations
     /// Indicates that this is a DataBase Field.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class DbFieldAttribute : Attribute
+    public sealed class DbFieldAttribute : DbFieldBase 
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DbFieldAttribute" /> class.
         /// </summary>
         /// <param name="fieldName">Name of the field.</param>
-        public DbFieldAttribute(String fieldName)
+        public DbFieldAttribute(String fieldName) : base(fieldName)
         {
-            FieldName = fieldName;
+            
         }
 
-        /// <summary>
-        /// Gets the name of the field.
-        /// </summary>
-        /// <value>
-        /// The name of the field.
-        /// </value>
-        internal String FieldName { get; private set; }
     }
 
     /// <summary>
     /// Indicates that this is a DataBase Key Field.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class DbKeyAttribute : Attribute
+    public sealed class DbKeyAttribute : DbFieldBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbKeyAttribute" /> class.
-        /// </summary>
-        /// <param name="fieldName">Name of the field.</param>
         public DbKeyAttribute(String fieldName = null)
+            : base(fieldName)
         {
-            FieldName = fieldName;
+            
         }
-
-        /// <summary>
-        /// Gets the name of the field.
-        /// </summary>
-        /// <value>
-        /// The name of the field.
-        /// </value>
-        internal String FieldName { get; private set; }
+       
     }
 
     /// <summary>
     /// Indicates that this is a DataBase Identity Field.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class DbIdentityAttribute : Attribute
+    public sealed class DbIdentityAttribute : DbFieldBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbIdentityAttribute" /> class.
-        /// </summary>
-        /// <param name="fieldName">Name of the field.</param>
         public DbIdentityAttribute(String fieldName = null)
+            : base(fieldName)
         {
-            FieldName = fieldName;
+            
         }
-
-        /// <summary>
-        /// Gets the name of the field.
-        /// </summary>
-        /// <value>
-        /// The name of the field.
-        /// </value>
-        internal String FieldName { get; private set; }
+        
     }
 
     /// <summary>
@@ -118,23 +103,13 @@ namespace VODB.Annotations
     /// Indicates the Foreign key to bind.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class DbBindAttribute : Attribute
+    public sealed class DbBindAttribute : DbFieldBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbBindAttribute" /> class.
-        /// </summary>
-        /// <param name="fieldName">Name of the field.</param>
-        public DbBindAttribute(String fieldName = null)
+        public DbBindAttribute(String fieldName)
+            : base(fieldName)
         {
-            FieldName = fieldName;
+            
         }
-
-        /// <summary>
-        /// Gets the name of the field.
-        /// </summary>
-        /// <value>
-        /// The name of the field.
-        /// </value>
-        internal String FieldName { get; private set; }
+        
     }
 }
