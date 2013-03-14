@@ -25,10 +25,11 @@ namespace VODB.Tests
 
     }
 
-    [TestFixture] 
-    public class EntityTranslator_Tests
+    [TestFixture(typeof(EntityTranslator))] 
+    public class EntityTranslator_Tests<TEntityTranslator> where TEntityTranslator : IEntityTranslator, new()
     {
-        IEntityTranslator translator = new EntityTranslator();
+
+        IEntityTranslator translator;
         IList<KeyValuePair<Type, String>> EntityTables = new List<KeyValuePair<Type, String>>
         {
             new Pair<Categories>("Categories").ToKVP(),
@@ -45,6 +46,11 @@ namespace VODB.Tests
             new Pair<Suppliers>("Suppliers").ToKVP(),
             new Pair<Territories>("Territories").ToKVP()
         };
+
+        public EntityTranslator_Tests()
+        {
+            this.translator = new TEntityTranslator();
+        }
 
         [Test]
         public void Translate_Assert_TableNames()
@@ -151,6 +157,23 @@ namespace VODB.Tests
             var employeeIdField = table.Fields.First(f => f.Name.Equals("EmployeeId"));
 
             employeeIdField.SetValue(employee, value); 
+        }
+
+        [Test]
+        public void Translate_Assert_BindedFieldValue()
+        {
+            var table = translator.Translate(typeof(Employee));
+
+            var employee = new Employee
+            {
+                EmployeeId = -1,
+                BirthDate = new DateTime(1983, 4, 16),
+                ReportsTo = new Employee { EmployeeId = 10 }
+            };
+
+            var reportsToField = table.Fields.First(f => f.Name.Equals("ReportsTo"));
+
+            Assert.That(reportsToField.GetFieldFinalValue(employee), Is.EqualTo(10));
         }
                 
     }

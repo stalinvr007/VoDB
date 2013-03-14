@@ -9,7 +9,7 @@ namespace VODB.Tests
 {
 
     [TestFixture]
-    public class UnitTest1
+    public class FasterFlect_Vs_Reflection
     {
 
         class TestClass
@@ -45,19 +45,6 @@ namespace VODB.Tests
             }
         }
                 
-        static Delegate GetPropertySetter(Type entity, PropertyInfo pi)
-        {
-            MethodInfo mi = pi.GetSetMethod();
-
-            ParameterExpression oParam = Expression.Parameter(entity, "obj");
-            ParameterExpression vParam = Expression.Parameter(pi.PropertyType, "val");
-
-            MethodCallExpression mce = Expression.Call(oParam, mi, Expression.Convert(vParam, pi.PropertyType));
-
-            var assign = Expression.Assign(oParam, Expression.Convert(vParam, pi.PropertyType));
-
-            return Expression.Lambda(assign, oParam, vParam).Compile();
-        }
 
     }
 
