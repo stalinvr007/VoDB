@@ -57,5 +57,28 @@ namespace VODB.Infrastructure
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
         Object GetValue(Object entity);
+
+        /// <summary>
+        /// Gets the field final value.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns></returns>
+        Object GetFieldFinalValue(Object entity);
+
+        /// <summary>
+        /// Gets the field this field in binded to.
+        /// </summary>
+        /// <value>
+        /// The field this field in binded.
+        /// </value>
+        IField BindToField { get; }
+
+        /// <summary>
+        /// Gets the table.
+        /// </summary>
+        /// <value>
+        /// The table.
+        /// </value>
+        ITable Table { get; }
     }
 }

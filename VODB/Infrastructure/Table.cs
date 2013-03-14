@@ -9,17 +9,15 @@ namespace VODB.Infrastructure
     class Table : ITable
     {
 
-        public Table(String name, IList<IField> fields, IList<IField> keys)
+        public Table(String name)
         {
             Name = name;
-            Fields = fields;
-            Keys = keys;
         }
 
         public String Name { get; private set; }
 
-        public IEnumerable<IField> Fields { get; private set; }
+        public IEnumerable<IField> Fields { get; internal set; }
 
-        public IEnumerable<IField> Keys { get; private set; }
+        public IEnumerable<IField> Keys { get; internal set; }
     }
 }

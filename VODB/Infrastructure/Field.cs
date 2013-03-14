@@ -32,5 +32,13 @@ namespace VODB.Infrastructure
         {
             return _ValueGetter(entity);
         }
+
+        public object GetFieldFinalValue(object entity)
+        {
+            object value = GetValue(entity);
+            return BindToField != null ? BindToField.GetValue(value) : value;
+        }
+
+        public IField BindToField { get; internal set; }
     }
 }

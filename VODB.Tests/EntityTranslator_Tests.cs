@@ -91,6 +91,8 @@ namespace VODB.Tests
             var employeeIdField = table.Fields.First(f => f.Name.Equals("EmployeeId"));
 
             Assert.That(employeeIdField.GetValue(employee), Is.EqualTo(1));
+
+            Assert.That(employeeIdField.GetValue(employee), Is.EqualTo(employeeIdField.GetFieldFinalValue(employee)));
         }
 
         [Test]
@@ -99,7 +101,7 @@ namespace VODB.Tests
         {
             var table = translator.Translate(typeof(Employee));
 
-            var employee = new Orders
+            var employee = new Orders // wrong type
             {
                 OrderId = 1
             };
@@ -143,7 +145,7 @@ namespace VODB.Tests
 
             var employeeIdField = table.Fields.First(f => f.Name.Equals("EmployeeId"));
 
-            employeeIdField.SetValue(employee, value);
+            employeeIdField.SetValue(employee, value); 
         }
                 
     }

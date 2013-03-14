@@ -23,13 +23,14 @@ namespace VODB.EntityTranslation
         public ITable Translate(Type entityType)
         {
             var dbTable = entityType.Attribute<DbTableAttribute>();
-            var fields = GetFields(entityType);
+            
 
-            return new Table(
-                dbTable != null ? dbTable.TableName : entityType.Name,
-                fields, 
-                fields.Where(f => f.IsKey).ToList()
-            );
+            var table = new Table(dbTable != null ? dbTable.TableName : entityType.Name);
+
+            table.Fields = GetFields(entityType);
+            table.Keys = table.Fields.Where(f => f.IsKey).ToList();
+
+            return table;
         }
 
         private IList<IField> GetFields(Type entityType)
