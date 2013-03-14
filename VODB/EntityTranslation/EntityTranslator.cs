@@ -7,13 +7,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Reflection;
 using VODB.Exceptions;
+using System.Collections;
 
 namespace VODB.EntityTranslation
 {
     class EntityTranslator : IEntityTranslator
     {
 
-        static IList<Type> fieldAttributes = new List<Type>()
+        private static IDictionary<Type, ITable> tables = new Dictionary<Type, ITable>();
+
+        private static IList<Type> fieldAttributes = new List<Type>()
         {
             typeof(DbFieldAttribute),
             typeof(DbKeyAttribute),
@@ -22,37 +25,38 @@ namespace VODB.EntityTranslation
 
         public ITable Translate(Type entityType)
         {
+            lock (tables)
+            {
+                ITable cached;
+
+                if (tables.TryGetValue(entityType, out cached))
+                {
+                    return cached;
+                }
+            }
+
             var dbTable = entityType.Attribute<DbTableAttribute>();
             
-
             var table = new Table(dbTable != null ? dbTable.TableName : entityType.Name);
 
-            table.Fields = GetFields(entityType);
+            table.Fields = MakeFields(entityType, table);
             table.Keys = table.Fields.Where(f => f.IsKey).ToList();
 
-            return table;
+            table.Fields.AsParallel().ForAll(f => SetFieldBindMember(this, f.Info, (Field)f));
+
+            return tables[entityType] = table;
         }
 
-        private IList<IField> GetFields(Type entityType)
+        private IList<IField> MakeFields(Type entityType, ITable table)
         {
             IList<IField> fields = new List<IField>();
 
             foreach (var item in entityType.GetProperties().AsParallel().Where(pi => !pi.HasAttribute<DbIgnoreAttribute>()))
             {
-                String fieldName = null;
-                MemberSetter setter = null;
-                MemberGetter getter = null;
+                Field field = MakeField(entityType, item);
 
-                Parallel.Invoke(
-
-                    () => fieldName = GetFieldName(item),
-                    () => getter = item.DelegateForGetPropertyValue(),
-                    () => setter = item.DelegateForSetPropertyValue()
-
-                );
-
-                var field = new Field(fieldName, entityType, MakeValueSetter(fieldName, setter), MakeValueGetter(fieldName, getter));
-
+                field.Info = item;
+                field.Table = table;
                 field.IsIdentity = item.HasAttribute<DbIdentityAttribute>();
                 field.IsKey = field.IsIdentity || item.HasAttribute<DbKeyAttribute>();
 
@@ -60,6 +64,59 @@ namespace VODB.EntityTranslation
             }
 
             return fields;
+        }
+
+        private static void SetFieldBindMember(IEntityTranslator translator, PropertyInfo item, Field field)
+        {
+            var bind = item.Attribute<DbBindAttribute>();
+            String bindFieldName = null;
+
+            if (bind != null)
+            {
+                if (!item.GetMethod.IsVirtual)
+                {
+                    throw new InvalidMappingException("The field [{0}] is marked with DbBind but is not Virtual.", field.Name);
+                }
+
+                bindFieldName = bind.FieldName;
+            }
+
+            if (item.GetMethod.IsVirtual && 
+                    !(item.PropertyType.GetInterfaces().Contains(typeof(IEnumerable))))
+            {
+                bindFieldName = bindFieldName ?? field.Name;
+
+                var table = item.PropertyType != field.EntityType ? 
+                    translator.Translate(item.PropertyType) :
+                    field.Table;
+
+                field.BindToField = table.Fields
+                    .FirstOrDefault(f => f.Name.Equals(bindFieldName, StringComparison.InvariantCultureIgnoreCase));
+
+                if (field.BindToField == null)
+                {
+                    throw new InvalidMappingException("The field [{0}] is a reference to the table [{1}] but no match was found.", field.Name, table.Name);
+                }
+
+            }
+
+        }
+
+        private static Field MakeField(Type entityType, PropertyInfo item)
+        {
+            String fieldName = null;
+            MemberSetter setter = null;
+            MemberGetter getter = null;
+
+            Parallel.Invoke(
+
+                () => fieldName = GetFieldName(item),
+                () => getter = item.DelegateForGetPropertyValue(),
+                () => setter = item.DelegateForSetPropertyValue()
+
+            );
+
+            return new Field(fieldName, entityType, MakeValueSetter(fieldName, setter), MakeValueGetter(fieldName, getter));
         }
 
         private static Func<Object, Object> MakeValueGetter(String fieldName, MemberGetter getter)
@@ -92,7 +149,7 @@ namespace VODB.EntityTranslation
             };
         }
 
-        private String GetFieldName(PropertyInfo property)
+        private static String GetFieldName(PropertyInfo property)
         {
             foreach (var item in fieldAttributes)
             {

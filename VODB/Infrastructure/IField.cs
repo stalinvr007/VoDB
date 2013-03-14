@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -80,5 +81,13 @@ namespace VODB.Infrastructure
         /// The table.
         /// </value>
         ITable Table { get; }
+
+        /// <summary>
+        /// Gets the info.
+        /// </summary>
+        /// <value>
+        /// The info.
+        /// </value>
+        PropertyInfo Info { get; }
     }
 }

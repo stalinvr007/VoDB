@@ -49,7 +49,7 @@ namespace VODB.Tests
         [Test]
         public void Translate_Assert_TableNames()
         {
-            foreach (var pair in EntityTables.AsParallel())
+            foreach (var pair in EntityTables)
             {
                 var table = translator.Translate(pair.Key);
                 Assert.That(table.Name, Is.EqualTo(pair.Value));
@@ -59,9 +59,11 @@ namespace VODB.Tests
         [Test]
         public void Translate_Assert_Fields()
         {
-            foreach (var pair in EntityTables.AsParallel())
+            foreach (var pair in EntityTables)
             {
                 var table = translator.Translate(pair.Key);
+
+                var entity = Activator.CreateInstance(pair.Key);
 
                 Assert.That(table.Fields.Any());
                 Assert.That(table.Keys.Any());
@@ -74,6 +76,9 @@ namespace VODB.Tests
 
                 CollectionAssert.AllItemsAreNotNull(table.Fields.Select(i => i.Name));
                 CollectionAssert.AllItemsAreNotNull(table.Keys.Select(i => i.Name));
+
+                CollectionAssert.IsNotEmpty(table.Fields.Select(f => f.GetFieldFinalValue(entity)));
+                CollectionAssert.IsNotEmpty(table.Keys.Select(f => f.GetFieldFinalValue(entity)));
             }
         }
 
