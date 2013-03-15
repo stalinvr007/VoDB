@@ -201,6 +201,8 @@
     <Compile Include="Core\Infrastructure\TSqlCommands\TSqlCmdBase.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TUpdate.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TWhere.cs" />
+    <Compile Include="TableToSql\CountBuilder.cs" />
+    <Compile Include="TableToSql\CountByIdBuilder.cs" />
     <Compile Include="TableToSql\InsertBuilder.cs" />
     <Compile Include="TableToSql\ISqlBuilder.cs" />
     <Compile Include="TableToSql\SelectBuilder.cs" />
