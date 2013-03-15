@@ -41,6 +41,23 @@ namespace VODB.Tests
         }
 
         [TestCaseSource("GetTables")]
+        public void ISqlBuilder_Assert_SelectById(ITable table)
+        {
+            var sql = new SelectByIdBuilder().Build(table);
+
+            StringAssert.StartsWith("Select [", sql);
+
+            foreach (var name in table.Fields.Select(f => f.Name))
+            {
+                StringAssert.Contains("[" + name + "]", sql);
+            }
+
+            StringAssert.Contains(" From [" + table.Name + "]", sql);
+
+            StringAssert.Contains(" Where ", sql);
+        }
+
+        [TestCaseSource("GetTables")]
         public void ISqlBuilder_Assert_WhereId(ITable table)
         {
             var sql = new WhereIdBuilder().Build(table);

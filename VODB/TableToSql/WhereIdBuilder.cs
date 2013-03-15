@@ -20,7 +20,7 @@ namespace VODB.TableToSql
         {
             var sb = new StringBuilder("Where ");
             const string LEFT_WRAPPER = "[";
-            const string RIGHT_WRAPPER = "], ";
+            const string RIGHT_WRAPPER = "]";
             const string WHITE_SPACE = " ";
 
             foreach (var name in table.Keys.Select(f => f.Name))
@@ -33,10 +33,10 @@ namespace VODB.TableToSql
                     sb.Append("old");
                 }
 
-                sb.Append(name.Replace(WHITE_SPACE, "")).Append(", ");
+                sb.Append(name.Replace(WHITE_SPACE, "")).Append(" and ");
             }
 
-            return sb.Remove(sb.Length - 2, 2).ToString();
+            return sb.Remove(sb.Length - 5, 5).ToString();
         }
     }
 }
