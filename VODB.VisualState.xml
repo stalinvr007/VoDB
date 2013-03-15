@@ -4,10 +4,13 @@
   <SelectedNode>[0-1000]D:\Projectos\VODB\VODB.nunit</SelectedNode>
   <ExcludeCategories>false</ExcludeCategories>
   <Nodes>
-    <Node UniqueName="[0-1089]D:\Projectos\VODB\VODB.Tests\bin\Release\VODB.Tests.dll" Expanded="true" />
-    <Node UniqueName="[0-1090]VODB" Expanded="true" />
-    <Node UniqueName="[0-1107]D:\Projectos\VODB\ConcurrentReader.Tests\bin\Release\ConcurrentReader.Tests.dll" Expanded="true" />
-    <Node UniqueName="[0-1108]ConcurrentReader" Expanded="true" />
-    <Node UniqueName="[0-1109]ConcurrentReader.Tests" Expanded="true" />
+    <Node UniqueName="[0-1000]D:\Projectos\VODB\VODB.nunit" Expanded="true" />
+    <Node UniqueName="[0-1121]D:\Projectos\VODB\VODB.Tests\bin\Release\VODB.Tests.dll" Expanded="true" />
+    <Node UniqueName="[0-1122]VODB" Expanded="true" />
+    <Node UniqueName="[0-1123]VODB.Tests" Expanded="true" />
+    <Node UniqueName="[0-1006]VODB.Tests.EntityTranslator_Tests&lt;TEntityTranslator&gt;" Expanded="true" />
+    <Node UniqueName="[0-1015]D:\Projectos\VODB\ConcurrentReader.Tests\bin\Release\ConcurrentReader.Tests.dll" Expanded="true" />
+    <Node UniqueName="[0-1016]ConcurrentReader" Expanded="true" />
+    <Node UniqueName="[0-1017]ConcurrentReader.Tests" Expanded="true" />
   </Nodes>
 </VisualState>

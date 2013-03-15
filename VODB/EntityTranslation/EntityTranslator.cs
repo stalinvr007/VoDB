@@ -25,27 +25,24 @@ namespace VODB.EntityTranslation
 
         public ITable Translate(Type entityType)
         {
-            lock (tables)
-            {
-                ITable cached;
+            ITable cached;
 
-                if (tables.TryGetValue(entityType, out cached))
-                {
-                    return cached;
-                }
+            if (tables.TryGetValue(entityType, out cached))
+            {
+                return cached;
             }
 
             var dbTable = entityType.Attribute<DbTableAttribute>();
-            
+
             var table = new Table(dbTable != null ? dbTable.TableName : entityType.Name);
 
             table.Fields = MakeFields(entityType, table);
-            
+
             table.Fields = table.Fields.Select(f => SetFieldBindMember(this, f.Info, (Field)f)).ToList();
 
             table.Keys = table.Fields
                 .Where(f => f.IsKey).ToList();
-            
+                        
             return tables[entityType] = table;
         }
 
@@ -53,7 +50,10 @@ namespace VODB.EntityTranslation
         {
             IList<IField> fields = new List<IField>();
 
-            foreach (var item in entityType.GetProperties().AsParallel().Where(pi => !pi.HasAttribute<DbIgnoreAttribute>()))
+            foreach (var item in entityType.GetProperties()
+                .AsParallel()
+                .Where(pi => !pi.HasAttribute<DbIgnoreAttribute>())
+                .Where(pi => !pi.PropertyType.IsGenericType || !pi.PropertyType.GetInterfaces().Contains(typeof(IEnumerable))))
             {
                 Field field = MakeField(entityType, item);
 
@@ -83,12 +83,11 @@ namespace VODB.EntityTranslation
                 bindFieldName = bind.FieldName;
             }
 
-            if (item.GetMethod.IsVirtual && 
-                    !(item.PropertyType.GetInterfaces().Contains(typeof(IEnumerable))))
+            if (item.GetMethod.IsVirtual)
             {
                 bindFieldName = bindFieldName ?? field.Name;
 
-                var table = item.PropertyType != field.EntityType ? 
+                var table = item.PropertyType != field.EntityType ?
                     translator.Translate(item.PropertyType) :
                     field.Table;
 
@@ -133,7 +132,7 @@ namespace VODB.EntityTranslation
                     return getter(entity);
                 }
                 catch (Exception ex)
-                {   
+                {
                     throw new UnableToGetTheFieldValueException(ex, fieldName);
                 }
             };

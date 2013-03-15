@@ -6,6 +6,7 @@ using VODB.Tests.Models.Northwind;
 using System.Linq;
 using System.Diagnostics;
 using VODB.Exceptions;
+using System.Collections;
 
 namespace VODB.Tests
 {
@@ -25,7 +26,7 @@ namespace VODB.Tests
 
     }
 
-    [TestFixture(typeof(EntityTranslator))] 
+    [TestFixture(typeof(EntityTranslator))]
     public class EntityTranslator_Tests<TEntityTranslator> where TEntityTranslator : IEntityTranslator, new()
     {
 
@@ -60,6 +61,14 @@ namespace VODB.Tests
                 var table = translator.Translate(pair.Key);
                 Assert.That(table.Name, Is.EqualTo(pair.Value));
             }
+        }
+
+        [Test]
+        public void Translate_Assert_FieldCount()
+        {
+            var table = translator.Translate(typeof(Employee));
+
+            Assert.That(table.Fields.Count(), Is.EqualTo(18));
         }
 
         [Test]
@@ -156,7 +165,7 @@ namespace VODB.Tests
 
             var employeeIdField = table.Fields.First(f => f.Name.Equals("EmployeeId"));
 
-            employeeIdField.SetValue(employee, value); 
+            employeeIdField.SetValue(employee, value);
         }
 
         [Test]
@@ -175,6 +184,89 @@ namespace VODB.Tests
 
             Assert.That(reportsToField.GetFieldFinalValue(employee), Is.EqualTo(10));
         }
-                
+
+        private static IEnumerable GetTestValues()
+        {
+            yield return new TestCaseData("EmployeeId", 1);
+            yield return new TestCaseData("FirstName", "Sérgio");
+            yield return new TestCaseData("LastName", "Ferreira");
+            yield return new TestCaseData("Title", "Eng");
+            yield return new TestCaseData("TitleOfCourtesy", "Eng");
+            yield return new TestCaseData("BirthDate", new DateTime(1983, 4, 16));
+            yield return new TestCaseData("HireDate", new DateTime(2001, 4, 16));
+            yield return new TestCaseData("Address", "av. bla bla number x");
+            yield return new TestCaseData("City", "Lisbon");
+            yield return new TestCaseData("Region", "West Coast");
+            yield return new TestCaseData("PostalCode", "1170");
+            yield return new TestCaseData("Country", "Portugal");
+            yield return new TestCaseData("HomePhone", "964585858");
+            yield return new TestCaseData("Extension", "2514");
+            yield return new TestCaseData("Notes", "some notes");
+            yield return new TestCaseData("Photo", new Byte[0]);
+            yield return new TestCaseData("ReportsTo", new Employee { EmployeeId = 10 });
+            yield return new TestCaseData("PhotoPath", "/");
+        }
+
+        [TestCaseSource("GetTestValues")]
+        public void Translate_Assert_SetValue_GetValue(String fieldName, Object value)
+        {
+            var table = translator.Translate(typeof(Employee));
+
+            var field = table.Fields.First(f => f.Name.Equals(fieldName));
+
+            var employee = new Employee();
+
+            field.SetValue(employee, value);
+
+            Assert.That(field.GetValue(employee), Is.EqualTo(value));
+        }
+
+        [Test]
+        public void Translate_Assert_SetAllValuesToEmployee()
+        {
+            var table = translator.Translate(typeof(Employee));
+
+            var dic = new Dictionary<String, Object>()
+            {
+                {"EmployeeId", 1},
+                {"LastName", "Ferreira"},
+                {"FirstName", "Sérgio"},
+                {"Title", "Eng"},
+                {"TitleOfCourtesy", "Eng"},
+                {"BirthDate", new DateTime(1983,4,16)},
+                {"HireDate", DateTime.Now},
+                {"Address", "av. bla bla number x"},
+                {"City", "Lisbon"},
+                {"Region", "West Coast"},
+                {"PostalCode", "1170"},
+                {"Country", "Portugal"},
+                {"HomePhone", "964585858"},
+                {"Extension", "2514"},
+                {"Notes", "some notes"},
+                {"Photo", new Byte[0]},
+                {"ReportsTo", new Employee { EmployeeId = 10 }},
+                {"PhotoPath", "/"}
+
+            };
+
+            var employee = new Employee();
+
+
+            var fields = table.Fields.OrderBy(i => i.Name).ToArray();
+
+            var values = dic.OrderBy(i => i.Key).Select(kvp => kvp.Value).ToArray();
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                fields[i].SetValue(employee, values[i]);
+            }
+
+            foreach (var field in fields)
+            {
+                Assert.That(field.GetValue(employee), Is.EqualTo(dic[field.Name]));
+            }
+
+        }
+
     }
 }
