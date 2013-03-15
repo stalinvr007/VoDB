@@ -40,10 +40,12 @@ namespace VODB.EntityTranslation
             var table = new Table(dbTable != null ? dbTable.TableName : entityType.Name);
 
             table.Fields = MakeFields(entityType, table);
-            table.Keys = table.Fields.Where(f => f.IsKey).ToList();
+            
+            table.Fields = table.Fields.Select(f => SetFieldBindMember(this, f.Info, (Field)f)).ToList();
 
-            table.Fields.AsParallel().ForAll(f => SetFieldBindMember(this, f.Info, (Field)f));
-
+            table.Keys = table.Fields
+                .Where(f => f.IsKey).ToList();
+            
             return tables[entityType] = table;
         }
 
@@ -66,7 +68,7 @@ namespace VODB.EntityTranslation
             return fields;
         }
 
-        private static void SetFieldBindMember(IEntityTranslator translator, PropertyInfo item, Field field)
+        private static IField SetFieldBindMember(IEntityTranslator translator, PropertyInfo item, Field field)
         {
             var bind = item.Attribute<DbBindAttribute>();
             String bindFieldName = null;
@@ -98,7 +100,10 @@ namespace VODB.EntityTranslation
                     throw new InvalidMappingException("The field [{0}] is a reference to the table [{1}] but no match was found.", field.Name, table.Name);
                 }
 
+                return new BindedField(field);
             }
+
+            return field;
 
         }
 

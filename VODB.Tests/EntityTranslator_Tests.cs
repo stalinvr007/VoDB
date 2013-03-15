@@ -49,7 +49,7 @@ namespace VODB.Tests
 
         public EntityTranslator_Tests()
         {
-            this.translator = new TEntityTranslator();
+            translator = new TEntityTranslator();
         }
 
         [Test]
