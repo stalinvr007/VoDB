@@ -36,6 +36,8 @@ namespace VODB.EntityTranslation
 
             var table = new Table(dbTable != null ? dbTable.TableName : entityType.Name);
 
+            table.EntityType = entityType;
+
             table.Fields = MakeFields(entityType, table);
 
             table.Fields = table.Fields.Select(f => SetFieldBindMember(this, f.Info, (Field)f)).ToList();
@@ -51,7 +53,6 @@ namespace VODB.EntityTranslation
             IList<IField> fields = new List<IField>();
 
             foreach (var item in entityType.GetProperties()
-                .AsParallel()
                 .Where(pi => !pi.HasAttribute<DbIgnoreAttribute>())
                 .Where(pi => !pi.PropertyType.IsGenericType || !pi.PropertyType.GetInterfaces().Contains(typeof(IEnumerable))))
             {

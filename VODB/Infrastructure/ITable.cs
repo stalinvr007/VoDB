@@ -21,6 +21,14 @@ namespace VODB.Infrastructure
         String Name { get; }
 
         /// <summary>
+        /// Gets the type of the entity.
+        /// </summary>
+        /// <value>
+        /// The type of the entity.
+        /// </value>
+        Type EntityType { get;}
+
+        /// <summary>
         /// Gets the table fields.
         /// </summary>
         /// <value>

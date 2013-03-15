@@ -7,6 +7,8 @@ using System.Linq;
 using System.Diagnostics;
 using VODB.Exceptions;
 using System.Collections;
+using VODB.Infrastructure;
+using VODB.Annotations;
 
 namespace VODB.Tests
 {
@@ -31,38 +33,36 @@ namespace VODB.Tests
     {
 
         IEntityTranslator translator;
-        IList<KeyValuePair<Type, String>> EntityTables = new List<KeyValuePair<Type, String>>
-        {
-            new Pair<Categories>("Categories").ToKVP(),
-            new Pair<CustomerCustomerDemo>("CustomerCustomerDemo").ToKVP(),
-            new Pair<CustomerDemographics>("CustomerDemographics").ToKVP(),
-            new Pair<Customers>("Customers").ToKVP(),
-            new Pair<Employee>("Employees").ToKVP(),
-            new Pair<EmployeeTerritories>("EmployeeTerritories").ToKVP(),
-            new Pair<OrderDetails>("Order Details").ToKVP(),
-            new Pair<Orders>("Orders").ToKVP(),
-            new Pair<Products>("Products").ToKVP(),
-            new Pair<Region>("Region").ToKVP(),
-            new Pair<Shippers>("Shippers").ToKVP(),
-            new Pair<Suppliers>("Suppliers").ToKVP(),
-            new Pair<Territories>("Territories").ToKVP()
-        };
-
+        
         public EntityTranslator_Tests()
         {
             translator = new TEntityTranslator();
         }
 
-        [Test]
-        public void Translate_Assert_TableNames()
+        private IEnumerable GetTablesNames()
         {
-            foreach (var pair in EntityTables)
-            {
-                var table = translator.Translate(pair.Key);
-                Assert.That(table.Name, Is.EqualTo(pair.Value));
-            }
+            return Utils.TestModels
+                  .ToTables(translator)
+                  .Select(t => new TestCaseData(t));
         }
 
+        [TestCaseSource("GetTablesNames")]
+        public void Translate_Assert_TableName(ITable table)
+        {
+            var attr = table.EntityType.GetCustomAttributes(typeof(DbTableAttribute), true).Cast<DbTableAttribute>().FirstOrDefault();
+
+            if (attr != null)
+            {
+                Assert.That(table.Name, Is.EqualTo(attr.TableName));
+                Assert.That(table.Name, Is.Not.Null);
+                Assert.That(table.Name.Length, Is.GreaterThan(1));
+            }
+            else
+            {
+                Assert.That(table.Name, Is.EqualTo(table.EntityType.Name));
+            }
+        }
+                
         [Test]
         public void Translate_Assert_FieldCount()
         {
@@ -71,30 +71,26 @@ namespace VODB.Tests
             Assert.That(table.Fields.Count(), Is.EqualTo(18));
         }
 
-        [Test]
-        public void Translate_Assert_Fields()
+        [TestCaseSource("GetTablesNames")]
+        public void Translate_Assert_Fields(ITable table)
         {
-            foreach (var pair in EntityTables)
-            {
-                var table = translator.Translate(pair.Key);
+            var entity = Activator.CreateInstance(table.EntityType);
 
-                var entity = Activator.CreateInstance(pair.Key);
+            Assert.That(table.Fields.Any());
+            Assert.That(table.Keys.Any());
 
-                Assert.That(table.Fields.Any());
-                Assert.That(table.Keys.Any());
+            CollectionAssert.AllItemsAreNotNull(table.Fields);
+            CollectionAssert.AllItemsAreNotNull(table.Keys);
 
-                CollectionAssert.AllItemsAreNotNull(table.Fields);
-                CollectionAssert.AllItemsAreNotNull(table.Keys);
+            CollectionAssert.AllItemsAreUnique(table.Fields);
+            CollectionAssert.AllItemsAreUnique(table.Keys);
 
-                CollectionAssert.AllItemsAreUnique(table.Fields);
-                CollectionAssert.AllItemsAreUnique(table.Keys);
+            CollectionAssert.AllItemsAreNotNull(table.Fields.Select(i => i.Name));
+            CollectionAssert.AllItemsAreNotNull(table.Keys.Select(i => i.Name));
 
-                CollectionAssert.AllItemsAreNotNull(table.Fields.Select(i => i.Name));
-                CollectionAssert.AllItemsAreNotNull(table.Keys.Select(i => i.Name));
+            CollectionAssert.IsNotEmpty(table.Fields.Select(f => f.GetFieldFinalValue(entity)));
+            CollectionAssert.IsNotEmpty(table.Keys.Select(f => f.GetFieldFinalValue(entity)));
 
-                CollectionAssert.IsNotEmpty(table.Fields.Select(f => f.GetFieldFinalValue(entity)));
-                CollectionAssert.IsNotEmpty(table.Keys.Select(f => f.GetFieldFinalValue(entity)));
-            }
         }
 
         [Test]
@@ -246,15 +242,14 @@ namespace VODB.Tests
                 {"Photo", new Byte[0]},
                 {"ReportsTo", new Employee { EmployeeId = 10 }},
                 {"PhotoPath", "/"}
-
             };
 
             var employee = new Employee();
 
 
-            var fields = table.Fields.OrderBy(i => i.Name).ToArray();
+            var fields = table.Fields.ToArray();
 
-            var values = dic.OrderBy(i => i.Key).Select(kvp => kvp.Value).ToArray();
+            var values = dic.Select(kvp => kvp.Value).ToArray();
 
             for (int i = 0; i < values.Length; i++)
             {

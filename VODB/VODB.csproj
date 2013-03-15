@@ -126,6 +126,7 @@
     <Compile Include="Exceptions\UniqueKeyViolationException.cs" />
     <Compile Include="Exceptions\WhereExpressionFormatterNotFoundException.cs" />
     <Compile Include="Exceptions\WhereExpressionHandlerNotFoundException.cs" />
+    <Compile Include="Executors\IExecutor.cs" />
     <Compile Include="ExpressionParser\ComparatorExpressionParser.cs" />
     <Compile Include="ExpressionParser\ExpressionBodyParser.cs" />
     <Compile Include="ExpressionParser\FieldGetterExpressionParser.cs" />
@@ -200,6 +201,8 @@
     <Compile Include="Core\Infrastructure\TSqlCommands\TSqlCmdBase.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TUpdate.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TWhere.cs" />
+    <Compile Include="TableToSql\ISqlBuilder.cs" />
+    <Compile Include="TableToSql\SelectBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
