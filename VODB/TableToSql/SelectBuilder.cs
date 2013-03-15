@@ -8,19 +8,19 @@ using VODB.Infrastructure;
 namespace VODB.TableToSql
 {
     class SelectBuilder : ISqlBuilder
+    {
+        public string Build(ITable table)
         {
-            public string Build(ITable table)
+            var sb = new StringBuilder("Select ");
+            const string LEFT_WRAPPER = "[";
+            const string RIGHT_WRAPPER = "], ";
+
+            foreach (var name in table.Fields.Select(f => f.Name))
             {
-                var sb = new StringBuilder("Select ");
-                const string LEFT_WRAPPER = "[";
-                const string RIGHT_WRAPPER = "], ";
-
-                foreach (var name in table.Fields.Select(f => f.Name))
-                {
-                    sb.Append(LEFT_WRAPPER).Append(name).Append(RIGHT_WRAPPER);
-                }
-
-                return sb.Remove(sb.Length-2, 2).Append(" From [").Append(table.Name).Append("]").ToString();
+                sb.Append(LEFT_WRAPPER).Append(name).Append(RIGHT_WRAPPER);
             }
+
+            return sb.Remove(sb.Length - 2, 2).Append(" From [").Append(table.Name).Append("]").ToString();
         }
+    }
 }

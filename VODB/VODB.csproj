@@ -203,6 +203,8 @@
     <Compile Include="Core\Infrastructure\TSqlCommands\TWhere.cs" />
     <Compile Include="TableToSql\ISqlBuilder.cs" />
     <Compile Include="TableToSql\SelectBuilder.cs" />
+    <Compile Include="TableToSql\UpdateBuilder.cs" />
+    <Compile Include="TableToSql\WhereIdBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
