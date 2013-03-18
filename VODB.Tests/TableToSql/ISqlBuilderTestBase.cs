@@ -17,10 +17,13 @@ namespace VODB.Tests.TableToSql
         where TSqlBuilder : ISqlBuilder, new()
     {
 
+        private static IEntityTranslator translator = 
+            new CachingTranslator(new TEntityTranslator());
+
         private static IEnumerable GetTables(ISqlBuilder builder)
         {
             return Utils.TestModels
-                .ToTables(new TEntityTranslator())
+                .ToTables(translator)
                 .Select(t => new TestCaseData(builder, t));
         }
 

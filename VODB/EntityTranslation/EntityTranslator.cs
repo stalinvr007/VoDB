@@ -12,6 +12,32 @@ using VODB.TableToSql;
 
 namespace VODB.EntityTranslation
 {
+
+    class CachingTranslator : IEntityTranslator
+    {
+        private static IDictionary<Type, Task<ITable>> tables = new Dictionary<Type, Task<ITable>>();
+        private readonly IEntityTranslator _Translator;
+
+        public CachingTranslator(IEntityTranslator translator)
+        {
+            _Translator = translator;
+        }
+
+        public ITable Translate(Type entityType)
+        {
+            Task<ITable> cached;
+
+            if (tables.TryGetValue(entityType, out cached))
+            {
+                return cached.Result;
+            }
+
+            cached = tables[entityType] = Task<ITable>.Factory.StartNew(() => _Translator.Translate(entityType));
+            
+            return cached.Result;
+        }
+    }
+
     class EntityTranslator : IEntityTranslator
     {
 
@@ -35,15 +61,10 @@ namespace VODB.EntityTranslation
             { SqlBuilderType.Update, new UpdateBuilder() }
         };
 
+
+
         public ITable Translate(Type entityType)
         {
-            ITable cached;
-
-            if (tables.TryGetValue(entityType, out cached))
-            {
-                return cached;
-            }
-
             var dbTable = entityType.Attribute<DbTableAttribute>();
 
             var table = new Table(dbTable != null ? dbTable.TableName : entityType.Name);
@@ -58,6 +79,7 @@ namespace VODB.EntityTranslation
                 .Where(f => f.IsKey).ToList();
 
             Parallel.Invoke(
+
                 () => table.SqlCount = builders[SqlBuilderType.Count].Build(table),
                 () => table.SqlCountById = builders[SqlBuilderType.CountById].Build(table),
                 () => table.SqlDeleteById = builders[SqlBuilderType.Delete].Build(table),
@@ -65,9 +87,10 @@ namespace VODB.EntityTranslation
                 () => table.SqlSelect = builders[SqlBuilderType.Select].Build(table),
                 () => table.SqlSelectById = builders[SqlBuilderType.SelectById].Build(table),
                 () => table.SqlUpdate = builders[SqlBuilderType.Update].Build(table)
+
             );
                         
-            return tables[entityType] = table;
+            return table;
         }
 
         private IList<IField> MakeFields(Type entityType, ITable table)
