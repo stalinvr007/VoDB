@@ -38,5 +38,10 @@ namespace VODB.TableToSql
 
             return sb.Remove(sb.Length - 5, 5).ToString();
         }
+
+        public SqlBuilderType BuilderType
+        {
+            get { return SqlBuilderType.WhereById; }
+        }
     }
 }

@@ -31,5 +31,10 @@ namespace VODB.TableToSql
 
             return sb.Remove(sb.Length - 2, 2).ToString();
         }
+
+        public SqlBuilderType BuilderType
+        {
+            get { return SqlBuilderType.Insert; }
+        }
     }
 }

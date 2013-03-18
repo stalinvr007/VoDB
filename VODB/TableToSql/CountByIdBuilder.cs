@@ -16,5 +16,10 @@ namespace VODB.TableToSql
             return new StringBuilder("Select count(*) From [").Append(table.Name).Append("] ")
                 .Append(where.Build(table)).ToString();
         }
+
+        public SqlBuilderType BuilderType
+        {
+            get { return SqlBuilderType.CountById; }
+        }
     }
 }

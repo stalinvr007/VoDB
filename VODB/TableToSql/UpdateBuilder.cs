@@ -29,5 +29,10 @@ namespace VODB.TableToSql
                 .Append(where.Build(table))
                 .ToString();
         }
+
+        public SqlBuilderType BuilderType
+        {
+            get { return SqlBuilderType.Update; }
+        }
     }
 }

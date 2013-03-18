@@ -25,5 +25,10 @@ namespace VODB.TableToSql
             return sb.Remove(sb.Length - 2, 2).Append(" From [").Append(table.Name).Append("] ")
                 .Append(where.Build(table)).ToString();
         }
+
+        public SqlBuilderType BuilderType
+        {
+            get { return SqlBuilderType.SelectById; }
+        }
     }
 }
