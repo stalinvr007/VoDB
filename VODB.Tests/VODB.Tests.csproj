@@ -70,7 +70,13 @@
     <Compile Include="EntitiesAsserts.cs" />
     <Compile Include="EntityTranslator_Tests.cs" />
     <Compile Include="ExpressionParser_Tests.cs" />
-    <Compile Include="ISqlBuilder_Tests.cs" />
+    <Compile Include="TableToSql\ISqlBuilderTestBase.cs" />
+    <Compile Include="TableToSql\ISqlBuilder_CountById_Tests.cs" />
+    <Compile Include="TableToSql\ISqlBuilder_DeleteById_Tests.cs" />
+    <Compile Include="TableToSql\ISqlBuilder_Insert_Tests.cs" />
+    <Compile Include="TableToSql\ISqlBuilder_SelectById_Tests.cs" />
+    <Compile Include="TableToSql\ISqlBuilder_Select_Tests.cs" />
+    <Compile Include="TableToSql\ISqlBuilder_Count_Tests.cs" />
     <Compile Include="Models\Northwind\Categories.cs" />
     <Compile Include="Models\Northwind\CustomerCustomerDemo.cs" />
     <Compile Include="Models\Northwind\CustomerDemographics.cs" />
@@ -90,6 +96,8 @@
     <Compile Include="DbConnectionCreator_Tests.cs" />
     <Compile Include="EntityLoaders_Tests.cs" />
     <Compile Include="EntityValidators_Tests.cs" />
+    <Compile Include="TableToSql\ISqlBuilder_Update_Tests.cs" />
+    <Compile Include="TableToSql\ISqlBuilder_WhereId_Tests.cs" />
     <Compile Include="Transaction_Tests.cs" />
     <Compile Include="DynamicProxy_Tests.cs" />
     <Compile Include="IOC_Tests.cs" />
@@ -108,6 +116,7 @@
     <None Include="App.Config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

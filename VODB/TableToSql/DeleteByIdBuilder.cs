@@ -7,15 +7,17 @@ using VODB.Infrastructure;
 
 namespace VODB.TableToSql
 {
-    class CountByIdBuilder : SqlBuilderBaseById
+    class DeleteByIdBuilder : SqlBuilderBaseById
     {
         
-        public CountByIdBuilder() : base(SqlBuilderType.CountById) { }
+
+        public DeleteByIdBuilder() : base(SqlBuilderType.CountById) { }
 
         public override string Build(ITable table)
         {
-            return new StringBuilder("Select count(*) From [").Append(table.Name).Append("] ")
+            return new StringBuilder("Delete From [").Append(table.Name).Append("] ")
                 .Append(Where.Build(table)).ToString();
         }
+
     }
 }

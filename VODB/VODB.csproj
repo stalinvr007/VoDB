@@ -203,10 +203,12 @@
     <Compile Include="Core\Infrastructure\TSqlCommands\TWhere.cs" />
     <Compile Include="TableToSql\CountBuilder.cs" />
     <Compile Include="TableToSql\CountByIdBuilder.cs" />
+    <Compile Include="TableToSql\DeleteByIdBuilder.cs" />
     <Compile Include="TableToSql\InsertBuilder.cs" />
     <Compile Include="TableToSql\ISqlBuilder.cs" />
     <Compile Include="TableToSql\SelectBuilder.cs" />
     <Compile Include="TableToSql\SelectByIdBuilder.cs" />
+    <Compile Include="TableToSql\SqlBuilderBase.cs" />
     <Compile Include="TableToSql\UpdateBuilder.cs" />
     <Compile Include="TableToSql\WhereIdBuilder.cs" />
   </ItemGroup>

@@ -7,10 +7,11 @@ using VODB.Infrastructure;
 
 namespace VODB.TableToSql
 {
-    class InsertBuilder : ISqlBuilder
+    class InsertBuilder : SqlBuilderBase
     {
+        public InsertBuilder() : base(SqlBuilderType.Insert) { }
 
-        public string Build(ITable table)
+        public override string Build(ITable table)
         {
             var sb = new StringBuilder("Insert into [").Append(table.Name).Append("] (");
             const string LEFT_WRAPPER = "[";
@@ -30,11 +31,6 @@ namespace VODB.TableToSql
             }
 
             return sb.Remove(sb.Length - 2, 2).ToString();
-        }
-
-        public SqlBuilderType BuilderType
-        {
-            get { return SqlBuilderType.Insert; }
         }
     }
 }

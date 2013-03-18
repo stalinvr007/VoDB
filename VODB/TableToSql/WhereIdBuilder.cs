@@ -7,16 +7,18 @@ using VODB.Infrastructure;
 
 namespace VODB.TableToSql
 {
-    class WhereIdBuilder : ISqlBuilder
+    class WhereIdBuilder : SqlBuilderBase
     {
 
         private readonly bool _WithOldValues;
-        public WhereIdBuilder(bool withOldValues = false)
+        public WhereIdBuilder() : this(false) { }
+
+        public WhereIdBuilder(bool withOldValues = false) : base(SqlBuilderType.WhereById)
         {
             _WithOldValues = withOldValues;
         }
 
-        public string Build(ITable table)
+        public override string Build(ITable table)
         {
             var sb = new StringBuilder("Where ");
             const string LEFT_WRAPPER = "[";
@@ -37,11 +39,6 @@ namespace VODB.TableToSql
             }
 
             return sb.Remove(sb.Length - 5, 5).ToString();
-        }
-
-        public SqlBuilderType BuilderType
-        {
-            get { return SqlBuilderType.WhereById; }
         }
     }
 }

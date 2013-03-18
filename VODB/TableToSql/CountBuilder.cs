@@ -7,16 +7,13 @@ using VODB.Infrastructure;
 
 namespace VODB.TableToSql
 {
-    class CountBuilder : ISqlBuilder
+    class CountBuilder : SqlBuilderBase
     {
-        public string Build(ITable table)
+        public CountBuilder() : base(SqlBuilderType.Count) { }
+
+        public override string Build(ITable table)
         {
             return new StringBuilder("Select count(*) From [").Append(table.Name).Append("] ").ToString();
-        }
-
-        public SqlBuilderType BuilderType
-        {
-            get { return SqlBuilderType.Count; }
         }
     }
 }

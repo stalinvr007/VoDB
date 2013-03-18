@@ -7,13 +7,15 @@ using VODB.Infrastructure;
 
 namespace VODB.TableToSql
 {
-    class UpdateBuilder : ISqlBuilder
+    class UpdateBuilder : SqlBuilderBase
     {
-        static ISqlBuilder where = new WhereIdBuilder(true);
+        private static ISqlBuilder Where = new WhereIdBuilder(true);
 
-        public string Build(ITable table)
+        public UpdateBuilder() : base(SqlBuilderType.Update) { }
+
+        public override string Build(ITable table)
         {
-            var sb = new StringBuilder("Update [").Append(table.Name).Append("]");
+            var sb = new StringBuilder("Update [").Append(table.Name).Append("] Set ");
             const string LEFT_WRAPPER = "[";
             const string RIGHT_WRAPPER = "]";
             const string WHITE_SPACE = " ";
@@ -26,13 +28,9 @@ namespace VODB.TableToSql
             }
 
             return sb.Remove(sb.Length - 2, 2)
-                .Append(where.Build(table))
+                .Append(Where.Build(table))
                 .ToString();
         }
 
-        public SqlBuilderType BuilderType
-        {
-            get { return SqlBuilderType.Update; }
-        }
     }
 }

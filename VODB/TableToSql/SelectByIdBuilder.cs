@@ -7,11 +7,11 @@ using VODB.Infrastructure;
 
 namespace VODB.TableToSql
 {
-    class SelectByIdBuilder : ISqlBuilder
+    class SelectByIdBuilder : SqlBuilderBaseById
     {
-        static ISqlBuilder where = new WhereIdBuilder();
+        public SelectByIdBuilder() : base(SqlBuilderType.SelectById) { }
 
-        public string Build(ITable table)
+        public override string Build(ITable table)
         {
             var sb = new StringBuilder("Select ");
             const string LEFT_WRAPPER = "[";
@@ -23,12 +23,8 @@ namespace VODB.TableToSql
             }
 
             return sb.Remove(sb.Length - 2, 2).Append(" From [").Append(table.Name).Append("] ")
-                .Append(where.Build(table)).ToString();
+                .Append(Where.Build(table)).ToString();
         }
 
-        public SqlBuilderType BuilderType
-        {
-            get { return SqlBuilderType.SelectById; }
-        }
     }
 }
