@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using VODB.Exceptions;
 using System.Collections;
+using VODB.TableToSql;
 
 namespace VODB.EntityTranslation
 {
@@ -21,6 +22,17 @@ namespace VODB.EntityTranslation
             typeof(DbFieldAttribute),
             typeof(DbKeyAttribute),
             typeof(DbIdentityAttribute)
+        };
+
+        private static IDictionary<SqlBuilderType, ISqlBuilder> builders = new Dictionary<SqlBuilderType, ISqlBuilder>()
+        {
+            { SqlBuilderType.CountById, new CountByIdBuilder() },
+            { SqlBuilderType.Count, new CountBuilder() },
+            { SqlBuilderType.Delete, new DeleteByIdBuilder() },
+            { SqlBuilderType.Insert, new InsertBuilder() },
+            { SqlBuilderType.Select, new SelectBuilder() },
+            { SqlBuilderType.SelectById, new SelectByIdBuilder() },
+            { SqlBuilderType.Update, new UpdateBuilder() }
         };
 
         public ITable Translate(Type entityType)
@@ -44,6 +56,16 @@ namespace VODB.EntityTranslation
 
             table.Keys = table.Fields
                 .Where(f => f.IsKey).ToList();
+
+            Parallel.Invoke(
+                () => table.SqlCount = builders[SqlBuilderType.Count].Build(table),
+                () => table.SqlCountById = builders[SqlBuilderType.CountById].Build(table),
+                () => table.SqlDeleteById = builders[SqlBuilderType.Delete].Build(table),
+                () => table.SqlInsert = builders[SqlBuilderType.Insert].Build(table),
+                () => table.SqlSelect = builders[SqlBuilderType.Select].Build(table),
+                () => table.SqlSelectById = builders[SqlBuilderType.SelectById].Build(table),
+                () => table.SqlUpdate = builders[SqlBuilderType.Update].Build(table)
+            );
                         
             return tables[entityType] = table;
         }

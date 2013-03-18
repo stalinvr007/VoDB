@@ -7,7 +7,6 @@
     <Node UniqueName="[0-1000]D:\Projectos\VODB\VODB.nunit" Expanded="true" />
     <Node UniqueName="[0-1275]D:\Projectos\VODB\VODB.Tests\bin\Release\VODB.Tests.dll" Expanded="true" />
     <Node UniqueName="[0-1276]VODB" Expanded="true" />
-    <Node UniqueName="[0-1277]VODB.Tests" Expanded="true" />
     <Node UniqueName="[0-1006]VODB.Tests.EntityTranslator_Tests&lt;TEntityTranslator&gt;" Expanded="true" />
     <Node UniqueName="[0-1278]VODB.Tests.TableToSql" Expanded="true" />
     <Node UniqueName="[0-1154]VODB.Tests.TableToSql.ISqlBuilder_Count_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />

@@ -26,5 +26,20 @@ namespace VODB.Infrastructure
         {
             return Name;
         }
+
+
+        public string SqlSelect { get; internal set; }
+
+        public string SqlSelectById { get; internal set; }
+
+        public string SqlCount { get; internal set; }
+
+        public string SqlCountById { get; internal set; }
+
+        public string SqlDeleteById { get; internal set; }
+
+        public string SqlInsert { get; internal set; }
+
+        public string SqlUpdate { get; internal set; }
     }
 }

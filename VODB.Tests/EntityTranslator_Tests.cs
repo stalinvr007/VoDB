@@ -47,7 +47,7 @@ namespace VODB.Tests
         }
 
         [TestCaseSource("GetTablesNames")]
-        public void Translate_Assert_TableName(ITable table)
+        public void Translate_Assert_Table(ITable table)
         {
             var attr = table.EntityType.GetCustomAttributes(typeof(DbTableAttribute), true).Cast<DbTableAttribute>().FirstOrDefault();
 
@@ -61,6 +61,15 @@ namespace VODB.Tests
             {
                 Assert.That(table.Name, Is.EqualTo(table.EntityType.Name));
             }
+
+            StringAssert.StartsWith("Select ", table.SqlSelect);
+            StringAssert.StartsWith("Select ", table.SqlSelectById);
+            StringAssert.StartsWith("Update ", table.SqlUpdate);
+            StringAssert.StartsWith("Insert into ", table.SqlInsert);
+            StringAssert.StartsWith("Delete From ", table.SqlDeleteById);
+            StringAssert.StartsWith("Select count(*) From ", table.SqlCountById);
+            StringAssert.StartsWith("Select count(*) From ", table.SqlCount);
+
         }
                 
         [Test]
