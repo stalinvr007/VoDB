@@ -107,7 +107,28 @@ namespace VODB.Tests
 
         }
 
+        [TestCaseSource("GetTables")]
+        public void ISqlBuilder_Assert_Count(ITable table)
+        {
+            var sql = new CountBuilder().Build(table);
 
+            StringAssert.StartsWith("Select count(*) From [" + table.Name + "]", sql);
+        }
+
+
+        [TestCaseSource("GetTables")]
+        public void ISqlBuilder_Assert_CountById(ITable table)
+        {
+            var sql = new CountByIdBuilder().Build(table);
+
+            StringAssert.StartsWith("Select count(*) From [" + table.Name + "]", sql);
+
+            foreach (var name in table.Keys.Select(f => f.Name))
+            {
+                StringAssert.Contains("[" + name + "]", sql);
+                StringAssert.Contains("@" + name, sql);
+            }
+        }
     }
 
 }
