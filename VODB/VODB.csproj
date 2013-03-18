@@ -73,6 +73,7 @@
     <Compile Include="Core\Infrastructure\TableMapper.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommandHolderLazy.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TCount.cs" />
+    <Compile Include="DbLayer\IDbCommandFactory.cs" />
     <Compile Include="EntityTranslation\CachingTranslator.cs" />
     <Compile Include="EntityTranslation\EntityTranslator.cs" />
     <Compile Include="EntityTranslation\IEntityTranslator.cs" />
