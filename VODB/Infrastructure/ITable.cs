@@ -85,6 +85,21 @@ namespace VODB.Infrastructure
         String SqlUpdate { get; }
 
         /// <summary>
+        /// Gets the identity field.
+        /// </summary>
+        /// <value>
+        /// The identity field.
+        /// </value>
+        IField IdentityField { get; }
+
+        /// <summary>
+        /// Sets the identity value.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <param name="value">The value.</param>
+        void SetIdentityValue(Object entity, Object value);
+
+        /// <summary>
         /// Gets the table fields.
         /// </summary>
         /// <value>

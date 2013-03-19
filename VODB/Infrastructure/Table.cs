@@ -27,7 +27,6 @@ namespace VODB.Infrastructure
             return Name;
         }
 
-
         public string SqlSelect { get; internal set; }
 
         public string SqlSelectById { get; internal set; }
@@ -41,5 +40,15 @@ namespace VODB.Infrastructure
         public string SqlInsert { get; internal set; }
 
         public string SqlUpdate { get; internal set; }
+
+        public IField IdentityField { get; internal set; }
+
+        public void SetIdentityValue(object entity, object value)
+        {
+            if (IdentityField != null)
+            {
+                IdentityField.SetFieldFinalValue(entity, value);
+            }
+        }
     }
 }
