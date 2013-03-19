@@ -24,13 +24,13 @@ namespace VODB.Tests.TableToSql
 
             StringAssert.StartsWith("Update [" + table.Name + "] Set ", sql);
 
-            foreach (var name in table.Fields.Select(f => f.Name))
+            foreach (var name in table.Fields.Where(f => !f.IsIdentity).Select(f => f.Name))
             {
                 StringAssert.Contains("[" + name + "]", sql);
                 StringAssert.Contains("@" + name, sql);
             }
 
-            foreach (var name in table.Keys.Select(f => f.Name))
+            foreach (var name in table.Keys.Where(f => !f.IsIdentity).Select(f => f.Name))
             {
                 StringAssert.Contains("[" + name + "]", sql);
                 StringAssert.Contains("@" + name, sql);

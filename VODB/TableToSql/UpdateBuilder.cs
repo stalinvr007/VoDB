@@ -20,14 +20,14 @@ namespace VODB.TableToSql
             const string RIGHT_WRAPPER = "]";
             const string WHITE_SPACE = " ";
 
-            foreach (var name in table.Fields.Select(f => f.Name))
+            foreach (var name in table.Fields.Where(f => !f.IsIdentity).Select(f => f.Name))
             {
-                
                 sb.Append(LEFT_WRAPPER).Append(name).Append(RIGHT_WRAPPER)
                     .Append(" = @").Append(name.Replace(WHITE_SPACE, "")).Append(", ");
             }
 
             return sb.Remove(sb.Length - 2, 2)
+                .Append(" ")
                 .Append(Where.Build(table))
                 .ToString();
         }
