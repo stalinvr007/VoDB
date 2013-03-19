@@ -22,14 +22,13 @@ namespace VODB.Tests.Executors
             return Utils.TestModels
                 .ToTables()
                 .Where(t => t.Name != "CustomerCustomerDemo")
-                .Where(t => t.Name != "CustomerDemographics");
+                .Where(t => t.Name != "CustomerDemographics")
+                .Select(t => new TestCaseData(t, t.CreateExistingTestEntity()));
         }
 
         [TestCaseSource("GetTables")]
-        public void IDbCommandExecutor_UpdateCommand_Assert(ITable table)
+        public void IDbCommandExecutor_UpdateCommand_Assert(ITable table, Object entity)
         {
-            var entity = table.CreateExistingTestEntity();
-
             Utils.ExecuteWith(connection =>
             {
                 var trans = connection.BeginTransaction();

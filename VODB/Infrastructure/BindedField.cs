@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using Fasterflect;
 
 namespace VODB.Infrastructure
 {
@@ -68,6 +69,16 @@ namespace VODB.Infrastructure
         public PropertyInfo Info
         {
             get { return _Field.Info; }
+        }
+
+        public void SetFieldFinalValue(object entity, object value)
+        {
+            if (BindToField != null)
+            {
+                var instance = BindToField.EntityType.CreateInstance();
+                SetValue(entity, instance);
+                BindToField.SetFieldFinalValue(instance, value);
+            }
         }
     }
 }

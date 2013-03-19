@@ -28,6 +28,11 @@ namespace VODB.Infrastructure
 
         public void SetValue(Object entity, Object value)
         {
+            if (value == DBNull.Value)
+            {
+                value = null;
+            }
+
             _ValueSetter(entity, value);
         }
 
@@ -44,5 +49,10 @@ namespace VODB.Infrastructure
         public IField BindToField { get; internal set; }
 
         public PropertyInfo Info { get; internal set; }
+
+        public void SetFieldFinalValue(object entity, object value)
+        {
+            SetValue(entity, value);
+        }
     }
 }

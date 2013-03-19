@@ -53,6 +53,13 @@ namespace VODB.Infrastructure
         void SetValue(Object entity, Object value);
 
         /// <summary>
+        /// Sets the field final value.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <param name="value">The value.</param>
+        void SetFieldFinalValue(Object entity, Object value);
+
+        /// <summary>
         /// Gets the value of the field.
         /// </summary>
         /// <param name="entity">The entity.</param>

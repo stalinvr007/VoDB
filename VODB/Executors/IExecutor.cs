@@ -9,7 +9,7 @@ namespace VODB.Executors
 {
 
     /// <summary>
-    /// Executes 
+    /// Represents a gathering of IDbExecutors to perform multiple actions.
     /// </summary>
     public interface IExecutor
     {
