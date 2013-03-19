@@ -74,6 +74,7 @@
     <Compile Include="Core\Infrastructure\TSqlCommandHolderLazy.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TCount.cs" />
     <Compile Include="DbLayer\IDbCommandFactory.cs" />
+    <Compile Include="DbLayer\IDbParameterFactory.cs" />
     <Compile Include="EntityMapping\IEntityMapper.cs" />
     <Compile Include="EntityMapping\OrderedEntityMapper.cs" />
     <Compile Include="EntityTranslation\CachingTranslator.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Executors\IDbCommandExecutor.cs" />
     <Compile Include="Executors\DbScalarCommandExecutor.cs" />
     <Compile Include="Executors\IExecutor.cs" />
+    <Compile Include="Executors\SimpleExecutor.cs" />
     <Compile Include="ExpressionParser\ComparatorExpressionParser.cs" />
     <Compile Include="ExpressionParser\ExpressionBodyParser.cs" />
     <Compile Include="ExpressionParser\FieldGetterExpressionParser.cs" />
