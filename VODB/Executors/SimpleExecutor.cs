@@ -76,7 +76,7 @@ namespace VODB.Executors
             Func<ITable, String> getCommandTxt, 
             Action<DbCommand, ITable> setFields, out ITable table)
         {
-            table = _Translator.Translate(typeof(T));
+            table = _Translator.Translate(entity.GetType());
             var cmd = _CommandFactory.MakeCommand();
             cmd.CommandText = getCommandTxt(table);
 
