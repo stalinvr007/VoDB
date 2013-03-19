@@ -69,6 +69,8 @@
     <Compile Include="DbReaderMapper.cs" />
     <Compile Include="EntitiesAsserts.cs" />
     <Compile Include="EntityTranslator_Tests.cs" />
+    <Compile Include="Executors\CountCommandExecutor_Tests.cs" />
+    <Compile Include="Executors\SelectCommandExecutor_Tests.cs" />
     <Compile Include="ExpressionParser_Tests.cs" />
     <Compile Include="TableToSql\ISqlBuilderTestBase.cs" />
     <Compile Include="TableToSql\ISqlBuilder_CountById_Tests.cs" />

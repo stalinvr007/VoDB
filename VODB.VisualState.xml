@@ -5,20 +5,20 @@
   <ExcludeCategories>false</ExcludeCategories>
   <Nodes>
     <Node UniqueName="[0-1000]D:\Projectos\VODB\VODB.nunit" Expanded="true" />
-    <Node UniqueName="[0-1275]D:\Projectos\VODB\VODB.Tests\bin\Release\VODB.Tests.dll" Expanded="true" />
-    <Node UniqueName="[0-1276]VODB" Expanded="true" />
+    <Node UniqueName="[0-1307]D:\Projectos\VODB\VODB.Tests\bin\Release\VODB.Tests.dll" Expanded="true" />
+    <Node UniqueName="[0-1308]VODB" Expanded="true" />
+    <Node UniqueName="[0-1309]VODB.Tests" Expanded="true" />
     <Node UniqueName="[0-1006]VODB.Tests.EntityTranslator_Tests&lt;TEntityTranslator&gt;" Expanded="true" />
-    <Node UniqueName="[0-1278]VODB.Tests.TableToSql" Expanded="true" />
-    <Node UniqueName="[0-1154]VODB.Tests.TableToSql.ISqlBuilder_Count_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
-    <Node UniqueName="[0-1155]VODB.Tests.TableToSql.ISqlBuilder_Count_Tests&lt;EntityTranslator,CountBuilder&gt;" Expanded="true" />
-    <Node UniqueName="[0-1156]VODB.Tests.TableToSql.ISqlBuilder_Count_Tests`2[[VODB.EntityTranslation.EntityTranslator, VODB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[VODB.TableToSql.CountBuilder, VODB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]].ISqlBuilder_Assert" Expanded="true" />
-    <Node UniqueName="[0-1074]VODB.Tests.TableToSql.ISqlBuilder_CountById_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
-    <Node UniqueName="[0-1090]VODB.Tests.TableToSql.ISqlBuilder_DeleteById_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
-    <Node UniqueName="[0-1106]VODB.Tests.TableToSql.ISqlBuilder_Insert_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
-    <Node UniqueName="[0-1138]VODB.Tests.TableToSql.ISqlBuilder_Select_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
-    <Node UniqueName="[0-1122]VODB.Tests.TableToSql.ISqlBuilder_SelectById_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
-    <Node UniqueName="[0-1201]VODB.Tests.TableToSql.ISqlBuilder_Update_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
-    <Node UniqueName="[0-1217]VODB.Tests.TableToSql.ISqlBuilder_WhereId_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
+    <Node UniqueName="[0-1065]VODB.Tests.Executors.CountCommandExecutor_Tests&lt;TCommandExecutor&gt;" Expanded="true" />
+    <Node UniqueName="[0-1081]VODB.Tests.Executors.SelectCommandExecutor_Tests&lt;TCommandExecutor&gt;" Expanded="true" />
+    <Node UniqueName="[0-1186]VODB.Tests.TableToSql.ISqlBuilder_Count_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
+    <Node UniqueName="[0-1106]VODB.Tests.TableToSql.ISqlBuilder_CountById_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
+    <Node UniqueName="[0-1122]VODB.Tests.TableToSql.ISqlBuilder_DeleteById_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
+    <Node UniqueName="[0-1138]VODB.Tests.TableToSql.ISqlBuilder_Insert_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
+    <Node UniqueName="[0-1170]VODB.Tests.TableToSql.ISqlBuilder_Select_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
+    <Node UniqueName="[0-1154]VODB.Tests.TableToSql.ISqlBuilder_SelectById_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
+    <Node UniqueName="[0-1233]VODB.Tests.TableToSql.ISqlBuilder_Update_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
+    <Node UniqueName="[0-1249]VODB.Tests.TableToSql.ISqlBuilder_WhereId_Tests&lt;TEntityTranslator,TSqlBuilder&gt;" Expanded="true" />
     <Node UniqueName="[0-1015]D:\Projectos\VODB\ConcurrentReader.Tests\bin\Release\ConcurrentReader.Tests.dll" Expanded="true" />
     <Node UniqueName="[0-1016]ConcurrentReader" Expanded="true" />
     <Node UniqueName="[0-1017]ConcurrentReader.Tests" Expanded="true" />

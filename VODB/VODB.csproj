@@ -128,6 +128,9 @@
     <Compile Include="Exceptions\UniqueKeyViolationException.cs" />
     <Compile Include="Exceptions\WhereExpressionFormatterNotFoundException.cs" />
     <Compile Include="Exceptions\WhereExpressionHandlerNotFoundException.cs" />
+    <Compile Include="Executors\DbQueryCommandExecutor.cs" />
+    <Compile Include="Executors\IDbCommandExecutor.cs" />
+    <Compile Include="Executors\DbScalarCommandExecutor.cs" />
     <Compile Include="Executors\IExecutor.cs" />
     <Compile Include="ExpressionParser\ComparatorExpressionParser.cs" />
     <Compile Include="ExpressionParser\ExpressionBodyParser.cs" />

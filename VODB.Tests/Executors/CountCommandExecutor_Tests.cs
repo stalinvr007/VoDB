@@ -1,0 +1,45 @@
+using NUnit.Framework;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using VODB.Executors;
+using VODB.Infrastructure;
+using VODB.Tests.Models.Northwind;
+
+namespace VODB.Tests.Executors
+{
+    [TestFixture(typeof(DbScalarCommandExecutor))]
+    public class CountCommandExecutor_Tests<TCommandExecutor> where TCommandExecutor : IDbCommandExecutor<Object>, new()
+    {
+        static IDbCommandExecutor<Object> executor = new TCommandExecutor();
+
+        private static IEnumerable GetTables()
+        {
+            return Utils.TestModels.ToTables()
+                .Select(t => new TestCaseData(t).Returns(Utils.RecordCounts[t.EntityType]));
+        }
+
+        [TestCaseSource("GetTables")]
+        public int IDbCommandExecutor_CountCommand_Assert(ITable table)
+        {
+            int count = 0;
+
+            Utils.ExecuteWith(connection =>
+            {
+                var cmd = connection.CreateCommand();
+
+                cmd.CommandText = table.SqlCount;
+
+                count = (int)executor.ExecuteCommand(cmd);
+
+            });
+
+            return count;
+        }
+
+    }
+}

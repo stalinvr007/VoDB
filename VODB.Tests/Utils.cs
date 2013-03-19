@@ -59,11 +59,30 @@ namespace VODB.Tests
                 }
                 finally
                 {
-                    con.Close();    
+                    con.Close();
                 }
             }
         }
 
+        static Dictionary<Type, int> recordCounts = new Dictionary<Type, int>() {
+            { typeof(Categories), 8 },
+            { typeof(CustomerCustomerDemo), 0 },
+            { typeof(CustomerDemographics), 0 },
+            { typeof(Customers), 91 },
+            { typeof(Employee), 9 },
+            { typeof(EmployeeTerritories), 49 },
+            { typeof(OrderDetails), 2155 },
+            { typeof(Orders), 830 },
+            { typeof(Products), 77 },
+            { typeof(Region), 4 },
+            { typeof(Shippers), 3 },
+            { typeof(Suppliers), 29 },
+            { typeof(Territories), 53 }
+        };
+
+        public static IDictionary<Type, int> RecordCounts {
+            get { return recordCounts; }
+        }
 
         public static IEnumerable<Type> TestModels
         {
@@ -89,6 +108,13 @@ namespace VODB.Tests
         {
             return TestModels
                 .Select(t => translator.Translate(t));
+        }
+
+        static IEntityTranslator translator = new CachingTranslator(new EntityTranslator());
+
+        public static IEnumerable<ITable> ToTables(this IEnumerable<Type> type)
+        {
+            return TestModels.ToTables(translator);
         }
 
     }
