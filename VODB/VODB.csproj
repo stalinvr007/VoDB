@@ -135,6 +135,7 @@
     <Compile Include="Executors\DbQueryCommandExecutor.cs" />
     <Compile Include="Executors\IDbCommandExecutor.cs" />
     <Compile Include="Executors\DbScalarCommandExecutor.cs" />
+    <Compile Include="Executors\IDeleteExecutor.cs" />
     <Compile Include="Executors\IExecutor.cs" />
     <Compile Include="Executors\SimpleExecutor.cs" />
     <Compile Include="ExpressionParser\ComparatorExpressionParser.cs" />

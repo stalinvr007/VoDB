@@ -64,6 +64,22 @@ namespace VODB.Tests
             }
         }
 
+        public static void ExecuteWith(Action<DbConnection, DbTransaction> action)
+        {
+            ExecuteWith(con =>
+            {
+                var trans = con.BeginTransaction();
+                try
+                {
+                    action(con, trans);
+                }
+                finally
+                {
+                    trans.Rollback();
+                }
+            });
+        }
+
         static Dictionary<Type, int> recordCounts = new Dictionary<Type, int>() {
             { typeof(Categories), 8 },
             { typeof(CustomerCustomerDemo), 0 },
