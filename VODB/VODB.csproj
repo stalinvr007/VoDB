@@ -159,7 +159,6 @@
     <Compile Include="ExpressionParser\Key.cs" />
     <Compile Include="ExpressionsToSql\BetweenCondition.cs" />
     <Compile Include="ExpressionsToSql\ConstantCondition.cs" />
-    <Compile Include="ExpressionsToSql\IEntityTranslator.cs" />
     <Compile Include="ExpressionsToSql\InCondition.cs" />
     <Compile Include="ExpressionsToSql\IQueryParameterHelper.cs" />
     <Compile Include="ExpressionsToSql\OrderByCondition.cs" />
@@ -203,6 +202,7 @@
     <Compile Include="DbLayer\DbConnectionCreator.cs" />
     <Compile Include="DbLayer\IDbConnectionCreator.cs" />
     <Compile Include="Extensions\ReflectionExtensions.cs" />
+    <Compile Include="Sessions\IConnectionManager.cs" />
     <Compile Include="Sessions\InternalSession.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Sessions\Transaction.cs" />
@@ -218,6 +218,7 @@
     <Compile Include="Core\Infrastructure\TSqlCommands\TSqlCmdBase.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TUpdate.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TWhere.cs" />
+    <Compile Include="Sessions\V2Session.cs" />
     <Compile Include="TableToSql\CountBuilder.cs" />
     <Compile Include="TableToSql\CountByIdBuilder.cs" />
     <Compile Include="TableToSql\DeleteByIdBuilder.cs" />

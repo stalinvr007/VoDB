@@ -225,6 +225,6 @@ namespace VODB.Tests
             int level = 0;
             return condition.Compile(ref level);
         }
-
+        
     }
 }
