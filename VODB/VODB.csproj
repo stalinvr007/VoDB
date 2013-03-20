@@ -81,6 +81,7 @@
     <Compile Include="EntityTranslation\EntityTranslator.cs" />
     <Compile Include="EntityTranslation\IEntityTranslator.cs" />
     <Compile Include="Exceptions\InvalidMappingException.cs" />
+    <Compile Include="Exceptions\NoEntityFoundException.cs" />
     <Compile Include="Exceptions\UnableToGetTheFieldValueException.cs" />
     <Compile Include="Exceptions\UnableToGetTheValue.cs" />
     <Compile Include="Core\Loaders\Factories\IEntityFactory.cs" />
@@ -138,6 +139,8 @@
     <Compile Include="Executors\DbScalarCommandExecutor.cs" />
     <Compile Include="Executors\IDeleteExecutor.cs" />
     <Compile Include="Executors\IExecutor.cs" />
+    <Compile Include="Executors\IInsertExecutor.cs" />
+    <Compile Include="Executors\ILoadByIdExecutor.cs" />
     <Compile Include="Executors\IUpdateExecutor.cs" />
     <Compile Include="Executors\SimpleExecutor.cs" />
     <Compile Include="ExpressionParser\ComparatorExpressionParser.cs" />

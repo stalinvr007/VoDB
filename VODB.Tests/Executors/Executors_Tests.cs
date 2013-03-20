@@ -114,4 +114,73 @@ namespace VODB.Tests.Executors
         }
 
     }
+
+    [TestFixture]
+    public class SelectByIdExecutor_Tests
+    {
+
+        private static IEnumerable GetEntities()
+        {
+            return Utils.TestModels.ToTables()
+                .Where(t => t.Name != "CustomerCustomerDemo")
+                .Where(t => t.Name != "CustomerDemographics")
+                .Select(t => t.CreateExistingTestEntity())
+                .Select(t => new TestCaseData(t).SetName("SelectByIdExecutor_Assert<" + t.GetType().Name + ">"));
+        }
+
+        [TestCaseSource("GetEntities")]
+        public void SelectByIdExecutor_Assert<TEntity>(TEntity entity) where TEntity : new()
+        {
+            Utils.ExecuteWith((con, trans) =>
+            {
+                var LoaderExecutor = new LoadByIdExecutor(
+                    new DbQueryCommandExecutor(),
+                    new OrderedEntityMapper(),
+                    new EntityTranslator(),
+                    new CommandFactory(con, trans),
+                    new DbParameterFactory(),
+                    new DbOldParameterFactory()
+                );
+
+                Assert.That(LoaderExecutor.Load(entity), Is.Not.Null);
+                
+            });
+
+        }
+
+    }
+
+    [TestFixture]
+    public class InsertExecutor_Tests
+    {
+
+        private static IEnumerable GetEntities()
+        {
+            return Utils.TestModels.ToTables()
+                .Where(t => t.Name != "CustomerCustomerDemo")
+                .Where(t => t.Name != "CustomerDemographics")
+                .Select(t => t.CreateUnExistingTestEntity())
+                .Select(t => new TestCaseData(t).SetName("InsertExecutor_Assert<" + t.GetType().Name + ">"));
+        }
+
+        [TestCaseSource("GetEntities")]
+        public void InsertExecutor_Assert<TEntity>(TEntity entity) where TEntity : new()
+        {
+            Utils.ExecuteWith((con, trans) =>
+            {
+                var LoaderExecutor = new InsertExecutor(
+                    new DbScalarCommandExecutor(),
+                    new EntityTranslator(),
+                    new CommandFactory(con, trans),
+                    new DbParameterFactory(),
+                    new DbOldParameterFactory()
+                );
+
+                Assert.That(LoaderExecutor.Insert(entity), Is.Not.Null);
+
+            });
+
+        }
+
+    }
 }
