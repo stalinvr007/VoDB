@@ -44,7 +44,8 @@ namespace VODB.Tests.Executors
         private static IEnumerable GetEntities()
         {
             return Utils.TestModels.ToTables()
-                .Select(t => t.CreateExistingTestEntity());
+                .Select(t => t.CreateExistingTestEntity())
+                .Select(t => new TestCaseData(t).SetName("DeleteExecutor_Assert<" +t.GetType().Name + ">"));
         }
 
         [TestCaseSource("GetEntities")]
@@ -71,6 +72,45 @@ namespace VODB.Tests.Executors
                 }
             });
             
+        }
+
+    }
+
+    [TestFixture]
+    public class UpdateExecutor_Tests
+    {
+
+        private static IEnumerable GetEntities()
+        {
+            return Utils.TestModels.ToTables()
+                .Select(t => t.CreateExistingTestEntity())
+                .Select(t => new TestCaseData(t).SetName("UpdateExecutor_Assert<" + t.GetType().Name + ">"));
+        }
+
+        [TestCaseSource("GetEntities")]
+        public void UpdateExecutor_Assert<TEntity>(TEntity entity) where TEntity : new()
+        {
+            Utils.ExecuteWith((con, trans) =>
+            {
+                var UpdateExecutor = new UpdateExecutor(
+                    new DbNonQueryCommandExecutor(),
+                    new EntityTranslator(),
+                    new CommandFactory(con, trans),
+                    new DbParameterFactory(),
+                    new DbOldParameterFactory()
+                );
+
+                try
+                {
+                    UpdateExecutor.Update(entity);
+                }
+                catch (SqlException ex)
+                {
+                    if (!ex.Message.Contains("conflicted with the REFERENCE"))
+                        throw ex;
+                }
+            });
+
         }
 
     }
