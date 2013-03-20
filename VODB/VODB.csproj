@@ -159,6 +159,7 @@
     <Compile Include="ExpressionParser\Key.cs" />
     <Compile Include="ExpressionsToSql\BetweenCondition.cs" />
     <Compile Include="ExpressionsToSql\ConstantCondition.cs" />
+    <Compile Include="ExpressionsToSql\IEntityTranslator.cs" />
     <Compile Include="ExpressionsToSql\InCondition.cs" />
     <Compile Include="ExpressionsToSql\IQueryParameterHelper.cs" />
     <Compile Include="ExpressionsToSql\OrderByCondition.cs" />

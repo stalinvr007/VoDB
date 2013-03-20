@@ -51,7 +51,7 @@ namespace VODB.Expressions
                     .Fields
                     .FirstOrDefault(f => f.Info.Name == part.PropertyName);
 
-                Debug.Assert(part.Field == null, "The property [" + part.PropertyName + "] used in the expression doesn't belong to the Entity table representation.");
+                Debug.Assert(part.Field != null, "The property [" + part.PropertyName + "] used in the expression doesn't belong to the Entity table representation.");
 
                 yield return part;
 

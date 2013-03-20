@@ -7,6 +7,9 @@ using System.Linq;
 using VODB.Core;
 using System.Diagnostics;
 using VODB.Expressions;
+using VODB.EntityTranslation;
+using System.Collections;
+using System.Linq.Expressions;
 
 namespace VODB.Tests
 {
@@ -14,17 +17,18 @@ namespace VODB.Tests
     public class ExpressionToSQL_Test
     {
         int argumentValue = 3;
+        static IEntityTranslator translator = new EntityTranslator();
 
         [Test]
         public void Expression_Decoder()
         {
             var parts = new ExpressionPart[] {
-                new ExpressionPart { PropertyName = "EmployeeId", EntityType = typeof(Employee), EntityTable = Engine.GetTable<Employee>() },
-                new ExpressionPart { PropertyName = "ReportsTo", EntityType = typeof(Employee), EntityTable = Engine.GetTable<Employee>() },
-                new ExpressionPart { PropertyName = "Employee", EntityType = typeof(Orders), EntityTable = Engine.GetTable<Orders>() }
+                new ExpressionPart { PropertyName = "EmployeeId", EntityType = typeof(Employee), EntityTable = translator.Translate(typeof(Employee)) },
+                new ExpressionPart { PropertyName = "ReportsTo", EntityType = typeof(Employee), EntityTable = translator.Translate(typeof(Employee)) },
+                new ExpressionPart { PropertyName = "Employee", EntityType = typeof(Orders), EntityTable = translator.Translate(typeof(Orders)) }
             };
 
-            var exp = new ExpressionDecoder<Orders, Boolean>(o => o.Employee.ReportsTo.EmployeeId == 3);
+            var exp = new ExpressionDecoder<Orders, Boolean>(translator, o => o.Employee.ReportsTo.EmployeeId == 3);
             var decoded = exp.DecodeLeft().ToList();
 
             Assert.AreEqual(3, exp.DecodeRight().First());
@@ -33,7 +37,7 @@ namespace VODB.Tests
             for (int i = 0; i < 3; i++)
             {
                 Assert.AreEqual(parts[i].PropertyName, decoded[i].PropertyName);
-                Assert.AreEqual(parts[i].EntityTable.TableName, decoded[i].EntityTable.TableName);
+                Assert.AreEqual(parts[i].EntityTable.Name, decoded[i].EntityTable.Name);
                 Assert.AreEqual(parts[i].EntityType, decoded[i].EntityType);
             }
         }
@@ -42,18 +46,18 @@ namespace VODB.Tests
         public void Expression_ReturnsObject_Decoder()
         {
             var parts = new ExpressionPart[] {
-                new ExpressionPart { PropertyName = "ReportsTo", EntityType = typeof(Employee), EntityTable = Engine.GetTable<Employee>() },
-                new ExpressionPart { PropertyName = "Employee", EntityType = typeof(Orders), EntityTable = Engine.GetTable<Orders>() }
+                new ExpressionPart { PropertyName = "ReportsTo", EntityType = typeof(Employee), EntityTable = translator.Translate(typeof(Employee)) },
+                new ExpressionPart { PropertyName = "Employee", EntityType = typeof(Orders), EntityTable = translator.Translate(typeof(Orders)) }
             };
 
-            var exp = new ExpressionDecoder<Orders, Object>(o => o.Employee.ReportsTo);
+            var exp = new ExpressionDecoder<Orders, Object>(translator, o => o.Employee.ReportsTo);
             var decoded = exp.DecodeLeft().ToList();
             Assert.AreEqual(2, decoded.Count);
 
             for (int i = 0; i < 2; i++)
             {
                 Assert.AreEqual(parts[i].PropertyName, decoded[i].PropertyName);
-                Assert.AreEqual(parts[i].EntityTable.TableName, decoded[i].EntityTable.TableName);
+                Assert.AreEqual(parts[i].EntityTable.Name, decoded[i].EntityTable.Name);
                 Assert.AreEqual(parts[i].EntityType, decoded[i].EntityType);
             }
         }
@@ -62,18 +66,18 @@ namespace VODB.Tests
         public void Expression_ReturnsProperty_Decoder()
         {
             var parts = new ExpressionPart[] {
-                new ExpressionPart { PropertyName = "EmployeeId", EntityType = typeof(Employee), EntityTable = Engine.GetTable<Employee>() },
-                new ExpressionPart { PropertyName = "Employee", EntityType = typeof(Orders), EntityTable = Engine.GetTable<Orders>() }
+                new ExpressionPart { PropertyName = "EmployeeId", EntityType = typeof(Employee), EntityTable = translator.Translate(typeof(Employee)) },
+                new ExpressionPart { PropertyName = "Employee", EntityType = typeof(Orders), EntityTable = translator.Translate(typeof(Orders)) }
             };
 
-            var exp = new ExpressionDecoder<Orders, Object>(o => o.Employee.EmployeeId);
+            var exp = new ExpressionDecoder<Orders, Object>(translator, o => o.Employee.EmployeeId);
             var decoded = exp.DecodeLeft().ToList();
             Assert.AreEqual(2, decoded.Count);
 
             for (int i = 0; i < 2; i++)
             {
                 Assert.AreEqual(parts[i].PropertyName, decoded[i].PropertyName);
-                Assert.AreEqual(parts[i].EntityTable.TableName, decoded[i].EntityTable.TableName);
+                Assert.AreEqual(parts[i].EntityTable.Name, decoded[i].EntityTable.Name);
                 Assert.AreEqual(parts[i].EntityType, decoded[i].EntityType);
             }
         }
@@ -90,17 +94,17 @@ namespace VODB.Tests
         public void ExpressionToSQL_Simple_Query()
         {
             var level = 0;
-            AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId == argumentValue), "OrderId = @p1", "@p1");
-            AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId < argumentValue), "OrderId < @p2", "@p2");
-            AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId <= argumentValue), "OrderId <= @p3", "@p3");
-            AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId > argumentValue), "OrderId > @p4", "@p4");
-            AssertQuery(ref level, new QueryCondition<Orders>(o => o.OrderId >= argumentValue), "OrderId >= @p5", "@p5");
+            AssertQuery(ref level, new QueryCondition<Orders>(translator, o => o.OrderId == argumentValue), "OrderId = @p1", "@p1");
+            AssertQuery(ref level, new QueryCondition<Orders>(translator, o => o.OrderId < argumentValue), "OrderId < @p2", "@p2");
+            AssertQuery(ref level, new QueryCondition<Orders>(translator, o => o.OrderId <= argumentValue), "OrderId <= @p3", "@p3");
+            AssertQuery(ref level, new QueryCondition<Orders>(translator, o => o.OrderId > argumentValue), "OrderId > @p4", "@p4");
+            AssertQuery(ref level, new QueryCondition<Orders>(translator, o => o.OrderId >= argumentValue), "OrderId >= @p5", "@p5");
         }
 
         [Test]
         public void ExpressionToSQL_StubCondition()
         {
-            var query = new QueryCondition<Orders>(o => o.OrderId, new StubCondition());
+            var query = new QueryCondition<Orders>(translator, o => o.OrderId, new StubCondition());
             var level = 0;
             Assert.That(query.Compile(ref level), Is.EqualTo("OrderId"));
         }
@@ -108,7 +112,7 @@ namespace VODB.Tests
         [Test]
         public void ExpressionToSQL_OrderByCondition()
         {
-            var query = new OrderByCondition<Orders>(o => o.OrderId);
+            var query = new OrderByCondition<Orders>(translator, o => o.OrderId);
             var level = 0;
             Assert.That(query.Compile(ref level), Is.EqualTo(" Order By OrderId"));
         }
@@ -117,7 +121,7 @@ namespace VODB.Tests
         public void ExpressionToSql_InCondition()
         {
             var level = 0;
-            var query = new QueryCondition<Orders>(o => o.OrderId,
+            var query = new QueryCondition<Orders>(translator, o => o.OrderId,
                 new InCondition(new Object[] { 1, 2, 3, 4 }));
 
             Assert.That(query.Compile(ref level), Is.EqualTo("OrderId In (@p1, @p2, @p3, @p4)"));
@@ -134,7 +138,7 @@ namespace VODB.Tests
         public void ExpressionToSql_Between()
         {
             var level = 0;
-            var query = new QueryCondition<Orders>(o => o.OrderId, new BetweenCondition(1, 3));
+            var query = new QueryCondition<Orders>(translator, o => o.OrderId, new BetweenCondition(1, 3));
 
             Assert.That(query.Compile(ref level), Is.EqualTo("OrderId Between @p1 and @p2"));
             Assert.That(query.Parameters.Count(), Is.EqualTo(2));
@@ -151,7 +155,7 @@ namespace VODB.Tests
         public void ExpressionToSQL_Multiple_Levels()
         {
             var level = 0;
-            var query = new QueryCondition<Orders>(o => o.Employee.ReportsTo.EmployeeId == 3);
+            var query = new QueryCondition<Orders>(translator, o => o.Employee.ReportsTo.EmployeeId == 3);
 
             Assert.AreEqual("EmployeeId in (Select EmployeeId From Employees Where ReportsTo in (Select EmployeeId From Employees Where EmployeeId = @p1))", query.Compile(ref level));
             Assert.That(query.Parameters.Count(), Is.EqualTo(1));
@@ -163,7 +167,7 @@ namespace VODB.Tests
         public void ExpressionToSQL_Multiple_Levels2()
         {
             var level = 0;
-            var query = new QueryCondition<Orders>(o => o.Employee.ReportsTo.ReportsTo.EmployeeId == 3);
+            var query = new QueryCondition<Orders>(translator, o => o.Employee.ReportsTo.ReportsTo.EmployeeId == 3);
 
             string queryCompile = query.Compile(ref level);
             Assert.AreEqual("EmployeeId in (Select EmployeeId From Employees Where ReportsTo in (Select EmployeeId From Employees Where ReportsTo in (Select EmployeeId From Employees Where EmployeeId = @p1)))", queryCompile);
@@ -180,7 +184,7 @@ namespace VODB.Tests
 
             for (int i = 0; i < 1000; i++)
             {
-                query.Add(new QueryCondition<Orders>(o => o.Employee.ReportsTo.EmployeeId == 3));
+                query.Add(new QueryCondition<Orders>(translator, o => o.Employee.ReportsTo.EmployeeId == 3));
             }
 
             var compiledQuery = query.Compile(ref level);
@@ -193,6 +197,33 @@ namespace VODB.Tests
                 Assert.That(parameter.Name, Is.StringStarting("@p"));
                 Assert.That(parameter.Value, Is.EqualTo(3));
             }
+        }
+
+        private TestCaseData GetCondition<TEntity>(Expression<Func<TEntity, Boolean>> expression)
+        {
+            return new TestCaseData(new QueryCondition<TEntity>(translator, expression));
+        }
+
+        private IEnumerable GetExpressions()
+        {
+            yield return GetCondition<Orders>(o => o.Customer.CustomerId == "10")
+                .Returns("CustomerId in (Select CustomerId From Customers Where CustomerId = @p1)")
+                .SetName("ExpressionsToSql_Assert_Customer.CustomerId == @p1");
+
+            yield return GetCondition<Employee>(o => o.EmployeeId == 10)
+                .Returns("EmployeeId = @p1")
+                .SetName("ExpressionsToSql_Assert_EmployeeId == @p1");
+
+            yield return GetCondition<CustomerCustomerDemo>(o => o.Demographics.CustomerTypeId == "test")
+                .Returns("CustomerTypeId in (Select CustomerTypeId From CustomerDemographics Where CustomerTypeId = @p1)")
+                .SetName("ExpressionsToSql_Assert_Demographics.CustomerTypeId = @p1");
+        }
+
+        [TestCaseSource("GetExpressions")]
+        public String ExpressionsToSql_Assert(IQueryCondition condition)
+        {
+            int level = 0;
+            return condition.Compile(ref level);
         }
 
     }

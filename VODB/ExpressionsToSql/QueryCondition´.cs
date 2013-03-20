@@ -23,7 +23,7 @@ namespace VODB.ExpressionsToSql
             _Follows = CreateFollowCondition(_Expression);
         }
 
-        public QueryCondition(Expression<Func<TEntity, Object>> expression, IQueryCondition follows)
+        public QueryCondition(IEntityTranslator translator, Expression<Func<TEntity, Object>> expression, IQueryCondition follows)
         {
             _Follows = follows;
             _Expression = new ExpressionDecoder<TEntity, Object>(translator, expression);
