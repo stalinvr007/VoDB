@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using VODB.Core;
+using VODB.EntityTranslation;
 using VODB.Exceptions;
 
 namespace VODB.Expressions
@@ -10,9 +13,11 @@ namespace VODB.Expressions
     class ExpressionDecoder<TEntity, TReturnValue> : IExpressionDecoder
     {
         private readonly LambdaExpression _Expression;
+        private readonly IEntityTranslator _Translator;
 
-        public ExpressionDecoder(Expression<Func<TEntity, TReturnValue>> expression)
+        public ExpressionDecoder(IEntityTranslator translator, Expression<Func<TEntity, TReturnValue>> expression)
         {
+            _Translator = translator;
             _Expression = expression;
         }
 
@@ -38,9 +43,15 @@ namespace VODB.Expressions
                     EntityType = current.Member.DeclaringType
                 };
 
+                // Gets the table for this entity type.
+                part.EntityTable = _Translator.Translate(part.EntityType);
 
-                part.EntityTable = Engine.GetTable(part.EntityType);
-                part.Field = part.EntityTable.FindField(part.PropertyName);
+                // Gets the field used in this expression part.
+                part.Field = part.EntityTable
+                    .Fields
+                    .FirstOrDefault(f => f.Info.Name == part.PropertyName);
+
+                Debug.Assert(part.Field == null, "The property [" + part.PropertyName + "] used in the expression doesn't belong to the Entity table representation.");
 
                 yield return part;
 

@@ -82,6 +82,15 @@ namespace VODB.Infrastructure
         IField BindToField { get; }
 
         /// <summary>
+        /// Gets the name of the binded field or the name of the current field 
+        /// if there's no bind.
+        /// </summary>
+        /// <value>
+        /// The name of the bind or.
+        /// </value>
+        String BindOrName { get; }
+
+        /// <summary>
         /// Gets the table.
         /// </summary>
         /// <value>

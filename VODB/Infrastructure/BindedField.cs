@@ -80,5 +80,8 @@ namespace VODB.Infrastructure
                 BindToField.SetFieldFinalValue(instance, value);
             }
         }
+
+
+        public string BindOrName { get { return BindToField != null ? BindToField.Name : Name; } }
     }
 }

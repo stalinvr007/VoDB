@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using VODB.EntityTranslation;
 using VODB.Expressions;
 
 namespace VODB.ExpressionsToSql
@@ -15,16 +17,16 @@ namespace VODB.ExpressionsToSql
         private readonly ICollection<IQueryParameter> _Parameters = new List<IQueryParameter>();
         private readonly IQueryCondition _Follows;
 
-        public QueryCondition(Expression<Func<TEntity, Boolean>> expression)
+        public QueryCondition(IEntityTranslator translator, Expression<Func<TEntity, Boolean>> expression)
         {
-            _Expression = new ExpressionDecoder<TEntity, Boolean>(expression);
+            _Expression = new ExpressionDecoder<TEntity, Boolean>(translator, expression);
             _Follows = CreateFollowCondition(_Expression);
         }
 
         public QueryCondition(Expression<Func<TEntity, Object>> expression, IQueryCondition follows)
         {
             _Follows = follows;
-            _Expression = new ExpressionDecoder<TEntity, Object>(expression);
+            _Expression = new ExpressionDecoder<TEntity, Object>(translator, expression);
         }
 
         private static IQueryCondition CreateFollowCondition(IExpressionDecoder decoder)
@@ -54,8 +56,11 @@ namespace VODB.ExpressionsToSql
 
             if (index == parts.Count - 1)
             {
+                Debug.Assert(parts[index] != null);
+                Debug.Assert(parts[index].Field != null);
+
                 // Finalize the Condition
-                sb.Append(parts[index].Field.FieldName)
+                sb.Append(parts[index].Field.Name)
                   .Append(_Follows.Compile(ref level));
 
                 // Add the values as a parameter to the parameters collection.
@@ -79,10 +84,10 @@ namespace VODB.ExpressionsToSql
             var current = parts[index].Field;
             var next = parts[index + 1].Field;
 
-            sb.Append(current.FieldName)
-                .Append(" in (Select ").Append(next.BindedTo ?? next.FieldName)
+            sb.Append(current.Name)
+                .Append(" in (Select ").Append(next.BindOrName)
                 .Append(" From ")
-                .Append(current.Table.TableName)
+                .Append(current.Table.Name)
                 .Append(" Where ");
 
             Build(sb, parts, index + 1, ref level);
