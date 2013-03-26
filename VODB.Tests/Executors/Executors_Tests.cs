@@ -29,10 +29,10 @@ namespace VODB.Tests.Executors
             _Transaction = transaction;
             _Connection = connection;
         }
-        public System.Data.Common.DbCommand MakeCommand()
+        public IVodbCommand MakeCommand()
         {
-            DbCommand cmd = _Connection.CreateCommand();
-            cmd.Transaction = _Transaction;
+            IVodbCommand cmd = new VodbCommand(_Connection.CreateCommand());
+            cmd.SetTransaction(_Transaction);
             return cmd;
         }
     }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VODB.DbLayer;
 using VODB.Sessions;
 
 namespace VODB.Tests.ConnectionLayer
@@ -53,6 +54,19 @@ namespace VODB.Tests.ConnectionLayer
                 connection.Close();
                 Assert.That(connection.IsOpened, Is.False);
             }
+        }
+
+        [Test]
+        public void Connection_MakeCommand()
+        {
+            VodbConnection connection;
+            using (connection = new VodbConnection(Utils.ConnectionCreator))
+            {
+                var command = connection.MakeCommand();
+                Assert.That(command, Is.Not.Null);
+                Assert.That(connection.IsOpened, Is.True);
+            }
+            Assert.That(connection.IsOpened, Is.False);
         }
 
     }

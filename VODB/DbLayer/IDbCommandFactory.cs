@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace VODB.DbLayer
 {
     /// <summary>
-    /// A Factory of DbCommands.
+    /// A Factory of IVodbCommand.
     /// </summary>
     public interface IDbCommandFactory
     {
@@ -17,7 +17,7 @@ namespace VODB.DbLayer
         /// Makes the command.
         /// </summary>
         /// <returns></returns>
-        DbCommand MakeCommand();
+        IVodbCommand MakeCommand();
 
     }
 }

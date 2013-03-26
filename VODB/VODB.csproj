@@ -75,6 +75,9 @@
     <Compile Include="Core\Infrastructure\TSqlCommands\TCount.cs" />
     <Compile Include="DbLayer\IDbCommandFactory.cs" />
     <Compile Include="DbLayer\IDbParameterFactory.cs" />
+    <Compile Include="DbLayer\IVodbCommand.cs" />
+    <Compile Include="DbLayer\VodbCommand.cs" />
+    <Compile Include="DbLayer\VodbConnection.cs" />
     <Compile Include="EntityMapping\IEntityMapper.cs" />
     <Compile Include="EntityMapping\OrderedEntityMapper.cs" />
     <Compile Include="EntityTranslation\CachingTranslator.cs" />
@@ -202,7 +205,7 @@
     <Compile Include="DbLayer\DbConnectionCreator.cs" />
     <Compile Include="DbLayer\IDbConnectionCreator.cs" />
     <Compile Include="Extensions\ReflectionExtensions.cs" />
-    <Compile Include="Sessions\IConnectionManager.cs" />
+    <Compile Include="DbLayer\IConnectionManager.cs" />
     <Compile Include="Sessions\InternalSession.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Sessions\Transaction.cs" />

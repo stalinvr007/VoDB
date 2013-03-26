@@ -45,7 +45,7 @@ namespace VODB.Executors
             _NonQueryExecutor = nonQueryExecutor;
         }
 
-        private void AddKeyFieldsToCommand(DbCommand cmd, ITable table, Object entity)
+        private void AddKeyFieldsToCommand(IVodbCommand cmd, ITable table, Object entity)
         {
             cmd.Parameters.AddRange(
                 table.Keys
@@ -54,7 +54,7 @@ namespace VODB.Executors
             );
         }
 
-        private void AddFieldsToCommand(DbCommand cmd, ITable table, Object entity)
+        private void AddFieldsToCommand(IVodbCommand cmd, ITable table, Object entity)
         {
             cmd.Parameters.AddRange(
                 table.Fields
@@ -63,7 +63,7 @@ namespace VODB.Executors
             );
         }
 
-        private void AddOldFieldsToCommand(DbCommand cmd, ITable table, Object entity)
+        private void AddOldFieldsToCommand(IVodbCommand cmd, ITable table, Object entity)
         {
             cmd.Parameters.AddRange(
                 table.Keys
@@ -72,13 +72,14 @@ namespace VODB.Executors
             );
         }
 
-        private DbCommand GetCmd<T>(T entity, 
+        private IVodbCommand GetCmd<T>(T entity, 
             Func<ITable, String> getCommandTxt, 
-            Action<DbCommand, ITable> setFields, out ITable table)
+            Action<IVodbCommand, ITable> setFields, out ITable table)
         {
             table = _Translator.Translate(entity.GetType());
-            var cmd = _CommandFactory.MakeCommand();
-            cmd.CommandText = getCommandTxt(table);
+            IVodbCommand cmd = _CommandFactory.MakeCommand();
+            
+            cmd.SetCommandText(getCommandTxt(table));
 
             setFields(cmd, table);
             
@@ -88,7 +89,7 @@ namespace VODB.Executors
         public void Delete<T>(T entity)
         {
             ITable table;
-            DbCommand cmd = GetCmd(entity, 
+            IVodbCommand cmd = GetCmd(entity, 
                 t => t.SqlDeleteById,
                 (c, t) => AddKeyFieldsToCommand(c, t, entity),
                 out table
@@ -100,7 +101,7 @@ namespace VODB.Executors
         public void Update<T>(T entity)
         {
             ITable table;
-            DbCommand cmd = GetCmd(entity,
+            IVodbCommand cmd = GetCmd(entity,
                 t => t.SqlUpdate,
                 (c, t) => { 
                     AddFieldsToCommand(c, t, entity);
@@ -115,7 +116,7 @@ namespace VODB.Executors
         public T Insert<T>(T entity)
         {
             ITable table;
-            DbCommand cmd = GetCmd(entity,
+            IVodbCommand cmd = GetCmd(entity,
                 t => t.SqlInsert,
                 (c, t) => AddFieldsToCommand(c, t, entity),
                 out table
@@ -123,7 +124,7 @@ namespace VODB.Executors
 
             if (table.IdentityField != null)
             {
-                cmd.CommandText += SELECT_IDENTITY;
+                // cmd.CommandText += SELECT_IDENTITY;
                 table.SetIdentityValue(entity, _ScalarExecutor.ExecuteCommand(cmd));
             }
             else
@@ -142,7 +143,7 @@ namespace VODB.Executors
         public T Query<T>(T entity)
         {
             ITable table;
-            DbCommand cmd = GetCmd(entity,
+            IVodbCommand cmd = GetCmd(entity,
                 t => t.SqlSelectById,
                 (c, t) => AddKeyFieldsToCommand(c, t, entity),
                 out table

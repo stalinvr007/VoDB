@@ -40,15 +40,15 @@ namespace VODB.Executors
             return _Translator.Translate(typeof(TEntity));
         }
 
-        protected DbCommand CreateCommand(String cmd)
+        protected IVodbCommand CreateCommand(String cmd)
         {
-            DbCommand command = _Factory.MakeCommand();
-            command.CommandText = cmd;
+            IVodbCommand command = _Factory.MakeCommand();
+            command.SetCommandText(cmd);
             return command;
         }
 
-        private static DbCommand AddFieldsToCommand(
-            DbCommand cmd,
+        private static IVodbCommand AddFieldsToCommand(
+            IVodbCommand cmd,
             IEnumerable<IField> fields,
             Object entity,
             IDbParameterFactory parameterFactory)
@@ -59,17 +59,17 @@ namespace VODB.Executors
             return cmd;
         }
 
-        protected DbCommand AddKeyFieldsToCommand(DbCommand cmd, ITable table, Object entity)
+        protected IVodbCommand AddKeyFieldsToCommand(IVodbCommand cmd, ITable table, Object entity)
         {
             return AddFieldsToCommand(cmd, table.Keys, entity, _ParameterFactory);
         }
 
-        protected DbCommand AddFieldsToCommand(DbCommand cmd, ITable table, Object entity)
+        protected IVodbCommand AddFieldsToCommand(IVodbCommand cmd, ITable table, Object entity)
         {
             return AddFieldsToCommand(cmd, table.Fields, entity, _ParameterFactory);
         }
 
-        protected DbCommand AddOldFieldsToCommand(DbCommand cmd, ITable table, Object entity)
+        protected IVodbCommand AddOldFieldsToCommand(IVodbCommand cmd, ITable table, Object entity)
         {
             return AddFieldsToCommand(cmd, table.Keys, entity, _OldParameterFactory);
         }

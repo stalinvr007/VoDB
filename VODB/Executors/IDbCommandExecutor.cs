@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Text;
 using System.Threading.Tasks;
 using ConcurrentReader;
+using VODB.DbLayer;
 
 namespace VODB.Executors
 {
@@ -20,6 +21,6 @@ namespace VODB.Executors
         /// </summary>
         /// <param name="command">The command.</param>
         /// <returns></returns>
-        TResult ExecuteCommand(DbCommand command);
+        TResult ExecuteCommand(IVodbCommand command);
     }
 }

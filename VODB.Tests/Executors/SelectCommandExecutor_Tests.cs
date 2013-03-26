@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VODB.DbLayer;
 using VODB.Executors;
 using VODB.Infrastructure;
 using VODB.Tests.Models.Northwind;
@@ -30,9 +31,9 @@ namespace VODB.Tests.Executors
 
             Utils.ExecuteWith(connection =>
             {
-                var cmd = connection.CreateCommand();
+                var cmd = new VodbCommand(connection.CreateCommand());
 
-                cmd.CommandText = table.SqlSelect;
+                cmd.SetCommandText(table.SqlSelect);
 
                 var reader = executor.ExecuteCommand(cmd);
 

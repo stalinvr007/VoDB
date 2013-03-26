@@ -6,9 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VODB.Core.Execution.Executers.DbResults;
-using VODB.DbLayer;
 
-namespace VODB.Sessions
+namespace VODB.DbLayer
 {
     class VodbConnection : IConnectionManager, IDbCommandFactory
     {
@@ -20,7 +19,7 @@ namespace VODB.Sessions
         {
             _Creator = creator;
         }
-        
+
         #region IConnectionManager Implementation
 
         internal bool IsOpened
@@ -52,18 +51,18 @@ namespace VODB.Sessions
             finally
             {
                 _Opened = false;
-            }            
+            }
         }
 
         #endregion
 
         #region IDbCommandFactory Implementation
-        
-        public DbCommand MakeCommand()
+
+        public IVodbCommand MakeCommand()
         {
             Open();
-            return _Connection.CreateCommand();
-        } 
+            return new VodbCommand(_Connection.CreateCommand());
+        }
 
         #endregion
 
@@ -77,25 +76,5 @@ namespace VODB.Sessions
                 _Connection = null;
             }
         }
-    }
-
-    /// <summary>
-    /// The connection manager is responsable to open the connection 
-    /// and close it when it is no longer needed.
-    /// 
-    /// </summary>
-    public interface IConnectionManager : IDisposable
-    {
-
-        /// <summary>
-        /// Asks the manager to open the connection.
-        /// </summary>
-        void Open();
-
-        /// <summary>
-        /// Asks the manager to close the connection.
-        /// </summary>
-        void Close();
-
     }
 }

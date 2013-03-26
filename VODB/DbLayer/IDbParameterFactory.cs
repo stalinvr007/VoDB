@@ -12,7 +12,7 @@ namespace VODB.DbLayer
     
     public interface IDbParameterFactory
     {
-        DbParameter CreateParameter(DbCommand cmd, IField field, Object entity);
+        DbParameter CreateParameter(IVodbCommand cmd, IField field, Object entity);
     }
 
     abstract class DbParameterFactoryBase : IDbParameterFactory
@@ -24,7 +24,7 @@ namespace VODB.DbLayer
             PREFIX = prefix;
         }
 
-        public DbParameter CreateParameter(DbCommand cmd, IField field, Object entity)
+        public DbParameter CreateParameter(IVodbCommand cmd, IField field, Object entity)
         {
             var param = cmd.CreateParameter();
             param.ParameterName = PREFIX + field.Name;
