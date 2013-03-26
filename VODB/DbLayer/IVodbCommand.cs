@@ -11,12 +11,12 @@ namespace VODB.DbLayer
 {
     public interface IVodbCommand
     {
-        DbParameterCollection Parameters { get; }
-        DbParameter CreateParameter();
+        void CreateParameter(String name, Object value);
         void SetCommandText(String sql);
+        void SetTransaction(DbTransaction transaction);
+
         int ExecuteNonQuery();
         IDataReader ExecuteReader();
-        void SetTransaction(DbTransaction transaction);
         object ExecuteScalar();
     }
 }

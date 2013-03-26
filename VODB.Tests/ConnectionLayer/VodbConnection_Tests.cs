@@ -14,6 +14,30 @@ namespace VODB.Tests.ConnectionLayer
     {
 
         [Test]
+        public void Connection_BeginTransaction()
+        {
+            using (var connection = new VodbConnection(Utils.ConnectionCreator))
+            {
+                var transaction = connection.BeginTransaction();
+            }
+        }
+
+        [Test]
+        public void Connection_BeginTransaction_And_Rollback()
+        {
+            using (var connection = new VodbConnection(Utils.ConnectionCreator))
+            {
+                var transaction = connection.BeginTransaction();
+
+                var command = connection.MakeCommand();
+                command.SetCommandText("Insert Into Employees (FirstName, LastName) values ('testing', 'testing')");
+                command.ExecuteNonQuery();
+
+                transaction.Rollback();
+            }
+        }
+
+        [Test]
         public void Connection_Close_NoOpen()
         {
             var connection = new VodbConnection(Utils.ConnectionCreator);

@@ -9,10 +9,11 @@ using VODB.Core.Execution.Executers.DbResults;
 
 namespace VODB.DbLayer
 {
-    class VodbConnection : IConnectionManager, IDbCommandFactory
+    class VodbConnection : IVodbConnection, IDbCommandFactory
     {
         private readonly IDbConnectionCreator _Creator;
         private DbConnection _Connection;
+        private DbTransaction _Transaction;
         private Boolean _Opened;
 
         public VodbConnection(IDbConnectionCreator creator)
@@ -35,6 +36,7 @@ namespace VODB.DbLayer
             if (!IsOpened)
             {
                 _Connection = _Creator.Create();
+                _Connection.Open();
                 _Opened = true;
             }
         }
@@ -54,6 +56,18 @@ namespace VODB.DbLayer
             }
         }
 
+        public IVodbTransaction BeginTransaction()
+        {
+            if (_Transaction == null)
+            {
+                Open();
+                _Transaction = _Connection.BeginTransaction();
+                return new VodbTransaction(_Transaction);
+            }
+
+            return new VodbInnerTransaction(_Transaction);
+        }
+
         #endregion
 
         #region IDbCommandFactory Implementation
@@ -61,7 +75,10 @@ namespace VODB.DbLayer
         public IVodbCommand MakeCommand()
         {
             Open();
-            return new VodbCommand(_Connection.CreateCommand());
+            var command = _Connection.CreateCommand();
+            command.Transaction = _Transaction;
+
+            return new VodbCommand(command);
         }
 
         #endregion
@@ -76,5 +93,7 @@ namespace VODB.DbLayer
                 _Connection = null;
             }
         }
+
+        
     }
 }

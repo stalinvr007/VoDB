@@ -13,17 +13,18 @@ namespace VODB.DbLayer
     {
         private readonly DbCommand _Command;
 
-        public DbParameterCollection Parameters
+        public void CreateParameter(String name, Object value)
         {
-            get
-            {
-                return _Command.Parameters;
-            }
-        }
+            var parameter = _Command.CreateParameter();
+            parameter.ParameterName = name;
+            parameter.Value = value;
 
-        public DbParameter CreateParameter()
-        {
-            return _Command.CreateParameter();
+            if (parameter.Value == null)
+            {
+                parameter.Value = DBNull.Value;
+            }
+
+            _Command.Parameters.Add(parameter);
         }
 
         public void SetCommandText(String sql)

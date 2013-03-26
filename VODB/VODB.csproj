@@ -74,10 +74,12 @@
     <Compile Include="Core\Infrastructure\TSqlCommandHolderLazy.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TCount.cs" />
     <Compile Include="DbLayer\IDbCommandFactory.cs" />
-    <Compile Include="DbLayer\IDbParameterFactory.cs" />
     <Compile Include="DbLayer\IVodbCommand.cs" />
+    <Compile Include="DbLayer\IVodbTransaction.cs" />
     <Compile Include="DbLayer\VodbCommand.cs" />
     <Compile Include="DbLayer\VodbConnection.cs" />
+    <Compile Include="DbLayer\VodbInnerTransaction.cs" />
+    <Compile Include="DbLayer\VodbTransaction.cs" />
     <Compile Include="EntityMapping\IEntityMapper.cs" />
     <Compile Include="EntityMapping\OrderedEntityMapper.cs" />
     <Compile Include="EntityTranslation\CachingTranslator.cs" />
@@ -135,17 +137,6 @@
     <Compile Include="Exceptions\UniqueKeyViolationException.cs" />
     <Compile Include="Exceptions\WhereExpressionFormatterNotFoundException.cs" />
     <Compile Include="Exceptions\WhereExpressionHandlerNotFoundException.cs" />
-    <Compile Include="Executors\CommandExecutor.cs" />
-    <Compile Include="Executors\DbNonQueryCommandExecutor.cs" />
-    <Compile Include="Executors\DbQueryCommandExecutor.cs" />
-    <Compile Include="Executors\IDbCommandExecutor.cs" />
-    <Compile Include="Executors\DbScalarCommandExecutor.cs" />
-    <Compile Include="Executors\IDeleteExecutor.cs" />
-    <Compile Include="Executors\IExecutor.cs" />
-    <Compile Include="Executors\IInsertExecutor.cs" />
-    <Compile Include="Executors\ILoadByIdExecutor.cs" />
-    <Compile Include="Executors\IUpdateExecutor.cs" />
-    <Compile Include="Executors\SimpleExecutor.cs" />
     <Compile Include="ExpressionParser\ComparatorExpressionParser.cs" />
     <Compile Include="ExpressionParser\ExpressionBodyParser.cs" />
     <Compile Include="ExpressionParser\FieldGetterExpressionParser.cs" />
@@ -205,7 +196,7 @@
     <Compile Include="DbLayer\DbConnectionCreator.cs" />
     <Compile Include="DbLayer\IDbConnectionCreator.cs" />
     <Compile Include="Extensions\ReflectionExtensions.cs" />
-    <Compile Include="DbLayer\IConnectionManager.cs" />
+    <Compile Include="DbLayer\IVodbConnection.cs" />
     <Compile Include="Sessions\InternalSession.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Sessions\Transaction.cs" />
@@ -242,7 +233,9 @@
       <Name>ConcurrentReader</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Executors\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

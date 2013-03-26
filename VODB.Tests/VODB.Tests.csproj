@@ -74,15 +74,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CommandsBuilding_Tests.cs" />
+    <Compile Include="ConnectionLayer\VodbCommand_Tests.cs" />
     <Compile Include="ConnectionLayer\VodbConnection_Tests.cs" />
     <Compile Include="DbReaderMapper.cs" />
     <Compile Include="EntitiesAsserts.cs" />
     <Compile Include="Entities_Test_Helpers.cs" />
     <Compile Include="EntityTranslator_Tests.cs" />
-    <Compile Include="Executors\CountCommandExecutor_Tests.cs" />
-    <Compile Include="Executors\SelectCommandExecutor_Tests.cs" />
-    <Compile Include="Executors\Executors_Tests.cs" />
-    <Compile Include="Executors\UpdateCommandExecutor_Tests.cs" />
     <Compile Include="ExpressionParser_Tests.cs" />
     <Compile Include="Mapping\OrderedEntityMapper_Tests.cs" />
     <Compile Include="TableToSql\ISqlBuilderTestBase.cs" />

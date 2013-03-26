@@ -10,19 +10,24 @@ using VODB.DbLayer;
 
 namespace VODB.DbLayer
 {
+
     /// <summary>
-    /// The connection manager is responsable to open the connection 
-    /// and close it when it is no longer needed.
-    /// 
+    /// The representation of a logical connection.
     /// </summary>
-    public interface IConnectionManager : IDisposable
+    public interface IVodbConnection : IDisposable
     {
+
+        /// <summary>
+        /// Begins the transaction.
+        /// </summary>
+        /// <returns></returns>
+        IVodbTransaction BeginTransaction();
 
         /// <summary>
         /// Asks the manager to open the connection.
         /// </summary>
         void Open();
-
+        
         /// <summary>
         /// Asks the manager to close the connection.
         /// </summary>
