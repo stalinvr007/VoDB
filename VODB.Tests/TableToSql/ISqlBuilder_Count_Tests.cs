@@ -1,14 +1,7 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VODB.EntityTranslation;
 using VODB.Infrastructure;
 using VODB.TableToSql;
-using VODB.Tests.Models.Northwind;
 
 namespace VODB.Tests.TableToSql
 {

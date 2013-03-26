@@ -1,11 +1,5 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VODB.DbLayer;
-using VODB.Sessions;
 
 namespace VODB.Tests.ConnectionLayer
 {
@@ -18,7 +12,7 @@ namespace VODB.Tests.ConnectionLayer
         {
             using (var connection = new VodbConnection(Utils.ConnectionCreator))
             {
-                var transaction = connection.BeginTransaction();
+                Assert.That(connection.BeginTransaction(), Is.Not.Null);
             }
         }
 
@@ -28,13 +22,24 @@ namespace VODB.Tests.ConnectionLayer
             using (var connection = new VodbConnection(Utils.ConnectionCreator))
             {
                 var transaction = connection.BeginTransaction();
+                try
+                {
+                    Assert.That(GetEmployeesCount(connection), Is.EqualTo(9));
 
-                var command = connection.MakeCommand();
-                command.SetCommandText("Insert Into Employees (FirstName, LastName) values ('testing', 'testing')");
-                command.ExecuteNonQuery();
+                    connection.Execute("Insert Into Employees (FirstName, LastName) values ('testing', 'testing')");
 
-                transaction.Rollback();
+                    Assert.That(GetEmployeesCount(connection), Is.EqualTo(10));
+                }
+                finally
+                {
+                    transaction.Rollback();
+                }
             }
+        }
+
+        private static int GetEmployeesCount(VodbConnection connection)
+        {
+            return connection.ExecuteScalar<int>("Select count(*) From Employees");
         }
 
         [Test]

@@ -1,30 +1,38 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VODB.Core.Execution.Executers.DbResults;
 
 namespace VODB.DbLayer
 {
-    public class VodbTransaction : IVodbTransaction
+
+    class VodbTransaction : IVodbTransaction
     {
         private readonly DbTransaction _Transaction;
+
         public VodbTransaction(DbTransaction transaction)
         {
             _Transaction = transaction;
         }
 
+        public bool HasRolledBack { get; private set; }
+
         public void Commit()
         {
+            if (HasRolledBack)
+            {
+                return;
+            }
+
             _Transaction.Commit();
         }
 
         public void Rollback()
         {
+            if (HasRolledBack)
+            {
+                return;
+            }
+
             _Transaction.Rollback();
+            HasRolledBack = true;
         }
     }
 }

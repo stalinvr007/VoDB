@@ -197,6 +197,7 @@
     <Compile Include="DbLayer\IDbConnectionCreator.cs" />
     <Compile Include="Extensions\ReflectionExtensions.cs" />
     <Compile Include="DbLayer\IVodbConnection.cs" />
+    <Compile Include="IVodbCommandExtensions.cs" />
     <Compile Include="Sessions\InternalSession.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Sessions\Transaction.cs" />

@@ -1,21 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VODB.Core.Execution.Executers.DbResults;
-
 namespace VODB.DbLayer
 {
-    public class VodbInnerTransaction : IVodbTransaction
+    
+    /// <summary>
+    /// This transaction can only rollback.
+    /// </summary>
+    class VodbInnerTransaction : IVodbTransaction
     {
-        private readonly DbTransaction _Transaction;
+        private readonly IVodbTransaction _Transaction;
 
-        public VodbInnerTransaction(DbTransaction transaction)
+        public VodbInnerTransaction(IVodbTransaction transaction)
         {
             _Transaction = transaction;
+        }
+
+        public bool HasRolledBack
+        {
+            get { return _Transaction.HasRolledBack; }
         }
 
         public void Commit() { /* */ }
@@ -24,5 +24,7 @@ namespace VODB.DbLayer
         {
             _Transaction.Rollback();
         }
+
+        
     }
 }

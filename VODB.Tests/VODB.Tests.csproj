@@ -117,6 +117,7 @@
     <Compile Include="FasterFlect_Vs_Reflection.cs" />
     <Compile Include="Validatores_Tests.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="VodbConnectionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VODB\VODB.csproj">

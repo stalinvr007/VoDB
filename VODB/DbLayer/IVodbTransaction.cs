@@ -1,12 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VODB.Core.Execution.Executers.DbResults;
-
 namespace VODB.DbLayer
 {
     /// <summary>
@@ -14,6 +5,14 @@ namespace VODB.DbLayer
     /// </summary>
     public interface IVodbTransaction
     {
+        /// <summary>
+        /// Gets a value indicating whether this instance has rolled back.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance has rolled back; otherwise, <c>false</c>.
+        /// </value>
+        bool HasRolledBack { get; }
+
         /// <summary>
         /// Commits the changes made within this scope to the database.
         /// </summary>

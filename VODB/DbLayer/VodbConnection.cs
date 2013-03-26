@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VODB.Core.Execution.Executers.DbResults;
 
 namespace VODB.DbLayer
 {
@@ -13,8 +6,8 @@ namespace VODB.DbLayer
     {
         private readonly IDbConnectionCreator _Creator;
         private DbConnection _Connection;
-        private DbTransaction _Transaction;
-        private Boolean _Opened;
+        private IVodbTransaction _Transaction;
+        DbTransaction _DbTransaction;
 
         public VodbConnection(IDbConnectionCreator creator)
         {
@@ -23,22 +16,18 @@ namespace VODB.DbLayer
 
         #region IConnectionManager Implementation
 
-        internal bool IsOpened
-        {
-            get
-            {
-                return _Opened;
-            }
-        }
+        internal bool IsOpened { get; private set; }
 
         public void Open()
         {
-            if (!IsOpened)
+            if (IsOpened)
             {
-                _Connection = _Creator.Create();
-                _Connection.Open();
-                _Opened = true;
+                return;
             }
+
+            _Connection = _Creator.Create();
+            _Connection.Open();
+            IsOpened = true;
         }
 
         public void Close()
@@ -52,17 +41,17 @@ namespace VODB.DbLayer
             }
             finally
             {
-                _Opened = false;
+                IsOpened = false;
             }
         }
 
         public IVodbTransaction BeginTransaction()
-        {
+        {            
             if (_Transaction == null)
             {
                 Open();
-                _Transaction = _Connection.BeginTransaction();
-                return new VodbTransaction(_Transaction);
+                _DbTransaction = _Connection.BeginTransaction();
+                return _Transaction = new VodbTransaction(_DbTransaction);
             }
 
             return new VodbInnerTransaction(_Transaction);
@@ -76,7 +65,7 @@ namespace VODB.DbLayer
         {
             Open();
             var command = _Connection.CreateCommand();
-            command.Transaction = _Transaction;
+            command.Transaction = _DbTransaction;
 
             return new VodbCommand(command);
         }
@@ -87,11 +76,13 @@ namespace VODB.DbLayer
         {
             Close();
 
-            if (_Connection != null)
+            if (_Connection == null)
             {
-                _Connection.Dispose();
-                _Connection = null;
+                return;
             }
+
+            _Connection.Dispose();
+            _Connection = null;
         }
 
         
