@@ -15,6 +15,11 @@ namespace VODB.Tests
     public static class Utils
     {
 
+        public static IDbConnectionCreator ConnectionCreator
+        {
+            get { return new NameConventionDbConnectionCreator("System.Data.SqlClient"); }
+        }
+
         internal static VODB.Core.Infrastructure.Table EmployeeTable
         {
             get
@@ -96,7 +101,8 @@ namespace VODB.Tests
             { typeof(Territories), 53 }
         };
 
-        public static IDictionary<Type, int> RecordCounts {
+        public static IDictionary<Type, int> RecordCounts
+        {
             get { return recordCounts; }
         }
 

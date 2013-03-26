@@ -10,20 +10,20 @@ using VODB.DbLayer;
 
 namespace VODB.Sessions
 {
-    class ConnectionManager : IConnectionManager, IDbCommandFactory
+    class VodbConnection : IConnectionManager, IDbCommandFactory
     {
         private readonly IDbConnectionCreator _Creator;
         private DbConnection _Connection;
         private Boolean _Opened;
 
-        public ConnectionManager(IDbConnectionCreator creator)
+        public VodbConnection(IDbConnectionCreator creator)
         {
             _Creator = creator;
         }
         
         #region IConnectionManager Implementation
 
-        private bool IsOpened
+        internal bool IsOpened
         {
             get
             {
@@ -44,7 +44,10 @@ namespace VODB.Sessions
         {
             try
             {
-                _Connection.Close();
+                if (_Connection != null)
+                {
+                    _Connection.Close();
+                }
             }
             finally
             {
@@ -63,12 +66,25 @@ namespace VODB.Sessions
         } 
 
         #endregion
+
+        public void Dispose()
+        {
+            Close();
+
+            if (_Connection != null)
+            {
+                _Connection.Dispose();
+                _Connection = null;
+            }
+        }
     }
+
     /// <summary>
     /// The connection manager is responsable to open the connection 
     /// and close it when it is no longer needed.
+    /// 
     /// </summary>
-    public interface IConnectionManager
+    public interface IConnectionManager : IDisposable
     {
 
         /// <summary>
