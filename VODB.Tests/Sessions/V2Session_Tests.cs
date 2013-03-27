@@ -56,6 +56,16 @@ namespace VODB.Tests.Sessions
         }
 
         [TestCaseSource("GetEntitiesById")]
+        public void V2Session_Assert_Exists<TEntity>(TEntity entity) where TEntity : class, new()
+        {
+            using (var session = GetSession())
+            {
+                Assert.That(session.Exists(entity), Is.True);
+                Assert.That(session.Exists(entity), Is.True);
+            }
+        }
+
+        [TestCaseSource("GetEntitiesById")]
         public void V2Session_Assert_Delete<TEntity>(TEntity entity) where TEntity : class, new()
         {
             using (var session = GetSession())

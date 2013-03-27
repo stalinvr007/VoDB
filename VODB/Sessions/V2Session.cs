@@ -33,6 +33,13 @@ namespace VODB.Sessions
             ).ToArray());
         }
 
+        private static void SetFieldValues<TEntity>(TEntity entity, ITable table, IVodbCommand command)
+        {
+            command.SetParametersValues(
+                table.Fields.Where(f => !f.IsIdentity).Select(f => f.GetFieldFinalValue(entity)
+            ).ToArray());
+        }
+
         private ITable GetTable<TEntity>() where TEntity : class, new()
         {
             return _Translator.Translate(typeof(TEntity));
@@ -65,6 +72,7 @@ namespace VODB.Sessions
                 var command = table.GetSelectByIdCommand(_Connection);
                 SetKeyValues<TEntity>(entity, table, command);
                 reader = _Connection.ExecuteReader(command);
+
                 return reader.Read() ? _Mapper.Map(entity, table, reader) : null;
             }
             finally
@@ -101,7 +109,11 @@ namespace VODB.Sessions
 
         public bool Exists<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            throw new NotImplementedException();
+            var table = GetTable<TEntity>();
+            var command = table.GetCountByIdCommand(_Connection);
+            SetKeyValues<TEntity>(entity, table, command);
+
+            return (int)_Connection.ExecuteScalar(command) == 1;
         }
 
         public void Dispose()
