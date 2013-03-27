@@ -14,6 +14,7 @@ namespace VODB.DbLayer
         void CreateParameter(String name, Object value);
         void SetCommandText(String sql);
         void SetTransaction(DbTransaction transaction);
+        void SetConnection(DbConnection connection);
 
         int ExecuteNonQuery();
         IDataReader ExecuteReader();

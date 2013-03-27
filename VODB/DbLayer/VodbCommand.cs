@@ -37,6 +37,11 @@ namespace VODB.DbLayer
             _Command.Transaction = transaction;
         }
 
+        public void SetConnection(DbConnection connection)
+        {
+            _Command.Connection = connection;
+        }
+
         public VodbCommand(DbCommand command)
         {
             _Command = command;
@@ -57,5 +62,6 @@ namespace VODB.DbLayer
             return _Command.ExecuteScalar();
         }
 
+        
     }
 }
