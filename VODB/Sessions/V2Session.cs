@@ -88,12 +88,20 @@ namespace VODB.Sessions
             {
                 reader.Close();
             }
-            
+
         }
 
         public TEntity Insert<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            throw new NotImplementedException();
+            var table = GetTable<TEntity>();
+            var command = table.GetInsertCommand(_Connection);
+            SetFieldValues(entity, table, command);
+
+            var id = _Connection.ExecuteScalar(command);
+
+            table.SetIdentityValue(entity, id);
+
+            return entity;
         }
 
         public bool Delete<TEntity>(TEntity entity) where TEntity : class, new()
@@ -138,7 +146,7 @@ namespace VODB.Sessions
 
             _Connection.Dispose();
             _Connection = null;
-        } 
+        }
 
         #endregion
     }

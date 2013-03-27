@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -99,6 +100,35 @@ namespace VODB.Tests.Sessions
                 {
                     Assert.That(session.Update(entity), Is.Not.Null);
                     Assert.That(session.Update(entity), Is.Not.Null);
+                });
+            }
+        }
+
+        private IEnumerable GetUnExistingEntities()
+        {
+            return Utils.TestModels.ToTables()
+                .Where(t => t.Name != "CustomerDemographics")
+                .Where(t => t.Name != "CustomerCustomerDemo")
+                .Select(t => t.CreateUnExistingTestEntity());
+        }
+
+        [TestCaseSource("GetUnExistingEntities")]
+        public void V2Session_Assert_Insert<TEntity>(TEntity entity) where TEntity : class, new()
+        {
+            using (var session = GetSession())
+            {
+                session.WithRollback(s =>
+                {
+                    Assert.That(session.Insert(entity), Is.Not.Null);
+                    try
+                    {
+                        Assert.That(session.Insert(entity), Is.Not.Null);
+                    }
+                    catch (SqlException ex)
+                    {
+                        StringAssert.Contains("PRIMARY KEY", ex.Message);
+                    }
+                    
                 });
             }
         }

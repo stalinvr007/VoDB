@@ -30,7 +30,7 @@ namespace VODB.TableToSql
                 sb.Append("@").Append(name.Replace(WHITE_SPACE, "")).Append(", ");
             }
 
-            return sb.Remove(sb.Length - 2, 2).Append(")").ToString();
+            return sb.Remove(sb.Length - 2, 2).Append("); Select @@IDENTITY").ToString();
         }
     }
 }
