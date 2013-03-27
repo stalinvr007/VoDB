@@ -33,5 +33,25 @@ namespace VODB.DbLayer
         /// </summary>
         void Close();
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <returns>The number of records afected by the command.</returns>
+        int ExecuteNonQuery(IVodbCommand command);
+
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <returns>A DataReader with the result</returns>
+        IDataReader ExecuteReader(IVodbCommand command);
+
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <returns>A simgle value.</returns>
+        object ExecuteScalar(IVodbCommand command);
     }
 }

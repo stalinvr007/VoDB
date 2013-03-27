@@ -37,12 +37,18 @@ namespace VODB.Tests.ConnectionLayer
                 for (int i = 0; i < 10; i++)
                 {
                     var inner = connection.BeginTransaction();
-                    inner.Rollback();
+                    
+                    // Should not close!
                     connection.Close();
                     Assert.That(connection.IsOpened, Is.True);
+
+                    // Should not influence the connection or Transaction.
+                    inner.Commit();
                 }
 
+                // Ends the transaction by Rollback.
                 transaction.Rollback();
+                // Then the close statement has efect.
                 connection.Close();
                 Assert.That(connection.IsOpened, Is.False);
             }
@@ -125,9 +131,8 @@ namespace VODB.Tests.ConnectionLayer
             {
                 var command = connection.MakeCommand();
                 Assert.That(command, Is.Not.Null);
-                Assert.That(connection.IsOpened, Is.True);
+                Assert.That(connection.IsOpened, Is.False);
             }
-            Assert.That(connection.IsOpened, Is.False);
         }
 
     }

@@ -41,6 +41,16 @@ namespace VODB.Tests.ConnectionLayer
             return result;
         }
 
+        [Test, ExpectedException(typeof(InvalidOperationException))]
+        public void VodbCommand_Execution_Failed_ConnectionClosed()
+        {
+            using (var connection = new VodbConnection(Utils.ConnectionCreator))
+            {
+                var command = connection.MakeCommand("Insert Into Employees (FirstName, LastName) values ('testing', 'testing')");
+                command.ExecuteNonQuery();
+            }
+        }
+
     }
 
 }
