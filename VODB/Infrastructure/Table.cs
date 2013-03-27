@@ -75,7 +75,7 @@ namespace VODB.Infrastructure
 
         private String GetParameterName(String prefix, IField field)
         {
-            return PARAMETER_PREFIX + field.Name.Replace(" ", "");
+            return prefix + field.Name.Replace(" ", "");
         }
 
         public IVodbCommand GetSelectAllCommand(IVodbCommandFactory factory)
@@ -136,7 +136,7 @@ namespace VODB.Infrastructure
         {
             if (_UpdateCommand != null) { return _UpdateCommand; }
 
-            _UpdateCommand = factory.MakeCommand(SqlInsert);
+            _UpdateCommand = factory.MakeCommand(SqlUpdate);
             SetFieldsAsParameters(PARAMETER_PREFIX, _UpdateCommand);
             SetKeysAsParameters(PARAMETER_PREFIX_OLD, _UpdateCommand);
 

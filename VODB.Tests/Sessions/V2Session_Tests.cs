@@ -90,5 +90,18 @@ namespace VODB.Tests.Sessions
             }
         }
 
+        [TestCaseSource("GetEntitiesById")]
+        public void V2Session_Assert_Update<TEntity>(TEntity entity) where TEntity : class, new()
+        {
+            using (var session = GetSession())
+            {
+                session.WithRollback(s =>
+                {
+                    Assert.That(session.Update(entity), Is.Not.Null);
+                    Assert.That(session.Update(entity), Is.Not.Null);
+                });
+            }
+        }
+
     }
 }

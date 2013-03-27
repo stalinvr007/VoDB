@@ -29,15 +29,24 @@ namespace VODB.Sessions
         private static void SetKeyValues<TEntity>(TEntity entity, ITable table, IVodbCommand command)
         {
             command.SetParametersValues(
-                table.Keys.Select(f => f.GetFieldFinalValue(entity)
-            ).ToArray());
+                table.Keys.Select(f => f.GetFieldFinalValue(entity)).ToArray()
+            );
         }
 
         private static void SetFieldValues<TEntity>(TEntity entity, ITable table, IVodbCommand command)
         {
             command.SetParametersValues(
-                table.Fields.Where(f => !f.IsIdentity).Select(f => f.GetFieldFinalValue(entity)
-            ).ToArray());
+                table.Fields.Where(f => !f.IsIdentity).Select(f => f.GetFieldFinalValue(entity)).ToArray()
+            );
+        }
+
+        private static void SetAllFieldValues<TEntity>(TEntity entity, ITable table, IVodbCommand command)
+        {
+            command.SetParametersValues(
+                table.Fields.Where(f => !f.IsIdentity).Select(f => f.GetFieldFinalValue(entity))
+                .Concat(table.Keys.Select(f => f.GetFieldFinalValue(entity)))
+                .ToArray()
+            );
         }
 
         private ITable GetTable<TEntity>() where TEntity : class, new()
@@ -98,7 +107,11 @@ namespace VODB.Sessions
 
         public TEntity Update<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            throw new NotImplementedException();
+            var table = GetTable<TEntity>();
+            var command = table.GetUpdateCommand(_Connection);
+            SetAllFieldValues<TEntity>(entity, table, command);
+
+            return _Connection.ExecuteNonQuery(command) == 1 ? entity : null;
         }
 
         public int Count<TEntity>() where TEntity : class, new()
