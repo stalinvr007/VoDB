@@ -13,11 +13,17 @@ namespace VODB.DbLayer
     {
         private readonly DbCommand _Command;
 
-        public void CreateParameter(String name, Object value)
+        private DbParameter InternalCreateParameter(String name, Object value)
         {
             var parameter = _Command.CreateParameter();
             parameter.ParameterName = name;
             parameter.Value = value;
+            return parameter;
+        }
+
+        public void CreateParameter(String name, Object value)
+        {
+            var parameter = InternalCreateParameter(name, value);
 
             if (parameter.Value == null)
             {
@@ -25,6 +31,23 @@ namespace VODB.DbLayer
             }
 
             _Command.Parameters.Add(parameter);
+        }
+
+        public void RefreshParametersValues(IEnumerable<object> values)
+        {
+            int i = -1;
+            foreach (var value in values)
+            {
+                _Command.Parameters[++i].Value = value ?? DBNull.Value;
+            }
+        }
+
+        public void CreateParameters(IEnumerable<string> names)
+        {
+            foreach (var name in names)
+            {
+                _Command.Parameters.Add(InternalCreateParameter(name, DBNull.Value));
+            }
         }
 
         public void SetCommandText(String sql)
@@ -61,6 +84,9 @@ namespace VODB.DbLayer
         {
             return _Command.ExecuteScalar();
         }
+
+
+
 
         
     }

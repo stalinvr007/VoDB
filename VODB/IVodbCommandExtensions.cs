@@ -11,6 +11,18 @@ namespace VODB
             return cmd;
         }
 
+        public static IVodbCommand SetParametersNames(this IVodbCommand command, params string[] names)
+        {
+            command.CreateParameters(names);
+            return command;
+        }
+
+        public static IVodbCommand SetParametersValues(this IVodbCommand command, params object[] values)
+        {
+            command.RefreshParametersValues(values);
+            return command;
+        }
+
         public static TResult ExecuteScalar<TResult>(this IVodbCommandFactory commandFactory, string sqlCmd)
         {
             return (TResult)commandFactory.MakeCommand(sqlCmd).ExecuteScalar();

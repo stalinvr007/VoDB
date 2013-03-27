@@ -24,6 +24,15 @@ namespace VODB.Tests.ConnectionLayer
             yield return Make(v => v.MakeCommand("Update Employees Set LastName = 'wow'"))
                 .Returns(9)
                 .SetName("VodbCommand Execute Update employees");
+
+            yield return Make(v => 
+                {
+                    return v.MakeCommand("Update Employees Set LastName = @p2 where EmployeeId = @p1")
+                        .SetParametersNames("@p1", "@p2")
+                        .SetParametersValues(1, "wow");
+                })
+                .Returns(1)
+                .SetName("VodbCommand Execute Update employees with parameters");
         }
 
         [TestCaseSource("GetCommandsNonQuery")]
