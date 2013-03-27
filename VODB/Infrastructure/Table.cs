@@ -80,20 +80,14 @@ namespace VODB.Infrastructure
 
         public IVodbCommand GetSelectAllCommand(IVodbCommandFactory factory)
         {
-            if (_SelectCommand != null)
-            {
-                return _SelectCommand;
-            }
+            if (_SelectCommand != null) { return _SelectCommand; }
 
             return _SelectCommand = factory.MakeCommand(SqlSelect);
         }
 
         public IVodbCommand GetSelectByIdCommand(IVodbCommandFactory factory)
         {
-            if (_SelectByIdCommand != null)
-            {
-                return _SelectByIdCommand;
-            }
+            if (_SelectByIdCommand != null) { return _SelectByIdCommand; }
 
             _SelectByIdCommand = factory.MakeCommand(SqlSelectById);
             SetKeysAsParameters(PARAMETER_PREFIX, _SelectByIdCommand);
@@ -103,20 +97,14 @@ namespace VODB.Infrastructure
 
         public IVodbCommand GetCountCommand(IVodbCommandFactory factory)
         {
-            if (_CountCommand != null)
-            {
-                return _CountCommand;
-            }
+            if (_CountCommand != null) { return _CountCommand; }
 
             return _CountCommand = factory.MakeCommand(SqlCount);
         }
 
         public IVodbCommand GetCountByIdCommand(IVodbCommandFactory factory)
         {
-            if (_CountByIdCommand != null)
-            {
-                return _CountByIdCommand;
-            }
+            if (_CountByIdCommand != null) { return _CountByIdCommand; }
 
             _CountByIdCommand = factory.MakeCommand(SqlCountById);
             SetKeysAsParameters(PARAMETER_PREFIX, _CountByIdCommand);
@@ -126,10 +114,7 @@ namespace VODB.Infrastructure
 
         public IVodbCommand GetDeleteCommand(IVodbCommandFactory factory)
         {
-            if (_DeleteCommand != null)
-            {
-                return _DeleteCommand;
-            }
+            if (_DeleteCommand != null) { return _DeleteCommand; }
 
             _DeleteCommand = factory.MakeCommand(SqlDeleteById);
             SetKeysAsParameters(PARAMETER_PREFIX, _DeleteCommand);
@@ -139,10 +124,7 @@ namespace VODB.Infrastructure
 
         public IVodbCommand GetInsertCommand(IVodbCommandFactory factory)
         {
-            if (_InsertCommand != null)
-            {
-                return _InsertCommand;
-            }
+            if (_InsertCommand != null) { return _InsertCommand; }
 
             _InsertCommand = factory.MakeCommand(SqlInsert);
             SetFieldsAsParameters(PARAMETER_PREFIX, _InsertCommand);
@@ -152,10 +134,7 @@ namespace VODB.Infrastructure
 
         public IVodbCommand GetUpdateCommand(IVodbCommandFactory factory)
         {
-            if (_UpdateCommand != null)
-            {
-                return _UpdateCommand;
-            }
+            if (_UpdateCommand != null) { return _UpdateCommand; }
 
             _UpdateCommand = factory.MakeCommand(SqlInsert);
             SetFieldsAsParameters(PARAMETER_PREFIX, _UpdateCommand);

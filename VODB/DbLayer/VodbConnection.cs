@@ -24,7 +24,7 @@ namespace VODB.DbLayer
         }
 
         #region IConnectionManager Implementation
-        
+
         internal bool IsOpened { get; private set; }
 
         public void Open()
@@ -61,7 +61,7 @@ namespace VODB.DbLayer
         }
 
         public IVodbTransaction BeginTransaction()
-        {            
+        {
             if (_Transaction == null)
             {
                 Open();
@@ -108,16 +108,10 @@ namespace VODB.DbLayer
         private TResult Execute<TResult>(IVodbCommand cmd, Func<IVodbCommand, TResult> action)
         {
             Open();
-            try
-            {
-                cmd.SetConnection(_DbConnection);
-                cmd.SetTransaction(_DbTransaction);
-                return action(cmd);
-            }
-            finally
-            {
-                Close();
-            }
+            cmd.SetConnection(_DbConnection);
+            cmd.SetTransaction(_DbTransaction);
+            return action(cmd);
+
         }
 
         public int ExecuteNonQuery(IVodbCommand command)
