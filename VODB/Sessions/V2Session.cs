@@ -5,23 +5,28 @@ using System.Text;
 using System.Threading.Tasks;
 using VODB.Core.Execution.Executers.DbResults;
 using VODB.DbLayer;
+using VODB.EntityTranslation;
 
 namespace VODB.Sessions
 {
 
     class V2Session : ISession
     {
-        
-        public V2Session()
-        {
 
+        private IVodbConnection _Connection;
+        private readonly IEntityTranslator _Translator;
+        
+        public V2Session(IVodbConnection connection, IEntityTranslator translator)
+        {
+            _Translator = translator;
+            _Connection = connection;            
         }
 
         #region ISession Implementation
 
         public ITransaction BeginTransaction()
         {
-            throw new NotImplementedException();
+            return _Connection.BeginTransaction();
         }
 
         public void ExecuteTSql(string SqlStatements)
@@ -56,7 +61,9 @@ namespace VODB.Sessions
 
         public int Count<TEntity>() where TEntity : class, new()
         {
-            throw new NotImplementedException();
+            var table = _Translator.Translate(typeof(TEntity));
+            var command = table.GetCountCommand(_Connection);
+            return (int)_Connection.ExecuteScalar(command);
         }
 
         public bool Exists<TEntity>(TEntity entity) where TEntity : class, new()
@@ -66,7 +73,13 @@ namespace VODB.Sessions
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            if (_Connection == null)
+            {
+                return;
+            }
+
+            _Connection.Dispose();
+            _Connection = null;
         } 
 
         #endregion

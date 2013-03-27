@@ -46,7 +46,7 @@ namespace VODB.Sessions
             _Transaction = null;
         }
 
-        public void RollBack()
+        public void Rollback()
         {
             if (Ended)
             {

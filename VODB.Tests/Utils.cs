@@ -48,7 +48,7 @@ namespace VODB.Tests
                 }
                 finally
                 {
-                    trans.RollBack();
+                    trans.Rollback();
                 }
             });
         }

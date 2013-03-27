@@ -82,6 +82,7 @@
     <Compile Include="EntityTranslator_Tests.cs" />
     <Compile Include="ExpressionParser_Tests.cs" />
     <Compile Include="Mapping\OrderedEntityMapper_Tests.cs" />
+    <Compile Include="Sessions\V2Session_Tests.cs" />
     <Compile Include="TableToSql\ISqlBuilderTestBase.cs" />
     <Compile Include="TableToSql\ISqlBuilder_CountById_Tests.cs" />
     <Compile Include="TableToSql\ISqlBuilder_DeleteById_Tests.cs" />

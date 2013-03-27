@@ -40,7 +40,7 @@ namespace VODB
             {
                 if (trans != null)
                 {
-                    trans.RollBack();
+                    trans.Rollback();
                 }
                 throw;
             }

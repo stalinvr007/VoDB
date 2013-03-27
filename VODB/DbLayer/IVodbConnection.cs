@@ -14,7 +14,7 @@ namespace VODB.DbLayer
     /// <summary>
     /// The representation of a logical connection.
     /// </summary>
-    public interface IVodbConnection : IDisposable
+    public interface IVodbConnection : IVodbCommandFactory, IDisposable
     {
 
         /// <summary>

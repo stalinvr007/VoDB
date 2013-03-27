@@ -3,7 +3,7 @@ using System.Data.Common;
 
 namespace VODB.DbLayer
 {
-    class VodbConnection : IVodbConnection, IVodbCommandFactory
+    class VodbConnection : IVodbConnection
     {
         private readonly IDbConnectionCreator _Creator;
         private DbConnection _DbConnection;

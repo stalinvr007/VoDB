@@ -36,12 +36,12 @@ namespace VODB.Tests
 
                             Assert.IsTrue(session.Exists(sergio1));
                         }
-                        trans1.RollBack();
+                        trans1.Rollback();
 
                         Assert.IsTrue(session.Exists(sergio));
                         Assert.IsFalse(session.Exists(sergio1));
                     }
-                    trans.RollBack();
+                    trans.Rollback();
 
                     Assert.IsFalse(session.Exists(sergio));
                 }
