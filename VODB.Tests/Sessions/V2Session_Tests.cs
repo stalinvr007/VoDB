@@ -55,5 +55,30 @@ namespace VODB.Tests.Sessions
             }
         }
 
+        [TestCaseSource("GetEntitiesById")]
+        public void V2Session_Assert_Delete<TEntity>(TEntity entity) where TEntity : class, new()
+        {
+            using (var session = GetSession())
+            {
+                session.WithRollback(s =>
+                {
+                    try
+                    {
+                        Assert.That(session.Delete(entity), Is.True);
+                        Assert.That(session.Delete(entity), Is.False);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex.Message.Contains("REFERENCE constraint "))
+                        {
+                            return;
+                        }
+                        throw;
+                    }
+                    
+                });
+            }
+        }
+
     }
 }

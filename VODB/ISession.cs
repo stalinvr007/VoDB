@@ -46,7 +46,8 @@ namespace VODB
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
-        void Delete<TEntity>(TEntity entity) where TEntity : class, new();
+        /// <returns>True if deleted</returns>
+        bool Delete<TEntity>(TEntity entity) where TEntity : class, new();
 
         /// <summary>
         /// Updates the specified entity.

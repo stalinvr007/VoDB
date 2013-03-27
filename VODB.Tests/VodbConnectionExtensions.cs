@@ -17,5 +17,18 @@ namespace VODB.Tests
                 transaction.Rollback();
             }
         }
+
+        public static void WithRollback(this ISession connection, Action<ISession> action)
+        {
+            var transaction = connection.BeginTransaction();
+            try
+            {
+                action(connection);
+            }
+            finally
+            {
+                transaction.Rollback();
+            }
+        }
     }
 }

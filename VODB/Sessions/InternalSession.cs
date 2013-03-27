@@ -184,13 +184,15 @@ namespace VODB.Sessions
             });
         }
 
-        public void Delete<TEntity>(TEntity entity) where TEntity : class, new()
+        public bool Delete<TEntity>(TEntity entity) where TEntity : class, new()
         {
+            bool result = false;
             _Transaction.RollbackOnError(() =>
             {
-                _DeleteExecuter.Execute(entity, this);
+                result = _DeleteExecuter.Execute(entity, this) == 1;
                 Close();
             });
+            return result;
         }
 
         public TEntity Update<TEntity>(TEntity entity) where TEntity : class, new()

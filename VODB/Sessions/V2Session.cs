@@ -79,9 +79,13 @@ namespace VODB.Sessions
             throw new NotImplementedException();
         }
 
-        public void Delete<TEntity>(TEntity entity) where TEntity : class, new()
+        public bool Delete<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            throw new NotImplementedException();
+            var table = GetTable<TEntity>();
+            var command = table.GetDeleteCommand(_Connection);
+            SetKeyValues<TEntity>(entity, table, command);
+
+            return _Connection.ExecuteNonQuery(command) == 1;
         }
 
         public TEntity Update<TEntity>(TEntity entity) where TEntity : class, new()

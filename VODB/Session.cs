@@ -45,9 +45,9 @@ namespace VODB
             return _InternalSession.Insert(entity);
         }
 
-        public void Delete<TEntity>(TEntity entity) where TEntity : class, new()
+        public bool Delete<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            _InternalSession.Delete(entity);
+            return _InternalSession.Delete(entity);
         }
 
         public TEntity Update<TEntity>(TEntity entity) where TEntity : class, new()
