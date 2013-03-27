@@ -73,7 +73,7 @@
     <Compile Include="Core\Infrastructure\TableMapper.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommandHolderLazy.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TCount.cs" />
-    <Compile Include="DbLayer\IDbCommandFactory.cs" />
+    <Compile Include="DbLayer\IVodbCommandFactory.cs" />
     <Compile Include="DbLayer\IVodbCommand.cs" />
     <Compile Include="DbLayer\IVodbTransaction.cs" />
     <Compile Include="DbLayer\VodbCommand.cs" />

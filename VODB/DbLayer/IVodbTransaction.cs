@@ -5,6 +5,15 @@ namespace VODB.DbLayer
     /// </summary>
     public interface IVodbTransaction
     {
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has inner transactions.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance has inner transactions; otherwise, <c>false</c>.
+        /// </value>
+        bool HasInnerTransactions { get; }
+
         /// <summary>
         /// Gets a value indicating whether this instance has rolled back.
         /// </summary>

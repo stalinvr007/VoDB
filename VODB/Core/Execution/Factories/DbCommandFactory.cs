@@ -1,4 +1,3 @@
-using System.Data;
 using System.Data.Common;
 
 namespace VODB.Core.Execution.Factories
@@ -12,7 +11,7 @@ namespace VODB.Core.Execution.Factories
             _internalSession = internalSession;
         }
 
-        #region IDbCommandFactory Members
+        #region IVodbCommandFactory Members
 
         public DbCommand Make()
         {

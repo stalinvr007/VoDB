@@ -2,12 +2,12 @@ using System.Data.Common;
 
 namespace VODB.DbLayer
 {
-    class VodbConnection : IVodbConnection, IDbCommandFactory
+    class VodbConnection : IVodbConnection, IVodbCommandFactory
     {
         private readonly IDbConnectionCreator _Creator;
         private DbConnection _Connection;
         private IVodbTransaction _Transaction;
-        DbTransaction _DbTransaction;
+        private DbTransaction _DbTransaction;
 
         public VodbConnection(IDbConnectionCreator creator)
         {
@@ -59,7 +59,7 @@ namespace VODB.DbLayer
 
         #endregion
 
-        #region IDbCommandFactory Implementation
+        #region IVodbCommandFactory Implementation
 
         public IVodbCommand MakeCommand()
         {
@@ -83,6 +83,14 @@ namespace VODB.DbLayer
 
             _Connection.Dispose();
             _Connection = null;
+
+            if (_DbTransaction == null)
+            {
+                return;
+            }
+
+            _DbTransaction.Dispose();
+            _DbTransaction = null;
         }
 
         

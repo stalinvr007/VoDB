@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VODB.DbLayer
+﻿namespace VODB.DbLayer
 {
     /// <summary>
     /// A Factory of IVodbCommand.
     /// </summary>
-    public interface IDbCommandFactory
+    public interface IVodbCommandFactory
     {
 
         /// <summary>

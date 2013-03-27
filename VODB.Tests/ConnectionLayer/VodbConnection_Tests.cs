@@ -17,6 +17,18 @@ namespace VODB.Tests.ConnectionLayer
         }
 
         [Test]
+        public void Connection_CantClose_From_Inner_Transaction()
+        {
+            using (var connection = new VodbConnection(Utils.ConnectionCreator))
+            {
+                connection.BeginTransaction();
+                connection.BeginTransaction();
+                connection.Close();
+                Assert.That(connection.IsOpened, Is.True);
+            }
+        }
+
+        [Test]
         public void Connection_BeginTransaction_And_Rollback()
         {
             using (var connection = new VodbConnection(Utils.ConnectionCreator))
