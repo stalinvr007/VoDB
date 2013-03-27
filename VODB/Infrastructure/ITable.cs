@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VODB.DbLayer;
 
 namespace VODB.Infrastructure
 {
@@ -114,6 +115,52 @@ namespace VODB.Infrastructure
         /// The keys.
         /// </value>
         IEnumerable<IField> Keys { get; }
+
+
+        /// <summary>
+        /// Gets the select all command.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <returns></returns>
+        IVodbCommand GetSelectAllCommand(IVodbCommandFactory factory);
+        /// <summary>
+        /// Gets the select by id command.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <returns></returns>
+        IVodbCommand GetSelectByIdCommand(IVodbCommandFactory factory);
+        /// <summary>
+        /// Gets the count command.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <returns></returns>
+        IVodbCommand GetCountCommand(IVodbCommandFactory factory);
+        /// <summary>
+        /// Gets the count by id command.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <returns></returns>
+        IVodbCommand GetCountByIdCommand(IVodbCommandFactory factory);
+        /// <summary>
+        /// Gets the delete command.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <returns></returns>
+        IVodbCommand GetDeleteCommand(IVodbCommandFactory factory);
+        /// <summary>
+        /// Gets the insert command.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <returns></returns>
+        IVodbCommand GetInsertCommand(IVodbCommandFactory factory);
+        /// <summary>
+        /// Gets the update command.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <returns></returns>
+        IVodbCommand GetUpdateCommand(IVodbCommandFactory factory);
+        
+
     }
 
 }
