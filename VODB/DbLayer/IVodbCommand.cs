@@ -19,7 +19,7 @@ namespace VODB.DbLayer
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>
-        void InternalCreateParameter(String name, Object value);
+        void CreateParameter(String name, Object value);
 
         /// <summary>
         /// Refreshes the parameters values.

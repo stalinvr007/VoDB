@@ -85,9 +85,5 @@ namespace VODB.DbLayer
             return _Command.ExecuteScalar();
         }
 
-
-
-
-        
     }
 }

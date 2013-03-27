@@ -43,8 +43,7 @@ namespace VODB.Tests.ConnectionLayer
             {
                 connection.WithRollback(c =>
                 {
-                    var command = makeCommand(connection);
-                    result = command.ExecuteNonQuery();
+                    result = connection.ExecuteNonQuery(makeCommand(connection));
                 });
             }
             return result;

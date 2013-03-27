@@ -79,10 +79,7 @@ namespace VODB.DbLayer
         public IVodbCommand MakeCommand()
         {
             CreateConnection();
-            var command = _DbConnection.CreateCommand();
-            command.Transaction = _DbTransaction;
-
-            return new VodbCommand(command);
+            return new VodbCommand(_DbConnection.CreateCommand());
         }
 
         #endregion

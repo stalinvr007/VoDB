@@ -64,7 +64,9 @@ namespace VODB.Tests.ConnectionLayer
                 {
                     Assert.That(GetEmployeesCount(connection), Is.EqualTo(9));
 
-                    connection.Execute("Insert Into Employees (FirstName, LastName) values ('testing', 'testing')");
+                    connection.ExecuteNonQuery(
+                        connection.MakeCommand("Insert Into Employees (FirstName, LastName) values ('testing', 'testing')")
+                    );
 
                     Assert.That(GetEmployeesCount(connection), Is.EqualTo(10));
                 }
@@ -77,7 +79,7 @@ namespace VODB.Tests.ConnectionLayer
 
         private static int GetEmployeesCount(VodbConnection connection)
         {
-            return connection.ExecuteScalar<int>("Select count(*) From Employees");
+            return (int)connection.ExecuteScalar(connection.MakeCommand("Select count(*) From Employees"));
         }
 
         [Test]
