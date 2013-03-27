@@ -6,23 +6,42 @@ namespace VODB.DbLayer
     /// </summary>
     class VodbInnerTransaction : IVodbTransaction
     {
-        private readonly IVodbTransaction _Transaction;
+        private readonly VodbTransaction _Transaction;
 
-        public VodbInnerTransaction(IVodbTransaction transaction)
+        public VodbInnerTransaction(VodbTransaction transaction)
         {
             _Transaction = transaction;
+            _Transaction.BeginInnerTransaction();
         }
 
-        public bool HasRolledBack
+        public bool IsActive
         {
-            get { return _Transaction.HasRolledBack; }
+            get { return _Transaction.IsActive; }
         }
 
-        public void Commit() { /* */ }
+        public bool HasRolledBack { get; private set; }
+
+        public void Commit()
+        {
+            if (HasRolledBack)
+            {
+                return;
+            }
+            
+            HasRolledBack = true;
+            _Transaction.EndInnerTransaction();
+        }
 
         public void Rollback()
         {
+            if (HasRolledBack)
+            {
+                return;
+            }
+
+            HasRolledBack = true;
             _Transaction.Rollback();
+            _Transaction.EndInnerTransaction();
         }
 
         

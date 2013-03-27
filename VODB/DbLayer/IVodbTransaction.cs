@@ -12,7 +12,7 @@ namespace VODB.DbLayer
         /// <value>
         /// <c>true</c> if this instance has inner transactions; otherwise, <c>false</c>.
         /// </value>
-        bool HasInnerTransactions { get; }
+        bool IsActive { get; }
 
         /// <summary>
         /// Gets a value indicating whether this instance has rolled back.

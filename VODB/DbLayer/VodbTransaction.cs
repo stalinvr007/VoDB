@@ -6,7 +6,7 @@ namespace VODB.DbLayer
     class VodbTransaction : IVodbTransaction
     {
         private readonly DbTransaction _Transaction;
-        private int innerTransactionCount;
+        private int innerTransactionCount = 1;
 
         public VodbTransaction(DbTransaction transaction)
         {
@@ -23,7 +23,7 @@ namespace VODB.DbLayer
             --innerTransactionCount;
         }
 
-        public bool HasInnerTransactions
+        public bool IsActive
         {
             get { return innerTransactionCount > 0; }
         }
@@ -38,6 +38,7 @@ namespace VODB.DbLayer
             }
 
             _Transaction.Commit();
+            EndTransaction();
         }
 
         public void Rollback()
@@ -49,6 +50,12 @@ namespace VODB.DbLayer
 
             _Transaction.Rollback();
             HasRolledBack = true;
+            EndTransaction();
+        }
+
+        private void EndTransaction()
+        {
+            innerTransactionCount = 0;
         }
     }
 }

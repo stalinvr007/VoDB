@@ -32,6 +32,12 @@ namespace VODB.DbLayer
 
         public void Close()
         {
+
+            if (_Transaction != null && _Transaction.IsActive)
+            {
+                return;
+            }
+
             try
             {
                 if (_Connection != null)
@@ -54,7 +60,7 @@ namespace VODB.DbLayer
                 return _Transaction = new VodbTransaction(_DbTransaction);
             }
 
-            return new VodbInnerTransaction(_Transaction);
+            return new VodbInnerTransaction((VodbTransaction)_Transaction);
         }
 
         #endregion

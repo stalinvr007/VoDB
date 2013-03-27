@@ -29,6 +29,26 @@ namespace VODB.Tests.ConnectionLayer
         }
 
         [Test]
+        public void Connection_CantClose_From_Inner_Transactions()
+        {
+            using (var connection = new VodbConnection(Utils.ConnectionCreator))
+            {
+                var transaction = connection.BeginTransaction();
+                for (int i = 0; i < 10; i++)
+                {
+                    var inner = connection.BeginTransaction();
+                    inner.Rollback();
+                    connection.Close();
+                    Assert.That(connection.IsOpened, Is.True);
+                }
+
+                transaction.Rollback();
+                connection.Close();
+                Assert.That(connection.IsOpened, Is.False);
+            }
+        }
+
+        [Test]
         public void Connection_BeginTransaction_And_Rollback()
         {
             using (var connection = new VodbConnection(Utils.ConnectionCreator))
