@@ -38,5 +38,10 @@ namespace VODB.ExpressionsToSql
         {
             get { return queries.SelectMany(q => q.Parameters); }
         }
+
+        public void RemoveLast()
+        {
+            queries.RemoveAt(queries.Count - 1);
+        }
     }
 }

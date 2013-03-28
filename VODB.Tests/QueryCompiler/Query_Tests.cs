@@ -114,6 +114,53 @@ namespace VODB.Tests.QueryCompiler
 
             ).Returns(" Where [EmployeeId] In (@p1, @p2, @p3)")
             .SetName("Query employee (Where EmployeeId in)");
+
+            yield return MakeTestCase<Employee>(query =>
+
+                query.Where(e => e.EmployeeId).Between(Param.Get<int>(), Param.Get<int>())
+                    .Or(e => e.EmployeeId).Between(Param.Get<int>(), Param.Get<int>())
+
+            ).Returns(" Where ([EmployeeId] Between @p1 And @p2 Or [EmployeeId] Between @p3 And @p4)")
+            .SetName("Query employee (Where EmployeeId between and or condition)");
+
+            yield return MakeTestCase<Employee>(query =>
+
+                query.Where(e => e.EmployeeId > Param.Get<int>())
+                    .Or(e => e.EmployeeId == Param.Get<int>())
+                    .Or(e => e.EmployeeId == Param.Get<int>())
+
+            ).Returns(" Where ([EmployeeId] > @p1 Or [EmployeeId] = @p2 Or [EmployeeId] = @p3)")
+            .SetName("Query employee (Where EmployeeId or condition)");
+
+            yield return MakeTestCase<Employee>(query =>
+
+                query.Where(e => e.EmployeeId > Param.Get<int>())
+                    .Or(e => e.EmployeeId == Param.Get<int>())
+                    .Or(e => e.EmployeeId == Param.Get<int>())
+                    .Or(e => e.EmployeeId == Param.Get<int>())
+
+            ).Returns(" Where ([EmployeeId] > @p1 Or [EmployeeId] = @p2 Or [EmployeeId] = @p3 Or [EmployeeId] = @p4)")
+            .SetName("Query employee (Where EmployeeId or conditions)");
+
+            yield return MakeTestCase<Employee>(query =>
+
+                query.Where(e => e.EmployeeId > Param.Get<int>())
+                    .Or(e => e.EmployeeId == Param.Get<int>())
+                    .And(e => e.EmployeeId == Param.Get<int>())
+                    .Or(e => e.EmployeeId == Param.Get<int>())
+
+            ).Returns(" Where ([EmployeeId] > @p1 Or [EmployeeId] = @p2) And ([EmployeeId] = @p3 Or [EmployeeId] = @p4)")
+            .SetName("Query employee (Where EmployeeId And Or conditions)");
+
+            yield return MakeTestCase<Employee>(query =>
+
+                query.Where(e => e.EmployeeId > Param.Get<int>())
+                    .Or(e => e.EmployeeId == Param.Get<int>())
+                    .Or(e => e.EmployeeId == Param.Get<int>())
+                    .Or(e => e.EmployeeId).Between(Param.Get<int>(), Param.Get<int>())
+
+            ).Returns(" Where ([EmployeeId] > @p1 Or [EmployeeId] = @p2 Or [EmployeeId] = @p3 Or [EmployeeId] Between @p4 And @p5)")
+            .SetName("Query employee (Where EmployeeId between and or condition)");
         }
 
         [TestCaseSource("GetEmployeeQueries")]

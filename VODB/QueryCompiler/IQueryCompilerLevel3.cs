@@ -15,7 +15,7 @@ namespace VODB.QueryCompiler
     /// And, Or, OrderBy
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    public interface IQueryCompilerLevel3<TEntity> : IEnumerable<TEntity>
+    public interface IQueryCompilerLevel3<TEntity> : IQuery<TEntity>, IEnumerable<TEntity>
     {
         /// <summary>
         /// Afects the Order By clause with Descending flag.
