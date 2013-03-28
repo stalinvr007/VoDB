@@ -89,7 +89,7 @@ namespace VODB.Sessions
 
         public IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new()
         {
-            throw new NotImplementedException();
+            return new QueryCompiler<TEntity>(_Translator);
         }
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()

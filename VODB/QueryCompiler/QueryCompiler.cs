@@ -23,11 +23,18 @@ namespace VODB.QueryCompiler
         private Expression<Func<TEntity, object>> _PartialExpression;
         private IQueryCondition _LastCondition = null;
         private bool _WasLastOr;
+        private String _CompiledQuery = null;
+        private int _ConditionCount = 0;
 
         public QueryCompiler(IEntityTranslator translator, Func<IQueryCompilerLevel1<TEntity>, IEnumerable<TEntity>> func)
         {
             _Translator = translator;
             func(this);
+        }
+
+        public QueryCompiler(IEntityTranslator translator)
+        {
+            _Translator = translator;
         }
 
         private IQueryCompilerLevel2<TEntity> AppendLastCondition()
@@ -197,7 +204,13 @@ namespace VODB.QueryCompiler
 
         public string Compile(ref int level)
         {
-            return _Translator.Translate(typeof(TEntity)).SqlSelect + " Where " + _Query.Compile(ref level);
+            if (_ConditionCount == _Query.Count())
+            {
+                return _CompiledQuery;
+            }
+
+            _ConditionCount = _Query.Count();
+            return _CompiledQuery = _Translator.Translate(typeof(TEntity)).SqlSelect + " Where " + _Query.Compile(ref level);
         }
 
         public IEnumerable<IQueryParameter> Parameters

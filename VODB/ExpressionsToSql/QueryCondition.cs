@@ -43,5 +43,11 @@ namespace VODB.ExpressionsToSql
         {
             queries.RemoveAt(queries.Count - 1);
         }
+
+
+        public int Count()
+        {
+            return queries.Count;
+        }
     }
 }
