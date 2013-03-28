@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using VODB.QueryCompiler;
+using VODB.Tests.Models.Northwind;
 
 namespace VODB.Tests.QueryCompiler
 {
@@ -7,9 +7,9 @@ namespace VODB.Tests.QueryCompiler
     public class QueryCompiler_Tests
     {
 
-        public string QueryCompiler_Assert_Result<T>(IQuery<T> query)
+        public void QueryCompiler_Assert_Result()
         {
-            Query<T>.PreCompile_QueryCompiler()
+            Query<Employee>.PreCompile_QueryCompiler(result => result.Where(f => f.EmployeeId == 1));
         }
 
     }

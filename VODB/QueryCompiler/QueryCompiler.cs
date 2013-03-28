@@ -9,7 +9,7 @@ namespace VODB.QueryCompiler
             
         }
 
-        public IEnumerable<TEntity> Run(ISession session)
+        public IEnumerable<TEntity> Execute(ISession session)
         {
             throw new System.NotImplementedException();
         }

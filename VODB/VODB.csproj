@@ -198,8 +198,11 @@
     <Compile Include="Extensions\ReflectionExtensions.cs" />
     <Compile Include="DbLayer\IVodbConnection.cs" />
     <Compile Include="IVodbCommandExtensions.cs" />
+    <Compile Include="Query.cs" />
+    <Compile Include="QueryCompiler\QueryCompiler.cs" />
     <Compile Include="Sessions\InternalSession.cs" />
     <Compile Include="Session.cs" />
+    <Compile Include="Sessions\SessionStub.cs" />
     <Compile Include="Sessions\Transaction.cs" />
     <Compile Include="Core\Infrastructure\Field.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
