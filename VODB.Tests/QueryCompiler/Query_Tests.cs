@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NUnit.Framework;
+using VODB.QueryCompiler;
 
 namespace VODB.Tests.QueryCompiler
 {
-    class Query_Tests
+    [TestFixture]
+    public class QueryCompiler_Tests
     {
+
+        public string QueryCompiler_Assert_Result<T>(IQuery<T> query)
+        {
+            Query<T>.PreCompile_QueryCompiler()
+        }
+
     }
 }
