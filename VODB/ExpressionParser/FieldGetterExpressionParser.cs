@@ -25,7 +25,13 @@ namespace VODB.ExpressionParser
         /// <returns></returns>
         public String Parse(Expression<Func<TEntity, TField>> expression)
         {
-            string field = ((MemberExpression) expression.Body).Member.Name;
+            var memberExp = expression.Body as MemberExpression;
+            if (memberExp == null)
+            {
+                memberExp = ((UnaryExpression)expression.Body).Operand as MemberExpression;
+            }
+
+            string field = memberExp.Member.Name;
 
             Field = Engine.GetTable<TEntity>().FindField(field);
 
