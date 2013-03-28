@@ -17,6 +17,11 @@ namespace VODB.ExpressionsToSql
             queries.Add(query);
         }
 
+        public void InsertBeforeLast(IQueryCondition query)
+        {
+            queries.Insert(queries.Count-1, query);
+        }
+
         public String Compile(ref int level)
         {
             var sb = new StringBuilder();

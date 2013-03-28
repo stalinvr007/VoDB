@@ -48,33 +48,20 @@ namespace VODB.QueryCompiler
         /// <param name="orderByField">The order by field.</param>
         /// <returns></returns>
         IQueryCompilerLevel3<TEntity> OrderBy(Expression<Func<TEntity, Object>> expression);
-    }
 
-    /// <summary>
-    /// This interface is used to represent the operations available at the third level.
-    /// 
-    /// Available features
-    /// And, Or, OrderBy
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    public interface IQueryCompilerLevel3<TEntity> : IEnumerable<TEntity>
-    {
         /// <summary>
-        /// Afects the Order By clause with Descending flag.
+        /// Appends another condition to the Query.
         /// </summary>
+        /// <param name="andCondition">The expression.</param>
         /// <returns></returns>
-        IQueryCompilerStub<TEntity> Descending();
-    }
+        IQueryCompilerLevel2<TEntity> And(Expression<Func<TEntity, Boolean>> expression);
 
-    /// <summary>
-    /// This interface is used to represent the operations available at the Final level.
-    /// 
-    /// Available features (none)
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    public interface IQueryCompilerStub<TEntity> : IEnumerable<TEntity>
-    {
-
+        /// <summary>
+        /// Appends another condition to the Query.
+        /// </summary>
+        /// <param name="andCondition">The expression.</param>
+        /// <returns></returns>
+        IQueryCompilerLevel2<TEntity> Or(Expression<Func<TEntity, Boolean>> expression);
     }
 
     class QueryCompiler<TEntity> : IQuery<TEntity>, IQueryCompilerLevel1<TEntity>, IQueryCompilerLevel2<TEntity>, IQueryCompilerLevel3<TEntity>, IQueryCompilerStub<TEntity>
@@ -84,7 +71,6 @@ namespace VODB.QueryCompiler
         /// </summary>
         private IQueryConditionComposite _Query = new QueryCondition();
         private IEntityTranslator _Translator;
-
         public QueryCompiler(IEntityTranslator translator, Func<IQueryCompilerLevel1<TEntity>, IEnumerable<TEntity>> func)
         {
             _Translator = translator;
@@ -97,11 +83,17 @@ namespace VODB.QueryCompiler
             return this;
         }
 
+        private QueryCompiler<TEntity> Add(Expression<Func<TEntity, bool>> expression)
+        {
+            _Query.Add(new QueryCondition<TEntity>(_Translator, expression));
+            return this;
+        }
+
         #region IQueryCompilerLevel1<TEntity> Implementation
 
         public IQueryCompilerLevel2<TEntity> Where(Expression<Func<TEntity, bool>> expression)
         {
-            return Add(new QueryCondition<TEntity>(_Translator, expression));
+            return Add(expression);
         }
 
         public IQueryCompilerLevel3<TEntity> OrderBy(Expression<Func<TEntity, Object>> expression)
@@ -113,6 +105,20 @@ namespace VODB.QueryCompiler
 
         #region IQueryCompilerLelvel2<TEntity> Implementation
 
+        public IQueryCompilerLevel2<TEntity> And(Expression<Func<TEntity, bool>> expression)
+        {
+            Add(new ConstantCondition(" And "));
+            return Add(expression);
+        }
+
+        public IQueryCompilerLevel2<TEntity> Or(Expression<Func<TEntity, bool>> expression)
+        {
+            _Query.InsertBeforeLast(new ConstantCondition("("));
+            Add(new ConstantCondition(" Or "));
+            Add(expression);
+            return Add(new ConstantCondition(")"));
+        }
+
         #endregion
 
         #region IQueryCompilerLelvel3<TEntity> Implementation
@@ -123,6 +129,7 @@ namespace VODB.QueryCompiler
         }
 
         #endregion
+      
         #region IEnumerable<TEntity> Implementation
 
         public IEnumerator<TEntity> GetEnumerator()
@@ -159,10 +166,5 @@ namespace VODB.QueryCompiler
 
         #endregion
 
-
-
-
-
-        
     }
 }

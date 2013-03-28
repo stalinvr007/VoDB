@@ -200,6 +200,8 @@
     <Compile Include="DbLayer\IVodbConnection.cs" />
     <Compile Include="IVodbCommandExtensions.cs" />
     <Compile Include="Query.cs" />
+    <Compile Include="QueryCompiler\IQueryCompilerLevel3.cs" />
+    <Compile Include="QueryCompiler\IQueryCompilerStub.cs" />
     <Compile Include="QueryCompiler\QueryCompiler.cs" />
     <Compile Include="Sessions\InternalSession.cs" />
     <Compile Include="Session.cs" />

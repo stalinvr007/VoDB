@@ -60,6 +60,32 @@ namespace VODB.Tests.QueryCompiler
              ).Returns("Doesn't matter")
             .SetName("Query employee (order by invalid)")
             .Throws(typeof(OrderByClauseException));
+
+            yield return MakeTestCase<Employee>(query =>
+
+                query.Where(e => e.EmployeeId > Param.Get<int>())
+                    .And(e => e.Title == Param.Get<String>())
+
+            ).Returns(" Where [EmployeeId] > @p1 And [Title] = @p2")
+            .SetName("Query employee (Where EmployeeId > @p1 and Title = @p2)");
+
+            yield return MakeTestCase<Employee>(query =>
+
+                query.Where(e => e.EmployeeId > Param.Get<int>())
+                    .And(e => e.Title == Param.Get<String>())
+                    .And(e => e.TitleOfCourtesy == Param.Get<String>())
+
+            ).Returns(" Where [EmployeeId] > @p1 And [Title] = @p2 And [TitleOfCourtesy] = @p3")
+            .SetName("Query employee (Where EmployeeId > @p1 and Title = @p2)");
+
+            yield return MakeTestCase<Employee>(query =>
+
+                query.Where(e => e.EmployeeId > Param.Get<int>())
+                    .And(e => e.Title == Param.Get<String>())
+                    .Or(e => e.TitleOfCourtesy == Param.Get<String>())
+
+            ).Returns(" Where [EmployeeId] > @p1 And ([Title] = @p2 Or [TitleOfCourtesy] = @p3)")
+            .SetName("Query employee (Where EmployeeId > @p1 or Title = @p2)");
         }
 
         [TestCaseSource("GetEmployeeQueries")]

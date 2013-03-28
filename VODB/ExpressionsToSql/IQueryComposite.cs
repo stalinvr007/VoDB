@@ -4,6 +4,6 @@
     {
 
         void Add(IQueryCondition query);
-
+        void InsertBeforeLast(IQueryCondition query);
     }
 }
