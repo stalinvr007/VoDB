@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using VODB.ExpressionParser;
+using VODB.QueryCompiler;
 
 namespace VODB.Core.Execution.Executers.DbResults
 {
@@ -18,7 +19,7 @@ namespace VODB.Core.Execution.Executers.DbResults
     /// 
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    public interface IDbQueryResult<TEntity> : IEnumerable<TEntity>, IDbResult
+    public interface IDbQueryResult<TEntity> : IEnumerable<TEntity>, IDbResult, IQueryCompilerLevel1<TEntity>
         where TEntity : class, new()
     {
         /// <summary>
@@ -27,14 +28,14 @@ namespace VODB.Core.Execution.Executers.DbResults
         /// <param name="whereCondition">The where condition.</param>
         /// <param name="args">The args.</param>
         /// <returns></returns>
-        IDbAndQueryResult<TEntity> Where(string whereCondition, params object[] args);
+        new IDbAndQueryResult<TEntity> Where(string whereCondition, params object[] args);
 
         /// <summary>
         /// Appends the specified where condition.
         /// </summary>
         /// <param name="whereCondition">The where condition.</param>
         /// <returns></returns>
-        IDbAndQueryResult<TEntity> Where(Expression<Func<TEntity, Boolean>> whereCondition);
+        new IDbAndQueryResult<TEntity> Where(Expression<Func<TEntity, Boolean>> whereCondition);
 
         /// <summary>
         /// Starts a field filter.
@@ -57,7 +58,7 @@ namespace VODB.Core.Execution.Executers.DbResults
     /// 
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    public interface IDbAndQueryResult<TEntity> : IEnumerable<TEntity>, IDbResult
+    public interface IDbAndQueryResult<TEntity> : IEnumerable<TEntity>, IDbResult, IQueryCompilerLevel2<TEntity>
     {
         /// <summary>
         /// Adds more conditions to the query.
@@ -65,14 +66,14 @@ namespace VODB.Core.Execution.Executers.DbResults
         /// <param name="andCondition">The and condition.</param>
         /// <param name="args">The args.</param>
         /// <returns></returns>
-        IDbAndQueryResult<TEntity> And(string andCondition, params object[] args);
+        new IDbAndQueryResult<TEntity> And(string andCondition, params object[] args);
 
         /// <summary>
         /// Adds more conditions to the query.
         /// </summary>
         /// <param name="andCondition">The and condition.</param>
         /// <returns></returns>
-        IDbAndQueryResult<TEntity> And(Expression<Func<TEntity, Boolean>> andCondition);
+        new IDbAndQueryResult<TEntity> And(Expression<Func<TEntity, Boolean>> andCondition);
 
         /// <summary>
         /// Starts a field filter.
@@ -87,7 +88,7 @@ namespace VODB.Core.Execution.Executers.DbResults
         /// </summary>
         /// <param name="andCondition">The and condition.</param>
         /// <returns></returns>
-        IDbAndQueryResult<TEntity> Or(Expression<Func<TEntity, Boolean>> orCondition);
+        new IDbAndQueryResult<TEntity> Or(Expression<Func<TEntity, Boolean>> orCondition);
 
         /// <summary>
         /// Starts a field filter.
@@ -106,13 +107,13 @@ namespace VODB.Core.Execution.Executers.DbResults
         IDbOrderedResult<TEntity> OrderBy<TField>(Expression<Func<TEntity, TField>> orderByField);
     }
 
-    public interface IDbOrderedDescResult<TEntity> : IEnumerable<TEntity>, IDbResult
+    public interface IDbOrderedDescResult<TEntity> : IEnumerable<TEntity>, IDbResult, IQueryCompilerStub<TEntity>
     {
     }
 
-    public interface IDbOrderedResult<TEntity> : IEnumerable<TEntity>, IDbResult
+    public interface IDbOrderedResult<TEntity> : IEnumerable<TEntity>, IDbResult, IQueryCompilerLevel3<TEntity>
     {
-        IDbOrderedDescResult<TEntity> Descending();
+        new IDbOrderedDescResult<TEntity> Descending();
     }
 
 
@@ -124,7 +125,7 @@ namespace VODB.Core.Execution.Executers.DbResults
         None
     }
 
-    public interface IDbFieldFilterResult<TEntity> : IDbResult
+    public interface IDbFieldFilterResult<TEntity> : IDbResult, IQueryCompilerLevel4<TEntity>
     {
         /// <summary>
         /// Likes the specified value.
@@ -132,7 +133,7 @@ namespace VODB.Core.Execution.Executers.DbResults
         /// <param name="value">The value.</param>
         /// <param name="token">The token.</param>
         /// <returns></returns>
-        IDbAndQueryResult<TEntity> Like(String value, WildCard token = WildCard.Both);
+        new IDbAndQueryResult<TEntity> Like(String value, WildCard token = WildCard.Both);
 
         /// <summary>
         /// filters the field withing the specified in the collection.

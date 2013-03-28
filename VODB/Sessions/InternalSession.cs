@@ -140,8 +140,7 @@ namespace VODB.Sessions
 
         public IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new()
         {
-            //return _QueryResultGetter.GetQueryResult<TEntity>(this, _EntityLoader, _EntityFactory);
-            return null;
+            return _QueryResultGetter.GetQueryResult<TEntity>(this, _EntityLoader, _EntityFactory);
         }
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
