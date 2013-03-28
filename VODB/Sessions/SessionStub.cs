@@ -1,4 +1,5 @@
 ﻿using System;
+using VODB.QueryCompiler;
 
 namespace VODB.Sessions
 {
@@ -14,7 +15,7 @@ namespace VODB.Sessions
             throw new NotImplementedException();
         }
 
-        public Core.Execution.Executers.DbResults.IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : class, new()
+        public IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new()
         {
             throw new NotImplementedException();
         }

@@ -61,6 +61,11 @@ namespace VODB.QueryCompiler
             return Add(expression);
         }
 
+        public IQueryCompilerLevel2<TEntity> Where(string mask, params object[] args)
+        {
+            return Add(new ConstantCondition(String.Format(mask, args)));
+        }
+
         public IQueryCompilerLevel4<TEntity> Where(Expression<Func<TEntity, object>> expression)
         {
             _PartialExpression = expression;
@@ -81,6 +86,12 @@ namespace VODB.QueryCompiler
             _WasLastOr = false;
             Add(new ConstantCondition(" And "));
             return Add(expression);
+        }
+
+        public IQueryCompilerLevel2<TEntity> And(string mask, params object[] args)
+        {
+            return Add(new ConstantCondition(" And "))
+                .Add(new ConstantCondition(String.Format(mask, args)));
         }
 
         public IQueryCompilerLevel4<TEntity> And(Expression<Func<TEntity, object>> expression)
@@ -199,5 +210,10 @@ namespace VODB.QueryCompiler
 
         #endregion
 
+
+
+
+
+        
     }
 }

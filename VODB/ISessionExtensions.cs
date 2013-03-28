@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using VODB.QueryCompiler;
 
 namespace VODB
 {
@@ -33,10 +35,17 @@ namespace VODB
         public static void WithinTransaction(this ISession session, Action action)
         {
             session.WithinTransaction<Object>(() =>
-                                                  {
-                                                      action();
-                                                      return null;
-                                                  });
+            {
+                action();
+                return null;
+            });
         }
+
+
+        public static IQueryCompilerLevel2<TEntity> In<TEntity, TField>(this IQueryCompilerLevel4<TEntity> query, TField[] data)
+        {
+            return query.In(data.ToList().Cast<Object>());
+        }
+
     }
 }

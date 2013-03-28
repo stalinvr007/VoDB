@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,22 +9,27 @@ using VODB.DbLayer;
 using VODB.EntityMapping;
 using VODB.EntityTranslation;
 using VODB.Infrastructure;
+using VODB.QueryCompiler;
+using ConcurrentReader;
+using VODB.Core.Loaders.Factories;
 
 namespace VODB.Sessions
 {
 
-    class V2Session : ISession
+    class V2Session : IInternalSession
     {
 
         private IVodbConnection _Connection;
         private readonly IEntityTranslator _Translator;
         private readonly IEntityMapper _Mapper;
+        private readonly IEntityFactory _EntityFactory;
 
-        public V2Session(IVodbConnection connection, IEntityTranslator translator, IEntityMapper mapper)
+        public V2Session(IVodbConnection connection, IEntityTranslator translator, IEntityMapper mapper, IEntityFactory entityFactory)
         {
             _Mapper = mapper;
             _Translator = translator;
             _Connection = connection;
+            _EntityFactory = entityFactory;
         }
 
         private static void SetKeyValues<TEntity>(TEntity entity, ITable table, IVodbCommand command)
@@ -54,6 +60,21 @@ namespace VODB.Sessions
             return _Translator.Translate(typeof(TEntity));
         }
 
+        private IEnumerable<TEntity> ExecuteQuery<TEntity>(IDataReader reader, ITable table)
+        {
+            try
+            {
+                while (reader.Read())
+                {
+                    yield return _Mapper.Map(_EntityFactory.Make<TEntity>(this), table, reader);
+                }
+            }
+            finally
+            {
+                reader.Close();
+            }
+        }
+
         #region ISession Implementation
 
         public ITransaction BeginTransaction()
@@ -66,7 +87,7 @@ namespace VODB.Sessions
             throw new NotImplementedException();
         }
 
-        public IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : class, new()
+        public IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new()
         {
             throw new NotImplementedException();
         }
@@ -74,20 +95,10 @@ namespace VODB.Sessions
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
         {
 
-            System.Data.IDataReader reader = null;
-            try
-            {
-                var table = GetTable<TEntity>();
-                var command = table.GetSelectByIdCommand(_Connection);
-                SetKeyValues<TEntity>(entity, table, command);
-                reader = _Connection.ExecuteReader(command);
-
-                return reader.Read() ? _Mapper.Map(entity, table, reader) : null;
-            }
-            finally
-            {
-                reader.Close();
-            }
+            var table = GetTable<TEntity>();
+            var command = table.GetSelectByIdCommand(_Connection);
+            SetKeyValues<TEntity>(entity, table, command);
+            return ExecuteQuery<TEntity>(_Connection.ExecuteReader(command), table).FirstOrDefault();
 
         }
 
@@ -149,5 +160,25 @@ namespace VODB.Sessions
         }
 
         #endregion
+
+        public System.Data.Common.DbCommand CreateCommand()
+        {
+            throw new NotImplementedException();
+        }
+
+        public System.Data.Common.DbCommand RefreshCommand(System.Data.Common.DbCommand command)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Open()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Close()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.Common;
 using VODB.Core.Execution.Executers.DbResults;
+using VODB.QueryCompiler;
 
 namespace VODB
 {
@@ -23,7 +24,7 @@ namespace VODB
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns></returns>
-        IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : class, new();
+        IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new();
 
         /// <summary>
         /// Gets the entity by Id.

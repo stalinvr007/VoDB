@@ -1,6 +1,7 @@
 ﻿using VODB.Core;
 using VODB.Core.Execution.Executers.DbResults;
 using VODB.DbLayer;
+using VODB.QueryCompiler;
 
 namespace VODB
 {
@@ -30,7 +31,7 @@ namespace VODB
             _InternalSession.ExecuteTSql(SqlStatements);
         }
 
-        public IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : class, new()
+        public IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new()
         {
             return _InternalSession.GetAll<TEntity>();
         }

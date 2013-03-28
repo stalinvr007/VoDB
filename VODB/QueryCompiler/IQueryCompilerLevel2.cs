@@ -34,6 +34,14 @@ namespace VODB.QueryCompiler
         /// <summary>
         /// Appends another condition to the Query.
         /// </summary>
+        /// <param name="mask">The mask.</param>
+        /// <param name="args">The args.</param>
+        /// <returns></returns>
+        IQueryCompilerLevel2<TEntity> And(String mask, params object[] args);
+
+        /// <summary>
+        /// Appends another condition to the Query.
+        /// </summary>
         /// <param name="andCondition">The expression.</param>
         /// <returns></returns>
         IQueryCompilerLevel4<TEntity> And(Expression<Func<TEntity, Object>> expression);

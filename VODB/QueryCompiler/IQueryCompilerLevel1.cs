@@ -27,6 +27,14 @@ namespace VODB.QueryCompiler
         /// <summary>
         /// Start of a where clause.
         /// </summary>
+        /// <param name="mask">The mask.</param>
+        /// <param name="args">The args.</param>
+        /// <returns></returns>
+        IQueryCompilerLevel2<TEntity> Where(String mask, params object[] args);
+
+        /// <summary>
+        /// Start of a where clause.
+        /// </summary>
         /// <param name="condition">The condition.</param>
         /// <returns></returns>
         IQueryCompilerLevel4<TEntity> Where(Expression<Func<TEntity, Object>> expression);

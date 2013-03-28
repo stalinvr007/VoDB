@@ -8,6 +8,7 @@ using VODB.Core.Infrastructure;
 using VODB.Core.Loaders;
 using VODB.Core.Loaders.Factories;
 using VODB.DbLayer;
+using VODB.QueryCompiler;
 
 namespace VODB.Sessions
 {
@@ -137,9 +138,10 @@ namespace VODB.Sessions
             Close();
         }
 
-        public IDbQueryResult<TEntity> GetAll<TEntity>() where TEntity : class, new()
+        public IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new()
         {
-            return _QueryResultGetter.GetQueryResult<TEntity>(this, _EntityLoader, _EntityFactory);
+            //return _QueryResultGetter.GetQueryResult<TEntity>(this, _EntityLoader, _EntityFactory);
+            return null;
         }
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()

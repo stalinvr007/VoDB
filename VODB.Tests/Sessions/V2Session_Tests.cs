@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VODB.Core.Loaders.Factories;
 using VODB.DbLayer;
 using VODB.EntityMapping;
 using VODB.EntityTranslation;
@@ -25,7 +26,12 @@ namespace VODB.Tests.Sessions
 
         private static ISession GetSession()
         {
-            return new V2Session(new VodbConnection(Utils.ConnectionCreator), new EntityTranslator(), new OrderedEntityMapper());
+            return new V2Session(
+                new VodbConnection(Utils.ConnectionCreator), 
+                new EntityTranslator(), 
+                new OrderedEntityMapper(), 
+                new EntityProxyFactory()
+            );
         }
 
         [TestCaseSource("GetEntities")]
