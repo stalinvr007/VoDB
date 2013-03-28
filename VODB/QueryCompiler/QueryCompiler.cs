@@ -24,6 +24,13 @@ namespace VODB.QueryCompiler
         /// <param name="condition">The condition.</param>
         /// <returns></returns>
         IQueryCompilerLevel2<TEntity> Where(Expression<Func<TEntity, Boolean>> condition);
+        
+        /// <summary>
+        /// Appends the Order By clause.
+        /// </summary>
+        /// <param name="orderByField">The order by field.</param>
+        /// <returns></returns>
+        IQueryCompilerLevel3<TEntity> OrderBy(Expression<Func<TEntity, Object>> expression);
     }
 
     /// <summary>
@@ -35,10 +42,42 @@ namespace VODB.QueryCompiler
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     public interface IQueryCompilerLevel2<TEntity> : IEnumerable<TEntity>
     {
+        /// <summary>
+        /// Appends the Order By clause.
+        /// </summary>
+        /// <param name="orderByField">The order by field.</param>
+        /// <returns></returns>
+        IQueryCompilerLevel3<TEntity> OrderBy(Expression<Func<TEntity, Object>> expression);
+    }
+
+    /// <summary>
+    /// This interface is used to represent the operations available at the third level.
+    /// 
+    /// Available features
+    /// And, Or, OrderBy
+    /// </summary>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    public interface IQueryCompilerLevel3<TEntity> : IEnumerable<TEntity>
+    {
+        /// <summary>
+        /// Afects the Order By clause with Descending flag.
+        /// </summary>
+        /// <returns></returns>
+        IQueryCompilerStub<TEntity> Descending();
+    }
+
+    /// <summary>
+    /// This interface is used to represent the operations available at the Final level.
+    /// 
+    /// Available features (none)
+    /// </summary>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    public interface IQueryCompilerStub<TEntity> : IEnumerable<TEntity>
+    {
 
     }
 
-    class QueryCompiler<TEntity> : IQuery<TEntity>, IQueryCompilerLevel1<TEntity>, IQueryCompilerLevel2<TEntity>
+    class QueryCompiler<TEntity> : IQuery<TEntity>, IQueryCompilerLevel1<TEntity>, IQueryCompilerLevel2<TEntity>, IQueryCompilerLevel3<TEntity>, IQueryCompilerStub<TEntity>
     {
         /// <summary>
         /// Holds the conditions and enables compilation.
@@ -52,16 +91,38 @@ namespace VODB.QueryCompiler
             func(this);
         }
 
+        private QueryCompiler<TEntity> Add(IQueryCondition condition)
+        {
+            _Query.Add(condition);
+            return this;
+        }
+
         #region IQueryCompilerLevel1<TEntity> Implementation
 
-        public IQueryCompilerLevel2<TEntity> Where(Expression<Func<TEntity, bool>> condition)
+        public IQueryCompilerLevel2<TEntity> Where(Expression<Func<TEntity, bool>> expression)
         {
-            _Query.Add(new QueryCondition<TEntity>(_Translator, condition));
-            return this;
+            return Add(new QueryCondition<TEntity>(_Translator, expression));
+        }
+
+        public IQueryCompilerLevel3<TEntity> OrderBy(Expression<Func<TEntity, Object>> expression)
+        {
+            return Add(new OrderByCondition<TEntity>(_Translator, expression));
         }
 
         #endregion
 
+        #region IQueryCompilerLelvel2<TEntity> Implementation
+
+        #endregion
+
+        #region IQueryCompilerLelvel3<TEntity> Implementation
+
+        public IQueryCompilerStub<TEntity> Descending()
+        {
+            return Add(new ConstantCondition(" Desc"));
+        }
+
+        #endregion
         #region IEnumerable<TEntity> Implementation
 
         public IEnumerator<TEntity> GetEnumerator()
@@ -76,7 +137,6 @@ namespace VODB.QueryCompiler
 
         #endregion
 
-
         #region IQuery<TEntity> Implementation
 
         public IEnumerable<TEntity> Execute(ISession session)
@@ -86,7 +146,7 @@ namespace VODB.QueryCompiler
 
         public string Compile(ref int level)
         {
-            return _Translator.Translate(typeof(TEntity)).SqlSelect + _Query.Compile(ref level);
+            return _Translator.Translate(typeof(TEntity)).SqlSelect + " Where " + _Query.Compile(ref level);
         }
 
         public IEnumerable<IQueryParameter> Parameters
@@ -99,5 +159,10 @@ namespace VODB.QueryCompiler
 
         #endregion
 
+
+
+
+
+        
     }
 }

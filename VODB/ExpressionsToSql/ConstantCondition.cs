@@ -37,6 +37,21 @@ namespace VODB.ExpressionsToSql
 
         public override string Compile(ref int level)
         {
+            return _Condition;
+        }
+
+    }
+
+    class ParameterCondition : ParameterLessCondition
+    {
+        private readonly String _Condition;
+        public ParameterCondition(String condition)
+        {
+            _Condition = condition;
+        }
+
+        public override string Compile(ref int level)
+        {
             return _Condition + ++level;
         }
 

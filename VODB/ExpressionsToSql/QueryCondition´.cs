@@ -12,6 +12,8 @@ namespace VODB.ExpressionsToSql
 
     class QueryCondition<TEntity> : IQueryCondition
     {
+        private const string RIGHT_BRACKET = "]";
+        private const string LEFT_BRACKET = "[";
 
         private readonly IExpressionDecoder _Expression;
         private readonly ICollection<IQueryParameter> _Parameters = new List<IQueryParameter>();
@@ -33,11 +35,11 @@ namespace VODB.ExpressionsToSql
         {
             switch (decoder.NodeType)
             {
-                case ExpressionType.Equal: return new ConstantCondition(" = @p");
-                case ExpressionType.GreaterThan: return new ConstantCondition(" > @p");
-                case ExpressionType.GreaterThanOrEqual: return new ConstantCondition(" >= @p");
-                case ExpressionType.LessThan: return new ConstantCondition(" < @p");
-                case ExpressionType.LessThanOrEqual: return new ConstantCondition(" <= @p");
+                case ExpressionType.Equal: return new ParameterCondition(" = @p");
+                case ExpressionType.GreaterThan: return new ParameterCondition(" > @p");
+                case ExpressionType.GreaterThanOrEqual: return new ParameterCondition(" >= @p");
+                case ExpressionType.LessThan: return new ParameterCondition(" < @p");
+                case ExpressionType.LessThanOrEqual: return new ParameterCondition(" <= @p");
                 default: throw new InvalidOperationException("Unable to decode this node type. " + decoder.NodeType.ToString());
             }
         }
@@ -60,7 +62,7 @@ namespace VODB.ExpressionsToSql
                 Debug.Assert(parts[index].Field != null);
 
                 // Finalize the Condition
-                sb.Append(parts[index].Field.Name)
+                sb.Append(LEFT_BRACKET).Append(parts[index].Field.Name).Append(RIGHT_BRACKET)
                   .Append(_Follows.Compile(ref level));
 
                 // Add the values as a parameter to the parameters collection.
@@ -84,11 +86,11 @@ namespace VODB.ExpressionsToSql
             var current = parts[index].Field;
             var next = parts[index + 1].Field;
 
-            sb.Append(current.Name)
-                .Append(" in (Select ").Append(next.BindOrName)
-                .Append(" From ")
+            sb.Append(LEFT_BRACKET).Append(current.Name).Append(RIGHT_BRACKET)
+                .Append(" in (Select [").Append(next.BindOrName)
+                .Append("] From [")
                 .Append(current.Table.Name)
-                .Append(" Where ");
+                .Append("] Where ");
 
             Build(sb, parts, index + 1, ref level);
             sb.Append(")");

@@ -87,6 +87,7 @@
     <Compile Include="EntityTranslation\IEntityTranslator.cs" />
     <Compile Include="Exceptions\InvalidMappingException.cs" />
     <Compile Include="Exceptions\NoEntityFoundException.cs" />
+    <Compile Include="Exceptions\OrderByClauseException.cs" />
     <Compile Include="Exceptions\UnableToGetTheFieldValueException.cs" />
     <Compile Include="Exceptions\UnableToGetTheValue.cs" />
     <Compile Include="Core\Loaders\Factories\IEntityFactory.cs" />

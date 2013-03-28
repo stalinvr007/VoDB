@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using VODB.EntityTranslation;
+using VODB.Exceptions;
 
 namespace VODB.ExpressionsToSql
 {
@@ -20,7 +21,12 @@ namespace VODB.ExpressionsToSql
 
         public override string Compile(ref int level)
         {
-            return " Order By " + queryCondition.Compile(ref level);
+            var result = queryCondition.Compile(ref level);
+            if (result.Contains(" in ("))
+            {
+                throw new OrderByClauseException("The order by clause can't have more than one level.");
+            }
+            return " Order By " + result;
         }
     }
 }

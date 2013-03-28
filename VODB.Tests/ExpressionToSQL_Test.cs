@@ -94,11 +94,11 @@ namespace VODB.Tests
         public void ExpressionToSQL_Simple_Query()
         {
             var level = 0;
-            AssertQuery(ref level, new QueryCondition<Orders>(translator, o => o.OrderId == argumentValue), "OrderId = @p1", "@p1");
-            AssertQuery(ref level, new QueryCondition<Orders>(translator, o => o.OrderId < argumentValue), "OrderId < @p2", "@p2");
-            AssertQuery(ref level, new QueryCondition<Orders>(translator, o => o.OrderId <= argumentValue), "OrderId <= @p3", "@p3");
-            AssertQuery(ref level, new QueryCondition<Orders>(translator, o => o.OrderId > argumentValue), "OrderId > @p4", "@p4");
-            AssertQuery(ref level, new QueryCondition<Orders>(translator, o => o.OrderId >= argumentValue), "OrderId >= @p5", "@p5");
+            AssertQuery(ref level, new QueryCondition<Orders>(translator, o => o.OrderId == argumentValue), "[OrderId] = @p1", "@p1");
+            AssertQuery(ref level, new QueryCondition<Orders>(translator, o => o.OrderId < argumentValue), "[OrderId] < @p2", "@p2");
+            AssertQuery(ref level, new QueryCondition<Orders>(translator, o => o.OrderId <= argumentValue), "[OrderId] <= @p3", "@p3");
+            AssertQuery(ref level, new QueryCondition<Orders>(translator, o => o.OrderId > argumentValue), "[OrderId] > @p4", "@p4");
+            AssertQuery(ref level, new QueryCondition<Orders>(translator, o => o.OrderId >= argumentValue), "[OrderId] >= @p5", "@p5");
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace VODB.Tests
         {
             var query = new QueryCondition<Orders>(translator, o => o.OrderId, new StubCondition());
             var level = 0;
-            Assert.That(query.Compile(ref level), Is.EqualTo("OrderId"));
+            Assert.That(query.Compile(ref level), Is.EqualTo("[OrderId]"));
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace VODB.Tests
         {
             var query = new OrderByCondition<Orders>(translator, o => o.OrderId);
             var level = 0;
-            Assert.That(query.Compile(ref level), Is.EqualTo(" Order By OrderId"));
+            Assert.That(query.Compile(ref level), Is.EqualTo(" Order By [OrderId]"));
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace VODB.Tests
             var query = new QueryCondition<Orders>(translator, o => o.OrderId,
                 new InCondition(new Object[] { 1, 2, 3, 4 }));
 
-            Assert.That(query.Compile(ref level), Is.EqualTo("OrderId In (@p1, @p2, @p3, @p4)"));
+            Assert.That(query.Compile(ref level), Is.EqualTo("[OrderId] In (@p1, @p2, @p3, @p4)"));
             Assert.That(query.Parameters.Count(), Is.EqualTo(4));
 
             var i = 0;
@@ -140,7 +140,7 @@ namespace VODB.Tests
             var level = 0;
             var query = new QueryCondition<Orders>(translator, o => o.OrderId, new BetweenCondition(1, 3));
 
-            Assert.That(query.Compile(ref level), Is.EqualTo("OrderId Between @p1 and @p2"));
+            Assert.That(query.Compile(ref level), Is.EqualTo("[OrderId] Between @p1 and @p2"));
             Assert.That(query.Parameters.Count(), Is.EqualTo(2));
 
             var i = 0;
@@ -157,7 +157,7 @@ namespace VODB.Tests
             var level = 0;
             var query = new QueryCondition<Orders>(translator, o => o.Employee.ReportsTo.EmployeeId == 3);
 
-            Assert.AreEqual("EmployeeId in (Select EmployeeId From Employees Where ReportsTo in (Select EmployeeId From Employees Where EmployeeId = @p1))", query.Compile(ref level));
+            Assert.AreEqual("[EmployeeId] in (Select [EmployeeId] From [Employees] Where [ReportsTo] in (Select [EmployeeId] From [Employees] Where [EmployeeId] = @p1))", query.Compile(ref level));
             Assert.That(query.Parameters.Count(), Is.EqualTo(1));
             Assert.That(query.Parameters.First().Value, Is.EqualTo(3));
             Assert.That(query.Parameters.First().Name, Is.EqualTo("@p1"));
@@ -170,7 +170,7 @@ namespace VODB.Tests
             var query = new QueryCondition<Orders>(translator, o => o.Employee.ReportsTo.ReportsTo.EmployeeId == 3);
 
             string queryCompile = query.Compile(ref level);
-            Assert.AreEqual("EmployeeId in (Select EmployeeId From Employees Where ReportsTo in (Select EmployeeId From Employees Where ReportsTo in (Select EmployeeId From Employees Where EmployeeId = @p1)))", queryCompile);
+            Assert.AreEqual("[EmployeeId] in (Select [EmployeeId] From [Employees] Where [ReportsTo] in (Select [EmployeeId] From [Employees] Where [ReportsTo] in (Select [EmployeeId] From [Employees] Where [EmployeeId] = @p1)))", queryCompile);
             Assert.That(query.Parameters.Count(), Is.EqualTo(1));
             Assert.That(query.Parameters.First().Value, Is.EqualTo(3));
             Assert.That(query.Parameters.First().Name, Is.EqualTo("@p1"));
@@ -189,7 +189,7 @@ namespace VODB.Tests
 
             var compiledQuery = query.Compile(ref level);
 
-            Assert.AreEqual(126893, compiledQuery.Count());
+            Assert.AreEqual(140893, compiledQuery.Count());
             Assert.That(query.Parameters.Count(), Is.EqualTo(1000));
 
             foreach (var parameter in query.Parameters)
@@ -207,15 +207,15 @@ namespace VODB.Tests
         private IEnumerable GetExpressions()
         {
             yield return GetCondition<Orders>(o => o.Customer.CustomerId == "10")
-                .Returns("CustomerId in (Select CustomerId From Customers Where CustomerId = @p1)")
+                .Returns("[CustomerId] in (Select [CustomerId] From [Customers] Where [CustomerId] = @p1)")
                 .SetName("ExpressionsToSql_Assert_Customer.CustomerId == @p1");
 
             yield return GetCondition<Employee>(o => o.EmployeeId == 10)
-                .Returns("EmployeeId = @p1")
+                .Returns("[EmployeeId] = @p1")
                 .SetName("ExpressionsToSql_Assert_EmployeeId == @p1");
 
             yield return GetCondition<CustomerCustomerDemo>(o => o.Demographics.CustomerTypeId == "test")
-                .Returns("CustomerTypeId in (Select CustomerTypeId From CustomerDemographics Where CustomerTypeId = @p1)")
+                .Returns("[CustomerTypeId] in (Select [CustomerTypeId] From [CustomerDemographics] Where [CustomerTypeId] = @p1)")
                 .SetName("ExpressionsToSql_Assert_Demographics.CustomerTypeId = @p1");
         }
 
