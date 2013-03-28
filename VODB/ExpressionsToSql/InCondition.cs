@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace VODB.ExpressionsToSql
 {
@@ -13,6 +14,12 @@ namespace VODB.ExpressionsToSql
         public InCondition(Object[] values)
         {
             _Values = values;
+            _Parameters = new List<IQueryParameter>();
+        }
+
+        public InCondition(IEnumerable<Object> values)
+        {
+            _Values = values.ToArray();
             _Parameters = new List<IQueryParameter>();
         }
 

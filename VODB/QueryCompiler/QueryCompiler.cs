@@ -23,7 +23,14 @@ namespace VODB.QueryCompiler
         /// </summary>
         /// <param name="condition">The condition.</param>
         /// <returns></returns>
-        IQueryCompilerLevel2<TEntity> Where(Expression<Func<TEntity, Boolean>> condition);
+        IQueryCompilerLevel2<TEntity> Where(Expression<Func<TEntity, Boolean>> expression);
+
+        /// <summary>
+        /// Start of a where clause.
+        /// </summary>
+        /// <param name="condition">The condition.</param>
+        /// <returns></returns>
+        IQueryCompilerLevel4<TEntity> Where(Expression<Func<TEntity, Object>> expression);
         
         /// <summary>
         /// Appends the Order By clause.
@@ -64,13 +71,49 @@ namespace VODB.QueryCompiler
         IQueryCompilerLevel2<TEntity> Or(Expression<Func<TEntity, Boolean>> expression);
     }
 
-    class QueryCompiler<TEntity> : IQuery<TEntity>, IQueryCompilerLevel1<TEntity>, IQueryCompilerLevel2<TEntity>, IQueryCompilerLevel3<TEntity>, IQueryCompilerStub<TEntity>
+    /// <summary>
+    /// This interface is used to represent the operations available at the forth level.
+    /// 
+    /// Available features
+    /// Like, In, Between
+    /// </summary>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    public interface IQueryCompilerLevel4<TEntity> : IEnumerable<TEntity>
+    {
+        /// <summary>
+        /// Filters the field using the Like condition.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        IQueryCompilerLevel2<TEntity> Like(String value, WildCard token = WildCard.Both);
+
+        /// <summary>
+        /// filters the field withing the specified in the collection.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
+        /// <returns></returns>
+        IQueryCompilerLevel2<TEntity> In(IEnumerable<Object> collection);
+
+        /// <summary>
+        /// Filters the field using the between condition.
+        /// </summary>
+        /// <param name="firstValue">The first value.</param>
+        /// <param name="secondValue">The second value.</param>
+        /// <returns></returns>
+        IQueryCompilerLevel2<TEntity> Between(Object firstValue, Object secondValue);
+    }
+
+    class QueryCompiler<TEntity> : IQuery<TEntity>, IQueryCompilerLevel1<TEntity>, IQueryCompilerLevel2<TEntity>, IQueryCompilerLevel3<TEntity>, IQueryCompilerLevel4<TEntity>, IQueryCompilerStub<TEntity>
     {
         /// <summary>
         /// Holds the conditions and enables compilation.
         /// </summary>
         private IQueryConditionComposite _Query = new QueryCondition();
         private IEntityTranslator _Translator;
+
+        private Expression<Func<TEntity, object>> _PartialExpression;
+
         public QueryCompiler(IEntityTranslator translator, Func<IQueryCompilerLevel1<TEntity>, IEnumerable<TEntity>> func)
         {
             _Translator = translator;
@@ -88,12 +131,18 @@ namespace VODB.QueryCompiler
             _Query.Add(new QueryCondition<TEntity>(_Translator, expression));
             return this;
         }
-
+                
         #region IQueryCompilerLevel1<TEntity> Implementation
 
         public IQueryCompilerLevel2<TEntity> Where(Expression<Func<TEntity, bool>> expression)
         {
             return Add(expression);
+        }
+
+        public IQueryCompilerLevel4<TEntity> Where(Expression<Func<TEntity, object>> expression)
+        {
+            _PartialExpression = expression;
+            return this;
         }
 
         public IQueryCompilerLevel3<TEntity> OrderBy(Expression<Func<TEntity, Object>> expression)
@@ -113,10 +162,11 @@ namespace VODB.QueryCompiler
 
         public IQueryCompilerLevel2<TEntity> Or(Expression<Func<TEntity, bool>> expression)
         {
+            // wraps the last condition with a (
             _Query.InsertBeforeLast(new ConstantCondition("("));
-            Add(new ConstantCondition(" Or "));
-            Add(expression);
-            return Add(new ConstantCondition(")"));
+            return Add(new ConstantCondition(" Or "))
+                  .Add(expression)
+                  .Add(new ConstantCondition(")"));
         }
 
         #endregion
@@ -129,7 +179,26 @@ namespace VODB.QueryCompiler
         }
 
         #endregion
-      
+
+        #region IQueryCompilerLevel4<TEntity> Implementation
+
+        public IQueryCompilerLevel2<TEntity> Like(string value, WildCard token = WildCard.Both)
+        {
+            return Add(new QueryCondition<TEntity>(_Translator, _PartialExpression, new LikeCondition(value, token)));
+        }
+
+        public IQueryCompilerLevel2<TEntity> In(IEnumerable<Object> collection)
+        {
+            return Add(new QueryCondition<TEntity>(_Translator, _PartialExpression, new InCondition(collection)));
+        }
+
+        public IQueryCompilerLevel2<TEntity> Between(Object firstValue, Object secondValue)
+        {
+            return Add(new QueryCondition<TEntity>(_Translator, _PartialExpression, new BetweenCondition(firstValue, secondValue)));
+        }
+
+        #endregion
+
         #region IEnumerable<TEntity> Implementation
 
         public IEnumerator<TEntity> GetEnumerator()

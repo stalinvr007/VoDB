@@ -21,17 +21,17 @@ namespace VODB.Tests.QueryCompiler
         }
         private IEnumerable GetEmployeeQueries()
         {
-            yield return MakeTestCase<Employee>(query => 
-                
+            yield return MakeTestCase<Employee>(query =>
+
                 query.Where(e => e.EmployeeId > Param.Get<int>())
-            
+
             ).Returns(" Where [EmployeeId] > @p1")
             .SetName("Query employee (Where EmployeeId > @p1)");
 
-            yield return MakeTestCase<Employee>(query => 
-                
+            yield return MakeTestCase<Employee>(query =>
+
                 query.Where(e => e.ReportsTo.EmployeeId > Param.Get<int>())
-                
+
             ).Returns(" Where [EmployeeId] in (Select [EmployeeId] From [Employees] Where [ReportsTo] > @p1)")
             .SetName("Query employee (Where ReportsTo > @p1)");
 
@@ -52,11 +52,11 @@ namespace VODB.Tests.QueryCompiler
             ).Returns(" Where [EmployeeId] in (Select [EmployeeId] From [Employees] Where [ReportsTo] > @p1) Order By [Region]")
             .SetName("Query employee (Where ReportsTo > @p1 order by region)");
 
-            yield return MakeTestCase<Employee>(query => 
+            yield return MakeTestCase<Employee>(query =>
 
                 query.Where(e => e.ReportsTo.EmployeeId > Param.Get<int>())
                     .OrderBy(e => e.ReportsTo.EmployeeId)
-             
+
              ).Returns("Doesn't matter")
             .SetName("Query employee (order by invalid)")
             .Throws(typeof(OrderByClauseException));
@@ -86,6 +86,34 @@ namespace VODB.Tests.QueryCompiler
 
             ).Returns(" Where [EmployeeId] > @p1 And ([Title] = @p2 Or [TitleOfCourtesy] = @p3)")
             .SetName("Query employee (Where EmployeeId > @p1 or Title = @p2)");
+
+            yield return MakeTestCase<Employee>(query =>
+
+                query.Where(e => e.EmployeeId).Between(Param.Get<int>(), Param.Get<int>())
+
+            ).Returns(" Where [EmployeeId] Between @p1 And @p2")
+            .SetName("Query employee (Where EmployeeId Between)");
+
+            yield return MakeTestCase<Employee>(query =>
+
+                query.Where(e => e.ReportsTo.EmployeeId).Between(Param.Get<int>(), Param.Get<int>())
+
+            ).Returns(" Where [EmployeeId] in (Select [EmployeeId] From [Employees] Where [ReportsTo] Between @p1 And @p2)")
+            .SetName("Query employee (Where ReportsTo Between)");
+
+            yield return MakeTestCase<Employee>(query =>
+
+                query.Where(e => e.EmployeeId).Like(Param.Get<String>())
+
+            ).Returns(" Where [EmployeeId] Like '%' + @p1 + '%'")
+            .SetName("Query employee (Where EmployeeId Like)");
+
+            yield return MakeTestCase<Employee>(query =>
+
+                query.Where(e => e.EmployeeId).In(new Object[] { 1, 2, 3 })
+
+            ).Returns(" Where [EmployeeId] In (@p1, @p2, @p3)")
+            .SetName("Query employee (Where EmployeeId in)");
         }
 
         [TestCaseSource("GetEmployeeQueries")]

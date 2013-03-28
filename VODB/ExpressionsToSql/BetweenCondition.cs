@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VODB.Core.Execution.Executers.DbResults;
 
 namespace VODB.ExpressionsToSql
 {
+
     class BetweenCondition : IQueryCondition
     {
         private ICollection<IQueryParameter> _Parameters;
@@ -21,7 +23,7 @@ namespace VODB.ExpressionsToSql
         {
             return new StringBuilder(" Between ")
                 .Append(_Parameters.Add(++level, _Val1))
-                .Append(" and ")
+                .Append(" And ")
                 .Append(_Parameters.Add(++level, _Val2))
                 .ToString();
         }

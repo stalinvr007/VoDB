@@ -140,7 +140,7 @@ namespace VODB.Tests
             var level = 0;
             var query = new QueryCondition<Orders>(translator, o => o.OrderId, new BetweenCondition(1, 3));
 
-            Assert.That(query.Compile(ref level), Is.EqualTo("[OrderId] Between @p1 and @p2"));
+            Assert.That(query.Compile(ref level), Is.EqualTo("[OrderId] Between @p1 And @p2"));
             Assert.That(query.Parameters.Count(), Is.EqualTo(2));
 
             var i = 0;
