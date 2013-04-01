@@ -15,6 +15,8 @@ namespace VODB.QueryCompiler
     {
         private static IQueryCondition _Right_parenthesis = new ConstantCondition(")");
         private static IQueryCondition _Left_parenthesis = new ConstantCondition("(");
+        private static IQueryCondition _Or_Condition = new ConstantCondition(" Or ");
+        private static IQueryCondition _And_Condition = new ConstantCondition(" And ");
 
         /// <summary>
         /// Holds the conditions and enables compilation.
@@ -39,6 +41,7 @@ namespace VODB.QueryCompiler
         public QueryCompiler(IEntityTranslator translator)
         {
             _Translator = translator;
+            Add(_Translator.Translate(typeof(TEntity)).SqlSelect);
         }
 
         public QueryCompiler(IEntityTranslator translator, ISession session)
@@ -59,6 +62,12 @@ namespace VODB.QueryCompiler
             return this;
         }
 
+        private QueryCompiler<TEntity> Add(String condition)
+        {
+            _Query.Add(new ConstantCondition(condition));
+            return this;
+        }
+
         private QueryCompiler<TEntity> Add(IQueryCondition condition)
         {
             _Query.Add(condition);
@@ -75,16 +84,17 @@ namespace VODB.QueryCompiler
 
         public IQueryCompilerLevel2<TEntity> Where(Expression<Func<TEntity, bool>> expression)
         {
-            return Add(expression);
+            return Add(" Where ").Add(expression);
         }
 
         public IQueryCompilerLevel2<TEntity> Where(string mask, params object[] args)
         {
-            return Add(new ConstantCondition(String.Format(mask, args)));
+            return Add(" Where ").Add(String.Format(mask, args));
         }
 
         public IQueryCompilerLevel4<TEntity> Where(Expression<Func<TEntity, object>> expression)
         {
+            Add(" Where ");
             _PartialExpression = expression;
             return this;
         }
@@ -101,14 +111,14 @@ namespace VODB.QueryCompiler
         public IQueryCompilerLevel2<TEntity> And(Expression<Func<TEntity, bool>> expression)
         {
             _WasLastOr = false;
-            Add(new ConstantCondition(" And "));
+            Add(_And_Condition);
             return Add(expression);
         }
 
         public IQueryCompilerLevel2<TEntity> And(string mask, params object[] args)
         {
-            return Add(new ConstantCondition(" And "))
-                .Add(new ConstantCondition(String.Format(mask, args)));
+            return Add(_And_Condition)
+                .Add(String.Format(mask, args));
         }
 
         public IQueryCompilerLevel4<TEntity> And(Expression<Func<TEntity, object>> expression)
@@ -129,7 +139,7 @@ namespace VODB.QueryCompiler
                 _Query.RemoveLast();
             }
 
-            Add(new ConstantCondition(" Or "));
+            Add(_Or_Condition);
             Add(expression);
 
             Add(_Right_parenthesis);
@@ -149,7 +159,7 @@ namespace VODB.QueryCompiler
                 _Query.RemoveLast();
             }
 
-            Add(new ConstantCondition(" Or "));
+            Add(_Or_Condition);
             _PartialExpression = expression;
 
             _LastCondition = _Right_parenthesis;
@@ -164,7 +174,7 @@ namespace VODB.QueryCompiler
 
         public IQueryCompilerStub<TEntity> Descending()
         {
-            return Add(new ConstantCondition(" Desc"));
+            return Add(" Desc");
         }
 
         #endregion
@@ -200,7 +210,7 @@ namespace VODB.QueryCompiler
                 throw new InvalidOperationException("The QueryCompiler has no session.");
             }
 
-            return Execute(_Session);
+            return Execute(_Session).GetEnumerator();
         } 
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -223,9 +233,9 @@ namespace VODB.QueryCompiler
             {
                 return _CompiledQuery;
             }
-
+            
             _ConditionCount = _Query.Count();
-            return _CompiledQuery = _Translator.Translate(typeof(TEntity)).SqlSelect + " Where " + _Query.Compile(ref level);
+            return _CompiledQuery = _Query.Compile(ref level);
         }
 
         public IEnumerable<IQueryParameter> Parameters
@@ -237,11 +247,6 @@ namespace VODB.QueryCompiler
         }
 
         #endregion
-
-
-
-
-
 
     }
 }

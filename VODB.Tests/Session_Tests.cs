@@ -35,18 +35,17 @@ namespace VODB.Tests
             Assert.AreEqual(9, employees.Count());
         }
 
-        [Test]
-        public void Session_GetAllOrders()
+        [TestCaseSource("GetSessions")]
+        public void Session_GetAllOrders(ISession session)
         {
-            var employees = new Session().GetAll<Orders>();
+            var employees = session.GetAll<Orders>();
 
             Assert.AreEqual(830, employees.Count());
         }
 
-        [Test]
-        public void Session_WhereCondition_ShouldBeKept_ByResult()
+        [TestCaseSource("GetSessions")]
+        public void Session_WhereCondition_ShouldBeKept_ByResult(ISession session)
         {
-            var session = new Session();
             var query1 = session.GetAll<Employee>()
                 .Where(m => m.EmployeeId > 4);
 
