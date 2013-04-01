@@ -207,6 +207,10 @@
     <Compile Include="QueryCompiler\IQueryCompilerLevel4.cs" />
     <Compile Include="QueryCompiler\IQueryCompilerStub.cs" />
     <Compile Include="QueryCompiler\QueryCompiler.cs" />
+    <Compile Include="Sessions\EntityFactories\IFieldInterceptor.cs" />
+    <Compile Include="Sessions\EntityFactories\InterceptorSelector.cs" />
+    <Compile Include="Sessions\EntityFactories\LazyForeignProperty.cs" />
+    <Compile Include="Sessions\EntityFactories\ProxyCreator.cs" />
     <Compile Include="Sessions\InternalSession.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Sessions\SessionStub.cs" />

@@ -8,6 +8,7 @@ using VODB.DbLayer;
 using VODB.EntityTranslation;
 using VODB.EntityMapping;
 using VODB.Core.Loaders.Factories;
+using VODB.Sessions.EntityFactories;
 
 namespace VODB.Tests
 {
@@ -22,7 +23,7 @@ namespace VODB.Tests
                 new VodbConnection(Utils.ConnectionCreator),
                 new EntityTranslator(),
                 new OrderedEntityMapper(),
-                new EntityProxyFactory()
+                new ProxyCreator()
             );
 
         }
@@ -77,20 +78,20 @@ namespace VODB.Tests
             Assert.AreEqual(2, employees.Count());
         }
 
-        [Test]
-        public void Session_GetAll_LikeCondition_Left()
+        [TestCaseSource("GetSessions")]
+        public void Session_GetAll_LikeCondition_Left(ISession session)
         {
-            var employees = new Session()
+            var employees = session
                 .GetAll<Employee>()
                 .Where(e => e.LastName).Like("r", WildCard.Left);
 
             Assert.AreEqual(1, employees.Count());
         }
 
-        [Test]
-        public void Session_GetAll_OrderedByFirstName()
+        [TestCaseSource("GetSessions")]
+        public void Session_GetAll_OrderedByFirstName(ISession session)
         {
-            var employee = new Session()
+            var employee = session
                 .GetAll<Employee>().OrderBy(e => e.FirstName)
                 .First();
 
@@ -98,8 +99,8 @@ namespace VODB.Tests
 
         }
 
-        [Test]
-        public void Session_GetEmployeeList_ReportsToFilter()
+        [TestCaseSource("GetSessions")]
+        public void Session_GetEmployeeList_ReportsToFilter(ISession session)
         {
             /* 
              * Select * from Employees Where ReportsTo in 

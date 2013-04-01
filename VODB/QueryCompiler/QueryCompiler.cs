@@ -246,8 +246,7 @@ namespace VODB.QueryCompiler
         }
 
         #endregion
-
-
+        
         public int Count()
         {
             if (_Session == null)

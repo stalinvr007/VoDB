@@ -100,7 +100,7 @@ namespace VODB.Sessions
             var command = _Connection.MakeCommand(query.Compile(ref level))
                 .SetParametersValues(args);
 
-            return ExecuteQuery<TEntity>(_Connection.ExecuteReader(command), table);
+            return ExecuteQuery<TEntity>(_Connection.ExecuteReader(command).AsParallel(), table);
         }
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()

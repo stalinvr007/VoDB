@@ -30,6 +30,7 @@ namespace VODB.Tests
             Assert.AreEqual("http://accweb/emmployees/davolio.bmp", employee.PhotoPath);
             Assert.IsNotNull(employee.ReportsTo);
             Assert.AreEqual(2, employee.ReportsTo.EmployeeId);
+            
         }
 
         public static void Assert_Employee_2(Employee employee)
@@ -54,7 +55,7 @@ namespace VODB.Tests
                 employee.Notes);
             Assert.AreEqual("http://accweb/emmployees/fuller.bmp", employee.PhotoPath);
             Assert.IsNotNull(employee.ReportsTo);
-            Assert.AreEqual(1, employee.ReportsTo.EmployeeId);
+            Assert_Employee_1(employee.ReportsTo);
         }
 
         public static void Assert_Employee_3(Employee employee)
