@@ -83,6 +83,9 @@ namespace VODB
         #endregion
 
 
-        
+        public override string ToString()
+        {
+            return "Session V1.0";
+        }
     }
 }

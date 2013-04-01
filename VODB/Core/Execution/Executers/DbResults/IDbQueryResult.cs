@@ -59,6 +59,7 @@ namespace VODB.Core.Execution.Executers.DbResults
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     public interface IDbAndQueryResult<TEntity> : IEnumerable<TEntity>, IDbResult, IQueryCompilerLevel2<TEntity>
+        where TEntity : class, new()
     {
         /// <summary>
         /// Adds more conditions to the query.
@@ -108,10 +109,12 @@ namespace VODB.Core.Execution.Executers.DbResults
     }
 
     public interface IDbOrderedDescResult<TEntity> : IEnumerable<TEntity>, IDbResult, IQueryCompilerStub<TEntity>
+        where TEntity : class, new()
     {
     }
 
     public interface IDbOrderedResult<TEntity> : IEnumerable<TEntity>, IDbResult, IQueryCompilerLevel3<TEntity>
+        where TEntity : class, new()
     {
         new IDbOrderedDescResult<TEntity> Descending();
     }
@@ -126,6 +129,7 @@ namespace VODB.Core.Execution.Executers.DbResults
     }
 
     public interface IDbFieldFilterResult<TEntity> : IDbResult, IQueryCompilerLevel4<TEntity>
+        where TEntity : class, new()
     {
         /// <summary>
         /// Likes the specified value.

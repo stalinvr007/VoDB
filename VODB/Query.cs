@@ -9,6 +9,7 @@ using VODB.Sessions;
 namespace VODB
 {
     public interface IQuery<out TEntity> : IQueryCondition
+        where TEntity : class, new()
     {
         IEnumerable<TEntity> Execute(ISession session);
     }

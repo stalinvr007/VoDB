@@ -2,16 +2,35 @@
 using VODB.Tests.Models.Northwind;
 using System.Linq;
 using VODB.Core.Execution.Executers.DbResults;
+using System.Collections;
+using VODB.Sessions;
+using VODB.DbLayer;
+using VODB.EntityTranslation;
+using VODB.EntityMapping;
+using VODB.Core.Loaders.Factories;
 
 namespace VODB.Tests
 {
     [TestFixture]
     public class Session_Tests
     {
-        [Test]
-        public void Session_GetAll()
+        private IEnumerable GetSessions()
         {
-            var employees = new Session().GetAll<Employee>();
+            yield return new Session();
+
+            yield return new V2Session(
+                new VodbConnection(Utils.ConnectionCreator),
+                new EntityTranslator(),
+                new OrderedEntityMapper(),
+                new EntityProxyFactory()
+            );
+
+        }
+
+        [TestCaseSource("GetSessions")]
+        public void Session_GetAll(ISession session)
+        {
+            var employees = session.GetAll<Employee>();
 
             Assert.AreEqual(9, employees.Count());
         }

@@ -89,7 +89,7 @@ namespace VODB.Sessions
 
         public IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new()
         {
-            return new QueryCompiler<TEntity>(_Translator);
+            return new QueryCompiler<TEntity>(_Translator, this);
         }
 
         public IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, params Object[] args) where TEntity : class, new()
@@ -188,6 +188,11 @@ namespace VODB.Sessions
         public void Close()
         {
             throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            return "Session V2.0";
         }
     }
 }

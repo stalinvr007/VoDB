@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.Linq;
 using VODB.Core.Execution.Executers.DbResults;
 using System.Linq.Expressions;
 using System.Collections;
@@ -10,6 +11,7 @@ namespace VODB.QueryCompiler
 {
 
     class QueryCompiler<TEntity> : IQueryCompilerLevel1<TEntity>, IQueryCompilerLevel2<TEntity>, IQueryCompilerLevel3<TEntity>, IQueryCompilerLevel4<TEntity>, IQueryCompilerStub<TEntity>
+        where TEntity : class, new()
     {
         private static IQueryCondition _Right_parenthesis = new ConstantCondition(")");
         private static IQueryCondition _Left_parenthesis = new ConstantCondition("(");
@@ -18,15 +20,17 @@ namespace VODB.QueryCompiler
         /// Holds the conditions and enables compilation.
         /// </summary>
         private IQueryConditionComposite _Query = new QueryCondition();
-        
+
         private IEntityTranslator _Translator;
         private Expression<Func<TEntity, object>> _PartialExpression;
         private IQueryCondition _LastCondition = null;
         private bool _WasLastOr;
         private String _CompiledQuery = null;
         private int _ConditionCount = 0;
+        private ISession _Session;
 
         public QueryCompiler(IEntityTranslator translator, Func<IQueryCompilerLevel1<TEntity>, IEnumerable<TEntity>> func)
+            : this(translator)
         {
             _Translator = translator;
             func(this);
@@ -35,6 +39,12 @@ namespace VODB.QueryCompiler
         public QueryCompiler(IEntityTranslator translator)
         {
             _Translator = translator;
+        }
+
+        public QueryCompiler(IEntityTranslator translator, ISession session)
+            : this(translator)
+        {
+            _Session = session;
         }
 
         private IQueryCompilerLevel2<TEntity> AppendLastCondition()
@@ -60,7 +70,7 @@ namespace VODB.QueryCompiler
             _Query.Add(new QueryCondition<TEntity>(_Translator, expression));
             return this;
         }
-                
+
         #region IQueryCompilerLevel1<TEntity> Implementation
 
         public IQueryCompilerLevel2<TEntity> Where(Expression<Func<TEntity, bool>> expression)
@@ -122,7 +132,7 @@ namespace VODB.QueryCompiler
             Add(new ConstantCondition(" Or "));
             Add(expression);
 
-            Add(_Right_parenthesis);            
+            Add(_Right_parenthesis);
 
             _WasLastOr = true;
             return this;
@@ -143,7 +153,7 @@ namespace VODB.QueryCompiler
             _PartialExpression = expression;
 
             _LastCondition = _Right_parenthesis;
-            
+
             _WasLastOr = true;
             return this;
         }
@@ -185,12 +195,17 @@ namespace VODB.QueryCompiler
 
         public IEnumerator<TEntity> GetEnumerator()
         {
-            throw new NotImplementedException();
-        }
+            if (_Session == null)
+            {
+                throw new InvalidOperationException("The QueryCompiler has no session.");
+            }
+
+            return Execute(_Session);
+        } 
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return this.GetEnumerator();
         }
 
         #endregion
@@ -199,7 +214,7 @@ namespace VODB.QueryCompiler
 
         public IEnumerable<TEntity> Execute(ISession session)
         {
-            throw new System.NotImplementedException();
+            return _Session.ExecuteQuery(this, Parameters.Select(p => p.Value).ToArray());
         }
 
         public string Compile(ref int level)
@@ -227,6 +242,6 @@ namespace VODB.QueryCompiler
 
 
 
-        
+
     }
 }

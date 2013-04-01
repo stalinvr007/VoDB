@@ -16,6 +16,7 @@ namespace VODB.QueryCompiler
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     public interface IQueryCompilerLevel4<TEntity>
+        where TEntity : class, new()
     {
         /// <summary>
         /// Filters the field using the Like condition.

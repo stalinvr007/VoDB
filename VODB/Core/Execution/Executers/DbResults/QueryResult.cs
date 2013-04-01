@@ -299,7 +299,7 @@ namespace VODB.Core.Execution.Executers.DbResults
 
         #region IDbFieldFilterResult<TEntity> Implementation
 
-        IQueryCompilerLevel2<TEntity> IQueryCompilerLevel4<TEntity>.Like(string value, WildCard token = WildCard.Both)
+        IQueryCompilerLevel2<TEntity> IQueryCompilerLevel4<TEntity>.Like(string value, WildCard token)
         {
             return Like(value, token);
         }

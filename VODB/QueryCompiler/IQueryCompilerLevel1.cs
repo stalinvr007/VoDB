@@ -16,6 +16,7 @@ namespace VODB.QueryCompiler
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     public interface IQueryCompilerLevel1<TEntity> : IQuery<TEntity>, IEnumerable<TEntity>
+        where TEntity : class, new()
     {
         /// <summary>
         /// Start of a where clause that match a given value.
