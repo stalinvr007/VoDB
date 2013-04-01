@@ -92,14 +92,23 @@ namespace VODB.Sessions
             return new QueryCompiler<TEntity>(_Translator);
         }
 
+        public IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, params Object[] args) where TEntity : class, new()
+        {
+            var level = 0;
+            var table = GetTable<TEntity>();
+            var command = _Connection.MakeCommand(query.Compile(ref level))
+                .SetParametersValues(args);
+
+            return ExecuteQuery<TEntity>(_Connection.ExecuteReader(command), table);
+        }
+
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
         {
-
             var table = GetTable<TEntity>();
             var command = table.GetSelectByIdCommand(_Connection);
             SetKeyValues<TEntity>(entity, table, command);
-            return ExecuteQuery<TEntity>(_Connection.ExecuteReader(command), table).FirstOrDefault();
 
+            return ExecuteQuery<TEntity>(_Connection.ExecuteReader(command), table).FirstOrDefault();
         }
 
         public TEntity Insert<TEntity>(TEntity entity) where TEntity : class, new()

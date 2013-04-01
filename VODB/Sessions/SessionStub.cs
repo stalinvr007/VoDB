@@ -20,6 +20,11 @@ namespace VODB.Sessions
             throw new NotImplementedException();
         }
 
+        public System.Collections.Generic.IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, Object[] args) where TEntity : class, new()
+        {
+            throw new NotImplementedException();
+        }
+
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
         {
             throw new NotImplementedException();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using VODB.Core.Execution.Executers.DbResults;
@@ -25,6 +26,15 @@ namespace VODB
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns></returns>
         IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new();
+
+        /// <summary>
+        /// Executes the query.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="query">The query.</param>
+        /// <returns></returns>
+        /// <param name="args"></param>
+        IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, params Object[] args) where TEntity : class, new();
 
         /// <summary>
         /// Gets the entity by Id.

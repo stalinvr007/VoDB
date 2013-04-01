@@ -1,4 +1,5 @@
-﻿using VODB.Core;
+﻿using System;
+using VODB.Core;
 using VODB.Core.Execution.Executers.DbResults;
 using VODB.DbLayer;
 using VODB.QueryCompiler;
@@ -34,6 +35,11 @@ namespace VODB
         public IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new()
         {
             return _InternalSession.GetAll<TEntity>();
+        }
+
+        public System.Collections.Generic.IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, params Object[] args) where TEntity : class, new()
+        {
+            return _InternalSession.ExecuteQuery(query, args);
         }
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
@@ -75,5 +81,8 @@ namespace VODB
         }
 
         #endregion
+
+
+        
     }
 }

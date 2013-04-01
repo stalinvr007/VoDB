@@ -11,7 +11,6 @@ namespace VODB
     public interface IQuery<out TEntity> : IQueryCondition
     {
         IEnumerable<TEntity> Execute(ISession session);
-        
     }
 
     public static class Param
