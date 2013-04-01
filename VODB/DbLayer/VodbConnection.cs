@@ -108,6 +108,7 @@ namespace VODB.DbLayer
         private TResult Execute<TResult>(IVodbCommand cmd, Func<IVodbCommand, TResult> action)
         {
             Open();
+
             cmd.SetConnection(_DbConnection);
             cmd.SetTransaction(_DbTransaction);
             return action(cmd);

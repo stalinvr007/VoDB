@@ -8,6 +8,16 @@ using VODB.EntityTranslation;
 
 namespace VODB.QueryCompiler
 {
+
+    public interface IQueryCompilerCommun<TEntity> : IEnumerable<TEntity>
+    {
+        /// <summary>
+        /// Makes this a count query.
+        /// </summary>
+        /// <returns></returns>
+        int Count();
+    }
+
     /// <summary>
     /// This interface is used to represent the operations available at the first level.
     /// 
@@ -15,7 +25,7 @@ namespace VODB.QueryCompiler
     /// Where, OrderBy
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    public interface IQueryCompilerLevel1<TEntity> : IQuery<TEntity>, IEnumerable<TEntity>
+    public interface IQueryCompilerLevel1<TEntity> : IQuery<TEntity>, IQueryCompilerCommun<TEntity>
         where TEntity : class, new()
     {
         /// <summary>
@@ -46,5 +56,6 @@ namespace VODB.QueryCompiler
         /// <param name="orderByField">The order by field.</param>
         /// <returns></returns>
         IQueryCompilerLevel3<TEntity> OrderBy(Expression<Func<TEntity, Object>> expression);
+
     }
 }

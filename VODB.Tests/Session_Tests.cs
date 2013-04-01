@@ -67,10 +67,10 @@ namespace VODB.Tests
 
         }
 
-        [Test]
-        public void Session_GetAll_LikeCondition()
+        [TestCaseSource("GetSessions")]
+        public void Session_GetAll_LikeCondition(ISession session)
         {
-            var employees = new Session()
+            var employees = session
                 .GetAll<Employee>()
                 .Where(e => e.LastName).Like("an");
 

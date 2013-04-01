@@ -46,6 +46,7 @@ namespace VODB.ExpressionsToSql
 
         public String Compile(ref int level)
         {
+            _Parameters.Clear();
             var parts = _Expression.DecodeLeft().ToList();
 
             var sb = new StringBuilder();

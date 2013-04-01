@@ -171,6 +171,8 @@ namespace VODB.Tests.QueryCompiler
 
             string select = _Translator.Translate(typeof(Employee)).SqlSelect;
             StringAssert.StartsWith(select, result);
+            Assert.That(query.Parameters.GetEnumerator().MoveNext(), Is.True);
+
             return result.Remove(0, select.Length);
         }
 

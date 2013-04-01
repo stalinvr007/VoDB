@@ -15,7 +15,7 @@ namespace VODB.QueryCompiler
     /// And, Or, OrderBy
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    public interface IQueryCompilerLevel2<TEntity> : IQuery<TEntity>, IEnumerable<TEntity>
+    public interface IQueryCompilerLevel2<TEntity> : IQuery<TEntity>, IQueryCompilerCommun<TEntity>
         where TEntity : class, new()
     {
         /// <summary>
@@ -60,5 +60,6 @@ namespace VODB.QueryCompiler
         /// <param name="andCondition">The expression.</param>
         /// <returns></returns>
         IQueryCompilerLevel4<TEntity> Or(Expression<Func<TEntity, Object>> expression);
+
     }
 }

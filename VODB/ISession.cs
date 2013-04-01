@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using VODB.Core.Execution.Executers.DbResults;
+using VODB.ExpressionsToSql;
 using VODB.QueryCompiler;
 
 namespace VODB
@@ -89,5 +90,26 @@ namespace VODB
         DbCommand RefreshCommand(DbCommand command);
         void Open();
         void Close();
+
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <returns>The number of records afected by the command.</returns>
+        int ExecuteNonQuery(String command, params IQueryParameter[] args);
+
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <returns>A DataReader with the result</returns>
+        IDataReader ExecuteReader(String command, params IQueryParameter[] args);
+
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <returns>A simgle value.</returns>
+        object ExecuteScalar(String command, params IQueryParameter[] args);
     }
 }

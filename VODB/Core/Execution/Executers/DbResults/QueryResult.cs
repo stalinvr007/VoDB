@@ -408,12 +408,28 @@ namespace VODB.Core.Execution.Executers.DbResults
 
         #endregion
 
-
         IQueryCompilerStub<TEntity> IQueryCompilerLevel3<TEntity>.Descending()
         {
             return Descending();
         }
 
-        
+        public int Count()
+        {
+            _Session.Open();
+            DbCommand cmd = _Session.CreateCommand();
+            cmd.CommandText = _Table.CommandsHolder.Count + WhereCondition;
+
+            cmd.SetParameters(_ExpressionParser.ConditionData);
+            cmd.SetParameters(_Parameters);
+
+            try
+            {
+                return (int)cmd.ExecuteScalar();
+            }
+            finally
+            {
+                _Session.Close();
+            }
+        }
     }
 }

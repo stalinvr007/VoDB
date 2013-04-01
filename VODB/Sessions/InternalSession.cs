@@ -8,6 +8,7 @@ using VODB.Core.Infrastructure;
 using VODB.Core.Loaders;
 using VODB.Core.Loaders.Factories;
 using VODB.DbLayer;
+using VODB.ExpressionsToSql;
 using VODB.QueryCompiler;
 
 namespace VODB.Sessions
@@ -243,6 +244,22 @@ namespace VODB.Sessions
             {
                 _connection = _Creator.Create();
             }
+        }
+
+
+        public int ExecuteNonQuery(string command, params IQueryParameter[] args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDataReader ExecuteReader(string command, params IQueryParameter[] args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object ExecuteScalar(string command, params IQueryParameter[] args)
+        {
+            throw new NotImplementedException();
         }
     }
 }

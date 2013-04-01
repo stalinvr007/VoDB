@@ -1,4 +1,5 @@
 ﻿using VODB.DbLayer;
+using VODB.ExpressionsToSql;
 
 namespace VODB
 {
@@ -9,6 +10,15 @@ namespace VODB
             var cmd = connection.MakeCommand();
             cmd.SetCommandText(sqlCmd);
             return cmd;
+        }
+
+        public static IVodbCommand SetParameters(this IVodbCommand command, params IQueryParameter[] param)
+        {
+            foreach (var item in param)
+            {
+                command.CreateParameter(item.Name, item.Value);
+            }
+            return command;
         }
 
         public static IVodbCommand SetParametersNames(this IVodbCommand command, params string[] names)

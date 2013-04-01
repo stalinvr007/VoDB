@@ -12,6 +12,7 @@ using VODB.Infrastructure;
 using VODB.QueryCompiler;
 using ConcurrentReader;
 using VODB.Core.Loaders.Factories;
+using VODB.ExpressionsToSql;
 
 namespace VODB.Sessions
 {
@@ -193,6 +194,28 @@ namespace VODB.Sessions
         public override string ToString()
         {
             return "Session V2.0";
+        }
+
+
+        public int ExecuteNonQuery(string command, params IQueryParameter[] args)
+        {
+            return _Connection.ExecuteNonQuery(
+                _Connection.MakeCommand(command).SetParameters(args)
+            );
+        }
+
+        public IDataReader ExecuteReader(string command, params IQueryParameter[] args)
+        {
+            return _Connection.ExecuteReader(
+                _Connection.MakeCommand(command).SetParameters(args)
+            );
+        }
+
+        public object ExecuteScalar(string command, params IQueryParameter[] args)
+        {
+            return _Connection.ExecuteScalar(
+                _Connection.MakeCommand(command).SetParameters(args)
+            );
         }
     }
 }

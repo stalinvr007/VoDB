@@ -28,8 +28,8 @@ namespace VODB.QueryCompiler
         private IQueryCondition _LastCondition = null;
         private bool _WasLastOr;
         private String _CompiledQuery = null;
-        private int _ConditionCount = 0;
-        private ISession _Session;
+        private int _ConditionCount = -1;
+        private IInternalSession _Session;
 
         public QueryCompiler(IEntityTranslator translator, Func<IQueryCompilerLevel1<TEntity>, IEnumerable<TEntity>> func)
             : this(translator)
@@ -41,10 +41,9 @@ namespace VODB.QueryCompiler
         public QueryCompiler(IEntityTranslator translator)
         {
             _Translator = translator;
-            Add(_Translator.Translate(typeof(TEntity)).SqlSelect);
         }
 
-        public QueryCompiler(IEntityTranslator translator, ISession session)
+        public QueryCompiler(IEntityTranslator translator, IInternalSession session)
             : this(translator)
         {
             _Session = session;
@@ -235,7 +234,7 @@ namespace VODB.QueryCompiler
             }
             
             _ConditionCount = _Query.Count();
-            return _CompiledQuery = _Query.Compile(ref level);
+            return _CompiledQuery = _Translator.Translate(typeof(TEntity)).SqlSelect + _Query.Compile(ref level);
         }
 
         public IEnumerable<IQueryParameter> Parameters
@@ -248,5 +247,17 @@ namespace VODB.QueryCompiler
 
         #endregion
 
+
+        public int Count()
+        {
+            if (_Session == null)
+            {
+                throw new InvalidOperationException("The QueryCompiler has no session.");
+            }
+
+            int level = 0;
+            string sql = _Translator.Translate(typeof(TEntity)).SqlCount + _Query.Compile(ref level);
+            return (int)_Session.ExecuteScalar(sql, Parameters.ToArray());
+        }
     }
 }
