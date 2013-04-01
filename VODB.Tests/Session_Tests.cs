@@ -106,7 +106,7 @@ namespace VODB.Tests
              * Select * from Employees Where ReportsTo in 
              *      (Select EmployeeId From Employees Where FirstName = 'Andrew')
              */
-            var employees1 = new Session()
+            var employees1 = session
                 .GetAll<Employee>().Where(e => e.ReportsTo.FirstName == "Andrew");
 
             Assert.AreEqual(5, employees1.Count());
@@ -117,16 +117,16 @@ namespace VODB.Tests
              * Select * From Employees Where ReportsTo in 
              *      (Select EmployeeId From Employees Where EmployeeId = 1)
              */
-            var employees2 = new Session()
+            var employees2 = session
                 .GetAll<Employee>().Where(e => e.ReportsTo.EmployeeId == 1);
 
             EntitiesAsserts.Assert_Employee_2(employees2.First());
         }
 
-        [Test]
-        public void Session_GetAll_OrderedByFirstName_TSql()
+        [TestCaseSource("GetSessions")]
+        public void Session_GetAll_OrderedByFirstName_TSql(ISession session)
         {
-            var employee = new Session()
+            var employee = session
                 .GetAll<Employee>().OrderBy(e => e.FirstName)
                 .First();
 

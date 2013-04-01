@@ -56,19 +56,52 @@ namespace VODB.Sessions
             );
         }
 
-        private ITable GetTable<TEntity>() where TEntity : class, new()
+        private ITable GetTable<TEntity>(TEntity entity = null) where TEntity : class, new()
         {
-            return _Translator.Translate(typeof(TEntity));
+            Type entityType = typeof(TEntity);
+            if (entityType == typeof(Object))
+            {
+                entityType = (entity ?? new TEntity()).GetType();
+            }
+
+            return _Translator.Translate(entityType);
         }
 
-        private IEnumerable<TEntity> ExecuteQuery<TEntity>(IDataReader reader, ITable table)
+        private IEnumerable<TEntity> ExecuteQuery<TEntity>(TEntity entity, IDataReader reader, ITable table) where TEntity : class, new()
         {
+            Type entityType = typeof(TEntity);
+            if (entityType == typeof(Object))
+            {
+                entityType = (entity ?? new TEntity()).GetType();
+            }
+
             try
             {
                 while (reader.Read())
                 {
-                    yield return _Mapper.Map(_EntityFactory.Make<TEntity>(this), table, reader);
+                    yield return _Mapper.Map((TEntity)_EntityFactory.Make(entityType, this), table, reader);
                 }
+            }
+            finally
+            {
+                reader.Close();
+            }
+        }
+
+        private IEnumerable<TEntity> ParallelExecuteQuery<TEntity>(TEntity entity, IDataReader reader, ITable table) where TEntity : class, new()
+        {
+            Type entityType = typeof(TEntity);
+            if (entityType == typeof(Object))
+            {
+                entityType = (entity ?? new TEntity()).GetType();
+            }
+
+            try
+            {
+                return reader.AsParallel().Transform<TEntity>(t =>
+                {
+                    return _Mapper.Map((TEntity)_EntityFactory.Make(entityType, this), table, t.Reader);
+                });
             }
             finally
             {
@@ -100,16 +133,16 @@ namespace VODB.Sessions
             var command = _Connection.MakeCommand(query.Compile(ref level))
                 .SetParametersValues(args);
 
-            return ExecuteQuery<TEntity>(_Connection.ExecuteReader(command).AsParallel(), table);
+            return ParallelExecuteQuery<TEntity>(default(TEntity), _Connection.ExecuteReader(command), table);
         }
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            var table = GetTable<TEntity>();
+            var table = GetTable<TEntity>(entity);
             var command = table.GetSelectByIdCommand(_Connection);
             SetKeyValues<TEntity>(entity, table, command);
 
-            return ExecuteQuery<TEntity>(_Connection.ExecuteReader(command), table).FirstOrDefault();
+            return ExecuteQuery<TEntity>(entity, _Connection.ExecuteReader(command), table).FirstOrDefault();
         }
 
         public TEntity Insert<TEntity>(TEntity entity) where TEntity : class, new()

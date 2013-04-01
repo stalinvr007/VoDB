@@ -50,7 +50,7 @@ namespace VODB.ExpressionsToSql
             var parts = _Expression.DecodeLeft().ToList();
 
             var sb = new StringBuilder();
-            Build(sb, parts, 0, ref level);
+            Build(sb, parts, parts.Count-1, ref level);
             return sb.ToString();
         }
 

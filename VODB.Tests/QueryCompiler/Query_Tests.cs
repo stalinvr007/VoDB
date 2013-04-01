@@ -32,8 +32,15 @@ namespace VODB.Tests.QueryCompiler
 
                 query.Where(e => e.ReportsTo.EmployeeId > Param.Get<int>())
 
-            ).Returns(" Where [EmployeeId] in (Select [EmployeeId] From [Employees] Where [ReportsTo] > @p1)")
+            ).Returns(" Where [ReportsTo] in (Select [EmployeeId] From [Employees] Where [EmployeeId] > @p1)")
             .SetName("Query employee (Where ReportsTo > @p1)");
+
+            yield return MakeTestCase<Employee>(query =>
+
+                query.Where(e => e.ReportsTo.LastName == Param.Get<String>())
+
+            ).Returns(" Where [ReportsTo] in (Select [EmployeeId] From [Employees] Where [LastName] = @p1)")
+            .SetName("Query employee (Where ReportsTo.LastName = @p1)");
 
             yield return MakeTestCase<Employee>(query =>
 
@@ -49,7 +56,7 @@ namespace VODB.Tests.QueryCompiler
                 query.Where(e => e.ReportsTo.EmployeeId > Param.Get<int>())
                     .OrderBy(e => e.Region)
 
-            ).Returns(" Where [EmployeeId] in (Select [EmployeeId] From [Employees] Where [ReportsTo] > @p1) Order By [Region]")
+            ).Returns(" Where [ReportsTo] in (Select [EmployeeId] From [Employees] Where [EmployeeId] > @p1) Order By [Region]")
             .SetName("Query employee (Where ReportsTo > @p1 order by region)");
 
             yield return MakeTestCase<Employee>(query =>
@@ -98,7 +105,7 @@ namespace VODB.Tests.QueryCompiler
 
                 query.Where(e => e.ReportsTo.EmployeeId).Between(Param.Get<int>(), Param.Get<int>())
 
-            ).Returns(" Where [EmployeeId] in (Select [EmployeeId] From [Employees] Where [ReportsTo] Between @p1 And @p2)")
+            ).Returns(" Where [ReportsTo] in (Select [EmployeeId] From [Employees] Where [EmployeeId] Between @p1 And @p2)")
             .SetName("Query employee (Where ReportsTo Between)");
 
             yield return MakeTestCase<Employee>(query =>

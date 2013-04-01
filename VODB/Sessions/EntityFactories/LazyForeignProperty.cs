@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Fasterflect;
 
 namespace VODB.Sessions.EntityFactories
 {
     internal class LazyForeignProperty : IFieldInterceptor
     {
         private IInternalSession _Session;
+
+        private readonly IDictionary<MethodInfo, Object> lastResult = new Dictionary<MethodInfo, Object>();
 
         public LazyForeignProperty(IInternalSession session)
         {
@@ -20,8 +23,19 @@ namespace VODB.Sessions.EntityFactories
         {
             invocation.Proceed();
             MethodInfo method = invocation.Method;
+            if (method.Name.StartsWith("set_"))
+            {
+                return;
+            }
 
-            invocation.ReturnValue = _Session.GetById(invocation.ReturnValue);
+            object result = null;
+            if (lastResult.TryGetValue(method, out result))
+            {
+                invocation.ReturnValue = result;
+                return;
+            }
+            
+            lastResult[method] = invocation.ReturnValue = _Session.GetById(invocation.ReturnValue);
         }
 
         public bool InterceptCollections
