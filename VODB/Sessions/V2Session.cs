@@ -131,6 +131,7 @@ namespace VODB.Sessions
             var level = 0;
             var table = GetTable<TEntity>();
             var command = _Connection.MakeCommand(query.Compile(ref level))
+                .SetParameters(query.Parameters.ToArray())
                 .SetParametersValues(args);
 
             return ParallelExecuteQuery<TEntity>(default(TEntity), _Connection.ExecuteReader(command), table);
