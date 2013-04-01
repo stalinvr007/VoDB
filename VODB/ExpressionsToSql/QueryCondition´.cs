@@ -50,8 +50,50 @@ namespace VODB.ExpressionsToSql
             var parts = _Expression.DecodeLeft().ToList();
 
             var sb = new StringBuilder();
-            Build(sb, parts, parts.Count-1, ref level);
+            
+            SafePrint(sb, parts[parts.Count - 1].Field.Name);
+
+            for (int i = parts.Count - 2; i >= 0; --i)
+            {
+                var current = parts[i].Field;
+                var next = parts[i + 1].Field;
+
+                sb.Append(" in (Select [").Append(next.BindOrName)
+                .Append("] From [")
+                .Append(current.Table.Name)
+                .Append("] Where ");
+
+                SafePrint(sb, current.Name);
+            }
+
+            sb.Append(_Follows.Compile(ref level));
+
+            foreach (var value in _Expression.DecodeRight())
+            {
+                _Parameters.Add(new QueryParameter
+                {
+                    Name = "@p" + level,
+                    Value = value
+                });
+            }
+
+            foreach (var parameter in _Follows.Parameters)
+            {
+                _Parameters.Add(parameter);
+            }
+
+            for (int i = 0; i < parts.Count-1; i++)
+            {
+                sb.Append(")");
+            }
+
             return sb.ToString();
+
+        }
+
+        private StringBuilder SafePrint(StringBuilder sb, String name)
+        {
+            return sb.Append(LEFT_BRACKET).Append(name).Append(RIGHT_BRACKET);
         }
 
         private void Build(StringBuilder sb, IList<ExpressionPart> parts, int index, ref int level)

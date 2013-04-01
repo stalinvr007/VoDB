@@ -210,9 +210,17 @@ namespace VODB.Tests
                 .Returns("[CustomerId] in (Select [CustomerId] From [Customers] Where [CustomerId] = @p1)")
                 .SetName("ExpressionsToSql_Assert_Customer.CustomerId == @p1");
 
+            yield return GetCondition<Orders>(o => o.Shipper.CompanyName == "10")
+                .Returns("[ShipVia] in (Select [ShipperId] From [Shippers] Where [CompanyName] = @p1)")
+                .SetName("ExpressionsToSql_Assert_Shipper.CompanyName == @p1");
+
             yield return GetCondition<Employee>(o => o.EmployeeId == 10)
                 .Returns("[EmployeeId] = @p1")
                 .SetName("ExpressionsToSql_Assert_EmployeeId == @p1");
+
+            yield return GetCondition<Employee>(e => e.ReportsTo.FirstName == "Andrew")
+                .Returns("[ReportsTo] in (Select [EmployeeId] From [Employees] Where [FirstName] = @p1)")
+                .SetName("ExpressionsToSql_Assert_ReportsTo.FirstName = @p1");
 
             yield return GetCondition<CustomerCustomerDemo>(o => o.Demographics.CustomerTypeId == "test")
                 .Returns("[CustomerTypeId] in (Select [CustomerTypeId] From [CustomerDemographics] Where [CustomerTypeId] = @p1)")

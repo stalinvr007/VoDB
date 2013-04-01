@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using VODB.EntityTranslation;
 using VODB.Exceptions;
+using VODB.ExpressionsToSql;
 using VODB.QueryCompiler;
 using VODB.Tests.Models.Northwind;
 
@@ -171,7 +172,7 @@ namespace VODB.Tests.QueryCompiler
         }
 
         [TestCaseSource("GetEmployeeQueries")]
-        public String QueryCompiler_Assert_Result_Employee(IQuery<Employee> query)
+        public String QueryCompiler_Assert_Result_Employee(IQueryCondition query)
         {
             int level = 0;
             var result = query.Compile(ref level);
