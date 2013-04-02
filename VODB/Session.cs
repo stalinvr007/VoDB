@@ -37,9 +37,9 @@ namespace VODB
             return _InternalSession.GetAll<TEntity>();
         }
 
-        public System.Collections.Generic.IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, params Object[] args) where TEntity : class, new()
+        public System.Collections.Generic.IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery query, params Object[] args) where TEntity : class, new()
         {
-            return _InternalSession.ExecuteQuery(query, args);
+            return _InternalSession.ExecuteQuery<TEntity>(query, args);
         }
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()

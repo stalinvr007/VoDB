@@ -16,7 +16,10 @@ namespace VODB.Sessions.EntityFactories
         {
             return proxyGenerator.CreateClassProxy(type, 
                 new ProxyGenerationOptions {
-                    Selector = new InterceptorSelector(new LazyForeignProperty(session)) 
+                    Selector = new InterceptorSelector(
+                        new LazyForeignProperty(session),
+                        new LazyCollectionForeignProperty(session)
+                    ) 
                 });
         }
     }

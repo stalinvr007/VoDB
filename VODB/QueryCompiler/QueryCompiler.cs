@@ -226,7 +226,7 @@ namespace VODB.QueryCompiler
 
         public IEnumerable<TEntity> Execute(ISession session)
         {
-            return _Session.ExecuteQuery(this, Parameters.Select(p => p.Value).ToArray());
+            return _Session.ExecuteQuery<TEntity>(this, Parameters.Select(p => p.Value).ToArray());
         }
 
         public string Compile(ref int level)

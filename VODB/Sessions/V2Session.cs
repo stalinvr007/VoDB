@@ -61,13 +61,7 @@ namespace VODB.Sessions
 
         private ITable GetTable<TEntity>(TEntity entity = null) where TEntity : class, new()
         {
-            Type entityType = typeof(TEntity);
-            if (entityType == typeof(Object))
-            {
-                entityType = (entity ?? new TEntity()).GetType();
-            }
-
-            return _Translator.Translate(entityType);
+            return _Translator.Translate(GetEntityType<TEntity>(entity));
         }
 
         private static Type GetEntityType<TEntity>(TEntity entity)
@@ -89,7 +83,11 @@ namespace VODB.Sessions
             {
                 while (reader.Read())
                 {
-                    yield return _Mapper.Map((TEntity)_EntityFactory.Make(entityType, this), table, reader);
+                    yield return _Mapper.Map(
+                        (TEntity)_EntityFactory.Make(entityType, this), 
+                        table, 
+                        reader
+                    );
                 }
             }
             finally
@@ -106,7 +104,11 @@ namespace VODB.Sessions
             {
                 return reader.AsParallel().Transform<TEntity>(t =>
                 {
-                    return _Mapper.Map((TEntity)_EntityFactory.Make(entityType, this), table, t.Reader);
+                    return _Mapper.Map(
+                        (TEntity)_EntityFactory.Make(entityType, this), 
+                        table, 
+                        t.Reader
+                    );
                 });
             }
             finally
@@ -132,7 +134,7 @@ namespace VODB.Sessions
             return new QueryCompiler<TEntity>(_Translator, this);
         }
 
-        public IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, params Object[] args) where TEntity : class, new()
+        public IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery query, params Object[] args) where TEntity : class, new()
         {
             var level = 0;
             var table = GetTable<TEntity>();

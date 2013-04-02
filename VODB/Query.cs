@@ -6,13 +6,18 @@ using VODB.EntityTranslation;
 using VODB.ExpressionsToSql;
 using VODB.QueryCompiler;
 using VODB.Sessions;
+using Fasterflect;
 
 namespace VODB
 {
-    public interface IQuery<out TEntity> : IQueryCondition
+    public interface IQuery<out TEntity> : IQuery 
         where TEntity : class, new()
     {
         IEnumerable<TEntity> Execute(ISession session);
+    }
+
+    public interface IQuery : IQueryCondition
+    {
         IVodbCommand CachedCommand { get; set; }
     }
 
@@ -39,5 +44,15 @@ namespace VODB
             return new QueryCompiler<TEntity>(_Translator, func);
         }
 
+    }
+
+    internal static class InternalQuery
+    {
+        private static IEntityTranslator _Translator = new EntityTranslator();
+
+        public static IQuery Internal_Query<T>(IInternalSession session) where T : class, new()
+        {
+            return new QueryCompiler<T>(_Translator, session);
+        }
     }
 }

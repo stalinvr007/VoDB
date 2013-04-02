@@ -210,6 +210,7 @@
     <Compile Include="QueryCompiler\QueryCompiler.cs" />
     <Compile Include="Sessions\EntityFactories\IFieldInterceptor.cs" />
     <Compile Include="Sessions\EntityFactories\InterceptorSelector.cs" />
+    <Compile Include="Sessions\EntityFactories\LazyCollectionForeignProperty.cs" />
     <Compile Include="Sessions\EntityFactories\LazyForeignProperty.cs" />
     <Compile Include="Sessions\EntityFactories\ProxyCreator.cs" />
     <Compile Include="Sessions\InternalSession.cs" />

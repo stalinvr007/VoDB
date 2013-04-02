@@ -35,7 +35,7 @@ namespace VODB
         /// <param name="query">The query.</param>
         /// <returns></returns>
         /// <param name="args"></param>
-        IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, params Object[] args) where TEntity : class, new();
+        IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery query, params Object[] args) where TEntity : class, new();
 
         /// <summary>
         /// Gets the entity by Id.

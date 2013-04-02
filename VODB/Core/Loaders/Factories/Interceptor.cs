@@ -130,7 +130,7 @@ namespace VODB.Core.Loaders.Factories
                                                                        entityType,
                                                                        _Session,
                                                                        builder.Query,
-                                                                       builder.Parameters),
+                                                                       builder.Parameters)
                                                                }),
                                IsLoaded = true
                            };

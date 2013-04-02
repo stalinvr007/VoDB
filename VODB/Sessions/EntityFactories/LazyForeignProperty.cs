@@ -8,7 +8,7 @@ using Fasterflect;
 
 namespace VODB.Sessions.EntityFactories
 {
-    internal class LazyForeignProperty : IFieldInterceptor
+    class LazyForeignProperty : IFieldInterceptor
     {
         private IInternalSession _Session;
 
