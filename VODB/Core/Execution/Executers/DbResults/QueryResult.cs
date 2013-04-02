@@ -434,5 +434,11 @@ namespace VODB.Core.Execution.Executers.DbResults
 
         public DbLayer.IVodbCommand CachedCommand { get; set; }
 
+
+
+        public ExpressionsToSql.IQueryCondition WhereCompile
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

@@ -10,7 +10,7 @@ using Fasterflect;
 
 namespace VODB
 {
-    public interface IQuery<out TEntity> : IQuery 
+    public interface IQuery<out TEntity> : IQuery
         where TEntity : class, new()
     {
         IEnumerable<TEntity> Execute(ISession session);
@@ -19,6 +19,7 @@ namespace VODB
     public interface IQuery : IQueryCondition
     {
         IVodbCommand CachedCommand { get; set; }
+        IQueryCondition WhereCompile { get; }
     }
 
     public static class Param
@@ -26,6 +27,16 @@ namespace VODB
         public static TResult Get<TResult>()
         {
             return default(TResult);
+        }
+    }
+
+    public static class Select
+    {
+        private static IEntityTranslator _Translator = new EntityTranslator();
+
+        public static IQueryCompilerLevel1<TEntity> From<TEntity>() where TEntity : class, new()
+        {
+            return new QueryCompiler<TEntity>(_Translator);
         }
     }
 
@@ -43,6 +54,7 @@ namespace VODB
         {
             return new QueryCompiler<TEntity>(_Translator, func);
         }
+
 
     }
 

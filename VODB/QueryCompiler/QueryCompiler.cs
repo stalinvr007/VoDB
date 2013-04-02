@@ -191,7 +191,14 @@ namespace VODB.QueryCompiler
 
         public IQueryCompilerLevel2<TEntity> In(IEnumerable<Object> collection)
         {
-            return Add(new QueryCondition<TEntity>(_Translator, _PartialExpression, new InCondition(collection)))
+            IQueryCondition inCondition = new InCondition(collection);
+
+            if (collection is IQuery)
+            {
+                inCondition = ((IQuery)collection).WhereCompile;
+            }
+
+            return Add(new QueryCondition<TEntity>(_Translator, _PartialExpression, inCondition))
                 .AppendLastCondition();
         }
 
@@ -260,7 +267,9 @@ namespace VODB.QueryCompiler
             return (int)_Session.ExecuteScalar(sql, Parameters.ToArray());
         }
 
-
-        
+        public IQueryCondition WhereCompile
+        {
+            get { return _Query; }
+        }
     }
 }
