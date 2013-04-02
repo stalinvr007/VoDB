@@ -33,26 +33,29 @@ namespace VODB.Sessions
             _EntityFactory = entityFactory;
         }
 
+        private static QueryParameter CreateParameter<TEntity>(IField f, TEntity entity)
+        {
+            return new QueryParameter { Value = f.GetFieldFinalValue(entity), type = f.Info.PropertyType };
+        }
         private static void SetKeyValues<TEntity>(TEntity entity, ITable table, IVodbCommand command)
         {
             command.SetParametersValues(
-                table.Keys.Select(f => f.GetFieldFinalValue(entity)).ToArray()
+                table.Keys.Select(f => CreateParameter<TEntity>(f, entity))
             );
         }
 
         private static void SetFieldValues<TEntity>(TEntity entity, ITable table, IVodbCommand command)
         {
             command.SetParametersValues(
-                table.Fields.Where(f => !f.IsIdentity).Select(f => f.GetFieldFinalValue(entity)).ToArray()
+                table.Fields.Where(f => !f.IsIdentity).Select(f => CreateParameter<TEntity>(f, entity))
             );
         }
 
         private static void SetAllFieldValues<TEntity>(TEntity entity, ITable table, IVodbCommand command)
         {
             command.SetParametersValues(
-                table.Fields.Where(f => !f.IsIdentity).Select(f => f.GetFieldFinalValue(entity))
-                .Concat(table.Keys.Select(f => f.GetFieldFinalValue(entity)))
-                .ToArray()
+                table.Fields.Where(f => !f.IsIdentity).Select(f => CreateParameter<TEntity>(f, entity))
+                .Concat(table.Keys.Select(f => CreateParameter<TEntity>(f, entity)))
             );
         }
 
@@ -67,13 +70,20 @@ namespace VODB.Sessions
             return _Translator.Translate(entityType);
         }
 
-        private IEnumerable<TEntity> ExecuteQuery<TEntity>(TEntity entity, IDataReader reader, ITable table) where TEntity : class, new()
+        private static Type GetEntityType<TEntity>(TEntity entity)
+                where TEntity : class, new()
         {
-            Type entityType = typeof(TEntity);
+            var entityType = typeof(TEntity);
             if (entityType == typeof(Object))
             {
                 entityType = (entity ?? new TEntity()).GetType();
             }
+            return entityType;
+        }
+
+        private IEnumerable<TEntity> ExecuteQuery<TEntity>(TEntity entity, IDataReader reader, ITable table) where TEntity : class, new()
+        {
+            var entityType = GetEntityType<TEntity>(entity);
 
             try
             {
@@ -90,11 +100,7 @@ namespace VODB.Sessions
 
         private IEnumerable<TEntity> ParallelExecuteQuery<TEntity>(TEntity entity, IDataReader reader, ITable table) where TEntity : class, new()
         {
-            Type entityType = typeof(TEntity);
-            if (entityType == typeof(Object))
-            {
-                entityType = (entity ?? new TEntity()).GetType();
-            }
+            var entityType = GetEntityType<TEntity>(entity);
 
             try
             {
@@ -131,11 +137,13 @@ namespace VODB.Sessions
             var level = 0;
             var table = GetTable<TEntity>();
 
+            // Make or get the command.
             IVodbCommand command = query.CachedCommand ?? 
                 _Connection.MakeCommand(query.Compile(ref level))
-                    .SetParameters(query.Parameters.ToArray());
+                .SetParameters(query.Parameters);
 
-            query.CachedCommand = command.SetParametersValues(args); 
+            // Holds out the command to use later again.
+            query.CachedCommand = command.SetParametersValues(args.Select(v => new QueryParameter { Value = v })); 
 
             return ParallelExecuteQuery<TEntity>(default(TEntity), _Connection.ExecuteReader(command), table);
         }

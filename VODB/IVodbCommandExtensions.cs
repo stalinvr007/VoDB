@@ -22,15 +22,15 @@ namespace VODB
             return command;
         }
 
-        public static IVodbCommand SetParametersNames(this IVodbCommand command, params string[] names)
+        public static IVodbCommand SetParametersNames(this IVodbCommand command, IEnumerable<string> names)
         {
             command.CreateParameters(names);
             return command;
         }
 
-        public static IVodbCommand SetParametersValues(this IVodbCommand command, params object[] values)
+        public static IVodbCommand SetParametersValues(this IVodbCommand command, IEnumerable<IQueryParameter> parameters)
         {
-            command.RefreshParametersValues(values);
+            command.RefreshParametersValues(parameters);
             return command;
         }
 

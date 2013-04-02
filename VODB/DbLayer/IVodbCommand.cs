@@ -28,7 +28,7 @@ namespace VODB.DbLayer
         /// as the created parameters.
         /// </summary>
         /// <param name="values">The values.</param>
-        void RefreshParametersValues(IEnumerable<Object> values);
+        void RefreshParametersValues(IEnumerable<IQueryParameter> values);
         /// <summary>
         /// Creates the parameters with the given names and values equal to DBNull.value.
         /// </summary>

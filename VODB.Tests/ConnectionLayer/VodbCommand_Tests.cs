@@ -2,6 +2,7 @@
 using System.Collections;
 using NUnit.Framework;
 using VODB.DbLayer;
+using VODB.ExpressionsToSql;
 
 namespace VODB.Tests.ConnectionLayer
 {
@@ -25,11 +26,14 @@ namespace VODB.Tests.ConnectionLayer
                 .Returns(9)
                 .SetName("VodbCommand Execute Update employees");
 
-            yield return Make(v => 
+            yield return Make(v =>
                 {
                     return v.MakeCommand("Update Employees Set LastName = @p2 where EmployeeId = @p1")
-                        .SetParametersNames("@p1", "@p2")
-                        .SetParametersValues(1, "wow");
+                        .SetParametersNames(new[] { "@p1", "@p2" })
+                        .SetParametersValues(new[] { 
+                            new QueryParameter { Value = 1}, 
+                            new QueryParameter { Value = "wow" }
+                        });
                 })
                 .Returns(1)
                 .SetName("VodbCommand Execute Update employees with parameters");

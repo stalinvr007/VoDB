@@ -41,12 +41,23 @@ namespace VODB.DbLayer
             _Command.Parameters.Add(parameter);
         }
 
-        public void RefreshParametersValues(IEnumerable<object> values)
+        private static bool InvalidDateTime(IQueryParameter parameter)
+        {
+            return parameter.type == typeof(DateTime) && ((DateTime)parameter.Value).Year < 1753;
+        }
+        public void RefreshParametersValues(IEnumerable<IQueryParameter> parameters)
         {
             int i = -1;
-            foreach (var value in values)
+            foreach (var parameter in parameters)
             {
-                _Command.Parameters[++i].Value = value ?? DBNull.Value;
+                if (InvalidDateTime(parameter))
+                {
+                    _Command.Parameters[++i].Value = DBNull.Value;
+                }
+                else
+                {
+                    _Command.Parameters[++i].Value = parameter.Value ?? DBNull.Value;
+                }
             }
         }
 
