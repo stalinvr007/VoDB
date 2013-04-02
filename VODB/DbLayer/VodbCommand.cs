@@ -45,6 +45,15 @@ namespace VODB.DbLayer
         {
             return parameter.type == typeof(DateTime) && ((DateTime)parameter.Value).Year < 1753;
         }
+
+        private static void FinalizeParameter(Type valueType, DbParameter parameter)
+        {
+            if (valueType == typeof(Byte[])) 
+            {
+                parameter.DbType = DbType.Binary;
+            }
+        }
+
         public void RefreshParametersValues(IEnumerable<IQueryParameter> parameters)
         {
             int i = -1;
@@ -58,6 +67,8 @@ namespace VODB.DbLayer
                 {
                     _Command.Parameters[++i].Value = parameter.Value ?? DBNull.Value;
                 }
+
+                FinalizeParameter(parameter.type, _Command.Parameters[i]);
             }
         }
 

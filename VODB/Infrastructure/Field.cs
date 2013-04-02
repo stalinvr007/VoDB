@@ -55,7 +55,6 @@ namespace VODB.Infrastructure
             SetValue(entity, value);
         }
 
-
         public string BindOrName { get { return Name; } }
     }
 }

@@ -11,6 +11,7 @@ using VODB.DbLayer;
 using VODB.EntityMapping;
 using VODB.EntityTranslation;
 using VODB.Sessions;
+using VODB.Sessions.EntityFactories;
 
 namespace VODB.Tests.Sessions
 {
@@ -30,7 +31,7 @@ namespace VODB.Tests.Sessions
                 new VodbConnection(Utils.ConnectionCreator), 
                 new EntityTranslator(), 
                 new OrderedEntityMapper(), 
-                new EntityProxyFactory()
+                new ProxyCreator()
             );
         }
 

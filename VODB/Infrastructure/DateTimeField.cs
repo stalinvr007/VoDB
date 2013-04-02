@@ -1,30 +1,21 @@
 using System;
 using System.Reflection;
-using Fasterflect;
 
 namespace VODB.Infrastructure
 {
-    /// <summary>
-    /// This class is a wrapper for a IField that redefines the GetFieldFinalValue.
-    /// Resolving the GetValue recursively.
-    /// 
-    /// Removes the comparations overhead when calling this method.
-    /// </summary>
-    class BindedField : IField
+    class DateTimeField : IField
     {
         private readonly IField _Field;
 
-        public BindedField(IField field)
+        public DateTimeField(IField field)
         {
-            _Field = field;            
+            _Field = field;
         }
 
         public Object GetFieldFinalValue(object entity)
         {
-            object value = GetValue(entity);
-            return BindToField != null && value != null ? BindToField.GetValue(value) : value;
+            return GetValue(entity);
         }
-
 
         public string Name
         {
@@ -73,21 +64,14 @@ namespace VODB.Infrastructure
 
         public void SetFieldFinalValue(object entity, object value)
         {
-            if (BindToField != null)
+            if (value == DBNull.Value)
             {
-                var instance = BindToField.EntityType.CreateInstance();
-                SetValue(entity, instance);
-                
-                if (value == DBNull.Value)
-                {
-                    return;
-                }
-
-                BindToField.SetFieldFinalValue(instance, value);
+                value = null;
             }
+
+            SetValue(entity, value ?? default(DateTime));
         }
 
-
-        public string BindOrName { get { return BindToField != null ? BindToField.Name : Name; } }
+        public string BindOrName { get { return _Field.BindOrName; } }
     }
 }

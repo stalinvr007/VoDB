@@ -239,7 +239,7 @@ namespace VODB.Tests
         [TestCaseSource("GetSessions")]
         public void Session_GetAll_In_using_collection(ISession session)
         {
-            
+
             var collection = session.GetAll<Employee>()
                 .Where(m => m.EmployeeId <= 5);
 
@@ -253,7 +253,7 @@ namespace VODB.Tests
         [TestCaseSource("GetSessions")]
         public void Session_GetAll_In_using_collection_SameNames(ISession session)
         {
-            
+
             var employee = session.GetById(new Employee { EmployeeId = 5 });
 
             var employees = session.GetAll<Employee>()
@@ -266,7 +266,7 @@ namespace VODB.Tests
         [TestCaseSource("GetSessions")]
         public void Session_GetAll_In_using_collection_diffNames(ISession session)
         {
-            
+
             var orders = session.GetAll<Orders>()
                 .Where(o => o.Shipper)
                 .In(session.GetAll<Shippers>().Where(s => s.ShipperId == 2))
@@ -314,30 +314,27 @@ namespace VODB.Tests
         [TestCaseSource("GetSessions")]
         public void Session_GetById(ISession session)
         {
+            var employee = session.GetById(new Employee { EmployeeId = 1 });
 
-                var employee = session.GetById(new Employee { EmployeeId = 1 });
-
-                EntitiesAsserts.Assert_Employee_1(employee);    
-            
+            EntitiesAsserts.Assert_Employee_1(employee);
         }
 
         [TestCaseSource("GetSessions")]
         public void Session_Exists(ISession session)
         {
 
-                Assert.IsTrue(session.Exists(new Employee { EmployeeId = 1 }));
-                Assert.IsTrue(session.Exists(new Employee { EmployeeId = 2 }));
-                Assert.IsTrue(session.Exists(new Employee { EmployeeId = 3 }));
+            Assert.IsTrue(session.Exists(new Employee { EmployeeId = 1 }));
+            Assert.IsTrue(session.Exists(new Employee { EmployeeId = 2 }));
+            Assert.IsTrue(session.Exists(new Employee { EmployeeId = 3 }));
 
-                Assert.IsFalse(session.Exists(new Employee { EmployeeId = 123123 }));
-            
+            Assert.IsFalse(session.Exists(new Employee { EmployeeId = 123123 }));
+
         }
 
         [TestCaseSource("GetSessions")]
         public void Session_GetById_Territories(ISession session)
         {
-            var employee = session.GetById(
-                new Employee { EmployeeId = 1 });
+            var employee = session.GetById(new Employee { EmployeeId = 1 });
 
             Assert.AreEqual(2, employee.Territories.Count());
 
@@ -414,6 +411,7 @@ namespace VODB.Tests
 
                     var alien = session.GetById(sergio);
 
+                    Assert.That(alien, Is.Not.Null);
                     Assert.AreEqual("Alien", alien.FirstName);
                 }
             );

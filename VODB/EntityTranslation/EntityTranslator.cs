@@ -47,11 +47,15 @@ namespace VODB.EntityTranslation
             table.EntityType = entityType;
 
             table.Fields = MakeFields(entityType, table);
+            table.Fields = table.Fields
+                .Select(f => SetFieldBindMember(this, f.Info, (Field)f))
+                .Select(WrapperDateTime).ToList();
 
-            table.Fields = table.Fields.Select(f => SetFieldBindMember(this, f.Info, (Field)f)).ToList();
 
             table.Keys = table.Fields
                 .Where(f => f.IsKey).ToList();
+
+            table.IdentityField = table.Keys.FirstOrDefault(f => f.IsIdentity);
 
             Parallel.Invoke(
 
@@ -124,7 +128,12 @@ namespace VODB.EntityTranslation
             }
 
             return field;
+        }
 
+        private IField WrapperDateTime(IField field)
+        {
+            return field.Info.PropertyType == typeof(DateTime) ?
+                new DateTimeField(field) : field;
         }
 
         private static Field MakeField(Type entityType, PropertyInfo item)

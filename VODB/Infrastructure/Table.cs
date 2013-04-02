@@ -58,7 +58,7 @@ namespace VODB.Infrastructure
         {
             if (IdentityField != null)
             {
-                IdentityField.SetFieldFinalValue(entity, value);
+                IdentityField.SetFieldFinalValue(entity, Convert.ChangeType(value, IdentityField.Info.PropertyType));
             }
         }
 
