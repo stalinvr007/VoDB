@@ -431,5 +431,8 @@ namespace VODB.Core.Execution.Executers.DbResults
                 _Session.Close();
             }
         }
+
+        public DbLayer.IVodbCommand CachedCommand { get; set; }
+
     }
 }

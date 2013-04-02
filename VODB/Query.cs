@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using VODB.Core.Execution.Executers.DbResults;
+using VODB.DbLayer;
 using VODB.EntityTranslation;
 using VODB.ExpressionsToSql;
 using VODB.QueryCompiler;
@@ -12,6 +13,7 @@ namespace VODB
         where TEntity : class, new()
     {
         IEnumerable<TEntity> Execute(ISession session);
+        IVodbCommand CachedCommand { get; set; }
     }
 
     public static class Param

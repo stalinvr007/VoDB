@@ -6,5 +6,6 @@ namespace VODB.ExpressionsToSql
     {
         String Name { get; }
         Object Value { get; }
+        Type type { get; }
     }
 }

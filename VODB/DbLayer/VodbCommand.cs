@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VODB.Core.Execution.Executers.DbResults;
+using VODB.ExpressionsToSql;
 
 namespace VODB.DbLayer
 {
@@ -19,6 +20,13 @@ namespace VODB.DbLayer
             parameter.ParameterName = name;
             parameter.Value = value;
             return parameter;
+        }
+
+        public void AddParameter(IQueryParameter parameter)
+        {
+            _Command.Parameters.Add(
+                InternalCreateParameter(parameter.Name, parameter.Value)
+            );
         }
 
         public void CreateParameter(String name, Object value)
@@ -84,6 +92,8 @@ namespace VODB.DbLayer
         {
             return _Command.ExecuteScalar();
         }
+
+
 
     }
 }

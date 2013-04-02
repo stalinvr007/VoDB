@@ -130,9 +130,12 @@ namespace VODB.Sessions
         {
             var level = 0;
             var table = GetTable<TEntity>();
-            var command = _Connection.MakeCommand(query.Compile(ref level))
-                .SetParameters(query.Parameters.ToArray())
-                .SetParametersValues(args);
+
+            IVodbCommand command = query.CachedCommand ?? 
+                _Connection.MakeCommand(query.Compile(ref level))
+                    .SetParameters(query.Parameters.ToArray());
+
+            query.CachedCommand = command.SetParametersValues(args); 
 
             return ParallelExecuteQuery<TEntity>(default(TEntity), _Connection.ExecuteReader(command), table);
         }
@@ -231,21 +234,21 @@ namespace VODB.Sessions
         }
 
 
-        public int ExecuteNonQuery(string command, params IQueryParameter[] args)
+        public int ExecuteNonQuery(string command, IEnumerable<IQueryParameter> args)
         {
             return _Connection.ExecuteNonQuery(
                 _Connection.MakeCommand(command).SetParameters(args)
             );
         }
 
-        public IDataReader ExecuteReader(string command, params IQueryParameter[] args)
+        public IDataReader ExecuteReader(string command, IEnumerable<IQueryParameter> args)
         {
             return _Connection.ExecuteReader(
                 _Connection.MakeCommand(command).SetParameters(args)
             );
         }
 
-        public object ExecuteScalar(string command, params IQueryParameter[] args)
+        public object ExecuteScalar(string command, IEnumerable<IQueryParameter> args)
         {
             return _Connection.ExecuteScalar(
                 _Connection.MakeCommand(command).SetParameters(args)

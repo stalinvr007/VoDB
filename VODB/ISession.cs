@@ -96,20 +96,20 @@ namespace VODB
         /// </summary>
         /// <param name="command">The command.</param>
         /// <returns>The number of records afected by the command.</returns>
-        int ExecuteNonQuery(String command, params IQueryParameter[] args);
+        int ExecuteNonQuery(String command, IEnumerable<IQueryParameter> args);
 
         /// <summary>
         /// Executes the command.
         /// </summary>
         /// <param name="command">The command.</param>
         /// <returns>A DataReader with the result</returns>
-        IDataReader ExecuteReader(String command, params IQueryParameter[] args);
+        IDataReader ExecuteReader(String command, IEnumerable<IQueryParameter> args);
 
         /// <summary>
         /// Executes the command.
         /// </summary>
         /// <param name="command">The command.</param>
         /// <returns>A simgle value.</returns>
-        object ExecuteScalar(String command, params IQueryParameter[] args);
+        object ExecuteScalar(String command, IEnumerable<IQueryParameter> args);
     }
 }

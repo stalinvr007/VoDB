@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using VODB.Core;
@@ -247,17 +248,17 @@ namespace VODB.Sessions
         }
 
 
-        public int ExecuteNonQuery(string command, params IQueryParameter[] args)
+        public int ExecuteNonQuery(string command, IEnumerable<IQueryParameter> args)
         {
             throw new NotImplementedException();
         }
 
-        public IDataReader ExecuteReader(string command, params IQueryParameter[] args)
+        public IDataReader ExecuteReader(string command, IEnumerable<IQueryParameter> args)
         {
             throw new NotImplementedException();
         }
 
-        public object ExecuteScalar(string command, params IQueryParameter[] args)
+        public object ExecuteScalar(string command, IEnumerable<IQueryParameter> args)
         {
             throw new NotImplementedException();
         }

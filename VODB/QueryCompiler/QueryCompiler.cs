@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Collections;
 using VODB.ExpressionsToSql;
 using VODB.EntityTranslation;
+using VODB.DbLayer;
 
 namespace VODB.QueryCompiler
 {
@@ -30,6 +31,8 @@ namespace VODB.QueryCompiler
         private String _CompiledQuery = null;
         private int _ConditionCount = -1;
         private IInternalSession _Session;
+
+        public IVodbCommand CachedCommand { get; set; }
 
         public QueryCompiler(IEntityTranslator translator, Func<IQueryCompilerLevel1<TEntity>, IEnumerable<TEntity>> func)
             : this(translator)
@@ -232,17 +235,15 @@ namespace VODB.QueryCompiler
             {
                 return _CompiledQuery;
             }
-            
+
+            CachedCommand = null;
             _ConditionCount = _Query.Count();
             return _CompiledQuery = _Translator.Translate(typeof(TEntity)).SqlSelect + _Query.Compile(ref level);
         }
 
         public IEnumerable<IQueryParameter> Parameters
         {
-            get
-            {
-                return _Query.Parameters;
-            }
+            get { return _Query.Parameters; }
         }
 
         #endregion
@@ -258,5 +259,8 @@ namespace VODB.QueryCompiler
             string sql = _Translator.Translate(typeof(TEntity)).SqlCount + _Query.Compile(ref level);
             return (int)_Session.ExecuteScalar(sql, Parameters.ToArray());
         }
+
+
+        
     }
 }
