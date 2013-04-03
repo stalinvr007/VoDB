@@ -158,8 +158,10 @@
     <Compile Include="ExpressionsToSql\IQueryParameterHelper.cs" />
     <Compile Include="ExpressionsToSql\LikeCondition.cs" />
     <Compile Include="ExpressionsToSql\OrderByCondition.cs" />
+    <Compile Include="Expressions\ExpressionBreaker.cs" />
     <Compile Include="Expressions\ExpressionDecoder.cs" />
     <Compile Include="Expressions\ExpressionPart.cs" />
+    <Compile Include="Expressions\IExpressionBreaker.cs" />
     <Compile Include="Expressions\IExpressionDecoder.cs" />
     <Compile Include="ExpressionsToSql\IQueryCondition.cs" />
     <Compile Include="ExpressionsToSql\IQueryComposite.cs" />
@@ -168,6 +170,7 @@
     <Compile Include="ExpressionsToSql\QueryCondition´.cs" />
     <Compile Include="ExpressionsToSql\QueryParameter.cs" />
     <Compile Include="Exceptions\UnableToGetTheFirstMember.cs" />
+    <Compile Include="Expressions\IExpressionPiece.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\ExpressionsExtensions.cs" />
     <Compile Include="Exceptions\VodbException.cs" />

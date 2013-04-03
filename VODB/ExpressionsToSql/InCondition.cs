@@ -6,21 +6,26 @@ using System.Linq;
 namespace VODB.ExpressionsToSql
 {
 
-    class InCondition : IQueryCondition
+    class InCondition<TField> : IQueryCondition
     {
 
         private ICollection<IQueryParameter> _Parameters;
-        private readonly Object[] _Values;
-        public InCondition(Object[] values)
+        private readonly TField[] _Values;
+        public InCondition(TField[] values)
         {
             _Values = values;
             _Parameters = new List<IQueryParameter>();
         }
 
-        public InCondition(IEnumerable<Object> values)
+        public InCondition(IEnumerable<TField> values)
         {
             _Values = values.ToArray();
             _Parameters = new List<IQueryParameter>();
+        }
+
+        public InCondition(QueryCondition<TField> queryCondition)
+        {
+            throw new NotImplementedException();
         }
 
         public string Compile(ref int level)

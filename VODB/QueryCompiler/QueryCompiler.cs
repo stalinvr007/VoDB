@@ -189,9 +189,9 @@ namespace VODB.QueryCompiler
                 .AppendLastCondition();
         }
 
-        public IQueryCompilerLevel2<TEntity> In(IEnumerable<Object> collection)
+        public IQueryCompilerLevel2<TEntity> In<TField>(IEnumerable<TField> collection)
         {
-            IQueryCondition inCondition = new InCondition(collection);
+            IQueryCondition inCondition = new InCondition<TField>(collection);
 
             if (collection is IQuery)
             {

@@ -16,7 +16,7 @@ namespace VODB.EntityTranslation
     class EntityTranslator : IEntityTranslator
     {
 
-        private static IDictionary<Type, ITable> tables = new Dictionary<Type, ITable>();
+        private static IDictionary<Type, Table> tables = new Dictionary<Type, Table>();
 
         private static IList<Type> fieldAttributes = new List<Type>()
         {
@@ -40,9 +40,16 @@ namespace VODB.EntityTranslation
 
         public ITable Translate(Type entityType)
         {
+            Table table;
+
+            if (tables.TryGetValue(entityType, out table))
+            {
+                return table;
+            }
+
             var dbTable = entityType.Attribute<DbTableAttribute>();
 
-            var table = new Table(dbTable != null ? dbTable.TableName : entityType.Name);
+            table = new Table(dbTable != null ? dbTable.TableName : entityType.Name);
 
             table.EntityType = entityType;
 
@@ -69,7 +76,7 @@ namespace VODB.EntityTranslation
 
             );
                         
-            return table;
+            return tables[entityType] = table;
         }
 
         private IList<IField> MakeFields(Type entityType, ITable table)

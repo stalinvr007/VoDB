@@ -1,39 +1,32 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using VODB.Core;
 using VODB.EntityTranslation;
 using VODB.Exceptions;
 
 namespace VODB.Expressions
 {
-
-    class ExpressionDecoder<TEntity, TReturnValue> : IExpressionDecoder
+    class ExpressionBreaker : IExpressionBreaker
     {
-        private readonly LambdaExpression _Expression;
         private readonly IEntityTranslator _Translator;
 
-        public ExpressionDecoder(IEntityTranslator translator, Expression<Func<TEntity, TReturnValue>> expression)
+        public ExpressionBreaker(IEntityTranslator translator)
         {
             _Translator = translator;
-            _Expression = expression;
         }
 
-        public Boolean HasParameters
+        /// <summary>
+        /// Breaks the expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <typeparam name="TReturnValue">The type of the return value.</typeparam>
+        /// <param name="expression">The expression.</param>
+        /// <returns></returns>
+        public IEnumerable<IExpressionPiece> BreakExpression(LambdaExpression expression)
         {
-            get { return _Expression.Body is BinaryExpression; }
-        }
-
-        public ExpressionType NodeType
-        {
-            get { return _Expression.Body.NodeType; }
-        }
-
-        public IEnumerable<ExpressionPiece> DecodeLeft()
-        {
-            var current = GetFirstMember(_Expression);
+            var current = GetFirstMember(expression);
 
             while (current != null)
             {
@@ -59,7 +52,7 @@ namespace VODB.Expressions
             }
         }
 
-        private MemberExpression GetFirstMember(LambdaExpression expression)
+        private static MemberExpression GetFirstMember(LambdaExpression expression)
         {
             if (expression.Body is BinaryExpression)
                 return ((BinaryExpression)expression.Body).Left as MemberExpression;
@@ -73,24 +66,9 @@ namespace VODB.Expressions
             throw new UnableToGetTheFirstMember(expression.ToString());
         }
 
-        public IEnumerable<Object> DecodeRight()
+        public override string ToString()
         {
-            var exp = _Expression.Body as BinaryExpression;
-
-            if (exp == null)
-            {
-                return new Object[] { };
-            }
-
-            var constantExpression = exp.Right as ConstantExpression;
-            if (constantExpression != null)
-            {
-                return new[] { constantExpression.Value };
-            }
-
-            return new[] { Expression.Lambda(exp.Right).Compile().DynamicInvoke() };
+            return "V2.0";
         }
-
     }
-
 }

@@ -303,15 +303,15 @@ namespace VODB.Core.Execution.Executers.DbResults
         {
             return Like(value, token);
         }
-
-        public IQueryCompilerLevel2<TEntity> In(IEnumerable<object> collection)
-        {
-            return In<Object>(collection);
-        }
-
+        
         public IQueryCompilerLevel2<TEntity> Between(object firstValue, object secondValue)
         {
             return Between<Object>(firstValue, secondValue);
+        }
+
+        IQueryCompilerLevel2<TEntity> IQueryCompilerLevel4<TEntity>.In<TField>(IEnumerable<TField> collection)
+        {
+            return In<TField>(collection);
         }
 
         public IDbAndQueryResult<TEntity> In<TField>(IEnumerable<TField> args)
@@ -440,5 +440,8 @@ namespace VODB.Core.Execution.Executers.DbResults
         {
             get { throw new NotImplementedException(); }
         }
+
+
+        
     }
 }

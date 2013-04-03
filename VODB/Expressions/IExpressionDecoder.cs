@@ -20,7 +20,7 @@ namespace VODB.Expressions
         /// Decodes the left part of the expression.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<ExpressionPart> DecodeLeft();
+        IEnumerable<ExpressionPiece> DecodeLeft();
         /// <summary>
         /// Decodes the right part of the expression.
         /// </summary>

@@ -96,7 +96,7 @@ namespace VODB.ExpressionsToSql
             return sb.Append(LEFT_BRACKET).Append(name).Append(RIGHT_BRACKET);
         }
 
-        private void Build(StringBuilder sb, IList<ExpressionPart> parts, int index, ref int level)
+        private void Build(StringBuilder sb, IList<ExpressionPiece> parts, int index, ref int level)
         {
 
             if (index == parts.Count - 1)

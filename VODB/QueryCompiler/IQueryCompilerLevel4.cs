@@ -29,9 +29,10 @@ namespace VODB.QueryCompiler
         /// <summary>
         /// filters the field withing the specified in the collection.
         /// </summary>
+        /// <typeparam name="TField">The type of the field.</typeparam>
         /// <param name="collection">The collection.</param>
         /// <returns></returns>
-        IQueryCompilerLevel2<TEntity> In(IEnumerable<Object> collection);
+        IQueryCompilerLevel2<TEntity> In<TField>(IEnumerable<TField> collection);
 
         /// <summary>
         /// Filters the field using the between condition.

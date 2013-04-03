@@ -22,10 +22,10 @@ namespace VODB.Tests
         [Test]
         public void Expression_Decoder()
         {
-            var parts = new ExpressionPart[] {
-                new ExpressionPart { PropertyName = "EmployeeId", EntityType = typeof(Employee), EntityTable = translator.Translate(typeof(Employee)) },
-                new ExpressionPart { PropertyName = "ReportsTo", EntityType = typeof(Employee), EntityTable = translator.Translate(typeof(Employee)) },
-                new ExpressionPart { PropertyName = "Employee", EntityType = typeof(Orders), EntityTable = translator.Translate(typeof(Orders)) }
+            var parts = new ExpressionPiece[] {
+                new ExpressionPiece { PropertyName = "EmployeeId", EntityType = typeof(Employee), EntityTable = translator.Translate(typeof(Employee)) },
+                new ExpressionPiece { PropertyName = "ReportsTo", EntityType = typeof(Employee), EntityTable = translator.Translate(typeof(Employee)) },
+                new ExpressionPiece { PropertyName = "Employee", EntityType = typeof(Orders), EntityTable = translator.Translate(typeof(Orders)) }
             };
 
             var exp = new ExpressionDecoder<Orders, Boolean>(translator, o => o.Employee.ReportsTo.EmployeeId == 3);
@@ -45,12 +45,12 @@ namespace VODB.Tests
         [Test]
         public void Expression_ReturnsObject_Decoder()
         {
-            var parts = new ExpressionPart[] {
-                new ExpressionPart { PropertyName = "ReportsTo", EntityType = typeof(Employee), EntityTable = translator.Translate(typeof(Employee)) },
-                new ExpressionPart { PropertyName = "Employee", EntityType = typeof(Orders), EntityTable = translator.Translate(typeof(Orders)) }
+            var parts = new ExpressionPiece[] {
+                new ExpressionPiece { PropertyName = "ReportsTo", EntityType = typeof(Employee), EntityTable = translator.Translate(typeof(Employee)) },
+                new ExpressionPiece { PropertyName = "Employee", EntityType = typeof(Orders), EntityTable = translator.Translate(typeof(Orders)) }
             };
 
-            var exp = new ExpressionDecoder<Orders, Object>(translator, o => o.Employee.ReportsTo);
+            var exp = new ExpressionDecoder<Orders, Employee>(translator, o => o.Employee.ReportsTo);
             var decoded = exp.DecodeLeft().ToList();
             Assert.AreEqual(2, decoded.Count);
 
@@ -65,12 +65,12 @@ namespace VODB.Tests
         [Test]
         public void Expression_ReturnsProperty_Decoder()
         {
-            var parts = new ExpressionPart[] {
-                new ExpressionPart { PropertyName = "EmployeeId", EntityType = typeof(Employee), EntityTable = translator.Translate(typeof(Employee)) },
-                new ExpressionPart { PropertyName = "Employee", EntityType = typeof(Orders), EntityTable = translator.Translate(typeof(Orders)) }
+            var parts = new ExpressionPiece[] {
+                new ExpressionPiece { PropertyName = "EmployeeId", EntityType = typeof(Employee), EntityTable = translator.Translate(typeof(Employee)) },
+                new ExpressionPiece { PropertyName = "Employee", EntityType = typeof(Orders), EntityTable = translator.Translate(typeof(Orders)) }
             };
 
-            var exp = new ExpressionDecoder<Orders, Object>(translator, o => o.Employee.EmployeeId);
+            var exp = new ExpressionDecoder<Orders, int>(translator, o => o.Employee.EmployeeId);
             var decoded = exp.DecodeLeft().ToList();
             Assert.AreEqual(2, decoded.Count);
 
@@ -122,7 +122,24 @@ namespace VODB.Tests
         {
             var level = 0;
             var query = new QueryCondition<Orders>(translator, o => o.OrderId,
-                new InCondition(new Object[] { 1, 2, 3, 4 }));
+                new InCondition<int>(new[] { 1, 2, 3, 4 }));
+
+            Assert.That(query.Compile(ref level), Is.EqualTo("[OrderId] In (@p1, @p2, @p3, @p4)"));
+            Assert.That(query.Parameters.Count(), Is.EqualTo(4));
+
+            var i = 0;
+            foreach (var parameter in query.Parameters)
+            {
+                Assert.That(parameter.Name, Is.EqualTo("@p" + ++i));
+            }
+        }
+
+        [Test]
+        public void ExpressionToSql_InCondition_InnerCondition()
+        {
+            var level = 0;
+            var query = new QueryCondition<Orders>(translator, o => o.Employee,
+                new InCondition<Employee>(new QueryCondition<Employee>(translator, e => e.EmployeeId == 0)));
 
             Assert.That(query.Compile(ref level), Is.EqualTo("[OrderId] In (@p1, @p2, @p3, @p4)"));
             Assert.That(query.Parameters.Count(), Is.EqualTo(4));
