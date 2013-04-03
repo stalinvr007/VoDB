@@ -26,6 +26,11 @@ namespace VODB.Expressions
         /// <returns></returns>
         public IEnumerable<IExpressionPiece> BreakExpression(LambdaExpression expression)
         {
+            return BreakExpression(_Translator, expression).Reverse();
+        }
+
+        private static IEnumerable<IExpressionPiece> BreakExpression(IEntityTranslator translator, LambdaExpression expression)
+        {
             var current = GetFirstMember(expression);
 
             while (current != null)
@@ -37,7 +42,7 @@ namespace VODB.Expressions
                 };
 
                 // Gets the table for this entity type.
-                part.EntityTable = _Translator.Translate(part.EntityType);
+                part.EntityTable = translator.Translate(part.EntityType);
 
                 // Gets the field used in this expression part.
                 part.Field = part.EntityTable

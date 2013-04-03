@@ -97,9 +97,7 @@ namespace VODB.Core.Loaders.Factories
         {
             if (invocation.Method.ReturnType.IsGenericType)
             {
-                // Todo: this code is kind of strange... Aply some refectoring strategy here.
-
-
+                
                 Table callerTable = Engine.GetTable(invocation.Method.ReflectedType);
                 Field field = callerTable.FindCollectionField(fieldName);
 

@@ -11,51 +11,41 @@ using VODB.Exceptions;
 
 namespace VODB.Tests.QueryCompiler
 {
+
     [TestFixture]
     public class ExpressionBreaker_Tests
     {
-        private static IEntityTranslator _Translator = new EntityTranslator();
-        private static IExpressionBreaker _Breaker = new ExpressionBreaker(_Translator);
+
+        private static IExpressionBreaker _Breaker = new ExpressionBreaker(Utils.Translator);
 
         private IEnumerable GetExpressions()
         {
             yield return MakeExpression<Employee, int>(e => e.EmployeeId, MakePiece<Employee>("EmployeeId"));
 
             yield return MakeExpression<Employee, Employee>(e => e.ReportsTo, MakePiece<Employee>("ReportsTo"));
-            
-            yield return MakeExpression<Employee, int>(e => e.ReportsTo.EmployeeId, MakePiece<Employee>("EmployeeId"), MakePiece<Employee>("ReportsTo"));
-            
-            yield return MakeExpression<Orders, int>(e => e.Employee.ReportsTo.EmployeeId, MakePiece<Employee>("EmployeeId"), MakePiece<Employee>("ReportsTo"), MakePiece<Orders>("Employee"));
-            
-            yield return MakeExpression<Orders, Boolean>(e => e.Employee.ReportsTo.EmployeeId == 0, MakePiece<Employee>("EmployeeId"), MakePiece<Employee>("ReportsTo"), MakePiece<Orders>("Employee"));
-            
-            yield return MakeExpression<Orders, String>(e => e.Employee.ReportsTo.EmployeeId.ToString(), MakePiece<Employee>("EmployeeId"), MakePiece<Employee>("ReportsTo"), MakePiece<Orders>("Employee"))
+
+            yield return MakeExpression<Employee, int>(e => e.ReportsTo.EmployeeId, MakePiece<Employee>("ReportsTo"), MakePiece<Employee>("EmployeeId"));
+
+            yield return MakeExpression<Orders, int>(e => e.Employee.ReportsTo.EmployeeId, MakePiece<Orders>("Employee"), MakePiece<Employee>("ReportsTo"), MakePiece<Employee>("EmployeeId"));
+
+            yield return MakeExpression<Orders, Boolean>(e => e.Employee.ReportsTo.EmployeeId == 0, MakePiece<Orders>("Employee"), MakePiece<Employee>("ReportsTo"), MakePiece<Employee>("EmployeeId"));
+
+            yield return MakeExpression<Orders, String>(e => e.Employee.ReportsTo.EmployeeId.ToString())
                 .Throws(typeof(UnableToGetTheFirstMember));
 
-            yield return MakeExpression<Orders, String>(e => e.Employee.ReportsTo.Address, MakePiece<Employee>("Address"), MakePiece<Employee>("ReportsTo"), MakePiece<Orders>("Employee"));
+            yield return MakeExpression<Orders, String>(e => e.Employee.ReportsTo.Address, MakePiece<Orders>("Employee"), MakePiece<Employee>("ReportsTo"), MakePiece<Employee>("Address"));
 
-            yield return MakeExpression<OrderDetails, String>(e => e.Order.Employee.ReportsTo.FirstName, MakePiece<Employee>("FirstName"), MakePiece<Employee>("ReportsTo"), MakePiece<Orders>("Employee"), MakePiece<OrderDetails>("Order"));
+            yield return MakeExpression<OrderDetails, String>(e => e.Order.Employee.ReportsTo.FirstName, MakePiece<OrderDetails>("Order"), MakePiece<Orders>("Employee"), MakePiece<Employee>("ReportsTo"), MakePiece<Employee>("FirstName"));
         }
 
-        private TestCaseData MakeExpression<TEntity, TReturnValue>(
-            Expression<Func<TEntity, TReturnValue>> expression,
-            params IExpressionPiece[] pieces)
+        private TestCaseData MakeExpression<TEntity, TReturnValue>(Expression<Func<TEntity, TReturnValue>> expression, params IExpressionPiece[] pieces)
         {
             return new TestCaseData(_Breaker, expression, pieces);
         }
 
         private IExpressionPiece MakePiece<TEntity>(String propertyName)
         {
-            var type = typeof(TEntity);
-            var table = _Translator.Translate(type);
-
-            return new ExpressionPiece
-            {
-                EntityType = type,
-                EntityTable = table,
-                PropertyName = propertyName,
-                Field = table.Fields.First(f => f.Info.Name == propertyName)
-            };
+            return Utils.MakePiece<TEntity>(propertyName);
         }
 
         [TestCaseSource("GetExpressions")]
