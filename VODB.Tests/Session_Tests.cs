@@ -332,16 +332,6 @@ namespace VODB.Tests
         }
 
         [TestCaseSource("GetSessions")]
-        public void Session_GetById_Territories(ISession session)
-        {
-            var employee = session.GetById(new Employee { EmployeeId = 1 });
-
-            Assert.AreEqual(2, employee.Territories.Count());
-
-            EntitiesAsserts.Assert_Employee_1(employee);
-        }
-
-        [TestCaseSource("GetSessions")]
         public void Session_GetById_ReportsTo(ISession session)
         {
             var employee = session.GetById(

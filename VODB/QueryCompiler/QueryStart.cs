@@ -19,21 +19,20 @@ namespace VODB.QueryCompiler
         protected static IExpressionBreaker _Breaker = new ExpressionBreaker(_Translator);
 
         public abstract IQueryCompilerLevel1<TEntity> From<TEntity>() where TEntity : class, new();
+
+        internal static IQueryCompilerLevel1<TEntity> From<TEntity>(IInternalSession session) where TEntity : class, new()
+        {
+            return new SelectAllFrom<TEntity>(_Translator, _Breaker, session);
+        }
+
     }
 
     class All : QueryStart
     {
         public override IQueryCompilerLevel1<TEntity> From<TEntity>()
         {
-            return new SelectAllFrom<TEntity>(_Translator, _Breaker);
+            return new SelectAllFrom<TEntity>(_Translator, _Breaker, null);
         }
     }
 
-    class Count : QueryStart
-    {
-        public override IQueryCompilerLevel1<TEntity> From<TEntity>()
-        {
-            return new SelectCountFrom<TEntity>(_Translator, _Breaker);
-        }
-    }
 }

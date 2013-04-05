@@ -5,6 +5,7 @@ using System.Text;
 using VODB.Expressions;
 using VODB.ExpressionsToSql;
 using VODB.Infrastructure;
+using VODB.Exceptions;
 
 namespace VODB.QueryCompiler.ExpressionPiecesToSql
 {

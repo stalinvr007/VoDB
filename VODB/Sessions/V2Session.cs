@@ -131,7 +131,7 @@ namespace VODB.Sessions
 
         public IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new()
         {
-            return Select.All.From<TEntity>();
+            return QueryStart.From<TEntity>(this);
         }
 
         public IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery query, params Object[] args) where TEntity : class, new()

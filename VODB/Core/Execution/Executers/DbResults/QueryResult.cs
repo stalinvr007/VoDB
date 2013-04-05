@@ -55,6 +55,8 @@ namespace VODB.Core.Execution.Executers.DbResults
         public VODB.Infrastructure.ITable Table { get; private set; }
         public ISqlCompiler SqlCompiler { get; private set; }
 
+        public Func<Object, String> AddParameter { get; set; }
+
         public QueryResult(IInternalSession session, IEntityLoader loader, IEntityFactory entityFactory)
         {
             _EntityFactory = entityFactory;
@@ -110,7 +112,7 @@ namespace VODB.Core.Execution.Executers.DbResults
             return builder;
         }
 
-        private String AddParameter(Field field, Object value)
+        private String AddFieldParameter(Field field, Object value)
         {
             string paramName = String.Format("@{0}db{1}", field.FieldName, _Parameters.Count);
             _Parameters.Add(new KeyValuePair<Key, Object>(new Key(field, paramName), value));
@@ -283,7 +285,7 @@ namespace VODB.Core.Execution.Executers.DbResults
             foreach (TField arg in args)
             {
                 _whereCondition
-                    .Append(AddParameter(_FilterField, arg))
+                    .Append(AddFieldParameter(_FilterField, arg))
                     .Append(", ");
             }
 
@@ -302,8 +304,8 @@ namespace VODB.Core.Execution.Executers.DbResults
             _whereCondition
                 .Append(_FilterField.FieldName)
                 .AppendFormat(" Between {0} And {1}",
-                              AddParameter(_FilterField, firstValue),
-                              AddParameter(_FilterField, secondValue));
+                              AddFieldParameter(_FilterField, firstValue),
+                              AddFieldParameter(_FilterField, secondValue));
 
             AppendToConditions(_whereCondition);
             return this;

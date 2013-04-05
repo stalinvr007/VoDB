@@ -12,11 +12,11 @@ namespace VODB.QueryCompiler.ExpressionPiecesToSql
     {
         private readonly ISqlCompiler _FirstParameter;
         private readonly ISqlCompiler _SecondParameter;
-
-        public BetweenCompiler(ISqlCompiler firstParameter, ISqlCompiler secondParameter)
+        
+        public BetweenCompiler(ISqlCompiler parameterCompiler, ISqlCompiler secondParameter)
         {
             _SecondParameter = secondParameter;
-            _FirstParameter = firstParameter;
+            _FirstParameter = parameterCompiler;
         }
 
         public String Compile()

@@ -23,8 +23,9 @@ namespace VODB
         ITable Table { get; }
         IVodbCommand CachedCommand { get; set; }
         IQueryCondition WhereCompile { get; }
-
         ISqlCompiler SqlCompiler { get; }
+
+        Func<Object, String> AddParameter { get; set; }
     }
 
     public static class Param
@@ -38,10 +39,8 @@ namespace VODB
     public static class Select
     {
         private static IQueryStart _All = new All();
-        private static IQueryStart _Count = new Count();
 
         public static IQueryStart All { get { return _All; } }
-        public static IQueryStart Count { get { return _Count; } }
     }
 
 }

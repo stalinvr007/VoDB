@@ -4,40 +4,51 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using VODB.Expressions;
+using VODB.ExpressionsToSql;
 
 namespace VODB.QueryCompiler.ExpressionPiecesToSql
 {
     class ParameterCompiler : ISqlCompiler
     {
-        private readonly Func<int> _GetNumber;
         private readonly ExpressionType _NodeType;
+        private readonly Func<Object, String> _ParameterAdder;
+        private readonly Object _Value;
         
-        public ParameterCompiler(Func<int> getNumber, ExpressionType nodeType)
+        public ParameterCompiler(Func<Object, String> parameterAdder, ExpressionType nodeType, Object value)
         {
+            _Value = value;
+            _ParameterAdder = parameterAdder;
             _NodeType = nodeType;
-            _GetNumber = getNumber;
         }
 
-        public ParameterCompiler(Func<int> getNumber)
+        public ParameterCompiler(Func<Object, String> parameterAdder, Object value)
+            : this(parameterAdder, ExpressionType.Equal, value)
         {
-            _GetNumber = getNumber;
-            _NodeType = ExpressionType.Parameter;
+
+        }
+
+        public ParameterCompiler(Func<Object, String> parameterAdder, Object value, ExpressionType type)
+            : this(parameterAdder, type, value)
+        {
+
         }
 
         public String Compile()
         {
+            string parameter = _ParameterAdder(_Value);
+
             switch (_NodeType)
             {
-                case ExpressionType.Equal: return " = @p" + _GetNumber();
-                case ExpressionType.GreaterThan: return " > @p" + _GetNumber();
-                case ExpressionType.GreaterThanOrEqual: return " >= @p" + _GetNumber();
-                case ExpressionType.LessThan: return " < @p" + _GetNumber();
-                case ExpressionType.LessThanOrEqual: return " <= @p" + _GetNumber();
-                case ExpressionType.NotEqual: return " != @p" + _GetNumber();
-                case ExpressionType.Parameter: return "@p" + _GetNumber();
-                default: return " = @p" + _GetNumber();
+                case ExpressionType.Equal: return " = " + parameter;
+                case ExpressionType.GreaterThan: return " > " + parameter;
+                case ExpressionType.GreaterThanOrEqual: return " >= " + parameter;
+                case ExpressionType.LessThan: return " < " + parameter;
+                case ExpressionType.LessThanOrEqual: return " <= " + parameter;
+                case ExpressionType.NotEqual: return " != " + parameter;
+                case ExpressionType.Parameter: return parameter;
+                default: return " = " + parameter;
             }
-            
+
         }
     }
 }

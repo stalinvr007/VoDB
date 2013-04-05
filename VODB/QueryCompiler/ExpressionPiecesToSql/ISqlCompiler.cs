@@ -8,6 +8,7 @@ using VODB.Infrastructure;
 
 namespace VODB.QueryCompiler.ExpressionPiecesToSql
 {
+   
     public interface ISqlCompiler
     {
         /// <summary>
@@ -15,5 +16,7 @@ namespace VODB.QueryCompiler.ExpressionPiecesToSql
         /// </summary>
         /// <returns></returns>
         String Compile();
+
+        
     }
 }

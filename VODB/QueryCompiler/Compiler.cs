@@ -26,11 +26,8 @@ namespace VODB.QueryCompiler
         private ICollection<IQueryParameter> _Parameters = new List<IQueryParameter>();
         private IExpressionBreaker _Breaker;
         private CompositeCompiler _Composite;
-        private ISqlCompiler _Parameter;
 
         private bool calledFromOr = false;
-        private int level = 1;
-        private int lastIndex = 0;
 
         private IEnumerable<IExpressionPiece> _Pieces;
         private static ISqlCompiler _Where = new ConstantCompiler(" Where ");
@@ -43,20 +40,26 @@ namespace VODB.QueryCompiler
 
         public ITable Table { get; private set; }
 
-        public QueryBase(IEntityTranslator translator, IExpressionBreaker breaker)
+        public QueryBase(IEntityTranslator translator, IExpressionBreaker breaker, IInternalSession session)
         {
             _Composite = new CompositeCompiler();
             _Translator = translator;
+            _Session = session;
             _Breaker = breaker;
-            _Parameter = new ParameterCompiler(GetNumber);
             Table = _Translator.Translate(typeof(TEntity));
+
+            AddParameter = v => _Parameters.Add(++paramCount, v);
         }
 
+        public Func<Object, String> AddParameter { get; set; }
         private int paramCount = 0;
-        private int GetNumber()
+
+
+        private String AddParam(Object value)
         {
-            return ++paramCount;
+            return AddParameter(value);
         }
+
 
         #region IQueryCompilerLevel1<TEntity> Implementation
 
@@ -66,9 +69,9 @@ namespace VODB.QueryCompiler
             _Composite.Add(
                 new PiecesCompiler(
                     _Breaker.BreakExpression(expression),
-                    new ParameterCompiler(GetNumber, expression.Body.NodeType))
+                    new ParameterCompiler(AddParam, expression.GetRightValue(), expression.Body.NodeType))
             );
-
+            
             return this;
         }
 
@@ -90,6 +93,7 @@ namespace VODB.QueryCompiler
 
         public IQueryCompilerLevel3<TEntity> OrderBy<TField>(Expression<Func<TEntity, TField>> expression)
         {
+            CloseParenthesis();
             _Composite.Add(_OrderBy);
             _Composite.Add(
                 new OrderByCompiler(_Breaker.BreakExpression(expression))
@@ -108,8 +112,9 @@ namespace VODB.QueryCompiler
             _Composite.Add(
                 new PiecesCompiler(
                     _Breaker.BreakExpression(expression),
-                    new ParameterCompiler(GetNumber, expression.Body.NodeType))
+                    new ParameterCompiler(AddParam, expression.GetRightValue(), expression.Body.NodeType))
             );
+
             return this;
         }
 
@@ -156,8 +161,9 @@ namespace VODB.QueryCompiler
             _Composite.Add(
                 new PiecesCompiler(
                     _Breaker.BreakExpression(expression),
-                    new ParameterCompiler(GetNumber, expression.Body.NodeType))
+                    new ParameterCompiler(AddParam, expression.GetRightValue(), expression.Body.NodeType))
             );
+
 
             calledFromOr = true;
             return this;
@@ -179,6 +185,7 @@ namespace VODB.QueryCompiler
 
         public IQueryCompilerStub<TEntity> Descending()
         {
+            
             _Composite.Add(new ConstantCompiler(" Desc"));
             return this;
         }
@@ -190,9 +197,9 @@ namespace VODB.QueryCompiler
         public IQueryCompilerLevel2<TEntity> Like(string value, WildCard token = WildCard.Both)
         {
             _Composite.Add(
-                new PiecesCompiler(_Pieces, new LikeCompiler(_Parameter, token))
+                new PiecesCompiler(_Pieces, new LikeCompiler(new ParameterCompiler(AddParam, value, ExpressionType.Parameter), token))
             );
-
+            
             return this;
         }
 
@@ -202,11 +209,12 @@ namespace VODB.QueryCompiler
             if (collection is IQuery)
             {
                 IQuery query = ((IQuery)collection);
+                query.AddParameter = this.AddParameter;
                 _Composite.Add(new SubQueryCompiler(query.Table, _Pieces, query.SqlCompiler));
             }
             else
             {
-                _Composite.Add(new PiecesCompiler(_Pieces, new InStatementCompiler(collection.Select(f => _Parameter))));
+                _Composite.Add(new PiecesCompiler(_Pieces, new InStatementCompiler(collection.Select(f => new ParameterCompiler(AddParam, f, ExpressionType.Parameter)))));
             }
             
             return this;
@@ -215,7 +223,7 @@ namespace VODB.QueryCompiler
         public IQueryCompilerLevel2<TEntity> Between<TField>(TField firstValue, TField secondValue)
         {
             _Composite.Add(
-                new PiecesCompiler(_Pieces, new BetweenCompiler(_Parameter, _Parameter))
+                new PiecesCompiler(_Pieces, new BetweenCompiler(new ParameterCompiler(AddParam, firstValue, ExpressionType.Parameter), new ParameterCompiler(AddParam, secondValue, ExpressionType.Parameter)))
             );
             
             return this;
@@ -273,17 +281,20 @@ namespace VODB.QueryCompiler
 
         public int Count()
         {
-            throw new NotImplementedException();
+            CloseParenthesis();
+            return (int)_Session.ExecuteScalar(
+                _Translator.Translate(typeof(TEntity)).SqlCount + _Composite.Compile(), 
+                Parameters);
         }
 
         protected abstract string Compile(ITable table);
-
+                
     }
 
     class SelectAllFrom<TEntity> : QueryBase<TEntity> where TEntity : class, new()
     {
-        public SelectAllFrom(IEntityTranslator translator, IExpressionBreaker breaker)
-            : base(translator, breaker)
+        public SelectAllFrom(IEntityTranslator translator, IExpressionBreaker breaker, IInternalSession session)
+            : base(translator, breaker, session)
         {
 
         }
@@ -291,20 +302,6 @@ namespace VODB.QueryCompiler
         protected override string Compile(ITable table)
         {
             return table.SqlSelect;
-        }
-    }
-
-    class SelectCountFrom<TEntity> : QueryBase<TEntity> where TEntity : class, new()
-    {
-        public SelectCountFrom(IEntityTranslator translator, IExpressionBreaker breaker)
-            : base(translator, breaker)
-        {
-
-        }
-
-        protected override string Compile(ITable table)
-        {
-            return table.SqlCount;
         }
     }
 

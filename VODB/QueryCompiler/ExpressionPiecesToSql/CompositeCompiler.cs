@@ -21,17 +21,30 @@ namespace VODB.QueryCompiler.ExpressionPiecesToSql
         public void Add(ISqlCompiler compiler)
         {
             _Compilers.Add(compiler);
+            forceCompile = true;
         }
 
         public void Insert(int index, ISqlCompiler compiler)
         {
             _Compilers.Insert(index, compiler);
+            forceCompile = true;
         }
 
         public int Count { get { return _Compilers.Count; } }
 
+
+        String compiledQuery;
+        Boolean forceCompile;
+
         public String Compile()
         {
+            if (!forceCompile)
+            {
+                return compiledQuery;
+            }
+
+            forceCompile = false;
+
             var sb = new StringBuilder();
 
             foreach (var compiler in _Compilers)
@@ -39,7 +52,7 @@ namespace VODB.QueryCompiler.ExpressionPiecesToSql
                 sb.Append(compiler.Compile());
             }
 
-            return sb.ToString();
+            return compiledQuery = sb.ToString();
         }
     }
 }
