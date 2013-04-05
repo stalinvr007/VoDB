@@ -131,17 +131,16 @@ namespace VODB.Sessions
 
         public IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new()
         {
-            return new QueryCompiler<TEntity>(_Translator, this);
+            return Select.All.From<TEntity>();
         }
 
         public IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery query, params Object[] args) where TEntity : class, new()
         {
-            var level = 0;
             var table = GetTable<TEntity>();
 
             // Make or get the command.
             IVodbCommand command = query.CachedCommand ?? 
-                _Connection.MakeCommand(query.Compile(ref level))
+                _Connection.MakeCommand(query.Compile())
                 .SetParameters(query.Parameters);
 
             // Holds out the command to use later again.

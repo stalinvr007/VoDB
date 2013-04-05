@@ -15,8 +15,7 @@ namespace VODB.QueryCompiler
     /// Like, In, Between
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    public interface IQueryCompilerLevel4<TEntity>
-        where TEntity : class, new()
+    public interface IQueryCompilerLevel4<TEntity> where TEntity : class, new()
     {
         /// <summary>
         /// Filters the field using the Like condition.
@@ -40,6 +39,6 @@ namespace VODB.QueryCompiler
         /// <param name="firstValue">The first value.</param>
         /// <param name="secondValue">The second value.</param>
         /// <returns></returns>
-        IQueryCompilerLevel2<TEntity> Between(Object firstValue, Object secondValue);
+        IQueryCompilerLevel2<TEntity> Between<TField>(TField firstValue, TField secondValue);
     }
 }

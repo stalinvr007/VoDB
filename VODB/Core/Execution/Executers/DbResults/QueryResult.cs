@@ -10,7 +10,9 @@ using VODB.Core.Infrastructure;
 using VODB.Core.Loaders;
 using VODB.Core.Loaders.Factories;
 using VODB.ExpressionParser;
+using VODB.Expressions;
 using VODB.QueryCompiler;
+using VODB.QueryCompiler.ExpressionPiecesToSql;
 
 namespace VODB.Core.Execution.Executers.DbResults
 {
@@ -50,6 +52,8 @@ namespace VODB.Core.Execution.Executers.DbResults
         private readonly IInternalSession _Session;
         private readonly Table _Table;
         private Field _FilterField;
+        public VODB.Infrastructure.ITable Table { get; private set; }
+        public ISqlCompiler SqlCompiler { get; private set; }
 
         public QueryResult(IInternalSession session, IEntityLoader loader, IEntityFactory entityFactory)
         {
@@ -117,32 +121,13 @@ namespace VODB.Core.Execution.Executers.DbResults
 
         #region IDbQueryResult Implementation
 
-        IQueryCompilerLevel2<TEntity> IQueryCompilerLevel1<TEntity>.Where(Expression<Func<TEntity, bool>> expression)
-        {
-            return Where(expression);
-        }
-
-        IQueryCompilerLevel2<TEntity> IQueryCompilerLevel1<TEntity>.Where(string mask, params object[] args)
-        {
-            return Where(mask, args);
-        }
-
-        public IQueryCompilerLevel4<TEntity> Where(Expression<Func<TEntity, object>> expression)
-        {
-            return Where<Object>(expression);
-        }
-
-        public IQueryCompilerLevel3<TEntity> OrderBy(Expression<Func<TEntity, object>> expression)
-        {
-            return OrderBy<Object>(expression);
-        }
-
+        
         public IEnumerable<TEntity> Execute(ISession session)
         {
             throw new NotImplementedException();
         }
 
-        public string Compile(ref int level)
+        public string Compile()
         {
             throw new NotImplementedException();
         }
@@ -152,17 +137,17 @@ namespace VODB.Core.Execution.Executers.DbResults
             get { throw new NotImplementedException(); }
         }
 
-        public IDbAndQueryResult<TEntity> Where(string whereCondition, params object[] args)
+        public IQueryCompilerLevel2<TEntity> Where(string whereCondition, params object[] args)
         {
             return AddCondition(Operation.Where, String.Format(whereCondition, args));
         }
 
-        public IDbAndQueryResult<TEntity> Where(Expression<Func<TEntity, bool>> whereCondition)
+        public IQueryCompilerLevel2<TEntity> Where(Expression<Func<TEntity, bool>> whereCondition)
         {
             return AddCondition(Operation.Where, _ExpressionParser.Parse(whereCondition));
         }
 
-        public IDbFieldFilterResult<TEntity> Where<TField>(Expression<Func<TEntity, TField>> field)
+        public IQueryCompilerLevel4<TEntity> Where<TField>(Expression<Func<TEntity, TField>> field)
         {
             var parser = new FieldGetterExpressionParser<TEntity, TField>();
             parser.Parse(field);
@@ -170,7 +155,7 @@ namespace VODB.Core.Execution.Executers.DbResults
             return AddCondition(Operation.Where, "");
         }
 
-        public IDbOrderedResult<TEntity> OrderBy<TField>(Expression<Func<TEntity, TField>> orderByField)
+        public IQueryCompilerLevel3<TEntity> OrderBy<TField>(Expression<Func<TEntity, TField>> orderByField)
         {
             return AddCondition(Operation.OrderBy,
                                 new FieldGetterExpressionParser<TEntity, TField>().Parse(orderByField));
@@ -235,37 +220,21 @@ namespace VODB.Core.Execution.Executers.DbResults
 
         #region IDbAndQueryResult Implementation
 
-        IQueryCompilerLevel2<TEntity> IQueryCompilerLevel2<TEntity>.And(Expression<Func<TEntity, bool>> expression)
-        {
-            return And(expression);
-        }
-
-        IQueryCompilerLevel2<TEntity> IQueryCompilerLevel2<TEntity>.And(string mask, params object[] args)
-        {
-            return And(mask, args);
-        }
-
         public IQueryCompilerLevel4<TEntity> And(Expression<Func<TEntity, object>> expression)
         {
             return And<Object>(expression);
         }
-
-        IQueryCompilerLevel2<TEntity> IQueryCompilerLevel2<TEntity>.Or(Expression<Func<TEntity, bool>> expression)
-        {
-            return Or(expression);
-        }
-
         public IQueryCompilerLevel4<TEntity> Or(Expression<Func<TEntity, object>> expression)
         {
             return Or<Object>(expression);
         }
 
-        public IDbAndQueryResult<TEntity> And(string andCondition, params object[] args)
+        public IQueryCompilerLevel2<TEntity> And(string andCondition, params object[] args)
         {
             return AddCondition(Operation.And, String.Format(andCondition, args));
         }
 
-        public IDbFieldFilterResult<TEntity> And<TField>(Expression<Func<TEntity, TField>> field)
+        public IQueryCompilerLevel4<TEntity> And<TField>(Expression<Func<TEntity, TField>> field)
         {
             var parser = new FieldGetterExpressionParser<TEntity, TField>();
             parser.Parse(field);
@@ -273,12 +242,12 @@ namespace VODB.Core.Execution.Executers.DbResults
             return AddCondition(Operation.And, "");
         }
 
-        public IDbAndQueryResult<TEntity> And(Expression<Func<TEntity, bool>> andCondition)
+        public IQueryCompilerLevel2<TEntity> And(Expression<Func<TEntity, bool>> andCondition)
         {
             return AddCondition(Operation.And, _ExpressionParser.Parse(andCondition));
         }
 
-        public IDbFieldFilterResult<TEntity> Or<TField>(Expression<Func<TEntity, TField>> field)
+        public IQueryCompilerLevel4<TEntity> Or<TField>(Expression<Func<TEntity, TField>> field)
         {
             var parser = new FieldGetterExpressionParser<TEntity, TField>();
             parser.Parse(field);
@@ -288,7 +257,7 @@ namespace VODB.Core.Execution.Executers.DbResults
             return AddCondition(Operation.Or, "");
         }
 
-        public IDbAndQueryResult<TEntity> Or(Expression<Func<TEntity, bool>> orCondition)
+        public IQueryCompilerLevel2<TEntity> Or(Expression<Func<TEntity, bool>> orCondition)
         {
             _Parts.Last.Value.Condition = "(" + _Parts.Last.Value.Condition;
 
@@ -299,22 +268,7 @@ namespace VODB.Core.Execution.Executers.DbResults
 
         #region IDbFieldFilterResult<TEntity> Implementation
 
-        IQueryCompilerLevel2<TEntity> IQueryCompilerLevel4<TEntity>.Like(string value, WildCard token)
-        {
-            return Like(value, token);
-        }
-        
-        public IQueryCompilerLevel2<TEntity> Between(object firstValue, object secondValue)
-        {
-            return Between<Object>(firstValue, secondValue);
-        }
-
-        IQueryCompilerLevel2<TEntity> IQueryCompilerLevel4<TEntity>.In<TField>(IEnumerable<TField> collection)
-        {
-            return In<TField>(collection);
-        }
-
-        public IDbAndQueryResult<TEntity> In<TField>(IEnumerable<TField> args)
+        public IQueryCompilerLevel2<TEntity> In<TField>(IEnumerable<TField> args)
         {
             if (args is IDbResult)
             {
@@ -341,7 +295,7 @@ namespace VODB.Core.Execution.Executers.DbResults
             return this;
         }
 
-        public IDbAndQueryResult<TEntity> Between<TField>(TField firstValue, TField secondValue)
+        public IQueryCompilerLevel2<TEntity> Between<TField>(TField firstValue, TField secondValue)
         {
             var _whereCondition = new StringBuilder();
 
@@ -355,7 +309,7 @@ namespace VODB.Core.Execution.Executers.DbResults
             return this;
         }
 
-        public IDbAndQueryResult<TEntity> Like(String value, WildCard token = WildCard.Both)
+        public IQueryCompilerLevel2<TEntity> Like(String value, WildCard token = WildCard.Both)
         {
             var _whereCondition = new StringBuilder();
             _whereCondition
@@ -401,17 +355,12 @@ namespace VODB.Core.Execution.Executers.DbResults
 
         #region IDbOrderedResult<TEntity> Implementation
 
-        public IDbOrderedDescResult<TEntity> Descending()
+        public IQueryCompilerStub<TEntity> Descending()
         {
             return AddCondition(Operation.Desc, "");
         }
 
         #endregion
-
-        IQueryCompilerStub<TEntity> IQueryCompilerLevel3<TEntity>.Descending()
-        {
-            return Descending();
-        }
 
         public int Count()
         {
@@ -441,7 +390,5 @@ namespace VODB.Core.Execution.Executers.DbResults
             get { throw new NotImplementedException(); }
         }
 
-
-        
     }
 }

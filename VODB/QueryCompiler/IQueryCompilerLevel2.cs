@@ -23,7 +23,7 @@ namespace VODB.QueryCompiler
         /// </summary>
         /// <param name="orderByField">The order by field.</param>
         /// <returns></returns>
-        IQueryCompilerLevel3<TEntity> OrderBy(Expression<Func<TEntity, Object>> expression);
+        IQueryCompilerLevel3<TEntity> OrderBy<TField>(Expression<Func<TEntity, TField>> expression);
 
         /// <summary>
         /// Appends another condition to the Query.
@@ -45,7 +45,7 @@ namespace VODB.QueryCompiler
         /// </summary>
         /// <param name="andCondition">The expression.</param>
         /// <returns></returns>
-        IQueryCompilerLevel4<TEntity> And(Expression<Func<TEntity, Object>> expression);
+        IQueryCompilerLevel4<TEntity> And<TField>(Expression<Func<TEntity, TField>> expression);
 
         /// <summary>
         /// Appends another condition to the Query.
@@ -59,7 +59,7 @@ namespace VODB.QueryCompiler
         /// </summary>
         /// <param name="andCondition">The expression.</param>
         /// <returns></returns>
-        IQueryCompilerLevel4<TEntity> Or(Expression<Func<TEntity, Object>> expression);
+        IQueryCompilerLevel4<TEntity> Or<TField>(Expression<Func<TEntity, TField>> expression);
 
     }
 }

@@ -12,63 +12,45 @@ namespace VODB.ExpressionsToSql
 
     class QueryCondition<TEntity> : IQueryCondition
     {
+
         private const string RIGHT_BRACKET = "]";
         private const string LEFT_BRACKET = "[";
 
-        private readonly IExpressionDecoder _Expression;
+        private readonly LambdaExpression _Expression;
+        private readonly IExpressionBreaker _Breaker;
         private readonly ICollection<IQueryParameter> _Parameters = new List<IQueryParameter>();
         private readonly IQueryCondition _Follows;
 
-        public QueryCondition(IEntityTranslator translator, Expression<Func<TEntity, Boolean>> expression)
+        private QueryCondition(IEntityTranslator translator, LambdaExpression expression)
         {
-            _Expression = new ExpressionDecoder<TEntity, Boolean>(translator, expression);
+            _Expression = expression;
+            _Breaker = new ExpressionBreaker(translator);
+        }
+
+        public QueryCondition(IEntityTranslator translator, Expression<Func<TEntity, Boolean>> expression)
+            : this(translator, (LambdaExpression)expression)
+        {
             _Follows = CreateFollowCondition(_Expression);
         }
 
         public QueryCondition(IEntityTranslator translator, Expression<Func<TEntity, Object>> expression, IQueryCondition follows)
+            : this(translator, (LambdaExpression)expression)
         {
             _Follows = follows;
-            _Expression = new ExpressionDecoder<TEntity, Object>(translator, expression);
         }
 
-        private static IQueryCondition CreateFollowCondition(IExpressionDecoder decoder)
+        private static IQueryCondition CreateFollowCondition(LambdaExpression expression)
         {
-            switch (decoder.NodeType)
+            switch (expression.Body.NodeType)
             {
-                case ExpressionType.Equal: return new ParameterCondition(" = @p");
-                case ExpressionType.GreaterThan: return new ParameterCondition(" > @p");
-                case ExpressionType.GreaterThanOrEqual: return new ParameterCondition(" >= @p");
-                case ExpressionType.LessThan: return new ParameterCondition(" < @p");
-                case ExpressionType.LessThanOrEqual: return new ParameterCondition(" <= @p");
-                default: throw new InvalidOperationException("Unable to decode this node type. " + decoder.NodeType.ToString());
+                default: throw new InvalidOperationException("Unable to decode this node type. " + expression.Body.NodeType.ToString());
             }
         }
 
-        public String Compile(ref int level)
+        private void AppendParameter(int level)
         {
-            _Parameters.Clear();
-            var parts = _Expression.DecodeLeft().ToList();
-
-            var sb = new StringBuilder();
-            
-            SafePrint(sb, parts[parts.Count - 1].Field.Name);
-
-            for (int i = parts.Count - 2; i >= 0; --i)
-            {
-                var current = parts[i].Field;
-                var next = parts[i + 1].Field;
-
-                sb.Append(" in (Select [").Append(next.BindOrName)
-                .Append("] From [")
-                .Append(current.Table.Name)
-                .Append("] Where ");
-
-                SafePrint(sb, current.Name);
-            }
-
-            sb.Append(_Follows.Compile(ref level));
-
-            foreach (var value in _Expression.DecodeRight())
+            var value = _Expression.GetRightValue();
+            if (value != null)
             {
                 _Parameters.Add(new QueryParameter
                 {
@@ -76,13 +58,40 @@ namespace VODB.ExpressionsToSql
                     Value = value
                 });
             }
+        }
+        public String Compile()
+        {
+            _Parameters.Clear();
+            var parts = _Breaker.BreakExpression(_Expression).ToList();
+
+            var sb = new StringBuilder();
+
+            SafePrint(sb, parts[0].Field.Name);
+
+            for (int i = 1; i < parts.Count; ++i)
+            {
+                var current = parts[i].Field;
+                var next = parts[i - 1].Field;
+
+                sb.Append(" in (Select [")
+                    .Append(next.BindOrName)
+                    .Append("] From [")
+                    .Append(current.Table.Name)
+                    .Append("] Where ");
+
+                SafePrint(sb, current.Name);
+            }
+
+            sb.Append(_Follows.Compile());
+
+            AppendParameter(0);
 
             foreach (var parameter in _Follows.Parameters)
             {
                 _Parameters.Add(parameter);
             }
 
-            for (int i = 0; i < parts.Count-1; i++)
+            for (int i = 0; i < parts.Count - 1; i++)
             {
                 sb.Append(")");
             }
@@ -96,54 +105,10 @@ namespace VODB.ExpressionsToSql
             return sb.Append(LEFT_BRACKET).Append(name).Append(RIGHT_BRACKET);
         }
 
-        private void Build(StringBuilder sb, IList<ExpressionPiece> parts, int index, ref int level)
-        {
-
-            if (index == parts.Count - 1)
-            {
-                Debug.Assert(parts[index] != null);
-                Debug.Assert(parts[index].Field != null);
-
-                // Finalize the Condition
-                sb.Append(LEFT_BRACKET).Append(parts[index].Field.Name).Append(RIGHT_BRACKET)
-                  .Append(_Follows.Compile(ref level));
-
-                // Add the values as a parameter to the parameters collection.
-                foreach (var value in _Expression.DecodeRight())
-                {
-                    _Parameters.Add(new QueryParameter
-                    {
-                        Name = "@p" + level,
-                        Value = value
-                    });
-                }
-
-                foreach (var parameter in _Follows.Parameters)
-                {
-                    _Parameters.Add(parameter);
-                }
-
-                return;
-            }
-
-            var current = parts[index].Field;
-            var next = parts[index + 1].Field;
-
-            sb.Append(LEFT_BRACKET).Append(current.Name).Append(RIGHT_BRACKET)
-                .Append(" in (Select [").Append(next.BindOrName)
-                .Append("] From [")
-                .Append(current.Table.Name)
-                .Append("] Where ");
-
-            Build(sb, parts, index + 1, ref level);
-            sb.Append(")");
-        }
-
         public IEnumerable<IQueryParameter> Parameters
         {
             get { return _Parameters; }
         }
-
 
     }
 

@@ -48,14 +48,14 @@ namespace VODB.QueryCompiler
         /// </summary>
         /// <param name="condition">The condition.</param>
         /// <returns></returns>
-        IQueryCompilerLevel4<TEntity> Where(Expression<Func<TEntity, Object>> expression);
+        IQueryCompilerLevel4<TEntity> Where<TField>(Expression<Func<TEntity, TField>> expression);
 
         /// <summary>
         /// Appends the Order By clause.
         /// </summary>
         /// <param name="orderByField">The order by field.</param>
         /// <returns></returns>
-        IQueryCompilerLevel3<TEntity> OrderBy(Expression<Func<TEntity, Object>> expression);
+        IQueryCompilerLevel3<TEntity> OrderBy<TField>(Expression<Func<TEntity, TField>> expression);
 
     }
 }

@@ -19,11 +19,6 @@ namespace VODB.Sessions.EntityFactories
                     "ProxyGenericIterator",
                     BindingFlags.NonPublic | BindingFlags.Static);
 
-        private static readonly MethodInfo Internal_Query =
-            typeof(InternalQuery)
-                .GetMethod(
-                    "Internal_Query");
-
         private static readonly MethodInfo SessionGenericExecuteQueryMethod =
             typeof(ISession)
                 .GetMethod(
@@ -48,7 +43,7 @@ namespace VODB.Sessions.EntityFactories
 
             MethodInfo methodIterator = ProxyGenericIteratorMethod.MakeGenericMethod(entityType);
             MethodInfo me = SessionGenericExecuteQueryMethod.MakeGenericMethod(entityType);
-            MethodInfo iq = Internal_Query.MakeGenericMethod(entityType);
+            MethodInfo iq = null; // Internal_Query.MakeGenericMethod(entityType);
 
             lastResult[method] = invocation.ReturnValue = methodIterator.Invoke(null, new Object[] {
                     invocation.InvocationTarget,

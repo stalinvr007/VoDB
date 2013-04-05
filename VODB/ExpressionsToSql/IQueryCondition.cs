@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using VODB.Expressions;
 
 namespace VODB.ExpressionsToSql
 {
     public interface IQueryCondition
     {
+
         /// <summary>
-        /// Compiles the query given a spefic depth level.
+        /// Compiles the query.
         /// </summary>
-        /// <param name="level">The level.</param>
         /// <returns></returns>
-        String Compile(ref int level);
+        String Compile();
 
         /// <summary>
         /// Gets the parameter values.
