@@ -144,7 +144,9 @@ namespace VODB.Sessions
                 .SetParameters(query.Parameters);
 
             // Holds out the command to use later again.
-            query.CachedCommand = command.SetParametersValues(args.Select(v => new QueryParameter { Value = v })); 
+            query.CachedCommand = command.SetParametersValues(
+                args.Select(v => new QueryParameter { Value = v })
+            );
 
             return ParallelExecuteQuery<TEntity>(default(TEntity), _Connection.ExecuteReader(command), table);
         }

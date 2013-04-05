@@ -255,11 +255,19 @@ namespace VODB.Tests
         {
 
             var employee = session.GetById(new Employee { EmployeeId = 5 });
+            
+            /*
+              Select * From Employees Where EmployeeId In (
+                Select EmployeeId From Employees Where ReportsTo = @p1
+              )
+             */
 
             var employees = session.GetAll<Employee>()
                 .Where(m => m.EmployeeId)
-                .In(session.GetAll<Employee>().Where(m => m.ReportsTo == employee));
-
+                .In(
+                    session.GetAll<Employee>().Where(m => m.ReportsTo == employee)
+                );
+            
             Assert.AreEqual(3, employees.Count());
         }
 
