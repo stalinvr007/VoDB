@@ -7,7 +7,6 @@ using VODB.Sessions;
 using VODB.DbLayer;
 using VODB.EntityTranslation;
 using VODB.EntityMapping;
-using VODB.Core.Loaders.Factories;
 using VODB.Sessions.EntityFactories;
 
 namespace VODB.Tests
@@ -265,7 +264,7 @@ namespace VODB.Tests
             var employees = session.GetAll<Employee>()
                 .Where(m => m.EmployeeId)
                 .In(
-                    session.GetAll<Employee>().Where(m => m.ReportsTo == employee)
+                    session.GetAll<Employee>().Where(m => m.ReportsTo.EmployeeId == employee.EmployeeId)
                 );
             
             Assert.AreEqual(3, employees.Count());
