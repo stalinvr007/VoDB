@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Data.SqlClient;
@@ -144,20 +145,27 @@ namespace VODB.Tests.Sessions
 
             using (var session = GetSession())
             {
-                var employees = session.ExecuteQuery(query, 1).ToList();
-                CollectionAssert.IsNotEmpty(employees);
-                CollectionAssert.AllItemsAreNotNull(employees);
-                CollectionAssert.AllItemsAreUnique(employees);
-
-                foreach (var employee in employees)
+                for (int i = 0; i < 3; i++)
                 {
-                    Assert.That(employee.EmployeeId, Is.GreaterThan(0));
-                    Assert.That(employee.LastName, Is.Not.Null);
-                    Assert.That(employee.LastName, Is.Not.Empty);
+                    var employees = session.ExecuteQuery(query, 1);
 
-                    Assert.That(employee.FirstName, Is.Not.Null);
-                    Assert.That(employee.FirstName, Is.Not.Empty);
+                    Assert.That(employees.Count(), Is.EqualTo(8));
+                    CollectionAssert.IsNotEmpty(employees);
+                    CollectionAssert.AllItemsAreNotNull(employees);
+                    CollectionAssert.AllItemsAreUnique(employees);
+
+                    foreach (var employee in employees)
+                    {
+                        Assert.That(employee.EmployeeId, Is.GreaterThan(0));
+                        Assert.That(employee.LastName, Is.Not.Null);
+                        Assert.That(employee.LastName, Is.Not.Empty);
+
+                        Assert.That(employee.FirstName, Is.Not.Null);
+                        Assert.That(employee.FirstName, Is.Not.Empty);
+                    }    
                 }
+                
+                
             }
         }
     }

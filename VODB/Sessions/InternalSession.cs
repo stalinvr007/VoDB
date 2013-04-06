@@ -105,6 +105,11 @@ namespace VODB.Sessions
             _connection = null;
         }
 
+        public IEnumerable<TEntity> InternalExecuteQuery<TEntity>(IQuery<TEntity> query, params object[] args) where TEntity : class, new()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Dispose()
         {
             Close();

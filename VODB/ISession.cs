@@ -90,6 +90,8 @@ namespace VODB
         void Open();
         void Close();
 
+        IEnumerable<TEntity> InternalExecuteQuery<TEntity>(IQuery<TEntity> query, params Object[] args) where TEntity : class, new();
+
         /// <summary>
         /// Executes the command.
         /// </summary>

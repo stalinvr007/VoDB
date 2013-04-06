@@ -127,12 +127,12 @@ namespace VODB.Sessions
             return QueryStart.From<TEntity>(this);
         }
 
-        public IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, params Object[] args) where TEntity : class, new()
+        public IEnumerable<TEntity> InternalExecuteQuery<TEntity>(IQuery<TEntity> query, params object[] args) where TEntity : class, new()
         {
             var table = GetTable<TEntity>();
 
             // Make or get the command.
-            IVodbCommand command = query.CachedCommand ?? 
+            var command = query.CachedCommand ??
                 _Connection.MakeCommand(query.Compile())
                 .SetParameters(query.Parameters);
 
@@ -142,6 +142,24 @@ namespace VODB.Sessions
             );
 
             return ParallelExecuteQuery(default(TEntity), _Connection.ExecuteReader(command), table);
+        }
+
+        public IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, params Object[] args) where TEntity : class, new()
+        {
+            query.Compile();
+            if (query.Parameters.Count() != args.Length)
+            {
+                throw new ArgumentException("The arguments expected to the query were not met.", "args");
+            }
+            // Resets the values.
+            var i = 0;
+            foreach (var parameter in query.Parameters)
+            {
+                parameter.Value = args[i++];
+            }
+
+            // Makes a new query in order to enable lazy load.
+            return QueryStart.From<TEntity>(this, query.SqlCompiler, query.Parameters);
         }
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
@@ -231,6 +249,8 @@ namespace VODB.Sessions
         {
             throw new NotImplementedException();
         }
+
+        
 
         public override string ToString()
         {

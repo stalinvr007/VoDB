@@ -27,13 +27,14 @@ namespace VODB.QueryCompiler
         private bool calledFromOr;
 
         private IEnumerable<IExpressionPiece> _Pieces;
-        private static ISqlCompiler _Where = new ConstantCompiler(" Where ");
-        private static ISqlCompiler _OrderBy = new ConstantCompiler(" Order By ");
-        private static ISqlCompiler _And = new ConstantCompiler(" And ");
-        private static ISqlCompiler _Or = new ConstantCompiler(" Or ");
-        private static ISqlCompiler _Stub = new ConstantCompiler("");
-        private static ISqlCompiler _ParenthesisClose = new ConstantCompiler(")");
-        private static ISqlCompiler _ParenthesisOpen = new ConstantCompiler("(");
+        // ReSharper disable StaticFieldInGenericType
+        private static readonly ISqlCompiler _Where = new ConstantCompiler(" Where ");
+        private static readonly ISqlCompiler _OrderBy = new ConstantCompiler(" Order By ");
+        private static readonly ISqlCompiler _And = new ConstantCompiler(" And ");
+        private static readonly ISqlCompiler _Or = new ConstantCompiler(" Or ");
+        private static readonly ISqlCompiler _ParenthesisClose = new ConstantCompiler(")");
+        private static readonly ISqlCompiler _ParenthesisOpen = new ConstantCompiler("(");
+        // ReSharper restore StaticFieldInGenericType
 
         public ITable Table { get; private set; }
 
@@ -47,6 +48,16 @@ namespace VODB.QueryCompiler
 
             AddParameter = v => _Parameters.Add(++paramCount, v);
         }
+
+        protected QueryBase(IEntityTranslator translator, IExpressionBreaker breaker, IInternalSession session, ISqlCompiler conditions, IEnumerable<IQueryParameter> parameters)
+            : this(translator, breaker, session)
+        {
+            _Composite.Add(conditions);
+            foreach (var parameter in parameters)
+            {
+                _Parameters.Add(parameter);
+            }
+        } 
 
         public Func<Object, String> AddParameter { get; set; }
         private int paramCount;
@@ -251,7 +262,7 @@ namespace VODB.QueryCompiler
 
         public IEnumerable<TEntity> Execute(ISession session)
         {
-            return _Session.ExecuteQuery(this, Parameters.Select(p => p.Value).ToArray());
+            return _Session.InternalExecuteQuery(this, Parameters.Select(p => p.Value).ToArray());
         }
 
         public string Compile()
@@ -291,10 +302,10 @@ namespace VODB.QueryCompiler
     class SelectAllFrom<TEntity> : QueryBase<TEntity> where TEntity : class, new()
     {
         public SelectAllFrom(IEntityTranslator translator, IExpressionBreaker breaker, IInternalSession session)
-            : base(translator, breaker, session)
-        {
+            : base(translator, breaker, session) { }
 
-        }
+        public SelectAllFrom(IEntityTranslator translator, IExpressionBreaker breaker, IInternalSession session, ISqlCompiler conditions, IEnumerable<IQueryParameter> parameters)
+            : base(translator, breaker, session, conditions, parameters) { }
 
         protected override string Compile(ITable table)
         {

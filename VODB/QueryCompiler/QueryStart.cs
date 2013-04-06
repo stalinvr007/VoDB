@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using VODB.EntityTranslation;
 using VODB.Expressions;
+using VODB.ExpressionsToSql;
+using VODB.QueryCompiler.ExpressionPiecesToSql;
 
 namespace VODB.QueryCompiler
 {
@@ -15,8 +13,8 @@ namespace VODB.QueryCompiler
 
     abstract class QueryStart : IQueryStart
     {
-        protected static IEntityTranslator _Translator = new EntityTranslator();
-        protected static IExpressionBreaker _Breaker = new ExpressionBreaker(_Translator);
+        protected static readonly IEntityTranslator _Translator = new EntityTranslator();
+        protected static readonly IExpressionBreaker _Breaker = new ExpressionBreaker(_Translator);
 
         public abstract IQueryCompilerLevel1<TEntity> From<TEntity>() where TEntity : class, new();
 
@@ -25,6 +23,10 @@ namespace VODB.QueryCompiler
             return new SelectAllFrom<TEntity>(_Translator, _Breaker, session);
         }
 
+        internal static IQueryCompilerLevel1<TEntity> From<TEntity>(IInternalSession session, ISqlCompiler conditions, IEnumerable<IQueryParameter> parameters) where TEntity : class, new()
+        {
+            return new SelectAllFrom<TEntity>(_Translator, _Breaker, session, conditions, parameters);
+        }
     }
 
     class All : QueryStart
