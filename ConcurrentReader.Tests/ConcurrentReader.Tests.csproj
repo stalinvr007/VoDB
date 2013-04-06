@@ -63,12 +63,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConcurrentReader\ConcurrentReader.csproj">
-      <Project>{e35bb3c7-7a52-49ce-851e-2381765b51bf}</Project>
-      <Name>ConcurrentReader</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>

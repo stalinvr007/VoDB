@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VODB.Core.Execution.Executers.DbResults;
+using VODB.ConcurrentReader;
 using VODB.DbLayer;
 using VODB.EntityMapping;
 using VODB.EntityTranslation;
 using VODB.Infrastructure;
 using VODB.QueryCompiler;
-using ConcurrentReader;
 using VODB.Core.Loaders.Factories;
 using VODB.ExpressionsToSql;
 
@@ -40,28 +37,28 @@ namespace VODB.Sessions
         private static void SetKeyValues<TEntity>(TEntity entity, ITable table, IVodbCommand command)
         {
             command.SetParametersValues(
-                table.Keys.Select(f => CreateParameter<TEntity>(f, entity))
+                table.Keys.Select(f => CreateParameter(f, entity))
             );
         }
 
         private static void SetFieldValues<TEntity>(TEntity entity, ITable table, IVodbCommand command)
         {
             command.SetParametersValues(
-                table.Fields.Where(f => !f.IsIdentity).Select(f => CreateParameter<TEntity>(f, entity))
+                table.Fields.Where(f => !f.IsIdentity).Select(f => CreateParameter(f, entity))
             );
         }
 
         private static void SetAllFieldValues<TEntity>(TEntity entity, ITable table, IVodbCommand command)
         {
             command.SetParametersValues(
-                table.Fields.Where(f => !f.IsIdentity).Select(f => CreateParameter<TEntity>(f, entity))
-                .Concat(table.Keys.Select(f => CreateParameter<TEntity>(f, entity)))
+                table.Fields.Where(f => !f.IsIdentity).Select(f => CreateParameter(f, entity))
+                .Concat(table.Keys.Select(f => CreateParameter(f, entity)))
             );
         }
 
         private ITable GetTable<TEntity>(TEntity entity = null) where TEntity : class, new()
         {
-            return _Translator.Translate(GetEntityType<TEntity>(entity));
+            return _Translator.Translate(GetEntityType(entity));
         }
 
         private static Type GetEntityType<TEntity>(TEntity entity)
@@ -77,7 +74,7 @@ namespace VODB.Sessions
 
         private IEnumerable<TEntity> ExecuteQuery<TEntity>(TEntity entity, IDataReader reader, ITable table) where TEntity : class, new()
         {
-            var entityType = GetEntityType<TEntity>(entity);
+            var entityType = GetEntityType(entity);
 
             try
             {
@@ -98,18 +95,14 @@ namespace VODB.Sessions
 
         private IEnumerable<TEntity> ParallelExecuteQuery<TEntity>(TEntity entity, IDataReader reader, ITable table) where TEntity : class, new()
         {
-            var entityType = GetEntityType<TEntity>(entity);
+            var entityType = GetEntityType(entity);
 
             try
             {
-                return reader.AsParallel().Transform<TEntity>(t =>
-                {
-                    return _Mapper.Map(
-                        (TEntity)_EntityFactory.Make(entityType, this), 
-                        table, 
-                        t.Reader
-                    );
-                });
+                return reader.AsParallel().Transform(t => _Mapper.Map(
+                    (TEntity)_EntityFactory.Make(entityType, this), 
+                    table, 
+                    t.Reader));
             }
             finally
             {
@@ -148,16 +141,16 @@ namespace VODB.Sessions
                 args.Select(v => new QueryParameter { Value = v })
             );
 
-            return ParallelExecuteQuery<TEntity>(default(TEntity), _Connection.ExecuteReader(command), table);
+            return ParallelExecuteQuery(default(TEntity), _Connection.ExecuteReader(command), table);
         }
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            var table = GetTable<TEntity>(entity);
+            var table = GetTable(entity);
             var command = table.GetSelectByIdCommand(_Connection);
-            SetKeyValues<TEntity>(entity, table, command);
+            SetKeyValues(entity, table, command);
 
-            return ExecuteQuery<TEntity>(entity, _Connection.ExecuteReader(command), table).FirstOrDefault();
+            return ExecuteQuery(entity, _Connection.ExecuteReader(command), table).FirstOrDefault();
         }
 
         public TEntity Insert<TEntity>(TEntity entity) where TEntity : class, new()
@@ -177,7 +170,7 @@ namespace VODB.Sessions
         {
             var table = GetTable<TEntity>();
             var command = table.GetDeleteCommand(_Connection);
-            SetKeyValues<TEntity>(entity, table, command);
+            SetKeyValues(entity, table, command);
 
             return _Connection.ExecuteNonQuery(command) == 1;
         }
@@ -186,7 +179,7 @@ namespace VODB.Sessions
         {
             var table = GetTable<TEntity>();
             var command = table.GetUpdateCommand(_Connection);
-            SetAllFieldValues<TEntity>(entity, table, command);
+            SetAllFieldValues(entity, table, command);
 
             return _Connection.ExecuteNonQuery(command) == 1 ? entity : null;
         }
@@ -201,7 +194,7 @@ namespace VODB.Sessions
         {
             var table = GetTable<TEntity>();
             var command = table.GetCountByIdCommand(_Connection);
-            SetKeyValues<TEntity>(entity, table, command);
+            SetKeyValues(entity, table, command);
 
             return (int)_Connection.ExecuteScalar(command) == 1;
         }

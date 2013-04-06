@@ -12,10 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7821D8
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrentReader", "ConcurrentReader\ConcurrentReader.csproj", "{E35BB3C7-7A52-49CE-851E-2381765B51BF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrentReader.Tests", "ConcurrentReader.Tests\ConcurrentReader.Tests.csproj", "{D3D7212C-EDE4-4B12-ABA6-503F36532092}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,14 +26,6 @@ Global
 		{272824AE-554E-4F1B-972B-1DB34EECBDFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{272824AE-554E-4F1B-972B-1DB34EECBDFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{272824AE-554E-4F1B-972B-1DB34EECBDFD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E35BB3C7-7A52-49CE-851E-2381765B51BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E35BB3C7-7A52-49CE-851E-2381765B51BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E35BB3C7-7A52-49CE-851E-2381765B51BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E35BB3C7-7A52-49CE-851E-2381765B51BF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D3D7212C-EDE4-4B12-ABA6-503F36532092}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D3D7212C-EDE4-4B12-ABA6-503F36532092}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D3D7212C-EDE4-4B12-ABA6-503F36532092}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D3D7212C-EDE4-4B12-ABA6-503F36532092}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

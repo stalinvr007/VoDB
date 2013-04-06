@@ -59,6 +59,7 @@
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -74,6 +75,10 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CommandsBuilding_Tests.cs" />
+    <Compile Include="ConcurrentReader_Tests\Benchmark.cs" />
+    <Compile Include="ConcurrentReader_Tests\Connection.cs" />
+    <Compile Include="ConcurrentReader_Tests\Loading_Tests.cs" />
+    <Compile Include="ConcurrentReader_Tests\Order.cs" />
     <Compile Include="ConnectionLayer\VodbCommand_Tests.cs" />
     <Compile Include="ConnectionLayer\VodbConnection_Tests.cs" />
     <Compile Include="DbReaderMapper.cs" />

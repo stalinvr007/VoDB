@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using VODB.ConcurrentReader;
 using VODB.Core.Execution.SqlPartialBuilders;
 using VODB.Core.Loaders;
 using VODB.Core.Loaders.Factories;
 using VODB.ExpressionParser;
-using ConcurrentReader;
 
 namespace VODB.Core.Execution.Executers
 {
@@ -40,7 +40,7 @@ namespace VODB.Core.Execution.Executers
 
             try
             {
-                return reader.AsParallel().Transform<Object>(t =>
+                return reader.AsParallel().Transform(t =>
                 {
                     object newEntity = _Factory.Make(entityType, session);
                     _Loader.Load(newEntity, session, t.Reader);

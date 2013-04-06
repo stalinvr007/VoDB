@@ -2,10 +2,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using VODB.EntityTranslation;
 using VODB.Exceptions;
 using VODB.ExpressionsToSql;
-using VODB.QueryCompiler;
 using VODB.Tests.Models.Northwind;
 
 namespace VODB.Tests.QueryCompiler
@@ -14,8 +12,6 @@ namespace VODB.Tests.QueryCompiler
     public class QueryCompiler_Tests
     {
         private const string SELECT_EMPLOYEES = "Select [EmployeeId], [LastName], [FirstName], [Title], [TitleOfCourtesy], [BirthDate], [HireDate], [Address], [City], [Region], [PostalCode], [Country], [HomePhone], [Extension], [Notes], [Photo], [ReportsTo], [PhotoPath] From [Employees]";
-
-        private static IEntityTranslator _Translator = new EntityTranslator();
 
         private static TestCaseData MakeTestCase(IQueryCondition query, int paramCount = 0)
         {

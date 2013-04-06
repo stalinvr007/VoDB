@@ -48,9 +48,16 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Annotations\Attributes.cs" />
+    <Compile Include="ConcurrentReader\BlockingDataReader.cs" />
+    <Compile Include="ConcurrentReader\ConcurrentDataReader.cs" />
+    <Compile Include="ConcurrentReader\ConcurrentDataReaderBase.cs" />
+    <Compile Include="ConcurrentReader\DataRow.cs" />
+    <Compile Include="ConcurrentReader\IConcurrentDataReader.cs" />
+    <Compile Include="ConcurrentReader\Tuple.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Core\Engine.cs" />
@@ -218,6 +225,7 @@
     <Compile Include="QueryCompiler\IQueryCompilerLevel4.cs" />
     <Compile Include="QueryCompiler\IQueryCompilerStub.cs" />
     <Compile Include="QueryCompiler\Compiler.cs" />
+    <Compile Include="ReaderExtensions.cs" />
     <Compile Include="Sessions\EntityFactories\IFieldInterceptor.cs" />
     <Compile Include="Sessions\EntityFactories\InterceptorSelector.cs" />
     <Compile Include="Sessions\EntityFactories\LazyCollectionForeignProperty.cs" />
@@ -253,12 +261,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ConcurrentReader\ConcurrentReader.csproj">
-      <Project>{e35bb3c7-7a52-49ce-851e-2381765b51bf}</Project>
-      <Name>ConcurrentReader</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
