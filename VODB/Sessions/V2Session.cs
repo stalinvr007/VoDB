@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using VODB.ConcurrentReader;
 using VODB.DbLayer;
 using VODB.EntityMapping;
 using VODB.EntityTranslation;
@@ -102,7 +101,8 @@ namespace VODB.Sessions
                 return reader.AsParallel().Transform(t => _Mapper.Map(
                     (TEntity)_EntityFactory.Make(entityType, this), 
                     table, 
-                    t.Reader));
+                    t.Reader)
+                );
             }
             finally
             {
@@ -127,7 +127,7 @@ namespace VODB.Sessions
             return QueryStart.From<TEntity>(this);
         }
 
-        public IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery query, params Object[] args) where TEntity : class, new()
+        public IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, params Object[] args) where TEntity : class, new()
         {
             var table = GetTable<TEntity>();
 

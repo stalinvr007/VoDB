@@ -1,17 +1,14 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VODB.Core.Loaders.Factories;
 using VODB.DbLayer;
 using VODB.EntityMapping;
 using VODB.EntityTranslation;
 using VODB.Sessions;
 using VODB.Sessions.EntityFactories;
+using VODB.Tests.Models.Northwind;
 
 namespace VODB.Tests.Sessions
 {
@@ -82,8 +79,8 @@ namespace VODB.Tests.Sessions
                 {
                     try
                     {
-                        Assert.That(session.Delete(entity), Is.True);
-                        Assert.That(session.Delete(entity), Is.False);
+                        Assert.That(s.Delete(entity), Is.True);
+                        Assert.That(s.Delete(entity), Is.False);
                     }
                     catch (Exception ex)
                     {
@@ -105,8 +102,8 @@ namespace VODB.Tests.Sessions
             {
                 session.WithRollback(s =>
                 {
-                    Assert.That(session.Update(entity), Is.Not.Null);
-                    Assert.That(session.Update(entity), Is.Not.Null);
+                    Assert.That(s.Update(entity), Is.Not.Null);
+                    Assert.That(s.Update(entity), Is.Not.Null);
                 });
             }
         }
@@ -126,10 +123,10 @@ namespace VODB.Tests.Sessions
             {
                 session.WithRollback(s =>
                 {
-                    Assert.That(session.Insert(entity), Is.Not.Null);
+                    Assert.That(s.Insert(entity), Is.Not.Null);
                     try
                     {
-                        Assert.That(session.Insert(entity), Is.Not.Null);
+                        Assert.That(s.Insert(entity), Is.Not.Null);
                     }
                     catch (SqlException ex)
                     {
@@ -140,5 +137,28 @@ namespace VODB.Tests.Sessions
             }
         }
 
+        [Test]
+        public  void V2Session_Assert_PrecompiledQuery()
+        {
+            var query = Select.All.From<Employee>().Where(f => f.EmployeeId > Param.Get<int>());
+
+            using (var session = GetSession())
+            {
+                var employees = session.ExecuteQuery(query, 1).ToList();
+                CollectionAssert.IsNotEmpty(employees);
+                CollectionAssert.AllItemsAreNotNull(employees);
+                CollectionAssert.AllItemsAreUnique(employees);
+
+                foreach (var employee in employees)
+                {
+                    Assert.That(employee.EmployeeId, Is.GreaterThan(0));
+                    Assert.That(employee.LastName, Is.Not.Null);
+                    Assert.That(employee.LastName, Is.Not.Empty);
+
+                    Assert.That(employee.FirstName, Is.Not.Null);
+                    Assert.That(employee.FirstName, Is.Not.Empty);
+                }
+            }
+        }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using VODB.Core.Execution.Executers.DbResults;
 using VODB.ExpressionsToSql;
 using VODB.QueryCompiler;
 
@@ -35,7 +34,7 @@ namespace VODB
         /// <param name="query">The query.</param>
         /// <returns></returns>
         /// <param name="args"></param>
-        IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery query, params Object[] args) where TEntity : class, new();
+        IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, params Object[] args) where TEntity : class, new();
 
         /// <summary>
         /// Gets the entity by Id.
@@ -95,21 +94,30 @@ namespace VODB
         /// Executes the command.
         /// </summary>
         /// <param name="command">The command.</param>
-        /// <returns>The number of records afected by the command.</returns>
+        /// <param name="args">The args.</param>
+        /// <returns>
+        /// The number of records afected by the command.
+        /// </returns>
         int ExecuteNonQuery(String command, IEnumerable<IQueryParameter> args);
 
         /// <summary>
         /// Executes the command.
         /// </summary>
         /// <param name="command">The command.</param>
-        /// <returns>A DataReader with the result</returns>
+        /// <param name="args">The args.</param>
+        /// <returns>
+        /// A DataReader with the result
+        /// </returns>
         IDataReader ExecuteReader(String command, IEnumerable<IQueryParameter> args);
 
         /// <summary>
         /// Executes the command.
         /// </summary>
         /// <param name="command">The command.</param>
-        /// <returns>A simgle value.</returns>
+        /// <param name="args">The args.</param>
+        /// <returns>
+        /// A simgle value.
+        /// </returns>
         object ExecuteScalar(String command, IEnumerable<IQueryParameter> args);
     }
 }

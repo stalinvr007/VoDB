@@ -3,12 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using VODB.Core.Execution.Executers.DbResults;
 using VODB.DbLayer;
 using VODB.EntityTranslation;
-using VODB.Exceptions;
 using VODB.Expressions;
 using VODB.ExpressionsToSql;
 using VODB.Infrastructure;
@@ -22,12 +19,12 @@ namespace VODB.QueryCompiler
     {
 
         private readonly IEntityTranslator _Translator;
-        private IInternalSession _Session;
-        private ICollection<IQueryParameter> _Parameters = new List<IQueryParameter>();
-        private IExpressionBreaker _Breaker;
-        private CompositeCompiler _Composite;
+        private readonly IInternalSession _Session;
+        private readonly ICollection<IQueryParameter> _Parameters = new List<IQueryParameter>();
+        private readonly IExpressionBreaker _Breaker;
+        private readonly CompositeCompiler _Composite;
 
-        private bool calledFromOr = false;
+        private bool calledFromOr;
 
         private IEnumerable<IExpressionPiece> _Pieces;
         private static ISqlCompiler _Where = new ConstantCompiler(" Where ");
@@ -40,7 +37,7 @@ namespace VODB.QueryCompiler
 
         public ITable Table { get; private set; }
 
-        public QueryBase(IEntityTranslator translator, IExpressionBreaker breaker, IInternalSession session)
+        protected QueryBase(IEntityTranslator translator, IExpressionBreaker breaker, IInternalSession session)
         {
             _Composite = new CompositeCompiler();
             _Translator = translator;
@@ -52,7 +49,7 @@ namespace VODB.QueryCompiler
         }
 
         public Func<Object, String> AddParameter { get; set; }
-        private int paramCount = 0;
+        private int paramCount;
 
 
         private String AddParam(Object value)
@@ -208,8 +205,8 @@ namespace VODB.QueryCompiler
 
             if (collection is IQuery)
             {
-                IQuery query = ((IQuery)collection);
-                query.AddParameter = this.AddParameter;
+                var query = ((IQuery)collection);
+                query.AddParameter = AddParameter;
                 _Composite.Add(new SubQueryCompiler(query.Table, _Pieces, query.SqlCompiler));
             }
             else
@@ -245,7 +242,7 @@ namespace VODB.QueryCompiler
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
         #endregion
@@ -254,7 +251,7 @@ namespace VODB.QueryCompiler
 
         public IEnumerable<TEntity> Execute(ISession session)
         {
-            return _Session.ExecuteQuery<TEntity>(this, Parameters.Select(p => p.Value).ToArray());
+            return _Session.ExecuteQuery(this, Parameters.Select(p => p.Value).ToArray());
         }
 
         public string Compile()

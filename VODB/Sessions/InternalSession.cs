@@ -145,7 +145,7 @@ namespace VODB.Sessions
             return _QueryResultGetter.GetQueryResult<TEntity>(this, _EntityLoader, _EntityFactory);
         }
 
-        public System.Collections.Generic.IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery query, Object[] args) where TEntity : class, new()
+        public System.Collections.Generic.IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, Object[] args) where TEntity : class, new()
         {
             throw new NotImplementedException();
         }
