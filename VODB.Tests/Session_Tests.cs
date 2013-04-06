@@ -16,9 +16,9 @@ namespace VODB.Tests
     {
         private IEnumerable GetSessions()
         {
-            yield return new Session();
+            yield return new SessionV1();
 
-            yield return new V2Session(
+            yield return new SessionV2(
                 new VodbConnection(Utils.ConnectionCreator),
                 new EntityTranslator(),
                 new OrderedEntityMapper(),

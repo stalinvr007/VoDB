@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using VODB.Sessions;
 using VODB.Tests.Models.Northwind;
 
 namespace VODB.Tests
@@ -10,7 +11,7 @@ namespace VODB.Tests
         public void InnerTransactions()
         {
 
-            using (var session = new Session())
+            using (var session = new SessionV1())
             {
 
                 using (session.BeginTransaction())

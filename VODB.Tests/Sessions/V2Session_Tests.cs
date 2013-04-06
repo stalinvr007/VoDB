@@ -25,7 +25,7 @@ namespace VODB.Tests.Sessions
 
         private static ISession GetSession()
         {
-            return new V2Session(
+            return new SessionV2(
                 new VodbConnection(Utils.ConnectionCreator), 
                 new EntityTranslator(), 
                 new OrderedEntityMapper(), 
@@ -147,7 +147,7 @@ namespace VODB.Tests.Sessions
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    var employees = session.ExecuteQuery(query, 1);
+                    var employees = session.ExecuteQuery(query, 1).ToList();
 
                     Assert.That(employees.Count(), Is.EqualTo(8));
                     CollectionAssert.IsNotEmpty(employees);

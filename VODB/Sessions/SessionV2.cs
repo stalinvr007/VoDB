@@ -13,7 +13,7 @@ using VODB.ExpressionsToSql;
 namespace VODB.Sessions
 {
 
-    class V2Session : IInternalSession
+    class SessionV2 : IInternalSession
     {
 
         private IVodbConnection _Connection;
@@ -21,7 +21,7 @@ namespace VODB.Sessions
         private readonly IEntityMapper _Mapper;
         private readonly IEntityFactory _EntityFactory;
 
-        public V2Session(IVodbConnection connection, IEntityTranslator translator, IEntityMapper mapper, IEntityFactory entityFactory)
+        public SessionV2(IVodbConnection connection, IEntityTranslator translator, IEntityMapper mapper, IEntityFactory entityFactory)
         {
             _Mapper = mapper;
             _Translator = translator;
@@ -151,6 +151,7 @@ namespace VODB.Sessions
             {
                 throw new ArgumentException("The arguments expected to the query were not met.", "args");
             }
+
             // Resets the values.
             var i = 0;
             foreach (var parameter in query.Parameters)

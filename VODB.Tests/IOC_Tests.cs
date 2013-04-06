@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using VODB.Sessions;
 
 namespace VODB.Tests
 {
@@ -8,7 +9,7 @@ namespace VODB.Tests
         [Test]
         public void Session_IOC_Test()
         {
-            var session = new Session();
+            var session = new SessionV1();
             Assert.IsNotNull(session);
         }
     }

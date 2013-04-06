@@ -1,91 +1,26 @@
-﻿using System;
-using VODB.Core;
-using VODB.Core.Execution.Executers.DbResults;
-using VODB.DbLayer;
-using VODB.QueryCompiler;
+﻿using VODB.DbLayer;
+using VODB.EntityMapping;
+using VODB.EntityTranslation;
+using VODB.Sessions;
+using VODB.Sessions.EntityFactories;
 
 namespace VODB
 {
-    public class Session : ISession
+    public class Session : SessionBase
     {
-        private ISession _InternalSession;
+        public Session() : base(GetSession(new NameConventionDbConnectionCreator("System.Data.SqlClient")))
+        { }
 
-        public Session()
+        public Session(IDbConnectionCreator connectionCreator) : base(GetSession(connectionCreator))
+        { }
+
+        private static ISession GetSession(IDbConnectionCreator connectionCreator)
         {
-            _InternalSession = Engine.Get<ISession>();
-        }
-
-        public Session(IDbConnectionCreator connectionCreator)
-        {
-            _InternalSession = Engine.Get<ISession>("creator", connectionCreator);
-        }
-
-        #region ISession Members
-
-        public ITransaction BeginTransaction()
-        {
-            return _InternalSession.BeginTransaction();
-        }
-
-        public void ExecuteTSql(string SqlStatements)
-        {
-            _InternalSession.ExecuteTSql(SqlStatements);
-        }
-
-        public IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new()
-        {
-            return _InternalSession.GetAll<TEntity>();
-        }
-
-        public System.Collections.Generic.IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, params Object[] args) where TEntity : class, new()
-        {
-            return _InternalSession.ExecuteQuery<TEntity>(query, args);
-        }
-
-        public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
-        {
-            return _InternalSession.GetById(entity);
-        }
-
-        public TEntity Insert<TEntity>(TEntity entity) where TEntity : class, new()
-        {
-            return _InternalSession.Insert(entity);
-        }
-
-        public bool Delete<TEntity>(TEntity entity) where TEntity : class, new()
-        {
-            return _InternalSession.Delete(entity);
-        }
-
-        public TEntity Update<TEntity>(TEntity entity) where TEntity : class, new()
-        {
-            return _InternalSession.Update(entity);
-        }
-
-        public int Count<TEntity>() where TEntity : class, new()
-        {
-            return _InternalSession.Count<TEntity>();
-        }
-
-        public bool Exists<TEntity>(TEntity entity) where TEntity : class, new()
-        {
-            return _InternalSession.Exists(entity);
-        }
-
-        public void Dispose()
-        {
-            if (_InternalSession == null) return;
-
-            _InternalSession.Dispose();
-            _InternalSession = null;
-        }
-
-        #endregion
-
-
-        public override string ToString()
-        {
-            return "Session V1.0";
+            return new SessionV2(
+                new VodbConnection(connectionCreator),
+                new EntityTranslator(),
+                new OrderedEntityMapper(),
+                new ProxyCreator());
         }
     }
 }

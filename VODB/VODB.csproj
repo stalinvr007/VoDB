@@ -226,13 +226,15 @@
     <Compile Include="QueryCompiler\IQueryCompilerStub.cs" />
     <Compile Include="QueryCompiler\Compiler.cs" />
     <Compile Include="ReaderExtensions.cs" />
+    <Compile Include="Session.cs" />
     <Compile Include="Sessions\EntityFactories\IFieldInterceptor.cs" />
     <Compile Include="Sessions\EntityFactories\InterceptorSelector.cs" />
     <Compile Include="Sessions\EntityFactories\LazyCollectionForeignProperty.cs" />
     <Compile Include="Sessions\EntityFactories\LazyForeignProperty.cs" />
     <Compile Include="Sessions\EntityFactories\ProxyCreator.cs" />
     <Compile Include="Sessions\InternalSession.cs" />
-    <Compile Include="Session.cs" />
+    <Compile Include="Sessions\SessionBase.cs" />
+    <Compile Include="Sessions\SessionV1.cs" />
     <Compile Include="Sessions\SessionStub.cs" />
     <Compile Include="Sessions\Transaction.cs" />
     <Compile Include="Core\Infrastructure\Field.cs" />
@@ -247,7 +249,7 @@
     <Compile Include="Core\Infrastructure\TSqlCommands\TSqlCmdBase.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TUpdate.cs" />
     <Compile Include="Core\Infrastructure\TSqlCommands\TWhere.cs" />
-    <Compile Include="Sessions\V2Session.cs" />
+    <Compile Include="Sessions\SessionV2.cs" />
     <Compile Include="TableToSql\CountBuilder.cs" />
     <Compile Include="TableToSql\CountByIdBuilder.cs" />
     <Compile Include="TableToSql\DeleteByIdBuilder.cs" />
