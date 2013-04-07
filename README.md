@@ -1,4 +1,3 @@
-
 ### Getting Started
 1. Create a class to represent a database table/model.
 2. Create properties to represents the fields for that model.
@@ -13,3 +12,7 @@
  * set the providerName to System.Data.SqlClient or other...
 
 ### For more info click [here] (http://alienengineer.github.com/VoDB/)
+### Get it as a NuGet Package [here] (https://nuget.org/packages/VODB/)
+```
+   PM> Install-Package VODB
+```
