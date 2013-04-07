@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>VODB</id>
+    <version>$version$</version>
+    <authors>AlienEnginer</authors>
+    <owners>AlienEnginer</owners>
+    <projectUrl>http://alienengineer.github.io/VoDB/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Virtual Object DataBase</description>
+    <releaseNotes>Release the stable version of VODB.</releaseNotes>
+    <copyright>Copyright @ AlienEngineer 2013</copyright>
+    <tags>ORM VODB DATABASE SQL Virtual</tags>
+  </metadata>
+</package>
