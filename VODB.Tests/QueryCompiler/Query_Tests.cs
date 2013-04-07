@@ -212,7 +212,7 @@ namespace VODB.Tests.QueryCompiler
 
                 Select.All.From<Shippers>().Where(e => e.ShipperId).In(
                     Select.All.From<Orders>()
-                ), 0
+                )
 
             ).Returns("Select [ShipperId], [CompanyName], [Phone] From [Shippers] Where [ShipperId] In (Select [ShipVia] From [Orders])")
             .SetName("Query employee (Where EmployeeId in SubQuery)");
@@ -225,8 +225,6 @@ namespace VODB.Tests.QueryCompiler
 
             ).Returns("Select [OrderId], [CustomerId], [EmployeeId], [OrderDate], [RequiredDate], [ShippedDate], [ShipVia], [Freight], [ShipName], [ShipAddress], [ShipCity], [ShipRegion], [ShipPostalCode], [ShipCountry] From [Orders] Where [ShipVia] In (Select [ShipperId] From [Shippers] Where [CompanyName] = @p1) And [OrderDate] = @p2")
             .SetName("Query employee (Where EmployeeId in SubQuery multiple params)");
-
-
 
             yield return MakeTestCase(
 

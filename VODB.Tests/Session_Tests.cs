@@ -47,6 +47,16 @@ namespace VODB.Tests
         }
 
         [TestCaseSource("GetSessions")]
+        public void Session_GetAll_Shippers_From_Orders(ISession session)
+        {
+            var shippers = session.GetAll<Shippers>().Where(e => e.ShipperId).In(
+                session.GetAll<Orders>()
+            );
+
+            Assert.AreEqual(3, shippers.Count());
+        }
+
+        [TestCaseSource("GetSessions")]
         public void Session_GetAllOrders(ISession session)
         {
             var employees = session.GetAll<Orders>();
