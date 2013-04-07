@@ -43,7 +43,6 @@
 
 <ol>
 <li>Create a class to represent a database table/model.</li>
-<li>Derive it from DbEntity.</li>
 <li>Create properties to represents the fields for that model.</li>
 <li>Decorate the properties with [DbField, DbKey, DbIdentity, DbRequired, DbBind, DbIgnore] See <a href="https://github.com/AlienEngineer/VoDB/blob/master/VODB.Tests/Models/Northwind/Employee.cs">Employee.cs</a>
 
@@ -86,11 +85,12 @@
 
 <span class="c1">// more complex query</span>
 <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
-   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> 
-       <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;()</span>
-       <span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">EmployeeId</span><span class="p">).</span><span class="n">In</span><span class="p">(</span>
+   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;()</span>
+       <span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">ReportsTo</span><span class="p">).</span><span class="n">In</span><span class="p">(</span>
            <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">Where</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">EmployeeId</span> <span class="p">&gt;</span> <span class="m">5</span><span class="p">)</span>
        <span class="p">);</span>
+   <span class="c1">// Or</span>
+   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">Where</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">ReportsTo</span><span class="p">.</span><span class="n">EmployeeId</span> <span class="p">&gt;</span> <span class="m">5</span><span class="p">)</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -105,6 +105,15 @@
    <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> 
        <span class="n">session</span><span class="p">.</span><span class="n">GetAll</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">OrderBy</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">City</span><span class="p">).</span><span class="n">Descending</span><span class="p">();</span>
 <span class="p">}</span>
+</pre></div>
+
+<h2>Precompiled Queries</h2>
+
+<div class="highlight"><pre>   <span class="kt">var</span> <span class="n">query</span> <span class="p">=</span> <span class="n">Select</span><span class="p">.</span><span class="n">All</span><span class="p">.</span><span class="n">From</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">Where</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">ReportsTo</span><span class="p">).</span><span class="n">In</span><span class="p">(</span>
+      <span class="n">Select</span><span class="p">.</span><span class="n">All</span><span class="p">.</span><span class="n">From</span><span class="p">&lt;</span><span class="n">Orders</span><span class="p">&gt;()</span>
+   <span class="p">);</span>
+
+   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;(</span><span class="n">query</span><span class="p">);</span>
 </pre></div>
 
 <h2>Inserting employee</h2>
@@ -149,6 +158,9 @@
          <span class="c1">// Commits the changes within this transaction scope.</span>
          <span class="n">transaction</span><span class="p">.</span><span class="n">Commit</span><span class="p">();</span>
 
+         <span class="n">using</span><span class="p">(</span><span class="kt">var</span> <span class="n">innerTrans</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">BeginTransaction</span><span class="p">())</span> <span class="p">{</span>
+             <span class="c1">// Make changes. If the rollback occurs then all transactions are void.</span>
+         <span class="p">}</span>
       <span class="p">}</span>
    <span class="p">}</span>
 
