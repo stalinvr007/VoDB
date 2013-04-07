@@ -6,8 +6,7 @@ namespace VODB.QueryCompiler.ExpressionPiecesToSql
 {
     class CompositeCompiler : ISqlCompiler
     {
-
-        IList<ISqlCompiler> _Compilers;
+        readonly IList<ISqlCompiler> _Compilers;
 
         public CompositeCompiler()
         {

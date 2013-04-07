@@ -36,6 +36,17 @@ namespace VODB.Tests
         }
 
         [TestCaseSource("GetSessions")]
+        public void Session_GetAll_Employees_From_Orders(ISession session)
+        {
+            var employees = session.GetAll<Employee>()
+                .Where(e => e.ReportsTo).In(
+                    session.GetAll<Orders>()
+                );
+
+            Assert.AreEqual(9, employees.Count());
+        }
+
+        [TestCaseSource("GetSessions")]
         public void Session_GetAllOrders(ISession session)
         {
             var employees = session.GetAll<Orders>();

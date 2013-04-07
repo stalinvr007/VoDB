@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using VODB.Expressions;
-using VODB.ExpressionsToSql;
 using VODB.Infrastructure;
-using VODB.Exceptions;
 
 namespace VODB.QueryCompiler.ExpressionPiecesToSql
 {
@@ -24,8 +20,11 @@ namespace VODB.QueryCompiler.ExpressionPiecesToSql
 
         public String Compile()
         {
+            var field = _Table.Fields.FirstOrDefault(f => f.BindOrName == _Piece.Field.BindOrName);
+            var fieldName = field != null ? field.Name : _Piece.Field.BindOrName;
+
             return String.Format(" In (Select [{0}] From [{1}]{2})",
-                _Piece.Field.BindOrName,
+                fieldName,
                 _Table.Name,
                 _Compiler.Compile());
         }

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using VODB.Exceptions;
 using VODB.Expressions;
 
 namespace VODB.QueryCompiler.ExpressionPiecesToSql
@@ -13,8 +11,8 @@ namespace VODB.QueryCompiler.ExpressionPiecesToSql
         private const string RIGHT_BRACKET = "]";
         private const string LEFT_BRACKET = "[";
 
-        private ISqlCompiler _Next;
-        private IEnumerable<IExpressionPiece> _Pieces;
+        private readonly ISqlCompiler _Next;
+        private readonly IEnumerable<IExpressionPiece> _Pieces;
 
         public PiecesCompiler(IEnumerable<IExpressionPiece> pieces, ISqlCompiler next)
         {
