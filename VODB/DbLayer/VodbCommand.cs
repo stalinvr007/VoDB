@@ -61,11 +61,26 @@ namespace VODB.DbLayer
                 }
                 else
                 {
-                    _Command.Parameters[++i].Value = parameter.Value ?? DBNull.Value;
+                    _Command.Parameters[++i].Value = ParseValue(parameter);
                 }
 
                 FinalizeParameter(parameter.type, _Command.Parameters[i]);
             }
+        }
+
+        private static object ParseValue(IQueryParameter parameter)
+        {
+            if (parameter.Value == null)
+            {
+                return DBNull.Value;
+            }
+
+            if (parameter.Field.BindToField != null && parameter.Field.Info.PropertyType == parameter.Value.GetType())
+            {
+                return parameter.Field.GetFieldFinalValue(parameter.Value);
+            }
+
+            return parameter.Value;
         }
 
         public void CreateParameters(IEnumerable<string> names)
