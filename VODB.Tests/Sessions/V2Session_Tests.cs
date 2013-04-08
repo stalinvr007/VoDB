@@ -137,18 +137,31 @@ namespace VODB.Tests.Sessions
             }
         }
 
-        [Test]
-        public  void V2Session_Assert_PrecompiledQuery()
+        private IEnumerable GetPrecompiledQueries()
         {
-            var query = Select.All.From<Employee>().Where(f => f.EmployeeId > Param.Get<int>());
+            yield return new TestCaseData(
+                Select.All.From<Employee>().Where(f => f.EmployeeId > Param.Get<int>()),
+                new Object[] { 1 }, /* Query arguments */
+                8
+            );
 
+            yield return new TestCaseData(
+                Select.All.From<Employee>().Where(f => f.ReportsTo == Param.Get<Employee>()),
+                new Object[] { new Employee{ EmployeeId = 2 } }, /* Query arguments */
+                1
+            );
+        }
+
+        [TestCaseSource("GetPrecompiledQueries")]
+        public  void V2Session_Assert_PrecompiledQuery(IQuery<Employee> query, Object[] queryArgs, int recordCount)
+        {
             using (var session = GetSession())
             {
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < 3; i++) /* Execute this query more than once. */
                 {
-                    var employees = session.ExecuteQuery(query, 1).ToList();
+                    var employees = session.ExecuteQuery(query, queryArgs).ToList();
 
-                    Assert.That(employees.Count(), Is.EqualTo(8));
+                    Assert.That(employees.Count(), Is.EqualTo(recordCount));
                     CollectionAssert.IsNotEmpty(employees);
                     CollectionAssert.AllItemsAreNotNull(employees);
                     CollectionAssert.AllItemsAreUnique(employees);
@@ -163,8 +176,6 @@ namespace VODB.Tests.Sessions
                         Assert.That(employee.FirstName, Is.Not.Empty);
                     }    
                 }
-                
-                
             }
         }
     }
