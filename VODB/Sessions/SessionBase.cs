@@ -27,42 +27,42 @@ namespace VODB.Sessions
 
         public IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new()
         {
-            return _InternalSession.GetAll<TEntity>();
+            return _InternalSession.CaptureExceptions(session => session.GetAll<TEntity>());
         }
 
         public System.Collections.Generic.IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, params Object[] args) where TEntity : class, new()
         {
-            return _InternalSession.ExecuteQuery<TEntity>(query, args);
+            return _InternalSession.CaptureExceptions(session => session.ExecuteQuery<TEntity>(query, args));
         }
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            return _InternalSession.GetById(entity);
+            return _InternalSession.CaptureExceptions(session => session.GetById(entity));
         }
 
         public TEntity Insert<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            return _InternalSession.Insert(entity);
+            return _InternalSession.CaptureExceptions(session => session.Insert(entity));
         }
 
         public bool Delete<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            return _InternalSession.Delete(entity);
+            return _InternalSession.CaptureExceptions(session => session.Delete(entity));
         }
 
         public TEntity Update<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            return _InternalSession.Update(entity);
+            return _InternalSession.CaptureExceptions(session => session.Update(entity));
         }
 
         public int Count<TEntity>() where TEntity : class, new()
         {
-            return _InternalSession.Count<TEntity>();
+            return _InternalSession.CaptureExceptions(session => session.Count<TEntity>());
         }
 
         public bool Exists<TEntity>(TEntity entity) where TEntity : class, new()
         {
-            return _InternalSession.Exists(entity);
+            return _InternalSession.CaptureExceptions(session => session.Exists(entity));
         }
 
         public void Dispose()
