@@ -107,7 +107,7 @@ namespace VODB.EntityTranslation
 
             if (bind != null)
             {
-                if (!item.GetMethod.IsVirtual)
+                if (!item.GetGetMethod().IsVirtual)
                 {
                     throw new InvalidMappingException("The field [{0}] is marked with DbBind but is not Virtual.", field.Name);
                 }
@@ -115,7 +115,7 @@ namespace VODB.EntityTranslation
                 bindFieldName = bind.FieldName;
             }
 
-            if (item.GetMethod.IsVirtual)
+            if (item.GetGetMethod().IsVirtual)
             {
                 bindFieldName = bindFieldName ?? field.Name;
 

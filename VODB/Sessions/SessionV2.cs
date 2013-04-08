@@ -158,6 +158,7 @@ namespace VODB.Sessions
             {
                 parameter.Value = args[i++];
             }
+            
 
             // Makes a new query in order to enable lazy load.
             return QueryStart.From<TEntity>(this, query.SqlCompiler, query.Parameters);

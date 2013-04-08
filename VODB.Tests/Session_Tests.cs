@@ -372,6 +372,15 @@ namespace VODB.Tests
         }
 
         [TestCaseSource("GetSessions")]
+        public void Session_GetById_Territories(ISession session)
+        {
+            var employee = session.GetById(
+                new Employee { EmployeeId = 1 });
+
+            Assert.That(employee.Territories.Count(), Is.EqualTo(2));
+        }
+
+        [TestCaseSource("GetSessions")]
         public void Session_Insert_Employee(ISession session)
         {
             session.WithRollback(s =>

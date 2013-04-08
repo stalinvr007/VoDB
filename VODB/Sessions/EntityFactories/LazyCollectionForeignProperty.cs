@@ -22,7 +22,7 @@ namespace VODB.Sessions.EntityFactories
         private static readonly MethodInfo SessionGenericExecuteQueryMethod =
             typeof(ISession)
                 .GetMethod(
-                    "ExecuteQuery",
+                    "GetAll",
                     BindingFlags.Public | BindingFlags.Instance);
 
         private readonly IInternalSession _Session;
@@ -39,18 +39,14 @@ namespace VODB.Sessions.EntityFactories
 
         private void SetResult(IInvocation invocation, MethodInfo method)
         {
-            var entityType = method.ReturnParameter.ParameterType.GenericTypeArguments[0];
+            var entityType = method.ReturnParameter.ParameterType.GetGenericArguments()[0];
 
             MethodInfo methodIterator = ProxyGenericIteratorMethod.MakeGenericMethod(entityType);
             MethodInfo me = SessionGenericExecuteQueryMethod.MakeGenericMethod(entityType);
-            MethodInfo iq = null; // Internal_Query.MakeGenericMethod(entityType);
-
+            
             lastResult[method] = invocation.ReturnValue = methodIterator.Invoke(null, new Object[] {
                     invocation.InvocationTarget,
-                    me.Invoke(_Session, new Object[]{
-                        iq.Invoke(null, new[] { _Session }),
-                        new Object[0]
-                    })
+                    me.Invoke(_Session, new Object[]{ })
                 });
         }
 
@@ -60,6 +56,7 @@ namespace VODB.Sessions.EntityFactories
             MethodInfo method = invocation.Method;
             if (method.Name.StartsWith("set_"))
             {
+                lastResult[method] = invocation.ReturnValue;
                 return;
             }
 
