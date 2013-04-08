@@ -2,34 +2,14 @@
 using System.Linq;
 using System.Reflection;
 using VODB.Core;
+using VODB.Exceptions.Handling;
 
 namespace VODB
 {
     public static class Config
     {
-        /// <summary>
-        /// Maps TEntity as a VODB entity.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the entity.</typeparam>
-        public static void Map<TEntity>()
-        {
-            Engine.Map<TEntity>();
-        }
 
-        /// <summary>
-        /// Maps the specified name space.
-        /// </summary>
-        /// <param name="nameSpace">The name space.</param>
-        public static void Map(String nameSpace)
-        {
-            foreach (Type type in Assembly.GetCallingAssembly().GetTypes()
-                .Where(t => !String.IsNullOrEmpty(t.Namespace))
-                .Where(t => t.IsClass)
-                .Where(t => t.Namespace.Equals(nameSpace)))
-            {
-                Engine.Map(type);
-            }
-        }
+        static IExceptionHandlerCollection handlers = new ExceptionHandlerComposite();
 
         internal static void MapNameSpace(Type type)
         {
@@ -41,5 +21,34 @@ namespace VODB
                 Engine.Map(_type);
             }
         }
+
+        public static IExceptionHandlerCollection RegisterExceptionHandler(IExceptionHandler handler)
+        {
+            handlers.RegisterExceptionHandler(handler);
+            return handlers;
+        }
+
+        public static IExceptionHandlerCollection UnRegisterExceptionHandler(IExceptionHandler handler)
+        {
+            handlers.UnRegisterExceptionHandler(handler);
+            return handlers;
+        }
+
+
+        /// <summary>
+        /// Gets the Registered Exception Handlers.
+        /// </summary>
+        /// <value>
+        /// The handlers.
+        /// </value>
+        public static IExceptionHandlerCollection Handlers
+        {
+            get
+            {
+                return handlers;
+            }
+        }
+    
+
     }
 }

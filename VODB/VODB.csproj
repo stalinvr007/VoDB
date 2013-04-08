@@ -93,6 +93,8 @@
     <Compile Include="EntityTranslation\CachingTranslator.cs" />
     <Compile Include="EntityTranslation\EntityTranslator.cs" />
     <Compile Include="EntityTranslation\IEntityTranslator.cs" />
+    <Compile Include="Exceptions\Handling\ExceptionHandlerComposite.cs" />
+    <Compile Include="Exceptions\Handling\IExceptionHandlerCollection.cs" />
     <Compile Include="Exceptions\InvalidMappingException.cs" />
     <Compile Include="Exceptions\InvalidSubQueryException.cs" />
     <Compile Include="Exceptions\NoEntityFoundException.cs" />
