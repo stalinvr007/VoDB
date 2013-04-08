@@ -1,5 +1,6 @@
 using System;
 using VODB.QueryCompiler;
+using VODB.Extensions;
 
 namespace VODB.Sessions
 {
@@ -21,7 +22,7 @@ namespace VODB.Sessions
 
         public void ExecuteTSql(string SqlStatements)
         {
-            _InternalSession.ExecuteTSql(SqlStatements);
+            _InternalSession.CaptureExceptions(session => session.ExecuteTSql(SqlStatements));
         }
 
         public IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new()

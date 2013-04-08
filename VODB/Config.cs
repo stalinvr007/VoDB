@@ -9,7 +9,7 @@ namespace VODB
     public static class Config
     {
 
-        static IExceptionHandlerCollection handlers = new ExceptionHandlerComposite();
+        static ExceptionHandlerComposite handlers = new ExceptionHandlerComposite();
 
         internal static void MapNameSpace(Type type)
         {
@@ -41,7 +41,7 @@ namespace VODB
         /// <value>
         /// The handlers.
         /// </value>
-        public static IExceptionHandlerCollection Handlers
+        public static IExceptionHandler Handlers
         {
             get
             {

@@ -20,6 +20,11 @@ namespace VODB
             {
                 return func();
             }
+            catch (Exception ex)
+            {
+                trans.Rollback();
+                throw ex;
+            }
             finally
             {
                 trans.Commit();
