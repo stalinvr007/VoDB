@@ -129,5 +129,14 @@ namespace VODB.DbLayer
         {
             return Execute(command, c => c.ExecuteScalar());
         }
+
+
+        public string DataBaseName
+        {
+            get {
+                CreateConnection();
+                return _DbConnection.Database; 
+            }
+        }
     }
 }

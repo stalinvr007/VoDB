@@ -53,5 +53,13 @@ namespace VODB.DbLayer
         /// <param name="command">The command.</param>
         /// <returns>A simgle value.</returns>
         object ExecuteScalar(IVodbCommand command);
+
+        /// <summary>
+        /// Gets the name of the data base.
+        /// </summary>
+        /// <value>
+        /// The name of the data base.
+        /// </value>
+        string DataBaseName { get; }
     }
 }

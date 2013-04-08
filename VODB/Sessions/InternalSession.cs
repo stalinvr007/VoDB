@@ -267,5 +267,14 @@ namespace VODB.Sessions
         {
             throw new NotImplementedException();
         }
+
+
+        public string DataBaseName
+        {
+            get {
+                Open();
+                return _connection.Database; 
+            }
+        }
     }
 }

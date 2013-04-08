@@ -72,9 +72,12 @@ namespace VODB.Sessions
             _InternalSession = null;
         }
 
+        public string DataBaseName
+        {
+            get { return _InternalSession.DataBaseName; }
+        }
+
         #endregion
 
-
-        
     }
 }

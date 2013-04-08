@@ -280,5 +280,11 @@ namespace VODB.Sessions
                 _Connection.MakeCommand(command).SetParameters(args)
             );
         }
+
+
+        public string DataBaseName
+        {
+            get { return _Connection.DataBaseName; }
+        }
     }
 }

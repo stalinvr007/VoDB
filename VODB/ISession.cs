@@ -81,6 +81,14 @@ namespace VODB
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns></returns>
         bool Exists<TEntity>(TEntity entity) where TEntity : class, new();
+
+        /// <summary>
+        /// Gets the name of the data base.
+        /// </summary>
+        /// <value>
+        /// The name of the data base.
+        /// </value>
+        String DataBaseName { get; }
     }
 
     internal interface IInternalSession : ISession
