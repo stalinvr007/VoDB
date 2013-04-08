@@ -8,7 +8,6 @@
     <projectUrl>http://alienengineer.github.io/VoDB/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Virtual Object DataBase</description>
-    <releaseNotes>Release the stable version of VODB.</releaseNotes>
     <copyright>Copyright @ AlienEngineer 2013</copyright>
     <tags>ORM VODB DATABASE SQL Virtual</tags>
   </metadata>

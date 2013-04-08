@@ -381,6 +381,17 @@ namespace VODB.Tests
         }
 
         [TestCaseSource("GetSessions")]
+        public void Session_Reuse_Returned_Entity(ISession session)
+        {
+            var employee = session.GetById(new Employee { EmployeeId = 1 });
+
+            var reportsTo = session.GetById(employee.ReportsTo);
+
+            Assert.That(reportsTo, Is.Not.Null);
+            EntitiesAsserts.Assert_Employee_2(reportsTo);
+        }
+
+        [TestCaseSource("GetSessions")]
         public void Session_Insert_Employee(ISession session)
         {
             session.WithRollback(s =>

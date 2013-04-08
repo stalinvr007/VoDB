@@ -60,7 +60,6 @@ namespace VODB.Sessions
             throw new NotImplementedException();
         }
 
-
         public string DataBaseName
         {
             get { throw new NotImplementedException(); }
