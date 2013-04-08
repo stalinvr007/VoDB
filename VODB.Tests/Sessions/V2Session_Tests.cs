@@ -148,7 +148,7 @@ namespace VODB.Tests.Sessions
             yield return new TestCaseData(
                 Select.All.From<Employee>().Where(f => f.ReportsTo == Param.Get<Employee>()),
                 new Object[] { new Employee{ EmployeeId = 2 } }, /* Query arguments */
-                1
+                5
             );
         }
 

@@ -31,7 +31,7 @@ namespace VODB.Sessions
 
         private static QueryParameter CreateParameter<TEntity>(IField f, TEntity entity)
         {
-            return new QueryParameter { Value = f.GetFieldFinalValue(entity), type = f.Info.PropertyType };
+            return new QueryParameter { Value = f.GetFieldFinalValue(entity), type = f.Info.PropertyType, Field = f };
         }
         private static void SetKeyValues<TEntity>(TEntity entity, ITable table, IVodbCommand command)
         {

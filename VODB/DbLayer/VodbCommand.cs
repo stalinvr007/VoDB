@@ -9,6 +9,7 @@ namespace VODB.DbLayer
     class VodbCommand : IVodbCommand
     {
         private readonly DbCommand _Command;
+        private readonly IList<IQueryParameter> _Parameters = new List<IQueryParameter>(); 
 
         private DbParameter InternalCreateParameter(String name, Object value)
         {
@@ -23,6 +24,7 @@ namespace VODB.DbLayer
             _Command.Parameters.Add(
                 InternalCreateParameter(parameter.Name, parameter.Value)
             );
+            _Parameters.Add(parameter);
         }
 
         public void CreateParameter(String name, Object value)
@@ -52,16 +54,24 @@ namespace VODB.DbLayer
 
         public void RefreshParametersValues(IEnumerable<IQueryParameter> parameters)
         {
+            bool withCreate = _Parameters.Count == 0;
+            
             int i = -1;
             foreach (var parameter in parameters)
             {
-                if (InvalidDateTime(parameter))
+                if (withCreate)
                 {
+                    _Parameters.Add(parameter);
+                }
+
+                if (InvalidDateTime(parameter))
+                {   
                     _Command.Parameters[++i].Value = DBNull.Value;
                 }
                 else
                 {
-                    _Command.Parameters[++i].Value = ParseValue(parameter);
+                    _Parameters[++i].Value = parameter.Value;
+                    _Command.Parameters[i].Value = ParseValue(_Parameters[i]);
                 }
 
                 FinalizeParameter(parameter.type, _Command.Parameters[i]);
@@ -77,7 +87,7 @@ namespace VODB.DbLayer
 
             if (parameter.Field.BindToField != null && parameter.Field.Info.PropertyType == parameter.Value.GetType())
             {
-                return parameter.Field.GetFieldFinalValue(parameter.Value);
+                return parameter.Field.BindToField.GetFieldFinalValue(parameter.Value);
             }
 
             return parameter.Value;

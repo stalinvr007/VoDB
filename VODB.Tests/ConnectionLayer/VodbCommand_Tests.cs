@@ -3,6 +3,7 @@ using System.Collections;
 using NUnit.Framework;
 using VODB.DbLayer;
 using VODB.ExpressionsToSql;
+using VODB.Infrastructure;
 
 namespace VODB.Tests.ConnectionLayer
 {
@@ -31,8 +32,8 @@ namespace VODB.Tests.ConnectionLayer
                     return v.MakeCommand("Update Employees Set LastName = @p2 where EmployeeId = @p1")
                         .SetParametersNames(new[] { "@p1", "@p2" })
                         .SetParametersValues(new[] { 
-                            new QueryParameter { Value = 1}, 
-                            new QueryParameter { Value = "wow" }
+                            new QueryParameter { Value = 1 , Field = new Field("EmployeeId", typeof(int), null, null)}, 
+                            new QueryParameter { Value = "wow" , Field = new Field("LastName", typeof(string), null, null) }
                         });
                 })
                 .Returns(1)
