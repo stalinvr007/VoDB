@@ -105,9 +105,11 @@ namespace VODB.EntityTranslation
             var bind = item.Attribute<DbBindAttribute>();
             String bindFieldName = null;
 
+            MethodInfo getMethod = item.GetGetMethod();
+
             if (bind != null)
             {
-                if (!item.GetGetMethod().IsVirtual)
+                if (!getMethod.IsVirtual)
                 {
                     throw new InvalidMappingException("The field [{0}] is marked with DbBind but is not Virtual.", field.Name);
                 }
@@ -115,7 +117,7 @@ namespace VODB.EntityTranslation
                 bindFieldName = bind.FieldName;
             }
 
-            if (item.GetGetMethod().IsVirtual)
+            if (getMethod.IsVirtual && !getMethod.ReturnType.Assembly.FullName.StartsWith("mscorlib, "))
             {
                 bindFieldName = bindFieldName ?? field.Name;
 
