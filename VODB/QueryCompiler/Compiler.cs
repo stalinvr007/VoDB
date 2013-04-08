@@ -46,7 +46,7 @@ namespace VODB.QueryCompiler
             _Breaker = breaker;
             Table = _Translator.Translate(typeof(TEntity));
 
-            AddParameter = v => _Parameters.Add(++paramCount, v);
+            AddParameter = (f, v) => _Parameters.Add(++paramCount, f, v);
         }
 
         protected QueryBase(IEntityTranslator translator, IExpressionBreaker breaker, IInternalSession session, ISqlCompiler conditions, IEnumerable<IQueryParameter> parameters)
@@ -59,13 +59,13 @@ namespace VODB.QueryCompiler
             }
         } 
 
-        public Func<Object, String> AddParameter { get; set; }
+        public Func<IField, Object, String> AddParameter { get; set; }
         private int paramCount;
 
 
-        private String AddParam(Object value)
+        private String AddParam(IField field, Object value)
         {
-            return AddParameter(value);
+            return AddParameter(field, value);
         }
 
 
@@ -73,11 +73,13 @@ namespace VODB.QueryCompiler
 
         public IQueryCompilerLevel2<TEntity> Where(Expression<Func<TEntity, bool>> expression)
         {
+            var pieces = _Breaker.BreakExpression(expression).ToList();
+
             _Composite.Add(_Where);
             _Composite.Add(
                 new PiecesCompiler(
-                    _Breaker.BreakExpression(expression),
-                    new ParameterCompiler(AddParam, expression.GetRightValue(), expression.Body.NodeType))
+                    pieces,
+                    new ParameterCompiler(v => AddParam(pieces.Last().Field, v), expression.GetRightValue(), expression.Body.NodeType))
             );
             
             return this;
@@ -116,11 +118,13 @@ namespace VODB.QueryCompiler
         public IQueryCompilerLevel2<TEntity> And(Expression<Func<TEntity, bool>> expression)
         {
             CloseParenthesis();
+            var pieces = _Breaker.BreakExpression(expression).ToList();
+
             _Composite.Add(_And);
             _Composite.Add(
                 new PiecesCompiler(
-                    _Breaker.BreakExpression(expression),
-                    new ParameterCompiler(AddParam, expression.GetRightValue(), expression.Body.NodeType))
+                    pieces,
+                    new ParameterCompiler(v => AddParam(pieces.Last().Field, v), expression.GetRightValue(), expression.Body.NodeType))
             );
 
             return this;
@@ -165,13 +169,14 @@ namespace VODB.QueryCompiler
         {
             OpenParenthesis();
 
+            var pieces = _Breaker.BreakExpression(expression).ToList();
+
             _Composite.Add(_Or);
             _Composite.Add(
                 new PiecesCompiler(
-                    _Breaker.BreakExpression(expression),
-                    new ParameterCompiler(AddParam, expression.GetRightValue(), expression.Body.NodeType))
+                    pieces,
+                    new ParameterCompiler(v => AddParam(pieces.Last().Field, v), expression.GetRightValue(), expression.Body.NodeType))
             );
-
 
             calledFromOr = true;
             return this;
@@ -205,7 +210,8 @@ namespace VODB.QueryCompiler
         public IQueryCompilerLevel2<TEntity> Like(string value, WildCard token = WildCard.Both)
         {
             _Composite.Add(
-                new PiecesCompiler(_Pieces, new LikeCompiler(new ParameterCompiler(AddParam, value, ExpressionType.Parameter), token))
+                new PiecesCompiler(_Pieces, new LikeCompiler(
+                    new ParameterCompiler(v => AddParam(_Pieces.Last().Field, v), value, ExpressionType.Parameter), token))
             );
             
             return this;
@@ -222,7 +228,7 @@ namespace VODB.QueryCompiler
             }
             else
             {
-                _Composite.Add(new PiecesCompiler(_Pieces, new InStatementCompiler(collection.Select(f => new ParameterCompiler(AddParam, f, ExpressionType.Parameter)))));
+                _Composite.Add(new PiecesCompiler(_Pieces, new InStatementCompiler(collection.Select(f => new ParameterCompiler(v => AddParam(_Pieces.Last().Field, v), f, ExpressionType.Parameter)))));
             }
             
             return this;
@@ -231,7 +237,9 @@ namespace VODB.QueryCompiler
         public IQueryCompilerLevel2<TEntity> Between<TField>(TField firstValue, TField secondValue)
         {
             _Composite.Add(
-                new PiecesCompiler(_Pieces, new BetweenCompiler(new ParameterCompiler(AddParam, firstValue, ExpressionType.Parameter), new ParameterCompiler(AddParam, secondValue, ExpressionType.Parameter)))
+                new PiecesCompiler(_Pieces, new BetweenCompiler(
+                    new ParameterCompiler(v => AddParam(_Pieces.Last().Field, v), firstValue, ExpressionType.Parameter),
+                    new ParameterCompiler(v => AddParam(_Pieces.Last().Field, v), secondValue, ExpressionType.Parameter)))
             );
             
             return this;

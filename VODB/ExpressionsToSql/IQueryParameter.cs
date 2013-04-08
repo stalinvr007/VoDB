@@ -1,4 +1,5 @@
 using System;
+using VODB.Infrastructure;
 
 namespace VODB.ExpressionsToSql
 {
@@ -7,5 +8,6 @@ namespace VODB.ExpressionsToSql
         String Name { get; }
         Object Value { get; set; }
         Type type { get; }
+        IField Field { get; set; }
     }
 }

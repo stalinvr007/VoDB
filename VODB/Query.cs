@@ -21,7 +21,7 @@ namespace VODB
         IQueryCondition WhereCompile { get; }
         ISqlCompiler SqlCompiler { get; }
 
-        Func<Object, String> AddParameter { get; set; }
+        Func<IField, object, string> AddParameter { get; set; }
     }
 
     public static class Param

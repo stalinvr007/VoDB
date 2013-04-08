@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using VODB.Infrastructure;
 
 namespace VODB.ExpressionsToSql
 {
     static class IQueryParameterHelper
     {
 
-        public static String Add(this ICollection<IQueryParameter> collection, int level, object value)
+        public static String Add(this ICollection<IQueryParameter> collection, int level, IField field, object value)
         {
             var parameter = new QueryParameter
             {
                 Name = "@p" + level,
-                Value = value
+                Value = value,
+                Field = field
             };
 
             collection.Add(parameter);

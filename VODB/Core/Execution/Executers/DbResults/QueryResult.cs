@@ -55,7 +55,7 @@ namespace VODB.Core.Execution.Executers.DbResults
         public VODB.Infrastructure.ITable Table { get; private set; }
         public ISqlCompiler SqlCompiler { get; private set; }
 
-        public Func<Object, String> AddParameter { get; set; }
+        public Func<VODB.Infrastructure.IField, Object, String> AddParameter { get; set; }
 
         public QueryResult(IInternalSession session, IEntityLoader loader, IEntityFactory entityFactory)
         {
