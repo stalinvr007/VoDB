@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 
 namespace VODB.Exceptions.Handling
 {
-    public class TruncatedExceptionHandler : IExceptionHandler
+    public class OnTruncatedExceptionHandler : IExceptionHandler
     {
         #region IExceptionHandler Members
 

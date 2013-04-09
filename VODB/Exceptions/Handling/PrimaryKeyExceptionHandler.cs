@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 
 namespace VODB.Exceptions.Handling
 {
-    internal class PrimaryKeyExceptionHandler : IExceptionHandler
+    internal class OnPrimaryKeyExceptionHandler : IExceptionHandler
     {
         #region IExceptionHandler Members
 

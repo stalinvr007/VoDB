@@ -51,9 +51,9 @@ namespace VODB
 
             ExceptionHandlers = new List<IExceptionHandler>
                                     {
-                                        new PrimaryKeyExceptionHandler(),
-                                        new UniqueKeyExceptionHandler(),
-                                        new TruncatedExceptionHandler()
+                                        new OnPrimaryKeyExceptionHandler(),
+                                        new OnUniqueKeyExceptionHandler(),
+                                        new OnTruncatedExceptionHandler()
                                     };
 
 

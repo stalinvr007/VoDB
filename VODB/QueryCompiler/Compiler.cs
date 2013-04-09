@@ -228,7 +228,9 @@ namespace VODB.QueryCompiler
             }
             else
             {
-                _Composite.Add(new PiecesCompiler(_Pieces, new InStatementCompiler(collection.Select(f => new ParameterCompiler(v => AddParam(_Pieces.Last().Field, v), f, ExpressionType.Parameter)))));
+                _Composite.Add(new PiecesCompiler(_Pieces, 
+                    new InStatementCompiler(collection.Select(f => new ParameterCompiler(v => AddParam(_Pieces.Last().Field, v), f, ExpressionType.Parameter))))
+                );
             }
             
             return this;

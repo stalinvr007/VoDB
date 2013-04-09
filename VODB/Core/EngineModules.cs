@@ -137,9 +137,9 @@ namespace VODB.Core
             Bind<IParameterSetter>().To<GuidParameterSetter>();
 
             /* Exception Handlers */
-            Bind<IExceptionHandler>().To<PrimaryKeyExceptionHandler>();
-            Bind<IExceptionHandler>().To<UniqueKeyExceptionHandler>();
-            Bind<IExceptionHandler>().To<TruncatedExceptionHandler>();
+            Bind<IExceptionHandler>().To<OnPrimaryKeyExceptionHandler>();
+            Bind<IExceptionHandler>().To<OnUniqueKeyExceptionHandler>();
+            Bind<IExceptionHandler>().To<OnTruncatedExceptionHandler>();
 
             /* Where Expression Handlers */
             Bind<IWhereExpressionHandler>().To<SimpleWhereExpressionHandler>();

@@ -17,9 +17,9 @@ namespace VODB.Tests.ExceptionHandlers
         [TestFixtureSetUp]
         public void Init_Handlers() 
         {
-            Config.RegisterExceptionHandler(new PrimaryKeyExceptionHandler())
-                .RegisterExceptionHandler(new TruncatedExceptionHandler())
-                .RegisterExceptionHandler(new UniqueKeyExceptionHandler());
+            Config.RegisterExceptionHandler(new OnPrimaryKeyExceptionHandler())
+                .RegisterExceptionHandler(new OnTruncatedExceptionHandler())
+                .RegisterExceptionHandler(new OnUniqueKeyExceptionHandler());
         }
 
         private static IEnumerable GetExecutions()

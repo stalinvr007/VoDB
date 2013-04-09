@@ -14,9 +14,9 @@ namespace VODB
         static Config()
         {
             handlers
-                .RegisterExceptionHandler(new PrimaryKeyExceptionHandler())
-                .RegisterExceptionHandler(new TruncatedExceptionHandler())
-                .RegisterExceptionHandler(new UniqueKeyExceptionHandler());
+                .RegisterExceptionHandler(new OnPrimaryKeyExceptionHandler())
+                .RegisterExceptionHandler(new OnTruncatedExceptionHandler())
+                .RegisterExceptionHandler(new OnUniqueKeyExceptionHandler());
         }
 
         internal static void MapNameSpace(Type type)

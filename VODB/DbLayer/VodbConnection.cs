@@ -10,6 +10,8 @@ namespace VODB.DbLayer
         private IVodbTransaction _Transaction;
         private DbTransaction _DbTransaction;
 
+        public static int ConnectionCount;
+
         public VodbConnection(IDbConnectionCreator creator)
         {
             _Creator = creator;
@@ -37,6 +39,7 @@ namespace VODB.DbLayer
             CreateConnection();
             _DbConnection.Open();
             IsOpened = true;
+            ++ConnectionCount;
         }
 
         public void Close()
@@ -52,6 +55,7 @@ namespace VODB.DbLayer
                 if (_DbConnection != null)
                 {
                     _DbConnection.Close();
+                    --ConnectionCount;
                 }
             }
             finally
@@ -62,7 +66,7 @@ namespace VODB.DbLayer
 
         public IVodbTransaction BeginTransaction()
         {
-            if (_Transaction == null)
+            if (_Transaction == null || _Transaction.RolledBack)
             {
                 Open();
                 _DbTransaction = _DbConnection.BeginTransaction();
