@@ -22,20 +22,25 @@ namespace VODB.Sessions.EntityFactories
         public void Intercept(IInvocation invocation)
         {
             invocation.Proceed();
+            
+
             MethodInfo method = invocation.Method;
             if (method.Name.StartsWith("set_"))
             {
                 return;
             }
 
-            object result = null;
-            if (lastResult.TryGetValue(method, out result))
+            if (method.Name.StartsWith("get_"))
             {
-                invocation.ReturnValue = result;
-                return;
+                object result = null;
+                if (lastResult.TryGetValue(method, out result))
+                {
+                    invocation.ReturnValue = result;
+                    return;
+                }
+
+                lastResult[method] = invocation.ReturnValue = _Session.GetById(invocation.ReturnValue);
             }
-            
-            lastResult[method] = invocation.ReturnValue = _Session.GetById(invocation.ReturnValue);
         }
 
         public bool InterceptCollections

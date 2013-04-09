@@ -88,8 +88,9 @@ namespace VODB.Sessions.EntityFactories
         public void Intercept(IInvocation invocation)
         {
             invocation.Proceed();
-            MethodInfo method = invocation.Method;
 
+
+            MethodInfo method = invocation.Method;
 
             if (method.Name.StartsWith("set_"))
             {
@@ -98,15 +99,18 @@ namespace VODB.Sessions.EntityFactories
                 return;
             }
 
-            // trys to get a cached value.
-            object result = null;
-            if (lastResult.TryGetValue(method, out result))
+            if (method.Name.StartsWith("get_"))
             {
-                invocation.ReturnValue = result;
-                return;
-            }
+                // trys to get a cached value.
+                object result = null;
+                if (lastResult.TryGetValue(method, out result))
+                {
+                    invocation.ReturnValue = result;
+                    return;
+                }
 
-            SetResult(invocation, method);
+                SetResult(invocation, method);
+            }
         }
 
         private static IEnumerable<T> ProxyGenericIterator<T>(object target, IEnumerable enumerable)
