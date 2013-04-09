@@ -5,18 +5,25 @@ using System.Text;
 
 namespace VODB.Exceptions.Handling
 {
-    class ExceptionHandlerComposite : IExceptionHandler, IExceptionHandlerCollection
+    class ExceptionHandlerComposite : IInternalExceptionHandlerCollection
     {
         private readonly ICollection<IExceptionHandler> handlers = new List<IExceptionHandler>();
 
-        public void RegisterExceptionHandler(IExceptionHandler handler)
+        public IExceptionHandlerCollection RegisterExceptionHandler(IExceptionHandler handler)
         {
             handlers.Add(handler);
+            return this;
         }
 
-        public void UnRegisterExceptionHandler(IExceptionHandler handler)
+        public IExceptionHandlerCollection UnRegisterExceptionHandler(IExceptionHandler handler)
         {
             handlers.Remove(handler);
+            return this;
+        }
+
+        public void UnregisterAllExceptionHandlers()
+        {
+            handlers.Clear();
         }
 
         public bool CanHandle(Exception exception)

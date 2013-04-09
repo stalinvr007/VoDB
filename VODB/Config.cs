@@ -9,7 +9,15 @@ namespace VODB
     public static class Config
     {
 
-        static ExceptionHandlerComposite handlers = new ExceptionHandlerComposite();
+        static IInternalExceptionHandlerCollection handlers = new ExceptionHandlerComposite();
+
+        static Config()
+        {
+            handlers
+                .RegisterExceptionHandler(new PrimaryKeyExceptionHandler())
+                .RegisterExceptionHandler(new TruncatedExceptionHandler())
+                .RegisterExceptionHandler(new UniqueKeyExceptionHandler());
+        }
 
         internal static void MapNameSpace(Type type)
         {
@@ -21,6 +29,8 @@ namespace VODB
                 Engine.Map(_type);
             }
         }
+
+        #region EXCEPTION HANDLING
 
         public static IExceptionHandlerCollection RegisterExceptionHandler(IExceptionHandler handler)
         {
@@ -34,6 +44,14 @@ namespace VODB
             return handlers;
         }
 
+        internal static void UnRegisterAllExceptionHandlers()
+        {
+            handlers.UnregisterAllExceptionHandlers();   
+        }
+
+        #endregion
+        
+        #region PUBLIC ACCESS PROPERTIES
 
         /// <summary>
         /// Gets the Registered Exception Handlers.
@@ -48,7 +66,8 @@ namespace VODB
                 return handlers;
             }
         }
-    
+        
+        #endregion
 
     }
 }

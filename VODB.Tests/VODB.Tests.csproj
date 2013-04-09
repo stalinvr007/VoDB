@@ -86,6 +86,7 @@
     <Compile Include="EntitiesAsserts.cs" />
     <Compile Include="Entities_Test_Helpers.cs" />
     <Compile Include="EntityTranslator_Tests.cs" />
+    <Compile Include="ExceptionHandlers\ExceptionHandling_Tests.cs" />
     <Compile Include="ExpressionParser_Tests.cs" />
     <Compile Include="Mapping\OrderedEntityMapper_Tests.cs" />
     <Compile Include="QueryCompiler\ExpressionBreaker_Tests.cs" />
