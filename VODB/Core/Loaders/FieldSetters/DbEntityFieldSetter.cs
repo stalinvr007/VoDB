@@ -39,7 +39,7 @@ namespace VODB.Core.Loaders.FieldSetters
         public void SetValue<TEntity>(TEntity entity, IInternalSession session, Field field, Object value,
                                       Func<Field, Object> getValueFromReader)
         {
-            object foreignEntity = _Factory.Make(field.FieldType, session);
+            object foreignEntity = _Factory.Make(field.FieldType, session, null);
 
             Table table = Engine.GetTable(field.FieldType);
 

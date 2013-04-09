@@ -72,7 +72,7 @@ namespace VODB
 
         public static TEntity Make<TEntity>(this IEntityFactory factory, IInternalSession session)
         {
-            return (TEntity)factory.Make(typeof(TEntity), session);
+            return (TEntity)factory.Make(typeof(TEntity), session, null);
         }
 
         public static void SetParameters(this DbCommand cmd, IEnumerable<KeyValuePair<Key, Object>> collection)

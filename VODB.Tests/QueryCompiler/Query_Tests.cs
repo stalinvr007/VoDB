@@ -28,6 +28,13 @@ namespace VODB.Tests.QueryCompiler
 
             yield return MakeTestCase(
 
+                Select.All.From<Employee>().Where("[EmployeeId] > {0}", 1)
+
+            ).Returns(SELECT_EMPLOYEES + " Where [EmployeeId] > 1")
+            .SetName("Query employee (Where EmployeeId > 1) (Manual)");
+
+            yield return MakeTestCase(
+
                 Select.All.From<Employee>().Where(e => e.ReportsTo == Param.Get<Employee>()), 1
 
             ).Returns(SELECT_EMPLOYEES + " Where [ReportsTo] = @p1")

@@ -8,13 +8,13 @@ using VODB.QueryCompiler.ExpressionPiecesToSql;
 
 namespace VODB
 {
-    public interface IQuery<out TEntity> : IQuery
+    public interface IQuery<out TEntity>
         where TEntity : class, new()
     {
         IEnumerable<TEntity> Execute(ISession session);
     }
 
-    public interface IQuery : IQueryCondition
+    internal interface IQuery : IQueryCondition
     {
         ITable Table { get; }
         IVodbCommand CachedCommand { get; set; }
@@ -22,6 +22,7 @@ namespace VODB
         ISqlCompiler SqlCompiler { get; }
 
         Func<IField, object, string> AddParameter { get; set; }
+        Object InternalWhere(IField field, IQueryParameter parameter);
     }
 
     public static class Param

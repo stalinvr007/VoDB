@@ -167,7 +167,7 @@ namespace VODB.Sessions
             {
                 if (reader.Read())
                 {
-                    var newEntity = _EntityFactory.Make(entity.GetType(), this) as TEntity;
+                    var newEntity = _EntityFactory.Make(entity.GetType(), this, null) as TEntity;
                     _EntityLoader.Load(newEntity, this, reader);
                     return newEntity;
                 }

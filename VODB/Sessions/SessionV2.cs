@@ -80,7 +80,7 @@ namespace VODB.Sessions
                 while (reader.Read())
                 {
                     yield return _Mapper.Map(
-                        (TEntity)_EntityFactory.Make(entityType, this), 
+                        (TEntity)_EntityFactory.Make(entityType, this, _Translator), 
                         table, 
                         reader
                     );
@@ -99,7 +99,7 @@ namespace VODB.Sessions
             try
             {
                 return reader.AsParallel().Transform(t => _Mapper.Map(
-                    (TEntity)_EntityFactory.Make(entityType, this), 
+                    (TEntity)_EntityFactory.Make(entityType, this, _Translator), 
                     table, 
                     t.Reader)
                 );
@@ -127,17 +127,30 @@ namespace VODB.Sessions
             return QueryStart.From<TEntity>(this);
         }
 
+        private static IQuery GetInternalQuery<TEntity>(IQuery<TEntity> query) where TEntity : class, new()
+        {
+            var internalQuery = query as IQuery;
+
+            if (internalQuery == null)
+            {
+                throw new ArgumentException("The IQuery<> passed as argument does not implement IQuery", "query");
+            }
+            return internalQuery;
+        }
+
         public IEnumerable<TEntity> InternalExecuteQuery<TEntity>(IQuery<TEntity> query, params object[] args) where TEntity : class, new()
         {
             var table = GetTable<TEntity>();
+            // Make sure the query received is a IQuery implementation.
+            var internalQuery = GetInternalQuery<TEntity>(query);
 
             // Make or get the command.
-            var command = query.CachedCommand ??
-                _Connection.MakeCommand(query.Compile())
-                .SetParameters(query.Parameters);
+            var command = internalQuery.CachedCommand ??
+                _Connection.MakeCommand(internalQuery.Compile())
+                .SetParameters(internalQuery.Parameters);
 
             // Holds out the command to use later again.
-            query.CachedCommand = command.SetParametersValues(
+            internalQuery.CachedCommand = command.SetParametersValues(
                 args.Select(v => new QueryParameter { Value = v })
             );
 
@@ -146,22 +159,25 @@ namespace VODB.Sessions
 
         public IEnumerable<TEntity> ExecuteQuery<TEntity>(IQuery<TEntity> query, params Object[] args) where TEntity : class, new()
         {
-            query.Compile();
-            if (query.Parameters.Count() != args.Length)
+            // Make sure the query received is a IQuery implementation.
+            var internalQuery = GetInternalQuery<TEntity>(query);
+
+            internalQuery.Compile();
+            if (internalQuery.Parameters.Count() != args.Length)
             {
                 throw new ArgumentException("The arguments expected to the query were not met.", "args");
             }
 
             // Resets the values.
             var i = 0;
-            foreach (var parameter in query.Parameters)
+            foreach (var parameter in internalQuery.Parameters)
             {
                 parameter.Value = args[i++];
             }
             
 
             // Makes a new query in order to enable lazy load.
-            return QueryStart.From<TEntity>(this, query.SqlCompiler, query.Parameters);
+            return QueryStart.From<TEntity>(this, internalQuery.SqlCompiler, internalQuery.Parameters);
         }
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()

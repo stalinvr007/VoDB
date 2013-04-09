@@ -41,7 +41,7 @@ namespace VODB.Core.Execution.Executers.DbResults
                                           IQueryCompilerLevel2<TEntity>,
                                           IQueryCompilerLevel3<TEntity>,
                                           IQueryCompilerLevel4<TEntity>,
-                                          IQueryCompilerStub<TEntity>
+                                          IQueryCompilerStub<TEntity>, IQuery
         where TEntity : class, new()
     {
         private readonly IEntityFactory _EntityFactory;
@@ -392,5 +392,9 @@ namespace VODB.Core.Execution.Executers.DbResults
             get { throw new NotImplementedException(); }
         }
 
+        public object InternalWhere(VODB.Infrastructure.IField field, ExpressionsToSql.IQueryParameter parameter)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

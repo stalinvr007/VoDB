@@ -42,7 +42,7 @@ namespace VODB.Core.Execution.Executers
             {
                 return reader.AsParallel().Transform(t =>
                 {
-                    object newEntity = _Factory.Make(entityType, session);
+                    object newEntity = _Factory.Make(entityType, session, null);
                     _Loader.Load(newEntity, session, t.Reader);
                     return newEntity;
                 });

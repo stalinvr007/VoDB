@@ -9,7 +9,7 @@ using VODB.EntityTranslation;
 namespace VODB.QueryCompiler
 {
 
-    public interface IQueryCompilerCommun<TEntity> : IEnumerable<TEntity>
+    public interface IQueryCompilerCommun<TEntity> : IEnumerable<TEntity>, IQueryCondition
     {
         /// <summary>
         /// Makes this a count query.

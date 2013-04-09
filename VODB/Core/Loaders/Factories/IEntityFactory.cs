@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
+using VODB.EntityTranslation;
 
 namespace VODB.Core.Loaders.Factories
 {
@@ -10,10 +11,10 @@ namespace VODB.Core.Loaders.Factories
 
         #region IEntityFactory Members
 
-        public Object Make(Type type, IInternalSession session)
+        public Object Make(Type type, IInternalSession session, IEntityTranslator translator)
         {
             return type.Namespace.Equals("Castle.Proxies")
-                           ? Make(type.BaseType, session)
+                           ? Make(type.BaseType, session, null)
                            : proxyGenerator.CreateClassProxy(type,
                                                              new Interceptor(
                                                                  session));
@@ -24,6 +25,6 @@ namespace VODB.Core.Loaders.Factories
 
     internal interface IEntityFactory
     {
-        Object Make(Type type, IInternalSession session);
+        Object Make(Type type, IInternalSession session, IEntityTranslator translator);
     }
 }

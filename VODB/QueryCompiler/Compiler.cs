@@ -14,7 +14,7 @@ using VODB.QueryCompiler.ExpressionPiecesToSql;
 namespace VODB.QueryCompiler
 {
 
-    abstract class QueryBase<TEntity> : IQueryCompilerLevel1<TEntity>, IQueryCompilerLevel2<TEntity>, IQueryCompilerLevel3<TEntity>, IQueryCompilerLevel4<TEntity>, IQueryCompilerStub<TEntity>
+    abstract class QueryBase<TEntity> :IQuery, IQueryCompilerLevel1<TEntity>, IQueryCompilerLevel2<TEntity>, IQueryCompilerLevel3<TEntity>, IQueryCompilerLevel4<TEntity>, IQueryCompilerStub<TEntity>
         where TEntity : class, new()
     {
 
@@ -306,7 +306,14 @@ namespace VODB.QueryCompiler
         }
 
         protected abstract string Compile(ITable table);
-                
+
+        public object InternalWhere(IField field, IQueryParameter parameter)
+        {
+            _Composite.Add(_Composite.Count == 0 ? _Where : _And);
+            _Composite.Add(new ConstantCompiler("{0}", field.BindOrName));
+            _Composite.Add(new ParameterCompiler(v => AddParam(field, v), parameter.Value, ExpressionType.Equal));
+            return this;
+        }
     }
 
     class SelectAllFrom<TEntity> : QueryBase<TEntity> where TEntity : class, new()
