@@ -43,11 +43,14 @@ namespace VODB.Sessions.EntityFactories
 
             MethodInfo methodIterator = ProxyGenericIteratorMethod.MakeGenericMethod(entityType);
             MethodInfo me = SessionGenericExecuteQueryMethod.MakeGenericMethod(entityType);
-            
-            lastResult[method] = invocation.ReturnValue = methodIterator.Invoke(null, new Object[] {
-                    invocation.InvocationTarget,
-                    me.Invoke(_Session, new Object[]{ })
-                });
+
+            object result = methodIterator.Invoke(null, new Object[] 
+            {
+                invocation.InvocationTarget,
+                me.Invoke(_Session, new Object[]{ })
+            });
+
+            lastResult[method] = invocation.ReturnValue = result;
         }
 
         public void Intercept(IInvocation invocation)

@@ -14,6 +14,11 @@ namespace VODB.Sessions.EntityFactories
 
         public object Make(Type type, IInternalSession session)
         {
+            if (type.GetInterfaces().Contains(typeof(IProxyTargetAccessor)))
+            {
+                return Make(type.BaseType, session);
+            }
+
             return proxyGenerator.CreateClassProxy(type, 
                 new ProxyGenerationOptions {
                     Selector = new InterceptorSelector(
