@@ -109,11 +109,11 @@
 
 <h2>Precompiled Queries</h2>
 
-<div class="highlight"><pre>   <span class="kt">var</span> <span class="n">query</span> <span class="p">=</span> <span class="n">Select</span><span class="p">.</span><span class="n">All</span><span class="p">.</span><span class="n">From</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">Where</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">ReportsTo</span><span class="p">).</span><span class="n">In</span><span class="p">(</span>
-      <span class="n">Select</span><span class="p">.</span><span class="n">All</span><span class="p">.</span><span class="n">From</span><span class="p">&lt;</span><span class="n">Orders</span><span class="p">&gt;()</span>
-   <span class="p">);</span>
+<div class="highlight"><pre><span class="kt">var</span> <span class="n">query</span> <span class="p">=</span> <span class="n">Select</span><span class="p">.</span><span class="n">All</span><span class="p">.</span><span class="n">From</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;().</span><span class="n">Where</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">ReportsTo</span><span class="p">).</span><span class="n">In</span><span class="p">(</span>
+    <span class="n">Select</span><span class="p">.</span><span class="n">All</span><span class="p">.</span><span class="n">From</span><span class="p">&lt;</span><span class="n">Orders</span><span class="p">&gt;()</span>
+<span class="p">);</span>
 
-   <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;(</span><span class="n">query</span><span class="p">);</span>
+<span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;(</span><span class="n">query</span><span class="p">);</span>
 </pre></div>
 
 <h2>Inserting employee</h2>
@@ -172,6 +172,28 @@
 
       <span class="p">});</span> <span class="c1">// Commits the changes</span>
    <span class="p">}</span>
+</pre></div>
+
+<h2>Exception Handling</h2>
+
+<div class="highlight"><pre><span class="n">VODB</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">RegisterExceptionHandler</span><span class="p">(</span>
+    <span class="k">new</span> <span class="nf">OnPrimaryKeyViolationHandler</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="k">class</span> <span class="nc">OnPrimaryKeyViolationHandler</span><span class="p">:</span> <span class="n">IExceptionHandler</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">bool</span> <span class="nf">CanHandle</span><span class="p">(</span><span class="n">Exception</span> <span class="n">exception</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">exception</span> <span class="k">is</span> <span class="n">SqlException</span> <span class="p">&amp;&amp;</span>
+            <span class="n">exception</span><span class="p">.</span><span class="n">Message</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">"Violation of PRIMARY KEY"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Handle</span><span class="p">(</span><span class="n">Exception</span> <span class="n">exception</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Do something here and rethrow the exception wrapped or not.</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">PrimaryKeyViolationException</span><span class="p">(</span><span class="n">exception</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 <h3>Support or Contact</h3>
