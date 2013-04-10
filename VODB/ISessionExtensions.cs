@@ -47,7 +47,7 @@ namespace VODB
         }
 
 
-        public static IQueryCompilerLevel2<TEntity> In<TEntity, TField>(this IQueryCompilerLevel4<TEntity> query, TField[] data)
+        public static IQueryCompilerLevel2<TEntity> In<TEntity, TField>(this IQueryCompilerLevel4<TEntity> query, params TField[] data)
             where TEntity : class, new()
         {
             return query.In(data.ToList().Cast<Object>());

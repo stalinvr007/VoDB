@@ -4,7 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using VODB.Exceptions;
 using VODB.ExpressionsToSql;
+using VODB.QueryCompiler;
 using VODB.Tests.Models.Northwind;
+using System.Linq;
 
 namespace VODB.Tests.QueryCompiler
 {
@@ -248,6 +250,21 @@ namespace VODB.Tests.QueryCompiler
             var result = query.Compile();
             Assert.That(((IList<IQueryParameter>)query.Parameters).Count, Is.EqualTo(paramCount));
             return result;
+        }
+
+        [Test]
+        public void QueryCompiler_Assert_PreCompiledQuery_Parameter_Value_Changes()
+        {
+            // basic precompiled query.
+            IQueryCompilerLevel2<Employee> query = Select.All.From<Employee>()
+                .Where(e => e.EmployeeId > Param.Get<int>());
+
+            using (var session = new Session())
+            {
+                Assert.That(session.ExecuteQuery(query, 1).Count(), Is.EqualTo(8));
+                Assert.That(session.ExecuteQuery(query, 2).Count(), Is.EqualTo(7));
+            }
+
         }
 
     }

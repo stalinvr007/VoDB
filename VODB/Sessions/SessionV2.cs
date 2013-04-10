@@ -9,6 +9,8 @@ using VODB.Infrastructure;
 using VODB.QueryCompiler;
 using VODB.Core.Loaders.Factories;
 using VODB.ExpressionsToSql;
+using VODB.Exceptions;
+using System.Collections;
 
 namespace VODB.Sessions
 {
@@ -80,8 +82,8 @@ namespace VODB.Sessions
                 while (reader.Read())
                 {
                     yield return _Mapper.Map(
-                        (TEntity)_EntityFactory.Make(entityType, this, _Translator), 
-                        table, 
+                        (TEntity)_EntityFactory.Make(entityType, this, _Translator),
+                        table,
                         reader
                     );
                 }
@@ -99,8 +101,8 @@ namespace VODB.Sessions
             try
             {
                 return reader.AsParallel().Transform(t => _Mapper.Map(
-                    (TEntity)_EntityFactory.Make(entityType, this, _Translator), 
-                    table, 
+                    (TEntity)_EntityFactory.Make(entityType, this, _Translator),
+                    table,
                     t.Reader)
                 );
             }
@@ -165,7 +167,21 @@ namespace VODB.Sessions
             internalQuery.Compile();
             if (internalQuery.Parameters.Count() != args.Length)
             {
-                throw new ArgumentException("The arguments expected to the query were not met.", "args");
+
+                args = args.SelectMany<Object, Object>(val =>
+                {
+                    Type valueType = val.GetType();
+                    if (val != null && valueType != typeof(String) && valueType.GetInterfaces().Contains(typeof(IEnumerable)))
+                    {
+                        return (val as IEnumerable).Cast<Object>();
+                    }
+                    return new[] { val };
+                }).ToArray();
+
+                if (internalQuery.Parameters.Count() != args.Length)
+                {
+                    throw new WrongArgumentsException(internalQuery, args);
+                }
             }
 
             // Resets the values.
@@ -174,7 +190,7 @@ namespace VODB.Sessions
             {
                 parameter.Value = args[i++];
             }
-            
+
 
             // Makes a new query in order to enable lazy load.
             return QueryStart.From<TEntity>(this, internalQuery.SqlCompiler, internalQuery.Parameters);
@@ -268,7 +284,7 @@ namespace VODB.Sessions
             throw new NotImplementedException();
         }
 
-        
+
 
         public override string ToString()
         {
