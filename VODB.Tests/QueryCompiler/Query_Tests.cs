@@ -268,6 +268,24 @@ namespace VODB.Tests.QueryCompiler
         }
 
         [Test]
+        public void QueryCompiler_Assert_PreCompiledQuery_ChangeQuery()
+        {
+            // basic precompiled query.
+            IQueryCompilerLevel2<Employee> query = Select.All.From<Employee>()
+                .Where(e => e.EmployeeId > Param.Get<int>());
+
+            using (var session = new Session())
+            {
+                Assert.That(session.ExecuteQuery(query, 1).Count(), Is.EqualTo(8));
+                Assert.That(session.ExecuteQuery(query, 2).Count(), Is.EqualTo(7));
+
+                query.And(e => e.EmployeeId < Param.Get<int>());
+                Assert.That(session.ExecuteQuery(query, 1, 8).Count(), Is.EqualTo(6));
+            }
+
+        }
+
+        [Test]
         public void QueryCompiler_Assert_PreCompiledQuery_Parameters_SetBy_IEnumerable()
         {
             // basic precompiled query.
