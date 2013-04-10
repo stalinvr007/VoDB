@@ -116,6 +116,19 @@
 <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;(</span><span class="n">query</span><span class="p">);</span>
 </pre></div>
 
+<h2>Precompiled Queries Parameters</h2>
+
+<div class="highlight"><pre><span class="kt">var</span> <span class="n">query</span> <span class="p">=</span> <span class="n">Select</span><span class="p">.</span><span class="n">All</span><span class="p">.</span><span class="n">From</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;()</span>
+    <span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">EmployeeId</span> <span class="p">&gt;</span> <span class="n">Param</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;())</span>
+    <span class="p">.</span><span class="n">and</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">EmployeeId</span> <span class="p">&lt;</span> <span class="n">Param</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;())</span>
+    <span class="p">.</span><span class="n">and</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">City</span><span class="p">).</span><span class="n">In</span><span class="p">(</span><span class="n">Param</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;(),</span> <span class="n">Param</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;(),</span> <span class="n">Param</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;())</span>
+<span class="p">);</span>
+
+<span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;</span> <span class="n">employees</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;(</span><span class="n">query</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Lisbon"</span><span class="p">,</span> <span class="s">"New York"</span><span class="p">,</span> <span class="s">"Sao Paulo"</span> <span class="p">});</span>
+</pre></div>
+
+<p>The Framework will flatten the values of an IEnumerable argument. </p>
+
 <h2>Inserting employee</h2>
 
 <div class="highlight"><pre><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">session</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Session</span><span class="p">())</span> <span class="p">{</span>
