@@ -230,7 +230,7 @@ namespace VODB.Tests.QueryCompiler
 
                 Select.All.From<Orders>().Where(e => e.Shipper).In(
                     Select.All.From<Shippers>().Where(z => z.CompanyName == Param.Get<String>())
-                ).And(e => e.OrderDate == Param.Get<DateTime>()) , 2
+                ).And(e => e.OrderDate == Param.Get<DateTime>()), 2
 
             ).Returns("Select [OrderId], [CustomerId], [EmployeeId], [OrderDate], [RequiredDate], [ShippedDate], [ShipVia], [Freight], [ShipName], [ShipAddress], [ShipCity], [ShipRegion], [ShipPostalCode], [ShipCountry] From [Orders] Where [ShipVia] In (Select [ShipperId] From [Shippers] Where [CompanyName] = @p1) And [OrderDate] = @p2")
             .SetName("Query employee (Where EmployeeId in SubQuery multiple params)");
@@ -241,7 +241,7 @@ namespace VODB.Tests.QueryCompiler
 
             ).Returns(SELECT_EMPLOYEES)
             .SetName("Select All From Employee");
-            
+
         }
 
         [TestCaseSource("GetEmployeeQueries")]
@@ -263,6 +263,22 @@ namespace VODB.Tests.QueryCompiler
             {
                 Assert.That(session.ExecuteQuery(query, 1).Count(), Is.EqualTo(8));
                 Assert.That(session.ExecuteQuery(query, 2).Count(), Is.EqualTo(7));
+            }
+
+        }
+
+        [Test]
+        public void QueryCompiler_Assert_PreCompiledQuery_Parameters_SetBy_IEnumerable()
+        {
+            // basic precompiled query.
+            IQueryCompilerLevel2<Employee> query = Select.All.From<Employee>()
+                .Where(e => e.EmployeeId > Param.Get<int>())
+                .And(e => e.EmployeeId < Param.Get<int>());
+
+            using (var session = new Session())
+            {
+                Assert.That(session.ExecuteQuery(query, new[] { 1, 8 }).Count(), Is.EqualTo(6));
+                Assert.That(session.ExecuteQuery(query, 1, 8).Count(), Is.EqualTo(6));
             }
 
         }
