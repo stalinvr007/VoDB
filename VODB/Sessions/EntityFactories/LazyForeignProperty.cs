@@ -27,6 +27,7 @@ namespace VODB.Sessions.EntityFactories
             MethodInfo method = invocation.Method;
             if (method.Name.StartsWith("set_"))
             {
+                lastResult[method] = invocation.ReturnValue;
                 return;
             }
 

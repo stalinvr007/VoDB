@@ -21,8 +21,9 @@ namespace VODB.Sessions.EntityFactories
         
         public IInterceptor[] SelectInterceptors(Type type, System.Reflection.MethodInfo method, IInterceptor[] interceptors)
         {
-            var isCollection = method.ReturnType.GetInterfaces().Contains(typeof(IEnumerable));
-
+            var isCollection = method.ReturnType.GetInterfaces().Contains(typeof(IEnumerable)) ||
+                method.GetParameters().FirstOrDefault().ParameterType.GetGenericArguments().Count() > 0;
+            
             return isCollection ?
                 _CollectionInterceptors :
                 _ForeignFieldInterceptors;

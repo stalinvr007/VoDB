@@ -231,6 +231,7 @@
     <Compile Include="QueryCompiler\Compiler.cs" />
     <Compile Include="ReaderExtensions.cs" />
     <Compile Include="Session.cs" />
+    <Compile Include="Sessions\EntityFactories\FieldInterceptorBase.cs" />
     <Compile Include="Sessions\EntityFactories\IFieldInterceptor.cs" />
     <Compile Include="Sessions\EntityFactories\InterceptorSelector.cs" />
     <Compile Include="Sessions\EntityFactories\LazyCollectionForeignProperty.cs" />

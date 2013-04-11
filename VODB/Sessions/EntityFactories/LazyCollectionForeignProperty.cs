@@ -89,7 +89,6 @@ namespace VODB.Sessions.EntityFactories
         {
             invocation.Proceed();
 
-
             MethodInfo method = invocation.Method;
 
             if (method.Name.StartsWith("set_"))
