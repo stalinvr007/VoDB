@@ -2,14 +2,14 @@ using System;
 
 namespace VODB.Exceptions
 {
-    public abstract class VodbException : Exception
+    public class VodbException : Exception
     {
-        protected VodbException(String msgMask, params Object[] args)
+        public VodbException(String msgMask, params Object[] args)
             : base(Format(msgMask, args))
         {
         }
 
-        protected VodbException(Exception innerException, String msgMask, params Object[] args)
+        public VodbException(Exception innerException, String msgMask, params Object[] args)
             : base(Format(msgMask, args), innerException)
         {
         }

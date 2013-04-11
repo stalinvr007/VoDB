@@ -6,11 +6,11 @@ namespace VODB.Sessions
     class SessionV1 : SessionBase
     {
         public SessionV1()
-            : base(Engine.Get<ISession>())
+            : base((IInternalSession)Engine.Get<ISession>())
         { }
 
         public SessionV1(IDbConnectionCreator connectionCreator)
-            : base(Engine.Get<ISession>("creator", connectionCreator))
+            : base((IInternalSession)Engine.Get<ISession>("creator", connectionCreator))
         { }
 
         public override string ToString()

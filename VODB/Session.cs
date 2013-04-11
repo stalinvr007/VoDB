@@ -14,7 +14,7 @@ namespace VODB
         public Session(IDbConnectionCreator connectionCreator) : base(GetSession(connectionCreator))
         { }
 
-        private static ISession GetSession(IDbConnectionCreator connectionCreator)
+        private static IInternalSession GetSession(IDbConnectionCreator connectionCreator)
         {
             return new SessionV2(
                 new VodbConnection(connectionCreator),

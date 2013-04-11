@@ -22,6 +22,9 @@ namespace VODB.Sessions
         private readonly IEntityTranslator _Translator;
         private readonly IEntityMapper _Mapper;
         private readonly IEntityFactory _EntityFactory;
+        
+        // Wrapper for the session. 
+        private readonly IInternalSession _InternalSession;
 
         public SessionV2(IVodbConnection connection, IEntityTranslator translator, IEntityMapper mapper, IEntityFactory entityFactory)
         {
@@ -29,6 +32,9 @@ namespace VODB.Sessions
             _Translator = translator;
             _Connection = connection;
             _EntityFactory = entityFactory;
+
+            // The session base makes sure every exception will be captured.
+            _InternalSession = new SessionBase(this);
         }
 
         private static QueryParameter CreateParameter<TEntity>(IField f, TEntity entity)
@@ -82,7 +88,7 @@ namespace VODB.Sessions
                 while (reader.Read())
                 {
                     yield return _Mapper.Map(
-                        (TEntity)_EntityFactory.Make(entityType, this, _Translator),
+                        (TEntity)_EntityFactory.Make(entityType, _InternalSession, _Translator),
                         table,
                         reader
                     );
@@ -101,7 +107,7 @@ namespace VODB.Sessions
             try
             {
                 return reader.AsParallel().Transform(t => _Mapper.Map(
-                    (TEntity)_EntityFactory.Make(entityType, this, _Translator),
+                    (TEntity)_EntityFactory.Make(entityType, _InternalSession, _Translator),
                     table,
                     t.Reader)
                 );
@@ -126,7 +132,7 @@ namespace VODB.Sessions
 
         public IQueryCompilerLevel1<TEntity> GetAll<TEntity>() where TEntity : class, new()
         {
-            return QueryStart.From<TEntity>(this);
+            return QueryStart.From<TEntity>(_InternalSession);
         }
 
         private static IQuery GetInternalQuery<TEntity>(IQuery<TEntity> query) where TEntity : class, new()
@@ -193,7 +199,7 @@ namespace VODB.Sessions
 
 
             // Makes a new query in order to enable lazy load.
-            return QueryStart.From<TEntity>(this, internalQuery.SqlCompiler, internalQuery.Parameters);
+            return QueryStart.From<TEntity>(_InternalSession, internalQuery.SqlCompiler, internalQuery.Parameters);
         }
 
         public TEntity GetById<TEntity>(TEntity entity) where TEntity : class, new()

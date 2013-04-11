@@ -38,14 +38,14 @@ namespace VODB.QueryCompiler.ExpressionPiecesToSql
                 return compiledQuery;
             }
 
-            forceCompile = false;
-
             var sb = new StringBuilder();
 
             foreach (var compiler in _Compilers)
             {
                 sb.Append(compiler.Compile());
             }
+
+            forceCompile = false;
 
             return compiledQuery = sb.ToString();
         }

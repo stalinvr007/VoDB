@@ -1,11 +1,9 @@
 ﻿<NUnitProject>
-  <Settings activeconfig="Debug" processModel="Default" domainUsage="Default" />
+  <Settings activeconfig="Release" />
   <Config name="Debug" binpathtype="Auto">
-    <assembly path="VODB\bin\Debug\VODB.dll" />
     <assembly path="VODB.Tests\bin\Debug\VODB.Tests.dll" />
   </Config>
   <Config name="Release" binpathtype="Auto">
-    <assembly path="VODB\bin\Release\VODB.dll" />
     <assembly path="VODB.Tests\bin\Release\VODB.Tests.dll" />
   </Config>
 </NUnitProject>

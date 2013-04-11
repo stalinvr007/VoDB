@@ -4,11 +4,11 @@ using VODB.Extensions;
 
 namespace VODB.Sessions
 {
-    public class SessionBase : ISession
+    public class SessionBase : IInternalSession
     {
-        private ISession _InternalSession;
+        private IInternalSession _InternalSession;
 
-        protected SessionBase(ISession internalSession)
+        internal SessionBase(IInternalSession internalSession)
         {
             _InternalSession = internalSession;
         }
@@ -80,5 +80,47 @@ namespace VODB.Sessions
 
         #endregion
 
+        #region IInternalSession Members
+        
+        public System.Data.Common.DbCommand CreateCommand()
+        {
+            return _InternalSession.CaptureExceptions(session => session.CreateCommand());
+        }
+
+        public System.Data.Common.DbCommand RefreshCommand(System.Data.Common.DbCommand command)
+        {
+            return _InternalSession.CaptureExceptions(session => session.RefreshCommand(command));
+        }
+
+        public void Open()
+        {
+            _InternalSession.CaptureExceptions(session => session.Open());
+        }
+
+        public void Close()
+        {
+            _InternalSession.CaptureExceptions(session => session.Close());
+        }
+
+        public System.Collections.Generic.IEnumerable<TEntity> InternalExecuteQuery<TEntity>(IQuery<TEntity> query, params object[] args) where TEntity : class, new()
+        {
+            return _InternalSession.CaptureExceptions(session => session.InternalExecuteQuery(query, args));
+        }
+
+        public int ExecuteNonQuery(string command, System.Collections.Generic.IEnumerable<ExpressionsToSql.IQueryParameter> args)
+        {
+            return _InternalSession.CaptureExceptions(session => session.ExecuteNonQuery(command, args));
+        }
+
+        public System.Data.IDataReader ExecuteReader(string command, System.Collections.Generic.IEnumerable<ExpressionsToSql.IQueryParameter> args)
+        {
+            return _InternalSession.CaptureExceptions(session => session.ExecuteReader(command, args));
+        }
+
+        public object ExecuteScalar(string command, System.Collections.Generic.IEnumerable<ExpressionsToSql.IQueryParameter> args)
+        {
+            return _InternalSession.CaptureExceptions(session => session.ExecuteScalar(command, args));
+        } 
+        #endregion
     }
 }

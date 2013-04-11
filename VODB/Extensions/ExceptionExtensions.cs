@@ -1,5 +1,6 @@
 ﻿using System;
 using VODB.Core;
+using VODB.Exceptions;
 using VODB.Exceptions.Handling;
 
 namespace VODB.Extensions
@@ -17,12 +18,10 @@ namespace VODB.Extensions
             {
                 Config.Handlers.Handle(exception);
                 return;
-            }
-
-            throw exception;
+            }  
         }
 
-        public static TResult CaptureExceptions<TResult>(this ISession session, Func<ISession, TResult> func)
+        public static TResult CaptureExceptions<TResult>(this IInternalSession session, Func<IInternalSession, TResult> func)
         {
             try
             {
@@ -31,21 +30,19 @@ namespace VODB.Extensions
             catch (Exception ex)
             {
                 ex.HandleException();
-                throw ex;
+
+                // If no one handles the exception Wrap it!
+                throw new VodbException(ex, "");
             }
         }
 
-        public static void CaptureExceptions(this ISession session, Action<ISession> action)
+        public static void CaptureExceptions(this IInternalSession session, Action<IInternalSession> action)
         {
-            try
+            session.CaptureExceptions<Object>(s =>
             {
-                action(session);
-            }
-            catch (Exception ex)
-            {
-                ex.HandleException();
-                throw ex;
-            }
+                action(s);
+                return null;
+            });
         }
 
     }

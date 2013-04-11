@@ -46,11 +46,19 @@ namespace VODB.Tests.ExceptionHandlers
 
             })).Throws(typeof(TruncatedException))
             .SetName("Inserting a value into customer bigger than field max length");
+
+            yield return new TestCaseData((Action<ISession>)(s =>
+            {
+
+                s.GetAll<Employee>().Where("aspodkaspdok").Count();
+
+            })).Throws(typeof(VodbException))
+            .SetName("Wrong query must throw VodbException.");
         }
 
 
         [TestCaseSource("GetExecutions")]
-        public void Insert_Record_Throws_Exception(Action<ISession> execution)
+        public void Exception_System_Assert(Action<ISession> execution)
         {
             using (var session = new Session())
             {
