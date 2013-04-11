@@ -24,7 +24,7 @@ namespace VODB.Sessions.EntityFactories
                 new ProxyGenerationOptions {
                     Selector = new InterceptorSelector(
                         new NonCollectionInterceptor(session),
-                        new LazyCollectionForeignProperty(session, translator)
+                        new CollectionPropertyInterceptor(session, translator)
                     ) 
                 });
         }

@@ -11,12 +11,13 @@ namespace VODB.Sessions.EntityFactories
 
     internal abstract class FieldInterceptorBase : IFieldInterceptor
     {
-
+        public static int typecount = 0;
         private readonly IDictionary<MethodInfo, PropertyValue> Properties = new Dictionary<MethodInfo, PropertyValue>();
 
         protected FieldInterceptorBase(Boolean interceptCollections)
         {
             InterceptCollections = interceptCollections;
+            ++typecount;
         }
 
         public Boolean InterceptCollections { get; private set; }
@@ -54,10 +55,15 @@ namespace VODB.Sessions.EntityFactories
             }
 
             // Sets the value and caches it.
-            Properties[getter] = new PropertyValue
+            propValue = Properties[getter] = new PropertyValue
             {
-                Value = invocation.GetArgumentValue(0)
+                Value = invocation.GetArgumentValue(0),
+
+                // If this is a collection field interceptor then the value 
+                // returned should allways be considered as loaded.
+                IsLoaded = InterceptCollections
             };
+
 
         }
 
@@ -81,7 +87,7 @@ namespace VODB.Sessions.EntityFactories
                 {
                     // If this is a collection field interceptor then the value 
                     // returned should allways be considered as loaded.
-                    IsLoaded = InterceptCollections 
+                    IsLoaded = InterceptCollections
                 };
             }
 

@@ -1,7 +1,11 @@
 ﻿<NUnitProject>
-  <Settings activeconfig="Release" />
-  <Config name="Release" configfile="App.Config" binpathtype="Auto" runtimeFramework="v4.0">
+  <Settings activeconfig="Debug" processModel="Default" domainUsage="Default" />
+  <Config name="Debug" binpathtype="Auto">
+    <assembly path="VODB\bin\Debug\VODB.dll" />
+    <assembly path="VODB.Tests\bin\Debug\VODB.Tests.dll" />
+  </Config>
+  <Config name="Release" binpathtype="Auto">
+    <assembly path="VODB\bin\Release\VODB.dll" />
     <assembly path="VODB.Tests\bin\Release\VODB.Tests.dll" />
-    <assembly path="ConcurrentReader.Tests\bin\Release\ConcurrentReader.Tests.dll" />
   </Config>
 </NUnitProject>

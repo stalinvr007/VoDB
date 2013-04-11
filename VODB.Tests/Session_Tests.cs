@@ -389,6 +389,9 @@ namespace VODB.Tests
             employee.Territories = session.GetAll<EmployeeTerritories>();
 
             // Should contain all the EmployeeTerritories instances.
+            var territories = employee.Territories;
+
+
             Assert.That(employee.Territories.Count(), Is.EqualTo(49));
         }
 

@@ -13,8 +13,7 @@ using VODB.ExpressionsToSql;
 
 namespace VODB.Sessions.EntityFactories
 {
-    [Obsolete]
-    internal class LazyCollectionForeignProperty : IFieldInterceptor
+    class CollectionPropertyInterceptor : FieldInterceptorBase
     {
         private static readonly MethodInfo ProxyGenericIteratorMethod =
             typeof(LazyCollectionForeignProperty)
@@ -29,20 +28,28 @@ namespace VODB.Sessions.EntityFactories
                     BindingFlags.Public | BindingFlags.Instance);
 
         private readonly IInternalSession _Session;
-        private readonly IDictionary<MethodInfo, Object> lastResult = new Dictionary<MethodInfo, Object>();
         private readonly IEntityTranslator _Translator;
 
-
-        public LazyCollectionForeignProperty(IInternalSession session, IEntityTranslator translator)
+        public CollectionPropertyInterceptor(IInternalSession session, IEntityTranslator translator)
+            : base(true)
         {
             _Translator = translator;
             _Session = session;
 
         }
 
-        public Boolean InterceptCollections { get { return true; } }
 
-        private void SetResult(IInvocation invocation, MethodInfo method)
+        private static IEnumerable<T> ProxyGenericIterator<T>(object target, IEnumerable enumerable)
+        {
+            return ProxyNonGenericIterator(target, enumerable).Cast<T>();
+        }
+
+        private static IEnumerable ProxyNonGenericIterator(object target, IEnumerable enumerable)
+        {
+            return enumerable.Cast<object>();
+        }
+
+        protected override object GetFieldValue(MethodInfo method, IInvocation invocation)
         {
             // Finds the entity type of the property return generic IEnumerable type.
             var entityType = method.ReturnParameter.ParameterType.GetGenericArguments().First();
@@ -55,10 +62,10 @@ namespace VODB.Sessions.EntityFactories
 
             // Gets a new IQuery created using the session GetAll method.
             IQuery result = (IQuery)methodIterator.Invoke(null, new Object[] 
-            {
-                invocation.InvocationTarget,
-                me.Invoke(_Session, new Object[]{ })
-            });
+                {
+                    invocation.InvocationTarget,
+                    me.Invoke(_Session, new Object[]{ })
+                });
 
             var foreignTable = _Translator.Translate(entityType);
             var callerTable = _Translator.Translate(invocation.Method.ReflectedType);
@@ -84,44 +91,7 @@ namespace VODB.Sessions.EntityFactories
 
             }
 
-            lastResult[method] = invocation.ReturnValue = result;
-        }
-
-        public void Intercept(IInvocation invocation)
-        {
-            invocation.Proceed();
-
-            MethodInfo method = invocation.Method;
-
-            if (method.Name.StartsWith("set_"))
-            {
-                // Saves the setted value.
-                lastResult[method] = invocation.ReturnValue;
-                return;
-            }
-
-            if (method.Name.StartsWith("get_"))
-            {
-                // trys to get a cached value.
-                object result = null;
-                if (lastResult.TryGetValue(method, out result))
-                {
-                    invocation.ReturnValue = result;
-                    return;
-                }
-
-                SetResult(invocation, method);
-            }
-        }
-
-        private static IEnumerable<T> ProxyGenericIterator<T>(object target, IEnumerable enumerable)
-        {
-            return ProxyNonGenericIterator(target, enumerable).Cast<T>();
-        }
-
-        private static IEnumerable ProxyNonGenericIterator(object target, IEnumerable enumerable)
-        {
-            return enumerable.Cast<object>();
+            return result;
         }
     }
 }

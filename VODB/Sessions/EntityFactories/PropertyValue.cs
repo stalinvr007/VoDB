@@ -36,7 +36,7 @@ namespace VODB.Sessions.EntityFactories
         public Boolean IsLoaded
         {
             get { return SettedCount > 1; }
-            set { SettedCount = 2; }
+            set { SettedCount = value ? 2 : 1; }
         }
     }
 }
