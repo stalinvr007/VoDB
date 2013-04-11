@@ -4,7 +4,7 @@ using System.Text;
 
 namespace VODB.QueryCompiler.ExpressionPiecesToSql
 {
-    class CompositeCompiler : ISqlCompiler
+    class CompositeCompiler : ISqlCompiler, IEnumerable<ISqlCompiler>
     {
         readonly IList<ISqlCompiler> _Compilers;
 
@@ -48,6 +48,16 @@ namespace VODB.QueryCompiler.ExpressionPiecesToSql
             }
 
             return compiledQuery = sb.ToString();
+        }
+
+        public IEnumerator<ISqlCompiler> GetEnumerator()
+        {
+            return _Compilers.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

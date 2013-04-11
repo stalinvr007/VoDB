@@ -381,6 +381,18 @@ namespace VODB.Tests
         }
 
         [TestCaseSource("GetSessions")]
+        public void Session_GetById_With_Setted_Territories(ISession session)
+        {
+            var employee = session.GetById(new Employee { EmployeeId = 1 });
+
+            // The territories property should be affected!    
+            employee.Territories = session.GetAll<EmployeeTerritories>();
+
+            // Should contain all the EmployeeTerritories instances.
+            Assert.That(employee.Territories.Count(), Is.EqualTo(49));
+        }
+
+        [TestCaseSource("GetSessions")]
         public void Session_Reuse_Returned_Entity(ISession session)
         {
             var employee = session.GetById(new Employee { EmployeeId = 1 });
