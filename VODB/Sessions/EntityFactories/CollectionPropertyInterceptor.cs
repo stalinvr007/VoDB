@@ -16,7 +16,7 @@ namespace VODB.Sessions.EntityFactories
     class CollectionPropertyInterceptor : FieldInterceptorBase
     {
         private static readonly MethodInfo ProxyGenericIteratorMethod =
-            typeof(LazyCollectionForeignProperty)
+            typeof(CollectionPropertyInterceptor)
                 .GetMethod(
                     "ProxyGenericIterator",
                     BindingFlags.NonPublic | BindingFlags.Static);
