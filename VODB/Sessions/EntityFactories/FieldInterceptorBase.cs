@@ -8,9 +8,13 @@ using System.Threading.Tasks;
 
 namespace VODB.Sessions.EntityFactories
 {
+
     internal abstract class FieldInterceptorBase : IFieldInterceptor
     {
-        public FieldInterceptorBase(Boolean interceptCollections)
+
+        private readonly IDictionary<MethodInfo, PropertyValue> Properties = new Dictionary<MethodInfo, PropertyValue>();
+
+        protected FieldInterceptorBase(Boolean interceptCollections)
         {
             InterceptCollections = interceptCollections;
         }
@@ -26,26 +30,72 @@ namespace VODB.Sessions.EntityFactories
 
             if (method.Name.StartsWith("set_"))
             {
-                HandleSetter(method);
+                // Handle the setter to set the value for this property.
+                HandleSetter(method, invocation);
             }
             else if (method.Name.StartsWith("get_"))
             {
-                HandleGetter(method);
+                // Handle the getter to return the property value.
+                HandleGetter(method, invocation);
             }
         }
 
-        /// <summary>
-        /// Handles the setter.
-        /// </summary>
-        /// <param name="method">The method.</param>
-        protected abstract void HandleSetter(MethodInfo method);
+        private void HandleSetter(MethodInfo method, IInvocation invocation)
+        {
+            // Find the get method
+            var getter = invocation.TargetType.GetMethod("g" + method.Name.Remove(0, 1));
+
+            PropertyValue propValue;
+            if (Properties.TryGetValue(getter, out propValue))
+            {
+                // Resets the value...
+                propValue.Value = invocation.ReturnValue;
+                return;
+            }
+
+            // Sets the value and caches it.
+            Properties[getter] = new PropertyValue
+            {
+                Value = invocation.ReturnValue
+            };
+
+        }
+
+        private void HandleGetter(MethodInfo method, IInvocation invocation)
+        {
+            PropertyValue propValue;
+            // Try to fetch from cache and check if this is fully loaded.
+            if (Properties.TryGetValue(method, out propValue) && propValue.IsLoaded)
+            {
+                invocation.ReturnValue = propValue.Value;
+                return;
+            }
+
+            // 
+            var value = GetFieldValue(method, invocation);
+
+            if (propValue == null)
+            {
+                // Cache the returned value from the HandleFieldGetValue;
+                propValue = Properties[method] = new PropertyValue
+                {
+                    // If this is a collection field interceptor then the value 
+                    // returned should allways be considered as loaded.
+                    IsLoaded = InterceptCollections 
+                };
+            }
+
+            // Cache and return the value.
+            propValue.Value = invocation.ReturnValue = value;
+        }
 
         /// <summary>
-        /// Handles the getter.
+        /// Gets the field value.
         /// </summary>
         /// <param name="method">The method.</param>
-        /// <returns>The value that will be returned by the getter.</returns>
-        protected abstract Object HandleGetter(MethodInfo method);
+        /// <param name="invocation">The invocation.</param>
+        /// <returns></returns>
+        protected abstract object GetFieldValue(MethodInfo method, IInvocation invocation);
 
     }
 }

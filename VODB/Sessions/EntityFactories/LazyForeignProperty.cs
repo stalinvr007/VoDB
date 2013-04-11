@@ -8,6 +8,7 @@ using Fasterflect;
 
 namespace VODB.Sessions.EntityFactories
 {
+
     class LazyForeignProperty : IFieldInterceptor
     {
         private IInternalSession _Session;
@@ -22,7 +23,7 @@ namespace VODB.Sessions.EntityFactories
         public void Intercept(IInvocation invocation)
         {
             invocation.Proceed();
-            
+
 
             MethodInfo method = invocation.Method;
             if (method.Name.StartsWith("set_"))

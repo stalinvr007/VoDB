@@ -10,23 +10,19 @@ namespace VODB.Sessions.EntityFactories
     class InterceptorSelector : IInterceptorSelector
     {
 
-        private readonly IFieldInterceptor[] _CollectionInterceptors;
-        private readonly IFieldInterceptor[] _ForeignFieldInterceptors;
 
+        private readonly IFieldInterceptor[] _Interceptors;
         public InterceptorSelector(params IFieldInterceptor[] interceptors)
         {
-            _CollectionInterceptors = interceptors.Where(i => i.InterceptCollections).ToArray();
-            _ForeignFieldInterceptors = interceptors.Where(i => !i.InterceptCollections).ToArray();
+            _Interceptors = interceptors;            
         }
         
         public IInterceptor[] SelectInterceptors(Type type, System.Reflection.MethodInfo method, IInterceptor[] interceptors)
         {
             var isCollection = method.ReturnType.GetInterfaces().Contains(typeof(IEnumerable)) ||
                 method.GetParameters().FirstOrDefault().ParameterType.GetGenericArguments().Count() > 0;
-            
-            return isCollection ?
-                _CollectionInterceptors :
-                _ForeignFieldInterceptors;
+
+            return _Interceptors.Where(e => e.InterceptCollections == isCollection).ToArray();            
         }
     }
 }
