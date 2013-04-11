@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace VODB.Sessions.EntityFactories
@@ -17,12 +18,24 @@ namespace VODB.Sessions.EntityFactories
             _Interceptors = interceptors;            
         }
         
-        public IInterceptor[] SelectInterceptors(Type type, System.Reflection.MethodInfo method, IInterceptor[] interceptors)
+        public IInterceptor[] SelectInterceptors(Type type, MethodInfo method, IInterceptor[] interceptors)
         {
-            var isCollection = method.ReturnType.GetInterfaces().Contains(typeof(IEnumerable)) ||
-                method.GetParameters().FirstOrDefault().ParameterType.GetGenericArguments().Count() > 0;
+            var isCollection = 
+                IsCollectionReturnType(method) ||
+                IsCollectionParameterType(method);
 
-            return _Interceptors.Where(e => e.InterceptCollections == isCollection).ToArray();            
+            return _Interceptors.Where(e => e.InterceptCollections == isCollection).ToArray();
         }
+
+        private static bool IsCollectionParameterType(MethodInfo method)
+        {
+            return method.Name.StartsWith("set_") && method.GetParameters().FirstOrDefault().ParameterType.GetGenericArguments().Count() > 0;
+        }
+
+        private static bool IsCollectionReturnType(MethodInfo method)
+        {
+            return method.Name.StartsWith("get_") && method.ReturnType.IsGenericType;
+        }
+
     }
 }

@@ -49,14 +49,14 @@ namespace VODB.Sessions.EntityFactories
             if (Properties.TryGetValue(getter, out propValue))
             {
                 // Resets the value...
-                propValue.Value = invocation.ReturnValue;
+                propValue.Value = invocation.GetArgumentValue(0);
                 return;
             }
 
             // Sets the value and caches it.
             Properties[getter] = new PropertyValue
             {
-                Value = invocation.ReturnValue
+                Value = invocation.GetArgumentValue(0)
             };
 
         }

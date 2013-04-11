@@ -386,7 +386,7 @@ namespace VODB.Tests
             var employee = session.GetById(new Employee { EmployeeId = 1 });
 
             // The territories property should be affected!    
-            employee.Territories = null;
+            employee.Territories = session.GetAll<EmployeeTerritories>();
 
             // Should contain all the EmployeeTerritories instances.
             Assert.That(employee.Territories.Count(), Is.EqualTo(49));

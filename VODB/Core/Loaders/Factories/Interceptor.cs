@@ -63,7 +63,7 @@ namespace VODB.Core.Loaders.Factories
 
             object value = invocation.GetArgumentValue(0);
             lastResult[methodInfo] = new ObjWrapper {
-                Value = invocation.GetArgumentValue(0),
+                Value = value,
                 IsLoaded = value != null && value.GetType().IsGenericType
             };
         }
